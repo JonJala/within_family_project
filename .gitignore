@@ -1,0 +1,16 @@
+# Eliminate all files under processed except tab_fig / analysis directories and any nested READMEs
+processed/*
+!processed/README.md
+!processed/**/README.md
+
+# Eliminate ~ files
+*~
+
+# Eliminate .nfs files
+.nfs*
+
+# Eliminate .log files
+*.log
+
+# Eliminate .pyc files
+*.pyc

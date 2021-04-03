@@ -8,3 +8,5 @@ bash /var/genetics/data/gen_scotland/public/latest/processed/sumstats/fgwas/qc_f
 bash /var/genetics/data/finn_twin/public/latest/processed/sumstats/fgwas/qc_files.sh
 bash /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/qc_files.sh
 bash /var/genetics/data/ukb/public/latest/processed/sumstats/fgwas/qc_files.sh
+
+

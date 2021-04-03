@@ -2,7 +2,7 @@
 
 # Intended to convert all hdf5 to LDSC ready sumstats
 
-within_family_path="/homes/nber/harij/within_family"
+sldsc_path="/homes/nber/harij/gitrepos/SNIPar/ldsc_reg"
 merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 bash /var/genetics/data/str/public/latest/processed/sumstats/fgwas/mksumstats.sh

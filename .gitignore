@@ -1,5 +1,6 @@
 # Eliminate all files under processed except tab_fig / analysis directories and any nested READMEs
 processed/*
+notebooks/*
 !processed/README.md
 !processed/**/README.md
 

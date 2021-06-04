@@ -185,40 +185,49 @@ cohorts=(str hunt gen_scotland finn_twin estonian_biobank)
 
 # == UKB == #
 # 13 = bmi
-python ${sniparpath}/ldsc_reg/run_estimates.py \
-"/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/13/chr_*.sumstats.hdf5" \
--ldsc "${eur_w_ld_chr}/*[0-9].l2.ldscore.gz" \
--l "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/13/snipar_bmi_avgparental.log" \
--e "direct_plus_averageparental" \
--bim_rsid 1 -bim_bp 2 -bim_a1 3 -bim_a2 4 \
--maf 1
-# x: array([0.21739314, 0.0372846 , 0.00706374])
+# python ${sniparpath}/ldsc_reg/run_estimates.py \
+# "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/13/chr_*.sumstats.hdf5" \
+# -ldsc "${eur_w_ld_chr}/*[0-9].l2.ldscore.gz" \
+# -l "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/13/snipar_bmi_avgparental.log" \
+# -e "direct_plus_averageparental" \
+# -bim_rsid 1 -bim_bp 2 -bim_a1 3 -bim_a2 4 \
+# -maf 1
+# # x: array([0.21739314, 0.0372846 , 0.00706374])
 
-python ${sniparpath}/ldsc_reg/run_estimates.py \
-"/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/13/chr_*.sumstats.hdf5" \
--ldsc "${eur_w_ld_chr}/*[0-9].l2.ldscore.gz" \
--l "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/13/snipar_bmi_pop.log" \
--e "direct_plus_population" \
--bim_rsid 1 -bim_bp 2 -bim_a1 3 -bim_a2 4 \
--maf 1
-# array([0.21739542, 0.25594159, 0.92430632])
+# python ${sniparpath}/ldsc_reg/run_estimates.py \
+# "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/13/chr_*.sumstats.hdf5" \
+# -ldsc "${eur_w_ld_chr}/*[0-9].l2.ldscore.gz" \
+# -l "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/13/snipar_bmi_pop.log" \
+# -e "direct_plus_population" \
+# -bim_rsid 1 -bim_bp 2 -bim_a1 3 -bim_a2 4 \
+# -maf 1
+# # array([0.21739542, 0.25594159, 0.92430632])
 
 
-# 21 = ea
-python ${sniparpath}/ldsc_reg/run_estimates.py \
-"/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/chr_*.sumstats.hdf5" \
--ldsc "${eur_w_ld_chr}/*[0-9].l2.ldscore.gz" \
--l "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/snipar_ea_avgparental.log" \
--e "direct_plus_averageparental" \
--bim_rsid 1 -bim_bp 2 -bim_a1 3 -bim_a2 4 \
--maf 1
-# x: array([1.58614413, 3.36186749, 0.41335096])
+# # 21 = ea
+# python ${sniparpath}/ldsc_reg/run_estimates.py \
+# "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/chr_*.sumstats.hdf5" \
+# -ldsc "${eur_w_ld_chr}/*[0-9].l2.ldscore.gz" \
+# -l "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/snipar_ea_avgparental.log" \
+# -e "direct_plus_averageparental" \
+# -bim_rsid 1 -bim_bp 2 -bim_a1 3 -bim_a2 4 \
+# -maf 1
+# # x: array([1.58614413, 3.36186749, 0.41335096])
 
-python ${sniparpath}/ldsc_reg/run_estimates.py \
-"/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/chr_*.sumstats.hdf5" \
--ldsc "${eur_w_ld_chr}/*[0-9].l2.ldscore.gz" \
--l "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/snipar_ea_pop.log" \
--e "direct_plus_population" \
--bim_rsid 1 -bim_bp 2 -bim_a1 3 -bim_a2 4 \
--maf 1
+# python ${sniparpath}/ldsc_reg/run_estimates.py \
+# "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/chr_*.sumstats.hdf5" \
+# -ldsc "${eur_w_ld_chr}/*[0-9].l2.ldscore.gz" \
+# -l "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/snipar_ea_pop.log" \
+# -e "direct_plus_population" \
+# -bim_rsid 1 -bim_bp 2 -bim_a1 3 -bim_a2 4 \
+# -maf 1
 # x: array([1.58608322, 6.85733895, 0.77059096])
+
+
+# Estonian Biobank depression
+python ${sniparpath}/ldsc_reg/run_estimates.py \
+"/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/mdd/MDD_chr*_results.sumstats.hdf5" \
+-ldsc "${eur_w_ld_chr}/*[0-9].l2.ldscore.gz" \
+-e "direct_plus_population" \
+-bim_bp 2 -bim_a1 3 -bim_a2 4 \
+-maf 1

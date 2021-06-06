@@ -8,45 +8,93 @@ options(bigstatsr.check.parallel.blas = FALSE)
 options(default.nproc.blas = NULL)
 library(ggplot2)
 library(dplyr)
+library(optparse)
 
-setwd("/var/genetics/proj/within_family/within_family_project/")
 
+####### Options ###########
 
-bfile = "/var/genetics/data/ukb/private/latest/processed/user/harij/projects/within_family/data/ukb_chr1_22_geno01_maf001_hwe10e6_500k_removedwithdrawn"
+option_list = list(
 
-dat <- fread("/var/genetics/proj/within_family/within_family_project/processed/ea_ref/GWAS_EA_excl23andMe.txt")
-dat <- unique(dat, by = "MarkerName")
+    make_option(c("--bfile"),  type="character", default=NULL, help="Path of bed file. Do not include the extension .bed. 
+                                        Assumes the .bim and .fam files are located in the same place", metavar="character"),
+    make_option(c("--sumstats"),   type="character", default="",  help="Sumstats file", metavar="character"),
+    make_option(c("--hm3"),   type="character", default="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist",  help="Sumstats file", metavar="character"),
+    make_option(c("--outfile"),   type="character", default="",  help="File of outputted PGI file.", metavar="character"),
+
+    # Column names for sumstats
+    make_option(c("--chr"),  type="character", default="chr", help="chr column name for sumstats", metavar="character"),
+    make_option(c("--pos"),  type="character", default="pos", help="BP column name for sumstats", metavar="character"),
+    make_option(c("--rsid"),  type="character", default="rsid", help="rsid column name for sumstats", metavar="character"),
+    make_option(c("--a1"),  type="character", default="a1", help="A1 column name for sumstats", metavar="character"),
+    make_option(c("--a2"),  type="character", default="a0", help="A2 column name for sumstats", metavar="character"),
+    make_option(c("--beta"),  type="character", default="beta", help="beta column name for sumstats", metavar="character"),
+    make_option(c("--beta_se"),  type="character", default="beta_se", help="beta SE column name for sumstats", metavar="character"),
+    make_option(c("--N_col"),  type="character", default="N", help="N column name for sumstats", metavar="character"),
+
+    # Other options on how to read sumstats
+    make_option(c("--or"),  type="character", default="", help="OR column name for sumstats. Will be logged to be used
+                                                as beta.
+                                                If non-empty this will be used instead of
+                                                beta and beta_se", metavar="character"),
+    make_option(c("--zscore"),  type="character", default="", help="Z-score column name for sumstats
+                                                If non-empty this will be used instead of
+                                                beta and beta_se", metavar="character"),
+    make_option(c("--gwas_samplesize"),  type="double", default=0.0, help="GWAS sample size to be used for all SNPs
+    Overrides the N_col option", metavar="character")
+)
+
+opt_parser = OptionParser(option_list = option_list)
+opt = parse_args(opt_parser)
+
+bfile = opt$bfile
+
+dat <- fread(opt$sumstats)
+dat <- unique(dat, by = opt$rsid)
 
 ####################
 # options
 ####################
-zscore <- FALSE
-gwas_samplesize <- 1100000
-
-if (!is.null(gwas_samplesize)){
-    dat[, N := gwas_samplesize]
+if (opt$zscore != "") {
+    zscore = opt$zscore
+    use_zscore = TRUE
+} else {
+    use_zscore = FALSE
 }
+
+if (opt$or != "") {
+    cat(paste("Using column name", opt$or, "as Odd's Ratio\n"))
+    dat[, beta := log(get(opt$or))]
+} else {
+    setnames(dat, opt$beta, "beta")
+}
+
+if (opt$gwas_samplesize != 0.0) {
+    dat[, N := get(opt$gwas_samplesize)]
+} else {
+    setnames(dat, opt$N_col, "N")
+}
+
 #########################
 # removing ambigous Alleles
-dat <- dat[!((A1 == "A" & A2 == "T") |
-          (A1 == "T" & A2 == "A") |
-          (A1 == "C" & A2 == "G") |
-          (A1 == "G" & A2 == "C"))]
+dat <- dat[!((get(opt$a1) == "A" & get(opt$a2) == "T") |
+          (get(opt$a1) == "T" & get(opt$a2) == "A") |
+          (get(opt$a1) == "C" & get(opt$a2) == "G") |
+          (get(opt$a1) == "G" & get(opt$a2) == "C"))]
 
 #HM3 snps
-info <- fread("/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist")
+info <- fread(opt$hm3)
 
 # Read in the summary statistic file
 sumstats <- dat
 
 # LDpred 2 require the header to follow the exact naming
-if (!zscore){
+if (!use_zscore){
     setnames(sumstats,
-            old = c("CHR", "POS", "MarkerName", "A1", "A2", "Beta", "SE", "N"),
-            new = c("chr", "pos", "rsid", "a1", "a0", "beta", "beta_se", "n_eff"))
+            old = c(opt$chr, opt$pos, opt$rsid, opt$a1, opt$a2, opt$beta_se, "N"),
+            new = c("chr", "pos", "rsid", "a1", "a0", "beta_se", "n_eff"))
 } else {
         setnames(sumstats,
-            old = c("Chr", "BP", "SNP", "A1", "A2", "Z", "N"),
+            old = c(opt$chr, opt$pos, opt$rsid, opt$a1, opt$a2, zscore, "N"),
             new = c("chr", "pos", "rsid", "a1", "a0", "Z", "n_eff"))
 }
 # Filter out hapmap SNPs
@@ -115,7 +163,7 @@ setnames(df.out,
 
 
 # LD score reg
-if (!zscore){
+if (!use_zscore){
     df_beta <- info_snp[,c("beta", "beta_se", "n_eff", "_NUM_ID_")]
     ldsc <- snp_ldsc(   ld, 
                     length(ld), 
@@ -162,7 +210,7 @@ pred_auto <- big_prodVec(genotypes,
 
 df.out$PGI <- pred_auto
 
-fwrite(df.out, "processed/ldpred2/ea_pgi_ea_ref.txt.gz")
+fwrite(df.out, opt$outfile)
 
 t1 <- proc.time()
 time <- t1 - t0

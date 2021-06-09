@@ -1,18 +1,12 @@
 import numpy as np
 import pandas as pd
-import h5py
-import glob
-import itertools as it
-from functools import reduce, partial
 import datetime as dt
 import json
 import argparse
-import sys
-import os
 
-from readfiles import *
 from parsedata import *
 from metaanalysis import *
+from diagnostics import *
 
 
 if __name__ == '__main__':
@@ -33,6 +27,7 @@ if __name__ == '__main__':
     output to outprefix.sumstats.hdf5''', default='')
     parser.add_argument('--no_hdf5_out',action='store_true',help='Suppress HDF5 output of summary statistics',default=False)
     parser.add_argument('--no_txt_out',action='store_true',help='Suppress text output of summary statistics',default=False)
+    parser.add_argument('--diag',action='store_true',help='Produce diagnostic plots and summary statistics of input files.',default=False)
     args=parser.parse_args()
     
 
@@ -45,6 +40,13 @@ if __name__ == '__main__':
     
     # parsing
     df_dict = read_from_json(data_args)
+
+    if args.diag:
+        print("Running diagnostics on input files...")
+        dfdiag = print_sumstats(df_dict, data_args)
+        print(type(dfdiag))
+        dfdiag.to_csv(args.outprefix + ".sumstats.csv")
+        make_diagnostic_plots(df_dict, data_args, args.outprefix)
     df_merged = merging_data(list(df_dict.values()))
 
     allele_cols = [col for col in df_merged if col.startswith('alleles')]

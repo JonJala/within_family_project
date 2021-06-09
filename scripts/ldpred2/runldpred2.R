@@ -9,6 +9,21 @@ options(default.nproc.blas = NULL)
 library(ggplot2)
 library(dplyr)
 library(optparse)
+library(stringr)
+
+########################
+# Functions
+#######################
+remove_ambig_alleles = function(dat, allele1name, allele2name){
+
+    dfout = dat[!((get(allele1name) == "A" & get(allele2name) == "T") |
+          (get(allele1name) == "T" & get(allele2name) == "A") |
+          (get(allele1name) == "C" & get(allele2name) == "G") |
+          (get(allele1name) == "G" & get(allele2name) == "C"))]
+
+    return(dfout)
+
+}
 
 
 ####### Options ###########
@@ -40,16 +55,21 @@ option_list = list(
                                                 If non-empty this will be used instead of
                                                 beta and beta_se", metavar="character"),
     make_option(c("--gwas_samplesize"),  type="double", default=0.0, help="GWAS sample size to be used for all SNPs
-    Overrides the N_col option", metavar="character")
+    Overrides the N_col option", metavar="character"),
+    make_option(c("--read_ldmat"),  type="character", default="", help="Read the LD matrix from an RDS file.
+    If empty will calculate the LD matrix from the genotype data. If non-empty provide two files which are comma
+    seperated - the actual data with the LD matrices with ~ instead of the chromosome, and the map data.", metavar="character")
 )
+
 
 opt_parser = OptionParser(option_list = option_list)
 opt = parse_args(opt_parser)
 
+
 bfile = opt$bfile
 
-dat <- fread(opt$sumstats)
-dat <- unique(dat, by = opt$rsid)
+sumstats <- fread(opt$sumstats)
+sumstats <- unique(sumstats, by = opt$rsid)
 
 ####################
 # options
@@ -63,29 +83,23 @@ if (opt$zscore != "") {
 
 if (opt$or != "") {
     cat(paste("Using column name", opt$or, "as Odd's Ratio\n"))
-    dat[, beta := log(get(opt$or))]
+    sumstats[, beta := log(get(opt$or))]
 } else {
-    setnames(dat, opt$beta, "beta")
+    setnames(sumstats, opt$beta, "beta")
 }
 
 if (opt$gwas_samplesize != 0.0) {
-    dat[, N := get(opt$gwas_samplesize)]
+    sumstats[, N := opt$gwas_samplesize]
 } else {
-    setnames(dat, opt$N_col, "N")
+    setnames(sumstats, opt$N_col, "N")
 }
 
 #########################
 # removing ambigous Alleles
-dat <- dat[!((get(opt$a1) == "A" & get(opt$a2) == "T") |
-          (get(opt$a1) == "T" & get(opt$a2) == "A") |
-          (get(opt$a1) == "C" & get(opt$a2) == "G") |
-          (get(opt$a1) == "G" & get(opt$a2) == "C"))]
+sumstats <- remove_ambig_alleles(sumstats, opt$a1, opt$a2)
 
 #HM3 snps
 info <- fread(opt$hm3)
-
-# Read in the summary statistic file
-sumstats <- dat
 
 # LDpred 2 require the header to follow the exact naming
 if (!use_zscore){
@@ -99,17 +113,13 @@ if (!use_zscore){
 }
 # Filter out hapmap SNPs
 sumstats <- sumstats[sumstats$rsid %in% info$SNP,]
-
+cat("Sumstats file:\n")
+head(sumstats)
 
 file.remove(paste0(bfile, ".bk"))
 # calcualte LD matrix
 # Get maximum amount of cores
 NCORES <- nb_cores()
-# Initialize variables for storing the LD score and LD matrix
-corr <- NULL
-ld <- NULL
-# We want to know the ordering of samples in the bed file 
-df.out <- NULL
 # preprocess the bed file (only need to do once for each data set)
 rds <- snp_readBed(paste0(bfile, ".bed"), backingfile = bfile)
 obj.bigSNP <- snp_attach(rds)
@@ -117,8 +127,17 @@ obj.bigSNP <- snp_attach(rds)
 
 # extract the SNP information from the genotype
 # Open a temporary file
-map <- obj.bigSNP$map[-3]
-names(map) <- c("chr", "rsid", "pos", "a1", "a0")
+if (opt$read_ldmat != ""){
+    ld_path = str_split(opt$read_ldmat, ",")[[1]][[1]]
+    map_path = str_split(opt$read_ldmat, ",")[[1]][[2]]
+    ld_path = str_split(ld_path, "~")[[1]]
+    map <- readRDS(map_path)
+
+} else {
+    map <- obj.bigSNP$map[-3]
+    names(map) <- c("chr", "rsid", "pos", "a1", "a0")
+}
+
 # perform SNP matching
 info_snp <- snp_match(sumstats, map)
 # Assign the genotype to a variable for easier downstream analysis
@@ -129,22 +148,25 @@ genotypes <- obj.bigSNP$genotypes <- snp_fastImputeSimple(
 # Rename the data structures
 CHR <- map$chr
 POS <- map$pos
-# get the CM information from 1000 Genome
-# will download the 1000G file to the current directory (".")
 POS2 <- snp_asGeneticPos(CHR, POS, ncores = NCORES)
-# calculate LD
 for (chr in 1:22) {
     # Extract SNPs that are included in the chromosome
     ind.chr <- which(info_snp$chr == chr)
     ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]
-    # Calculate the LD
-    corr0 <- snp_cor(
-            genotypes,
-            ind.col = ind.chr2,
-            ncores = NCORES,
-            infos.pos = POS2[ind.chr2],
-            size = 3 / 1000
-        )
+
+    if (opt$read_ldmat != "") {
+        # if we are using external LD mat data
+        ind.chr3 <- match(ind.chr2, which(map$chr == chr))
+        corr0 <- readRDS(paste0(ld_path[[1]], chr, ld_path[[2]]))[ind.chr3, ind.chr3]
+    } else {
+        corr0 <- snp_cor(
+                genotypes,
+                ind.col = ind.chr2,
+                ncores = NCORES,
+                infos.pos = POS2[ind.chr2],
+                size = 3 / 1000
+            )
+    }
     if (chr == 1) {
         ld <- Matrix::colSums(corr0^2)
         corr <- as_SFBM(corr0)
@@ -159,8 +181,6 @@ df.out <- as.data.table(obj.bigSNP$fam)
 setnames(df.out,
         c("family.ID", "sample.ID"),
         c("FID", "IID"))
-
-
 
 # LD score reg
 if (!use_zscore){

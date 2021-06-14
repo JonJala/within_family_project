@@ -78,6 +78,10 @@ def make_diagnostic_plots(df_dict, df_args, plot_prefix = ".",
                          savefig = True):
     
     REF = pd.read_csv(REF_file, delim_whitespace = True)
+    ref_map_file = "/var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.RSMID.MAPFILE.HRC.chr1_22_X.txt"
+    REF_map = pd.read_csv(ref_map_file, delim_whitespace = True)
+    REF_map['ChrPosID'] = REF_map['chr'].astype(str) + ':' + REF_map['pos'].astype(str)
+    REF = REF.merge(REF_map, on = "ChrPosID")
     
     for cohort in df_dict:
         
@@ -85,9 +89,7 @@ def make_diagnostic_plots(df_dict, df_args, plot_prefix = ".",
         
         # process data
         df_in = df_dict[cohort]
-        df_in[cohort] = df_in[f'CHR_{cohort}'].astype(str) + ":" + df_in[f'BP_{cohort}'].astype(str)
-        df_in['cptid'] = df_in[f'CHR_{cohort}'].astype(str) + ":" + df_in[f'BP_{cohort}'].astype(str)
-        df_merged = df_in.merge(REF, left_on = "cptid", right_on = "ChrPosID",
+        df_merged = df_in.merge(REF, left_on = "SNP", right_on = "rsmid",
                        how = "left")
         
         # calculating f outliers
@@ -160,5 +162,5 @@ if __name__ == '__main__':
 
     print("Running diagnostics on input files...")
     dfdiag = print_sumstats(df_dict, data_args)
-    dfdiag.to_csv(args.outprefix + ".sumstats.csv")
+    dfdiag.to_csv(args.outprefix + ".diag.sumstats.csv")
     make_diagnostic_plots(df_dict, data_args, args.outprefix)

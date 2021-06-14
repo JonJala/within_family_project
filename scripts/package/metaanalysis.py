@@ -1,7 +1,6 @@
 import numpy as np
 import scipy.stats
 from parsedata import *
-from readfiles import *
 
 
 def adjust_S_by_phvar(S_dict, phvar_dict):

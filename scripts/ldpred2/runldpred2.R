@@ -1,5 +1,7 @@
 t0 <- proc.time()
 
+cat("Start time:\n", t0)
+
 library(data.table)
 library(magrittr)
 library(rlang)
@@ -114,6 +116,7 @@ if (!use_zscore){
 # Filter out hapmap SNPs
 sumstats <- sumstats[sumstats$rsid %in% info$SNP,]
 cat("Sumstats file:\n")
+cat("Nrows: ", nrow(sumstats))
 head(sumstats)
 
 file.remove(paste0(bfile, ".bk"))
@@ -121,6 +124,7 @@ file.remove(paste0(bfile, ".bk"))
 # Get maximum amount of cores
 NCORES <- nb_cores()
 # preprocess the bed file (only need to do once for each data set)
+cat("Reading the bed file...")
 rds <- snp_readBed(paste0(bfile, ".bed"), backingfile = bfile)
 obj.bigSNP <- snp_attach(rds)
 
@@ -148,6 +152,7 @@ genotypes <- obj.bigSNP$genotypes <- snp_fastImputeSimple(
 # Rename the data structures
 CHR <- map$chr
 POS <- map$pos
+cat("Calculating the LD Matrix...\n")
 POS2 <- snp_asGeneticPos(CHR, POS, ncores = NCORES)
 for (chr in 1:22) {
     # Extract SNPs that are included in the chromosome
@@ -183,6 +188,7 @@ setnames(df.out,
         c("FID", "IID"))
 
 # LD score reg
+cat("Conducting the LD-Score Regression")
 if (!use_zscore){
     df_beta <- info_snp[,c("beta", "beta_se", "n_eff", "_NUM_ID_")]
     ldsc <- snp_ldsc(   ld, 
@@ -210,6 +216,7 @@ if (!use_zscore){
 
 # auto model
 # Get adjusted beta from the auto model
+cat("Calculating the PGI")
 multi_auto <- snp_ldpred2_auto(
     corr,
     df_beta,
@@ -220,15 +227,14 @@ multi_auto <- snp_ldpred2_auto(
 beta_auto <- sapply(multi_auto, function(auto) {auto$beta_est})
 
 # obtain pgi
-# calculate PRS for all samples
 ind.test <- 1:nrow(genotypes)
-final_beta_auto <- rowMeans(beta_auto)
-pred_auto <- big_prodVec(genotypes,
-                        final_beta_auto,
-                        ind.row = ind.test,
-                        ind.col = info_snp$`_NUM_ID_`)
+pred_auto <- big_prodMat(
+    genotypes, beta_auto,
+    ind.row = ind.test, ind.col = info_snp$`_NUM_ID_`
+)
+final_pred_auto <- rowMeans(pred_auto)
 
-df.out$PGI <- pred_auto
+df.out[, PGI := final_pred_auto]
 
 fwrite(df.out, opt$outfile)
 

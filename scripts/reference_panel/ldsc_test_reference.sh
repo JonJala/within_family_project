@@ -21,9 +21,16 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --chunksize 50000
 
 
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats ${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide \
+# --N 807553 --signed-sumstat LogOR,0 \
+# --chunksize 50000
+
 ${ldscpath}/munge_sumstats.py  \
---sumstats ${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.txt \
+--sumstats ${within_family_path}/processed/smoking_ref/Smokinginit.txt \
 --merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide \
---N 807553 --signed-sumstat LogOR,0 \
+--out ${within_family_path}/processed/smoking_ref/Smokinginit \
+--N-col EFFECTIVE_N --ignore N --a1 REF --a2 ALT \
 --chunksize 50000

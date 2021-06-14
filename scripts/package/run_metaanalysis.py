@@ -44,7 +44,6 @@ if __name__ == '__main__':
     if args.diag:
         print("Running diagnostics on input files...")
         dfdiag = print_sumstats(df_dict, data_args)
-        print(type(dfdiag))
         dfdiag.to_csv(args.outprefix + ".sumstats.csv")
         make_diagnostic_plots(df_dict, data_args, args.outprefix)
     df_merged = merging_data(list(df_dict.values()))

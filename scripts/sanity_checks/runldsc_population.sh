@@ -117,20 +117,20 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --out /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_pop.sumstats
 
 
-python ${ldsc_path}/ldsc.py \
---rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_dir.sumstats.sumstats.gz,${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz \
---ref-ld-chr ${eur_w_ld_chr} \
---w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/processed/mdd_ref/mdd_dir
+# python ${ldsc_path}/ldsc.py \
+# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_dir.sumstats.sumstats.gz,${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz \
+# --ref-ld-chr ${eur_w_ld_chr} \
+# --w-ld-chr ${eur_w_ld_chr} \
+# --out ${within_family_path}/processed/mdd_ref/mdd_dir
 
-python ${ldsc_path}/ldsc.py \
---rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_pop.sumstats.sumstats.gz,${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz \
---ref-ld-chr ${eur_w_ld_chr} \
---w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/processed/mdd_ref/mdd_pop
+# python ${ldsc_path}/ldsc.py \
+# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_pop.sumstats.sumstats.gz,${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz \
+# --ref-ld-chr ${eur_w_ld_chr} \
+# --w-ld-chr ${eur_w_ld_chr} \
+# --out ${within_family_path}/processed/mdd_ref/mdd_pop
 
-python ${ldsc_path}/ldsc.py \
---rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_dir.sumstats.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_pop.sumstats.sumstats.gz \
---ref-ld-chr ${eur_w_ld_chr} \
---w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/processed/mdd_ref/mdd_dir_pop
+# python ${ldsc_path}/ldsc.py \
+# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_dir.sumstats.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_pop.sumstats.sumstats.gz \
+# --ref-ld-chr ${eur_w_ld_chr} \
+# --w-ld-chr ${eur_w_ld_chr} \
+# --out ${within_family_path}/processed/mdd_ref/mdd_dir_pop

@@ -35,14 +35,14 @@ ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/bmi/meta_analysis_pop.sumstats.gz,${within_family_path}/processed/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/notebooks/creating_package/bmi/bmi_reference_sample
+--out ${within_family_path}/processed/package_output/bmi/bmi_reference_sample
 
 
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/bmi/meta_analysis_dir.sumstats.gz,${within_family_path}/processed/metal_output/metal_dir_bmi1_munged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/notebooks/creating_package/bmi/metal_dir
+--out ${within_family_path}/processed/package_output/bmi/metal_dir
 
 
 echo "Calculating rg between population and direct effects"
@@ -50,6 +50,6 @@ ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/bmi/meta_analysis_dir.sumstats.gz,${within_family_path}/processed/package_output/bmi/meta_analysis_pop.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/notebooks/creating_package/bmi/dir_pop \
+--out ${within_family_path}/processed/package_output/bmi/dir_pop \
 --intercept-h2 1.0,1.0 \
 --intercept-gencov 0.6660485401777425,0.6660485401777425

@@ -2,6 +2,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import argparse
+import datetime as dt
+import json
 
 import matplotlib as mpl
 mpl.rcParams['agg.path.chunksize'] = 10000
@@ -70,8 +73,9 @@ def print_sumstats(df_dict, df_args, hm3path = "/disk/genetics2/pub/data/PH3_Ref
 
 
 
-def make_diagnostic_plots(df_dict, df_args, plot_prefix,
-                         REF_file = "/var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.ALLELE_FREQUENCY.MAPFILE.HRC.chr1_22_X.LET.FLIPPED_ALLELE_1000G+UK10K.txt"):
+def make_diagnostic_plots(df_dict, df_args, plot_prefix = ".",
+                         REF_file = "/var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.ALLELE_FREQUENCY.MAPFILE.HRC.chr1_22_X.LET.FLIPPED_ALLELE_1000G+UK10K.txt",
+                         savefig = True):
     
     REF = pd.read_csv(REF_file, delim_whitespace = True)
     
@@ -124,8 +128,37 @@ def make_diagnostic_plots(df_dict, df_args, plot_prefix,
         
         fig.tight_layout()
         
-        plt.savefig(plot_prefix + cohort + ".png")
+        if savefig:
+            plt.savefig(plot_prefix + cohort + ".png")
+        else:
+            plt.show()
         
         print("Outputted plot!")
         
         
+if __name__ == '__main__':
+    # parse arguments
+    parser=argparse.ArgumentParser()
+    parser.add_argument('path2json', type=str, 
+                        help='''Path to json file describing input
+                        files''')
+    parser.add_argument('--outprefix', type=str, help='''
+    Location to output association statistic hdf5 file. 
+    Outputs text output to outprefix.sumstats.gz and HDF5 
+    output to outprefix.sumstats.hdf5''', default='')
+    args=parser.parse_args()
+
+    startTime = dt.datetime.now()
+    print(f'Start time: {startTime}')
+    
+    # reading in files
+    with open(args.path2json) as f:
+        data_args = json.load(f)
+    
+    # parsing
+    df_dict = read_from_json(data_args)
+
+    print("Running diagnostics on input files...")
+    dfdiag = print_sumstats(df_dict, data_args)
+    dfdiag.to_csv(args.outprefix + ".sumstats.csv")
+    make_diagnostic_plots(df_dict, data_args, args.outprefix)

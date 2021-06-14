@@ -177,30 +177,42 @@ def filter_allele_matches(df, alleles, theta, S):
     return df
     
 
-def _align_alleles(z, alleles):
+def _align_alleles(z, f, alleles):
     '''Align Z1 and Z2 to same choice of ref allele (allowing for strand flip).'''
     
     z = np.array(z.tolist())
-    mult = np.array((-1) ** alleles.apply(lambda y: FLIP_ALLELES[y] if pd.notna(y) else None), dtype = float)
+    f = np.array(f.tolist())
+    flip_idx = np.array(alleles.apply(lambda y: FLIP_ALLELES[y] if pd.notna(y) else False).tolist(), dtype = bool)
+    # flip z
+    mult = (-1) ** flip_idx
     z = z * mult[:, None]
-    
-    return z
+
+    # flip 
+    f[flip_idx] = 1.0 - f[flip_idx]
+
+    return z, f
 
 @logdf
-def align_alleles(df, zname, alleles, chunksize = 1_000_000):
+def align_alleles(df, zname, f, alleles, chunksize = 1_000_000):
     
     z = np.array(df[zname].tolist())
     assert z.shape[0] == df[alleles].shape[0] 
+    assert z.shape[0] == df[f].shape[0] 
     N = z.shape[0]
     steps = np.arange(0, z.shape[0], step = chunksize)
     steps = np.hstack((steps, N))
     zout = np.zeros_like(z)
+    fout = np.zeros(N)
     
     for i in range(len(steps) - 1):
-        zout[steps[i]:(steps[i+1] - 1)] = _align_alleles(z[steps[i]:(steps[i+1] - 1)] , df[alleles][steps[i]:(steps[i+1] - 1)] )
+        zout[steps[i]:(steps[i+1] - 1)], fout[steps[i]:(steps[i+1] - 1)] = _align_alleles(z[steps[i]:(steps[i+1] - 1)] , 
+                                                        df[f][steps[i]:(steps[i+1] - 1)],
+                                                        df[alleles][steps[i]:(steps[i+1] - 1)],)
         
     zout = pd.Series(zout.tolist())
+    fout = pd.Series(fout.tolist())
     df[zname] = zout
+    df[f] = fout
         
     return df
 
@@ -212,7 +224,7 @@ def filter_and_align(df, cohorts):
     
     for cohort in cohorts:
         dfout = filter_allele_matches(dfout, f'allele_merge_{cohort}', f'theta_{cohort}', f'S_{cohort}')
-        dfout = align_alleles(dfout, f'theta_{cohort}', f'allele_merge_{cohort}')
+        dfout = align_alleles(dfout, f'theta_{cohort}', f'f_{cohort}', f'allele_merge_{cohort}')
         
     return dfout
 

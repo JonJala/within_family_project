@@ -124,7 +124,7 @@ file.remove(paste0(bfile, ".bk"))
 # Get maximum amount of cores
 NCORES <- nb_cores()
 # preprocess the bed file (only need to do once for each data set)
-cat("Reading the bed file...")
+cat("Reading the bed file...\n")
 rds <- snp_readBed(paste0(bfile, ".bed"), backingfile = bfile)
 obj.bigSNP <- snp_attach(rds)
 
@@ -154,16 +154,22 @@ CHR <- map$chr
 POS <- map$pos
 cat("Calculating the LD Matrix...\n")
 POS2 <- snp_asGeneticPos(CHR, POS, ncores = NCORES)
+cat("LD Mat reading option:", opt$read_ldmat, "\n")
 for (chr in 1:22) {
+
+    cat("Reading chromosome number", chr, "...\n")
+
     # Extract SNPs that are included in the chromosome
     ind.chr <- which(info_snp$chr == chr)
     ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]
 
     if (opt$read_ldmat != "") {
+        cat("Reading LDmatrix\n")
         # if we are using external LD mat data
-        ind.chr3 <- match(ind.chr2, which(map$chr == chr))
+        ind.chr3 <- match(ind.chr2, which(CHR == chr))
         corr0 <- readRDS(paste0(ld_path[[1]], chr, ld_path[[2]]))[ind.chr3, ind.chr3]
     } else {
+        cat("Calculating LD Matrix\n")
         corr0 <- snp_cor(
                 genotypes,
                 ind.col = ind.chr2,
@@ -188,7 +194,7 @@ setnames(df.out,
         c("FID", "IID"))
 
 # LD score reg
-cat("Conducting the LD-Score Regression")
+cat("Conducting the LD-Score Regression\n")
 if (!use_zscore){
     df_beta <- info_snp[,c("beta", "beta_se", "n_eff", "_NUM_ID_")]
     ldsc <- snp_ldsc(   ld, 
@@ -216,7 +222,7 @@ if (!use_zscore){
 
 # auto model
 # Get adjusted beta from the auto model
-cat("Calculating the PGI")
+cat("Calculating the PGI\n")
 multi_auto <- snp_ldpred2_auto(
     corr,
     df_beta,
@@ -236,6 +242,7 @@ final_pred_auto <- rowMeans(pred_auto)
 
 df.out[, PGI := final_pred_auto]
 
+cat("Outputting final file...\n")
 fwrite(df.out, opt$outfile)
 
 t1 <- proc.time()

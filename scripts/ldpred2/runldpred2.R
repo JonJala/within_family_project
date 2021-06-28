@@ -27,6 +27,34 @@ remove_ambig_alleles = function(dat, allele1name, allele2name){
 
 }
 
+import_validation_bed <- function(file, bkfile) {
+
+    rds_file <- paste0(file, ".rds")
+    rds_file_backup <- paste0(file, ".bk")
+    rds_file_bk <- paste0(bkfile, ".rds")
+    rds_file_bk_backup <- paste0(rds_file_bk, ".bk")
+
+    if (file.exists(rds_file) & file.exists(rds_file_backup)) {
+        cat("Reading RDS File from", rds_file, "\n")
+        obj.bigSNP <- snp_attach(rds_file)
+    } else if (file.exists(rds_file_bk) & file.exists(rds_file_bk_backup)) {
+        cat("Reading RDS File from", rds_file_bk, "\n")
+        obj.bigSNP <- snp_attach(rds_file_bk)
+    } else {
+        cat("Reading bed file from", file, "\n")
+        
+        if (bkfile == ""){
+            file.remove(paste0(bfile, ".bk"))
+            rds <- snp_readBed(paste0(file, ".bed"))
+        } else {
+            file.remove(paste0(bkfile, ".bk"))
+            rds <- snp_readBed(paste0(file, ".bed"), backingfile = bkfile)
+        }
+        obj.bigSNP <- snp_attach(rds)
+    }
+    return(obj.bigSNP)
+}
+
 
 ####### Options ###########
 
@@ -60,13 +88,18 @@ option_list = list(
     Overrides the N_col option", metavar="character"),
     make_option(c("--read_ldmat"),  type="character", default="", help="Read the LD matrix from an RDS file.
     If empty will calculate the LD matrix from the genotype data. If non-empty provide two files which are comma
-    seperated - the actual data with the LD matrices with ~ instead of the chromosome, and the map data.", metavar="character")
+    seperated - the actual data with the LD matrices with ~ instead of the chromosome, and the map data.", metavar="character"),
+    make_option(c("--bed_backup"),  type="character", default="", help="To read the bed file a backup file needs
+    to be created. This specifies where that will be. If empty, its the same location as the bed file itself.", metavar="character"),
+    make_option(c("--predout"),  action="store_true", default=FALSE, help="Should PGIs also be calculated and
+    outputted. If no the script will only output the weights.", metavar="character"),
+    make_option(c("--scale_pgi"),  action="store_true", default=FALSE, help="If true PGI's are standardized
+    to have mean 0 and variance 1. Only works if the predout option is chosen.", metavar="character")
 )
 
 
 opt_parser = OptionParser(option_list = option_list)
 opt = parse_args(opt_parser)
-
 
 bfile = opt$bfile
 
@@ -116,18 +149,21 @@ if (!use_zscore){
 # Filter out hapmap SNPs
 sumstats <- sumstats[sumstats$rsid %in% info$SNP,]
 cat("Sumstats file:\n")
-cat("Nrows: ", nrow(sumstats))
+cat("Nrows: ", nrow(sumstats), "\n")
 head(sumstats)
 
-file.remove(paste0(bfile, ".bk"))
+
 # calcualte LD matrix
 # Get maximum amount of cores
 NCORES <- nb_cores()
+
 # preprocess the bed file (only need to do once for each data set)
 cat("Reading the bed file...\n")
-rds <- snp_readBed(paste0(bfile, ".bed"), backingfile = bfile)
-obj.bigSNP <- snp_attach(rds)
-
+obj.bigSNP <- import_validation_bed(bfile, opt$bed_backup)
+n_individuals = nrow(obj.bigSNP$fam)
+n_snps = nrow(obj.bigSNP$map)
+cat("Number of individuals in bed file:", n_individuals, "\n")
+cat("Number of SNPs in bed file:", n_snps, "\n")
 
 # extract the SNP information from the genotype
 # Open a temporary file
@@ -149,6 +185,8 @@ genotypes <- obj.bigSNP$genotypes <- snp_fastImputeSimple(
     obj.bigSNP$genotypes,
     method = "random", ncores = nb_cores()
 )
+
+
 # Rename the data structures
 CHR <- map$chr
 POS <- map$pos
@@ -190,8 +228,8 @@ for (chr in 1:22) {
 df.out <- as.data.table(obj.bigSNP$fam)
 # Rename fam order
 setnames(df.out,
-        c("family.ID", "sample.ID"),
-        c("FID", "IID"))
+        old = c("family.ID", "sample.ID"),
+        new = c("FID", "IID"))
 
 # LD score reg
 cat("Conducting the LD-Score Regression\n")
@@ -231,20 +269,47 @@ multi_auto <- snp_ldpred2_auto(
     ncores = NCORES
 )
 beta_auto <- sapply(multi_auto, function(auto) {auto$beta_est})
-
-# obtain pgi
 ind.test <- 1:nrow(genotypes)
-pred_auto <- big_prodMat(
-    genotypes, beta_auto,
-    ind.row = ind.test, ind.col = info_snp$`_NUM_ID_`
+final_beta_auto <- rowMeans(beta_auto)
+
+
+df.out.wt <- as.data.table(info_snp[, c("chr", "pos",  "rsid.ss", "a1", "a0")])
+df.out.wt[, ldpred_beta := final_beta_auto]
+setnames(df.out.wt,
+    old = c("chr", "pos", "rsid.ss", "a1", "a0"),
+    new = c("chrom", "pos", "sid", "nt1", "nt2")
 )
-final_pred_auto <- rowMeans(pred_auto)
 
-df.out[, PGI := final_pred_auto]
+cat("Outputting weight file...\n")
+fwrite(df.out.wt, paste0(opt$outfile, ".wt.txt.gz"),  sep = " ", na = ".")
 
-cat("Outputting final file...\n")
-fwrite(df.out, opt$outfile)
+if (opt$predout) {
+    
+    final_pred_auto <- big_prodVec(
+        genotypes, final_beta_auto,
+        ind.row = ind.test, ind.col = info_snp$`_NUM_ID_`
+    )
+
+    df.out[, PGI := final_pred_auto]
+
+    if opt$scale_pgi{
+
+        df.out[, PGI := (PGI - mean(PGI, na.rm = TRUE)/sd(PGI, na.rm = TRUE))]
+        cat("PGI has been standarized!\n")
+    }
+    cat("Outputting PGI file...\n")
+    fwrite(df.out, paste0(opt$outfile, ".pgi.txt.gz"), sep = " ", na = ".")
+
+}
+
+# remove bk files
+if (opt$bed_backup == ""){
+    file.remove(paste0(bfile, ".bk"))
+} else {
+    file.remove(paste0(opt$bed_backup, ".bk"))
+}
 
 t1 <- proc.time()
 time <- t1 - t0
-cat("Time Taken for Script:", time[3]/60, "minutes\n")
+timeminutes = time[3]/60
+cat("Time Taken for Script:", timeminutes, "minutes\n")

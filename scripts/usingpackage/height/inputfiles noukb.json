@@ -1,0 +1,58 @@
+{
+"str": {
+"path2file" : "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/height/height_chr*.hdf5",
+"bim" : "bim",
+"bim_chromosome" : 0,
+"bim_bp" : 3,
+"bim_rsid" : 1,
+"bim_a1" : 4,
+"bim_a2" : 5,
+"estimate" : "estimate",
+"estimate_ses" : "estimate_ses",
+"estimate_covariance" : "estimate_covariance",
+"sigma2" : "sigma2",
+"tau" : "tau",
+"freqs" : "freqs",
+"rsid_readfrombim" : "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPs/chr_*.bim,3,1, ",
+"maf" : 1,
+"effect_transform" : "full"
+},
+"ft" : {
+"path2file" : "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/height.chr*.hdf5",
+"bim" : "bim",
+"bim_chromosome" : 0,
+"bim_bp" : 2,
+"bim_rsid" : 1,
+"bim_a1" : 3,
+"bim_a2" : 4,
+"estimate" : "estimate",
+"estimate_ses" : "estimate_ses",
+"estimate_covariance" : "estimate_covariance",
+"sigma2" : "sigma2",
+"tau" : "tau",
+"freqs" : "freqs",
+"rsid_readfrombim" : "",
+"maf" : 1,
+"effect_transform" : "full"
+},
+
+"gs" : {
+"path2file" : "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/5/chr_*chr_clean.hdf5",
+"bim" : "bim",
+"bim_chromosome" : 0,
+"bim_bp" : 2,
+"bim_rsid" : 1,
+"bim_a1" : 3,
+"bim_a2" : 4,
+"estimate" : "estimate",
+"estimate_ses" : "estimate_ses",
+"estimate_covariance" : "estimate_covariance",
+"sigma2" : "sigma2",
+"tau" : "tau",
+"freqs" : "freqs",
+"rsid_readfrombim" : "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/SNPs/chr_*_rsids.txt,3,1, ",
+"maf" : 1,
+"effect_transform" : "direct_plus_averageparental"
+}
+
+}

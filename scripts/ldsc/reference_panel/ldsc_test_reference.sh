@@ -36,9 +36,32 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --chunksize 50000
 
 
-${ldscpath}/munge_sumstats.py  \
---sumstats ${within_family_path}/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.txt \
---merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018 \
---N-col EFFECTIVE_N --a1 Tested_Allele --a2 Other_Allele --frq Freq_Tested_Allele_in_HRS \
---chunksize 50000
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats ${within_family_path}/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018 \
+# --N-col EFFECTIVE_N --a1 Tested_Allele --a2 Other_Allele --frq Freq_Tested_Allele_in_HRS \
+# --chunksize 50000
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats ${within_family_path}/processed/dep_ref/DS_Full.txt \
+# --merge-alleles ${merge_alleles} \
+# --N 161460 \
+# --out ${within_family_path}/processed/dep_ref/DS_Full \
+# --chunksize 50000
+
+# Hourly Income
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats ${within_family_path}/processed/inc_ref/GWAS_hourly_wage_UKB.txt \
+# --merge-alleles ${merge_alleles} \
+# --N 35000 \
+# --out ${within_family_path}/processed/inc_ref/hourly_wage \
+# --chunksize 50000
+
+# HH Income
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats ${within_family_path}/processed/inc_ref/Household_Income_UKBiobank.txt.gz \
+# --merge-alleles ${merge_alleles} \
+# --N 286301 --a1 Effect_Allele --a2 Non_effect_Allele \
+# --out ${within_family_path}/processed/inc_ref/hh_wage \
+# --chunksize 50000

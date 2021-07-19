@@ -281,7 +281,7 @@ setnames(df.out.wt,
 )
 
 cat("Outputting weight file...\n")
-fwrite(df.out.wt, paste0(opt$outfile, ".wt.txt.gz"),  sep = " ", na = ".")
+fwrite(df.out.wt, paste0(opt$outfile, ".wt.txt"),  sep = " ", na = ".")
 
 if (opt$predout) {
     
@@ -292,13 +292,13 @@ if (opt$predout) {
 
     df.out[, PGI := final_pred_auto]
 
-    if opt$scale_pgi{
+    if (opt$scale_pgi) {
 
         df.out[, PGI := (PGI - mean(PGI, na.rm = TRUE)/sd(PGI, na.rm = TRUE))]
         cat("PGI has been standarized!\n")
     }
     cat("Outputting PGI file...\n")
-    fwrite(df.out, paste0(opt$outfile, ".pgi.txt.gz"), sep = " ", na = ".")
+    fwrite(df.out, paste0(opt$outfile, ".pgi.txt"), sep = " ", na = ".")
 
 }
 

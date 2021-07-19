@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     df_toarray = (df_toarray
     .pipe(begin_pipeline)
-    .pipe(combine_cols, 'CHR', [c for c in df_toarray if c.startswith('CHR_')])
+    .pipe(combine_cols, 'CHR', [c for c in df_toarray if c.startswith('CHR_')], 0)
     .pipe(combine_cols, 'BP', [c for c in df_toarray if c.startswith('BP_')])
     )
     

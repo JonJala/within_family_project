@@ -32,7 +32,6 @@
     "ukb": {
         "path2file" : "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/chr_*.sumstats.hdf5",
         "bim" : "bim",
-        "bim_chromosome" : 0,
         "bim_bp" : 2,
         "bim_rsid" : 1,
         "bim_a1" : 3,

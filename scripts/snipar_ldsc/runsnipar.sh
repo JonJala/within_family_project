@@ -1,5 +1,9 @@
 #!/usr/bin/bash
 
+
+# Running snipar for individual
+# Cohorts to see if things look fine
+
 sniparpath="/homes/nber/harij/gitrepos/SNIPar"
 within_family_path="/homes/nber/harij/within_family"
 ldscpath="/homes/nber/harij/ldsc"

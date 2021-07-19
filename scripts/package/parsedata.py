@@ -8,6 +8,7 @@ from numba import njit
 import datetime as dt
 from fastmode import *
 from df_helpers import *
+import re
 
 
 # complementary bases
@@ -229,12 +230,24 @@ def filter_and_align(df, cohorts):
     return dfout
 
 @logdf
-def combine_cols(df, colname, cols):
+def combine_cols(df, colname, cols, na_replace = None):
+    '''
+    df : dataframe
+    colname : final column name
+    cols : list of col names to combine
+    na_replace : values which we should consider as NAs
+    '''
+
     
     lencols = len(cols)
     
-    df[colname] = df[cols[0]]
-    for i in range(1, lencols):
+    # initialize with empty column
+    df[colname] = np.NaN
+
+    if na_replace is not None:
+        df[cols] = df[cols].replace(na_replace, np.NaN)
+
+    for i in range(lencols):
         df.loc[df[colname].isna(), colname] = df[cols[i]]
         
     return df
@@ -253,6 +266,18 @@ def return_rsid(file, bp_pos, rsid_pos, filesep):
     return bimfile
 
 
+def parse_chr(args, file):
+
+    print("Trying to parse chromosome number from file.")
+    filenames = args['path2file']
+    chrpos = filenames.index("*")
+    chromosome = file[chrpos:chrpos+2]
+    chromosome = re.findall('\d+', chromosome)[0]
+
+    print("Chromosome parsed as: ", chromosome)
+
+    return chromosome
+
 def read_hdf5(args, printinfo = True):
     # == Reading in data == #
     if printinfo:
@@ -267,7 +292,11 @@ def read_hdf5(args, printinfo = True):
         print("Reading in file: ", file)
     hf = h5py.File(file, 'r')
     metadata = hf.get(args['bim'])[()]
-    chromosome = metadata[:, args['bim_chromosome']]
+    if 'bim_chromosome' in args:
+        chromosome = metadata[:, args['bim_chromosome']]
+    else:
+        chromosome = parse_chr(args, file)
+        chromosome = np.repeat(chromosome, metadata.shape[0])
     bp = metadata[:, args['bim_bp']]
     if args['rsid_readfrombim'] != '':
         snp = np.zeros(bp.shape[0])
@@ -293,7 +322,11 @@ def read_hdf5(args, printinfo = True):
                 print("Reading in file: ", file)
             hf = h5py.File(file, 'r')
             metadata = hf.get(args['bim'])[()]
-            chromosome_file = metadata[:, args['bim_chromosome']]
+            if 'bim_chromosome' in args:
+                chromosome_file = metadata[:, args['bim_chromosome']]
+            else:
+                chromosome_file = parse_chr(args, file)
+                chromosome_file = np.repeat(chromosome_file, metadata.shape[0])
             bp_file = metadata[:, args['bim_bp']]
             if args['rsid_readfrombim'] != '':
                 snp_file = np.zeros(bp_file.shape[0])

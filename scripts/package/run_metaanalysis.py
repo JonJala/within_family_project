@@ -48,15 +48,14 @@ if __name__ == '__main__':
         make_diagnostic_plots(df_dict, data_args, args.outprefix)
     df_merged = merging_data(list(df_dict.values()))
 
+    # Filtering and aligning alleles/effects
     allele_cols = [col for col in df_merged if col.startswith('alleles')]
     df_merged['allele_consensus'] = df_fastmode(df_merged, allele_cols)
     df_merged = df_merged.dropna(subset = ["SNP"])
     df_merged = create_allele_consensus(df_merged, allele_cols)
-    
-    
-    # creating data frame ready to become an array
     df_toarray = filter_and_align(df_merged, list(data_args.keys()))
 
+    # creating data frame ready to become an array
     df_toarray = (df_toarray
     .pipe(begin_pipeline)
     .pipe(combine_cols, 'CHR', [c for c in df_toarray if c.startswith('CHR_')], 0)
@@ -70,16 +69,12 @@ if __name__ == '__main__':
     theta_vec = extract_vector(df_toarray, "theta")
     S_vec = extract_vector(df_toarray, "S_")
     phvar_vec = extract_vector(df_toarray, "phvar")
-    
     phvar_vec = get_phvar_scalar(phvar_vec)
-    
     theta_vec_adj, S_vec_adj  = transform_estimates_dict(theta_vec, S_vec, data_args)
-    
     theta_vec_adj = adjust_theta_by_phvar(theta_vec_adj, phvar_vec)
     S_vec_adj = adjust_S_by_phvar(S_vec_adj, phvar_vec)
     
     wt = get_wts(S_vec_adj)
-    
     nan_to_num_dict(wt, theta_vec_adj)
     
     # run analysis
@@ -109,6 +104,9 @@ if __name__ == '__main__':
     est1_type = args.outestimates.split("_")[0]
     est2_type = args.outestimates.split("_")[-1]
     
+    Neff_dir = neff(f_bar, theta_ses_out[:, 0])
+    Neff_effect1 = neff(f_bar, theta_ses[:, 1])
+    Neff_effect2 = neff(f_bar, theta_ses_out[:, 1])
     
     # combining everything into a dataframe
     df_out = pd.DataFrame(
@@ -122,14 +120,17 @@ if __name__ == '__main__':
             f'beta_{est2_type}' : theta_bar_out[:, 1].flatten(),
             'wt_dir' : wt_sum[:, 0, 0],
             'wt_2' : wt_sum[:, 1, 1],
+            'N_dir' : Neff_dir,
+            f'N_{est1_type}' : Neff_effect1,
+            f'N_{est2_type}' : Neff_effect2,
             'z_dir' : z_bar_out[:, 0].flatten(),
             f'z_{est1_type}' : z_bar[:, 1].flatten(),
             f'z_{est2_type}' : z_bar_out[:, 1].flatten(),
             'beta_se_dir' : theta_ses_out[:, 0],
             f'beta_se_{est1_type}' : theta_ses[:, 1],
             f'beta_se_{est2_type}' : theta_ses_out[:, 1],
-            f'beta_cov_{est1_type}': theta_var_out[:, 0, 1],
-            f'beta_cov_{est2_type}': theta_var[:, 0, 1],
+            f'beta_cov_{est1_type}': theta_var[:, 0, 1],
+            f'beta_cov_{est2_type}': theta_var_out[:, 0, 1],
             'pval_dir' : pval_out[:, 0].flatten(),
             f'pval_{est1_type}' : pval[:, 1].flatten(),
             f'pval_{est2_type}' : pval_out[:, 1].flatten(),

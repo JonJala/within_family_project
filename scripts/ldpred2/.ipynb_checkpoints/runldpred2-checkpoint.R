@@ -281,7 +281,6 @@ setnames(df.out.wt,
 )
 
 cat("Outputting weight file...\n")
-print(str(df.out.wt))
 fwrite(df.out.wt, paste0(opt$outfile, ".wt.txt"),  sep = " ", na = ".")
 
 if (opt$predout) {
@@ -299,7 +298,6 @@ if (opt$predout) {
         cat("PGI has been standarized!\n")
     }
     cat("Outputting PGI file...\n")
-    print(str(df.out))
     fwrite(df.out, paste0(opt$outfile, ".pgi.txt"), sep = " ", na = ".")
 
 }

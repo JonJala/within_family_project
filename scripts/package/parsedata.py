@@ -67,10 +67,10 @@ def maf_filter(df, maf):
 
 
 @logdf
-def filter_bad_alleles(df, a1, a2):
+def filter_bad_alleles(df, a1 = "A1", a2 = "A2"):
     '''Remove bad variants (mismatched alleles, non-SNPs, strand ambiguous).'''
     
-    alleles = df["A1"] + df["A2"]
+    alleles = df[a1] + df[a2]
     idx = alleles.apply(lambda y: y in VALID_SNPS)
     df = df[idx]
     

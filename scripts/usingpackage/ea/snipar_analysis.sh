@@ -9,7 +9,8 @@ python "${sniparpath}/ldsc_reg/run_estimates.py" \
         -e "full" \
         -bim_bp 2 -bim_a1 3 -bim_a2 4 \
         -maf 1 \
-        -l "${within_family_path}/processed/package_output/ea/snipar_avgparental.log"
+        -l "${within_family_path}/processed/package_output/ea/snipar_avgparental.log" \
+        --write-v-out "${within_family_path}/processed/package_output/ea/snipar_avgparental.varcov"
 
 python "${sniparpath}/ldsc_reg/run_estimates.py" \
         "${within_family_path}/processed/package_output/ea/ea_meta_analysis_population.sumstats.hdf5" \
@@ -17,6 +18,7 @@ python "${sniparpath}/ldsc_reg/run_estimates.py" \
         -e "full" \
         -bim_bp 2 -bim_a1 3 -bim_a2 4 \
         -maf 1 \
-        -l "${within_family_path}/processed/package_output/ea/snipar_population.log"
+        -l "${within_family_path}/processed/package_output/ea/snipar_population.log" \
+        --write-v-out "${within_family_path}/processed/package_output/ea/snipar_population.varcov"
 
 

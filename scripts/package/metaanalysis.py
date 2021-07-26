@@ -170,3 +170,12 @@ def freq_wted_sum(f_dict, wt_dict):
         f_bar += wt_dict[cohort] * f_dict[cohort]
     
     return f_bar
+
+
+def neff(f, se, phvar = 1):
+    '''
+    Get Effective N
+    '''
+
+    N = np.round(phvar*(2*f*(1-f)*se**2)**(-1))
+    return N

@@ -21,11 +21,11 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # Genetic Correlation: 0.8651 (0.1034)
 
 # Depressive symptoms
-python ${ldsc_path}/ldsc.py \
---rg /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/depanx.pop.sumstats.gz,/var/genetics/proj/within_family/within_family_project/processed/dep_ref/DS_Full.sumstats.gz \
---ref-ld-chr ${eur_w_ld_chr} \
---w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/processed/sanity_checks/moba/ldsc_depanx
+# python ${ldsc_path}/ldsc.py \
+# --rg /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/depanx.pop.sumstats.gz,/var/genetics/proj/within_family/within_family_project/processed/dep_ref/DS_Full.sumstats.gz \
+# --ref-ld-chr ${eur_w_ld_chr} \
+# --w-ld-chr ${eur_w_ld_chr} \
+# --out ${within_family_path}/processed/sanity_checks/moba/ldsc_depanx
 # Error, h2 of measure is <0 ?
 
 # Income
@@ -37,3 +37,4 @@ python ${ldsc_path}/ldsc.py \
 # Negative h2 again?
 
 
+## What is fertility

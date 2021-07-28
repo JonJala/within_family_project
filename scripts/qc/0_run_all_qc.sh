@@ -8,5 +8,5 @@ ssgacrepo="/homes/nber/harij/ssgac"
 
 
 bash /var/genetics/proj/within_family/within_family_project/scripts/qc/1_create_ldscsumstats.sh
-bash /var/genetics/proj/within_family/within_family_project/scripts/qc/2_qc_sumstats.sh
+# bash /var/genetics/proj/within_family/within_family_project/scripts/qc/2_qc_sumstats.sh
 

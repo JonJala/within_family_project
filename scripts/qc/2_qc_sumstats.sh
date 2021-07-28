@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+# NO longer used. We QC files within the QC script itself
 
 ssgacrepo="/homes/nber/harij/ssgac"
 

@@ -47,11 +47,16 @@ def df_mode(df, columns):
 
 
 @logdf
-def create_allele_consensus(df, columns):
+def allele_plus_alleleconsensus(df, columns, allele_consensus_name = 'allele_consensus'):
+    '''
+    Merges the reference allele column
+    with the given allele column.
+    This is to check for allele flipping.
+    '''
     
     cohort_names = [cols.split('_')[-1] for cols in columns]
     for i in range(len(columns)):
-        df[f'allele_merge_{cohort_names[i]}'] = df['allele_consensus'] + df[columns[i]]
+        df[f'allele_merge_{cohort_names[i]}'] = df[allele_consensus_name] + df[columns[i]]
         
     return df
 
@@ -155,6 +160,12 @@ def _filter_alleles_matches(alleles):
 
 @logdf
 def filter_allele_matches(df, alleles, theta, S):
+    '''
+    Takes out observations where alleles
+    aren't right. The observations arent actually dropped.
+    Instead the theta, and S values are made into
+    NA matrices
+    '''
     
     ii = _filter_alleles_matches(df[alleles])
     
@@ -186,15 +197,25 @@ def _align_alleles(z, f, alleles):
     flip_idx = np.array(alleles.apply(lambda y: FLIP_ALLELES[y] if pd.notna(y) else False).tolist(), dtype = bool)
     # flip z
     mult = (-1) ** flip_idx
-    z = z * mult[:, None]
+    if z.ndim == 1:
+        z = z * mult
+    else:
+        z = z * mult[:, None]
 
-    # flip 
+    # flip f
     f[flip_idx] = 1.0 - f[flip_idx]
 
     return z, f
 
 @logdf
 def align_alleles(df, zname, f, alleles, chunksize = 1_000_000):
+    '''
+    Aligns effect sizes (znames) and frequency (f)
+    if alleles need flipping
+
+    Note that the original z and f are replaced by
+    the flipped values.
+    '''
     
     z = np.array(df[zname].tolist())
     assert z.shape[0] == df[alleles].shape[0] 
@@ -204,11 +225,12 @@ def align_alleles(df, zname, f, alleles, chunksize = 1_000_000):
     steps = np.hstack((steps, N))
     zout = np.zeros_like(z)
     fout = np.zeros(N)
-    
+    print(steps)
+
     for i in range(len(steps) - 1):
-        zout[steps[i]:(steps[i+1] - 1)], fout[steps[i]:(steps[i+1] - 1)] = _align_alleles(z[steps[i]:(steps[i+1] - 1)] , 
-                                                        df[f][steps[i]:(steps[i+1] - 1)],
-                                                        df[alleles][steps[i]:(steps[i+1] - 1)],)
+        zout[steps[i]:(steps[i+1])], fout[steps[i]:(steps[i+1])] = _align_alleles(z[steps[i]:(steps[i+1])] , 
+                                                        df[f][steps[i]:(steps[i+1])],
+                                                        df[alleles][steps[i]:(steps[i+1])])
         
     zout = pd.Series(zout.tolist())
     fout = pd.Series(fout.tolist())
@@ -220,6 +242,10 @@ def align_alleles(df, zname, f, alleles, chunksize = 1_000_000):
 
 @logdf
 def filter_and_align(df, cohorts):
+    '''
+    Drops ambiguous alleles and
+    aligns effects if alleles are flipped
+    '''
     
     dfout = begin_pipeline(df)
     
@@ -232,6 +258,13 @@ def filter_and_align(df, cohorts):
 @logdf
 def combine_cols(df, colname, cols, na_replace = None):
     '''
+    Combines all the columns of the cohorts. Should be used for
+    something like SNPs or Chromosomes to get one identifier
+    for these. 
+
+    The function is naive and chooses the first non na
+    column to be the finalized column
+
     df : dataframe
     colname : final column name
     cols : list of col names to combine
@@ -613,17 +646,20 @@ def makeDmat(S):
     return Dmat
 
 
-
-def get_phvar(df, x):
-    
-    x_arr = np.array(df[x].dropna().tolist())
-    phvar = x_arr[0]
-    
-    return phvar
-
-
-
 def extract_vector(df, estimatename):
+
+    '''
+    df : pandas dataframe
+    estimatename: list of strings
+
+    assumes string in `estimatenames` follows
+    `{estimate_type}_{cohort}`.
+
+    extracts all the columns in `df` whos name starts
+    with the strings in `estimatename`. Then outputs a 
+    dictionary of vectors with names as `cohorts`.
+    '''
+
     
     vector_dict = {}
     cols = [col for col in df.columns if col.startswith(estimatename)]

@@ -52,7 +52,7 @@ if __name__ == '__main__':
     allele_cols = [col for col in df_merged if col.startswith('alleles')]
     df_merged['allele_consensus'] = df_fastmode(df_merged, allele_cols)
     df_merged = df_merged.dropna(subset = ["SNP"])
-    df_merged = create_allele_consensus(df_merged, allele_cols)
+    df_merged = allele_plus_alleleconsensus(df_merged, allele_cols)
     df_toarray = filter_and_align(df_merged, list(data_args.keys()))
 
     # creating data frame ready to become an array
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     wt_dir_sum = get_wt_sum(wt_dir)
     f_bar = f_bar/wt_dir_sum
 
-
+    # preparation for outdata
     est1_type = args.outestimates.split("_")[0]
     est2_type = args.outestimates.split("_")[-1]
     

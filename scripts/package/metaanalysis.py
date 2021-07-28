@@ -27,33 +27,19 @@ def adjust_theta_by_phvar(theta_dict, phvar_dict):
 
 
 def get_wts(S_dict):
+    '''
+    Dictionary of S matrices meant to
+    be inverted
+    '''
     
     wt_dict = {}
     
     for cohort in S_dict:
-        wt_dict[cohort] = np.linalg.inv(S_dict[cohort])
+        S_mat = np.atleast_2d(S_dict[cohort])
+        wt_dict[cohort] = np.linalg.inv(S_mat)
         
     return wt_dict
 
-
-def get_wt_sum(wt):
-    
-    '''
-    Get sum of weights.
-    Used for calculating variance covariance matrix
-    of estimates
-    
-    Also used as the effective N potentially for
-    direct and indirect effects
-    '''
-    
-    cohorts = list(wt.keys())
-    wtsum = np.zeros_like(wt[cohorts[0]])
-    
-    for cohort in cohorts:
-        wtsum += wt[cohort]
-        
-    return wtsum
 
 
 def get_wt_sum(wt):
@@ -115,7 +101,6 @@ def get_estimates(theta_dict, wt_dict):
     
     '''
     Get meta analyzed theta.
-
     '''
     
     theta_bar = theta_wted_sum(theta_dict, wt_dict)

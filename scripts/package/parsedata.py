@@ -489,6 +489,12 @@ def read_file(args, printinfo = True):
     else:
         raise Exception("Input file extension should either be hdf5 or txt")
 
+    #adding A matrix
+    Amat = args['Amat']
+    Amat = np.array(np.matrix(Amat))
+    N = zdata.shape[0]
+    Amatarray = np.array(Amat.tolist() * N).reshape(N, Amat.shape[0], Amat.shape[1])
+    zdata['amat'] = Amatarray.tolist()
 
     return zdata
 

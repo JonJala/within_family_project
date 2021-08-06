@@ -225,7 +225,6 @@ def align_alleles(df, zname, f, alleles, chunksize = 1_000_000):
     steps = np.hstack((steps, N))
     zout = np.zeros_like(z)
     fout = np.zeros(N)
-    print(steps)
 
     for i in range(len(steps) - 1):
         zout[steps[i]:(steps[i+1])], fout[steps[i]:(steps[i+1])] = _align_alleles(z[steps[i]:(steps[i+1])] , 

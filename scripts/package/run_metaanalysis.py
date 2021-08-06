@@ -63,6 +63,15 @@ if __name__ == '__main__':
     )
     
     df_toarray = df_toarray.sort_values("BP").reset_index(drop = True)
+
+    # properly formatting missing values
+    df_toarray = (
+        df_toarray
+        .pipe(begin_pipeline)
+        .pipe(make_array_cols_nas, 'theta_')
+        .pipe(make_array_cols_nas, 'S_')
+        .pipe(make_array_cols_nas, 'amat_')
+    )
     
     
     # == Array operations == #
@@ -81,7 +90,7 @@ if __name__ == '__main__':
     nan_to_num_dict(wt, theta_vec_adj)
     
     # run analysis
-    theta_bar, theta_var, wt_sum = get_estimates(theta_vec_adj, wt)
+    theta_bar, theta_var, wt_sum = get_estimates(theta_vec_adj, wt, Amat)
     theta_ses = get_ses(theta_var)
     z_bar = theta2z(theta_bar, theta_var)
     pval = get_pval(z_bar)

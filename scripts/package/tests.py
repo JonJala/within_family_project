@@ -259,6 +259,62 @@ class test_functions(unittest.TestCase):
 
         self.assertTrue(np.allclose(theta_var, theta_var_manual))
 
+    def test_full_meta(self):
+
+        theta_a = np.array([[0.3, 0.6],
+                            [0.5, 0.3]])
+
+        theta_b = np.array([[0.1, 0.3],
+                            [0.34, 0.8]])
+
+        theta_dict = dict(
+            A = theta_a,
+            B = theta_b
+        )
+
+        Amat = np.array(
+                [
+                    [[0.5, 0.3],
+                    [ 0.3, 0.5]],
+
+                    [[0.3, 0.6],
+                    [0.6, 0.1]]
+                ]
+            )
+
+        Bmat = np.array(
+                [
+                    [[0.1, 0.5],
+                    [0.5, 0.5]],
+
+                    [[0.3, 0.3],
+                    [0.3, 0.55]]
+                ]
+            )
+
+        atransform = np.random.rand(2, 2)
+        wt_a = atransform.T @ np.linalg.inv(Amat)
+        wt_b = atransform.T @ np.linalg.inv(Bmat)
+
+        theta_wted_sum_manual = wt_a @ theta_a[..., None]  + wt_b @ theta_b[..., None]
+        theta_out_manual = theta_wted_sum_manual
+        wtsum = wt_a @ atransform + wt_b @ atransform
+        theta_var_manual = np.linalg.inv(wtsum)
+        theta_estimates_manual = theta_var_manual @ theta_out_manual
+
+        wt_dict = dict(
+            A = atransform.T @ np.linalg.inv(Amat),
+            B = atransform.T @ np.linalg.inv(Bmat)
+        )
+
+        atransform_dict = dict(
+            A = atransform,
+            B = atransform
+        )
+
+        theta_estimates, _, __ = get_estimates(theta_dict, wt_dict, atransform_dict)
+        self.assertTrue(np.allclose(theta_estimates, theta_estimates_manual))
+
 
 
 

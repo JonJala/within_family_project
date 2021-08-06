@@ -121,22 +121,30 @@ def clean_SNPs(df, dataname):
 
 
 @logdf
-def make_array_cols(df, thetacol, Scol):
-    
-    theta_arr = np.array(df[thetacol].dropna().tolist())
-    theta_shape = np.array(theta_arr[0]).shape
-    nan_mat = np.empty(theta_shape)
-    nan_mat[:] = np.nan
-    
-    df[thetacol] = df[thetacol].apply(lambda d: nan_mat if np.all(np.isnan(d)) else d)
-    
-    S_arr = np.array(df[Scol].dropna().tolist())
-    S_shape = np.array(S_arr[0]).shape
-    nan_mat = np.empty(S_shape)
-    nan_mat[:] = np.nan
-    
-    df[Scol] = df[Scol].apply(lambda d: nan_mat if np.all(np.isnan(d)) else d)
-    
+def make_array_cols_nas(df, col_name_pattern):
+
+    '''
+    Properly formats NA values for columns of a dataframe
+    which are missing. For exampple if each observation
+    has an m by n array, the proper missing value here
+    should be an m by n matrix of np.nans.
+
+    df : pandas dataframe
+    col_name_pattern : string indicating all the
+    columns to be used. All columns with names starting
+    with this string will be read
+    '''
+    vector_columns = [col for col in df if col.startswith(col_name_pattern)]
+
+    for vector_column in vector_columns:
+        # import pdb; pdb.set_trace()
+        ii = df[vector_column].isna()
+        arr = np.array(df[vector_column].dropna().tolist())
+        arr_shape = np.array(arr[0]).shape
+        nan_mat = np.empty(arr_shape)
+        nan_mat[:] = np.nan
+        df.loc[ii, vector_column] = df.loc[ii, vector_column].apply(lambda x: nan_mat)
+
     return df
 
 
@@ -539,17 +547,6 @@ def read_from_json(df_args):
     return df_dict
 
 
-
-@logdf
-def merging_data(df_list):
-    
-    df_merged = reduce(lambda left,right: pd.merge(left, right, 
-                                              on = "SNP",
-                                              how = "outer"
-                                              ),
-                  df_list)
-    
-    return df_merged
     
 # == Working with arrays == #
 
@@ -705,6 +702,7 @@ def get_firstvalue_dict(input_dict):
     for cohort in input_dict:
         input_vec = input_dict[cohort]
         input_vec = atleast2d_col(input_vec)
+        print(input_vec)
 
         scalar_out = input_vec[~np.any(np.isnan(input_vec),  tuple(range(1, input_vec.ndim)))][0]
 

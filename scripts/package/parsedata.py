@@ -702,7 +702,6 @@ def get_firstvalue_dict(input_dict):
     for cohort in input_dict:
         input_vec = input_dict[cohort]
         input_vec = atleast2d_col(input_vec)
-        print(input_vec)
 
         scalar_out = input_vec[~np.any(np.isnan(input_vec),  tuple(range(1, input_vec.ndim)))][0]
 

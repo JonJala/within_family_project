@@ -2,6 +2,22 @@ import numpy as np
 import scipy.stats
 from parsedata import *
 
+def max_dim(xdict, axis = 1):
+    '''
+    Figure out what the highest dimension value is
+    along a particular axis
+
+    xdict: a dictionary of arrays
+    '''
+
+    cohorts = list(xdict.keys())
+    
+    maxsofar = 0
+    for c in cohorts:
+        dimsize = xdict[c].shape[axis]
+        maxsofar = max(maxsofar, dimsize)
+    
+    return maxsofar
 
 def adjust_S_by_phvar(S_dict, phvar_dict):
     
@@ -52,6 +68,7 @@ def get_wt_sum(wt):
     Also used as the effective N potentially for
     direct and indirect effects
     '''
+
     
     cohorts = list(wt.keys())
     wtsum = np.zeros_like(wt[cohorts[0]])
@@ -69,7 +86,9 @@ def get_theta_var(wt, A):
     meta analyzed estimate
     '''
     cohorts = list(wt.keys())
-    wtsum = np.zeros_like(wt[cohorts[0]])
+    ndim1 = max_dim(wt, axis = 1)
+    ndim2 = max_dim(wt, axis = 2)
+    wtsum = np.zeros((wt[cohorts[0]].shape[0], ndim1, ndim2))
 
     for cohort in cohorts:
         wtsum += wt[cohort] @ A[cohort]
@@ -90,10 +109,12 @@ def theta_wted_sum(theta_dict, wt_dict):
     here to make arrays conform
     
     '''
-    
+
+
     assert theta_dict.keys() == wt_dict.keys()
     cohorts = list(theta_dict.keys())
-    theta_bar = np.zeros_like(theta_dict[cohorts[0]])[..., None]
+    ndimout = max_dim(theta_dict)
+    theta_bar = np.zeros((theta_dict[cohorts[0]].shape[0], ndimout, 1))
     
     for cohort in theta_dict:
         theta_bar += wt_dict[cohort] @ theta_dict[cohort][..., None]
@@ -109,11 +130,11 @@ def get_estimates(theta_dict, wt_dict, A):
     '''
     
     theta_bar = theta_wted_sum(theta_dict, wt_dict)
-    wt_sum = get_wt_sum(wt_dict)
+    # wt_sum = get_wt_sum(wt_dict)
     theta_var = get_theta_var(wt_dict, A)
     theta_bar = theta_var @ theta_bar
         
-    return theta_bar, theta_var, wt_sum
+    return theta_bar, theta_var#, wt_sum
 
 
 def get_ses(var):

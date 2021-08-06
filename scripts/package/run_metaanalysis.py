@@ -90,7 +90,7 @@ if __name__ == '__main__':
     nan_to_num_dict(wt, theta_vec_adj)
     
     # run analysis
-    theta_bar, theta_var, wt_sum = get_estimates(theta_vec_adj, wt, Amat)
+    theta_bar, theta_var = get_estimates(theta_vec_adj, wt, Amat)
     theta_ses = get_ses(theta_var)
     z_bar = theta2z(theta_bar, theta_var)
     pval = get_pval(z_bar)
@@ -130,8 +130,6 @@ if __name__ == '__main__':
             'beta_dir' : theta_bar_out[:, 0].flatten(),
             f'beta_{est1_type}' : theta_bar[:, 1].flatten(),
             f'beta_{est2_type}' : theta_bar_out[:, 1].flatten(),
-            'wt_dir' : wt_sum[:, 0, 0],
-            'wt_2' : wt_sum[:, 1, 1],
             'N_dir' : Neff_dir,
             f'N_{est1_type}' : Neff_effect1,
             f'N_{est2_type}' : Neff_effect2,
@@ -155,9 +153,9 @@ if __name__ == '__main__':
 
     n_missing_snps = df_out['SNP'].isna().sum()
     print(f"Number of missing SNPs {n_missing_snps}")
-    (theta_bar, theta_var_out, wt_sum, z_bar, z_bar_out, 
+    (theta_bar, theta_var_out, z_bar, z_bar_out, 
     theta_ses, theta_ses_out, theta_var, theta_var_out,
-    pval, pval_out, f_bar, df_out) = clean_snps(theta_bar, theta_bar_out, wt_sum, z_bar, z_bar_out, 
+    pval, pval_out, f_bar, df_out) = clean_snps(theta_bar, theta_bar_out, z_bar, z_bar_out, 
                                         theta_ses, theta_ses_out, theta_var, theta_var_out,
                                         pval, pval_out, f_bar,
                                         df = df_out, snpname = 'SNP')

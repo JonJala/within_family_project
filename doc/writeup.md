@@ -5,7 +5,24 @@ subtitle: Everything Done So Far
 
 # Cohorts And Phenotypes
 
-*Need to fill this out*
+| Cohohort | Phenotype | Passed diagnostics? | Notes |
+| -------- | --------- | ------------------- | ----- |
+| STR | BMI | No | h2 estimate is negative |
+| STR | EA | Yes | Need to plot diag plots |
+| Hunt | EA | Yes | Need to plot diag plots |
+| GS | EA | Yes | Need to plot diag plots |
+| GS | BMI | Yes | Need to plot diag plots |
+| Finnish Twins | EA| No | Negative h2 estiamte|
+| Finnish Twins | BMI | Yes | | Need to plot diag plots |
+| Estonian Biobank | BMI | Yes | Need to plot diag plots |
+|Estonian Biobank | MDD | Yes | Need to plot diag plots | 
+| UKB | BMI | Yes | Need to plot diag plots |
+| UKB | EA | Yes | Need to plot diag plots |
+| MOBA | BMI | Yes | |
+| MOBA | Height | Yes | |
+| MOBA | Depressive symptoms | No | h2 is negative |
+| MOBA | Income | No | h2 is negative |
+| MOBA | Fertility | No | Low power. h2 is negative sometimes in jack knife|
 
 # Analysis
 

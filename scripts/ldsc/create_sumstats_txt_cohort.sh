@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-# Intended to convert all hdf5 to LDSC ready sumstats
+# Intended to convert all cohort hdf5 to LDSC ready sumstats/txt files
 
 sldsc_path="/homes/nber/harij/gitrepos/SNIPar/ldsc_reg"
 merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"

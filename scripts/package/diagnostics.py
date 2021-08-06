@@ -102,6 +102,7 @@ def make_diagnostic_plots(df_dict, df_args, plot_prefix = ".",
         S = np.array(df_merged[f'S_{cohort}'].tolist())
         S, theta = transform_estimates(df_arg['effect_transform'], S, theta)
         indir_effect_name = df_arg['effect_transform'].split('_')[-1]
+        indir_effect_name = indir_effect_name.replace('_', ' ').title()
         
         # plotting
         fig, ax = plt.subplots(nrows = 3,
@@ -125,7 +126,7 @@ def make_diagnostic_plots(df_dict, df_args, plot_prefix = ".",
         
         # distribution of 2nd effect
         g = sns.distplot(theta[:,1], ax = ax[2])
-        g.set_xlabel("Direct Effect")
+        g.set_xlabel(f"{indir_effect_name}")
         g.set_title(f"Distribution of {indir_effect_name} Effects")
         
         fig.tight_layout()

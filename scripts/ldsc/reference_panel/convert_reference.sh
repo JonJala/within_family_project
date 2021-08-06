@@ -1,5 +1,10 @@
 #!/usr/bin/bash
 
+# ----------------------------------------------- #
+# File is meant to convert all reference panels
+# to ldsc ready files
+# ----------------------------------------------- #
+
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 ldscpath="/homes/nber/harij/ldsc"
 eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
@@ -59,9 +64,18 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --chunksize 50000
 
 # HH Income
-# ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/processed/inc_ref/Household_Income_UKBiobank.txt.gz \
-# --merge-alleles ${merge_alleles} \
-# --N 286301 --a1 Effect_Allele --a2 Non_effect_Allele \
-# --out ${within_family_path}/processed/inc_ref/hh_wage \
-# --chunksize 50000
+${ldscpath}/munge_sumstats.py  \
+--sumstats ${within_family_path}/processed/inc_ref/Household_Income_UKBiobank.txt.gz \
+--merge-alleles ${merge_alleles} \
+--N 286301 --a1 Effect_Allele --a2 Non_effect_Allele \
+--out ${within_family_path}/processed/inc_ref/hh_wage \
+--chunksize 50000
+
+# Fertility / NEB
+
+${ldscpath}/munge_sumstats.py  \
+--sumstats ${within_family_path}/processed/fert_ref/NumberChildrenEverBorn_Male.txt \
+--merge-alleles ${merge_alleles} \
+--N 103909 --frq Freq_HapMap \
+--out ${within_family_path}/processed/fert_ref/fert_ref \
+--chunksize 50000

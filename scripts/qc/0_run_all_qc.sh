@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+# THIS FILE ISNT USED NOW
+
 # Intended to convert all hdf5 to LDSC ready sumstats
 
 sldsc_path="/homes/nber/harij/gitrepos/SNIPar/ldsc_reg"

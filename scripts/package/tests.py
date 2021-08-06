@@ -116,10 +116,18 @@ class test_functions(unittest.TestCase):
             A = Amat,
             B = Bmat
         )
-        wt_a = np.linalg.inv(Amat)
-        wt_b = np.linalg.inv(Bmat)
+
         
-        wt_dict = get_wts(S_dict)
+        atransform = np.random.rand(2, 2)
+        wt_a = atransform.T @ np.linalg.inv(Amat)
+        wt_b = atransform.T @ np.linalg.inv(Bmat)
+
+        atransform_dict = dict(
+            A = atransform,
+            B = atransform
+        )
+    
+        wt_dict = get_wts(atransform_dict, S_dict)
 
         Aallclose = np.allclose(wt_a, wt_dict['A'])
         Ballclose = np.allclose(wt_b, wt_dict['B'])
@@ -149,10 +157,6 @@ class test_functions(unittest.TestCase):
                     [0.3, 0.55]]
                 ]
             )
-        S_dict = dict(
-            A = Amat,
-            B = Bmat
-        )
 
         wt_a = np.linalg.inv(Amat)
         wt_b = np.linalg.inv(Bmat)
@@ -199,16 +203,64 @@ class test_functions(unittest.TestCase):
                     [0.3, 0.55]]
                 ]
             )
+
         wt_dict = dict(
             A = np.linalg.inv(Amat),
             B = np.linalg.inv(Bmat)
         )
 
+        
         theta_weighted_sum = theta_wted_sum(theta_dict, wt_dict)
 
         theta_wted_sum_manual = np.linalg.inv(Amat) @ theta_a[..., None]  + np.linalg.inv(Bmat) @ theta_b[..., None]
 
         self.assertTrue(np.allclose(theta_weighted_sum, theta_wted_sum_manual))
+
+    def test_theta_var(self):
+        Amat = np.array(
+                [
+                    [[0.5, 0.3],
+                    [ 0.3, 0.5]],
+
+                    [[0.3, 0.6],
+                    [0.6, 0.1]]
+                ]
+            )
+
+        Bmat = np.array(
+                [
+                    [[0.1, 0.5],
+                    [0.5, 0.5]],
+
+                    [[0.3, 0.3],
+                    [0.3, 0.55]]
+                ]
+            )
+
+
+        
+        atransform = np.random.rand(2, 2)
+        wt_a = atransform.T @ np.linalg.inv(Amat)
+        wt_b = atransform.T @ np.linalg.inv(Bmat)
+
+        wt_dict = dict(
+            A = atransform.T @ np.linalg.inv(Amat),
+            B = atransform.T @ np.linalg.inv(Bmat)
+        )
+
+        wtsum = wt_a @ atransform + wt_b @ atransform
+        theta_var_manual = np.linalg.inv(wtsum)
+
+        atransform_dict = dict(
+            A = atransform,
+            B = atransform
+        )
+        theta_var = get_theta_var(wt_dict, atransform_dict)
+
+        self.assertTrue(np.allclose(theta_var, theta_var_manual))
+
+
+
 
 
 if __name__ == '__main__':

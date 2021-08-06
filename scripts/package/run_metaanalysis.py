@@ -70,16 +70,14 @@ if __name__ == '__main__':
     S_vec = extract_vector(df_toarray, "S_")
     phvar_vec = extract_vector(df_toarray, "phvar")
     phvar_vec = get_firstvalue_dict(phvar_vec)
-
     
     Amat = extract_vector(df_toarray, "amat")
     Amat = get_firstvalue_dict(Amat)
 
-    theta_vec_adj, S_vec_adj  = transform_estimates_dict(theta_vec, S_vec, data_args)
-    theta_vec_adj = adjust_theta_by_phvar(theta_vec_adj, phvar_vec)
-    S_vec_adj = adjust_S_by_phvar(S_vec_adj, phvar_vec)
+    theta_vec_adj = adjust_theta_by_phvar(theta_vec, phvar_vec)
+    S_vec_adj = adjust_S_by_phvar(S_vec, phvar_vec)
     
-    wt = get_wts(S_vec_adj)
+    wt = get_wts(Amat, S_vec_adj)
     nan_to_num_dict(wt, theta_vec_adj)
     
     # run analysis

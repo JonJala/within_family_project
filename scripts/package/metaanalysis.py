@@ -26,17 +26,17 @@ def adjust_theta_by_phvar(theta_dict, phvar_dict):
 
 
 
-def get_wts(S_dict):
+def get_wts(A, S_dict):
     '''
-    Dictionary of S matrices meant to
-    be inverted
+    Dictionary of S matrices and A matrices
+    to be made into weights
     '''
     
     wt_dict = {}
     
     for cohort in S_dict:
         S_mat = np.atleast_2d(S_dict[cohort])
-        wt_dict[cohort] = np.linalg.inv(S_mat)
+        wt_dict[cohort] = A[cohort].T @ np.linalg.inv(S_mat)
         
     return wt_dict
 
@@ -63,12 +63,17 @@ def get_wt_sum(wt):
 
 
 
-def get_theta_var(wtsum):
+def get_theta_var(wt, A):
     '''
     Get variance cov matrix of 
     meta analyzed estimate
     '''
-        
+    cohorts = list(wt.keys())
+    wtsum = np.zeros_like(wt[cohorts[0]])
+
+    for cohort in cohorts:
+        wtsum += wt[cohort] @ A[cohort]
+
     theta_var = np.linalg.inv(wtsum)
     
     return theta_var
@@ -97,7 +102,7 @@ def theta_wted_sum(theta_dict, wt_dict):
 
 
 
-def get_estimates(theta_dict, wt_dict):
+def get_estimates(theta_dict, wt_dict, A):
     
     '''
     Get meta analyzed theta.
@@ -105,7 +110,7 @@ def get_estimates(theta_dict, wt_dict):
     
     theta_bar = theta_wted_sum(theta_dict, wt_dict)
     wt_sum = get_wt_sum(wt_dict)
-    theta_var = get_theta_var(wt_sum)
+    theta_var = get_theta_var(wt_dict, A)
     theta_bar = theta_var @ theta_bar
         
     return theta_bar, theta_var, wt_sum

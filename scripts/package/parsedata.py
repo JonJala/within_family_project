@@ -38,6 +38,27 @@ FLIP_ALLELES = {''.join(x):
                 ((x[0] == COMPLEMENT[x[3]]) and (x[1] == COMPLEMENT[x[2]]))
                 for x in MATCH_ALLELES}
 
+def atleast2d_col(x):
+    '''
+    x: np.array
+    out : np.array
+
+    Makes x atleast 2 dimensional. 
+    But empty axis is added at the end.
+    This is opposed to np.atleast_2d which
+    adds it at the begining.
+    For example if x is 1d with shape (N,).
+    This will make it (N,1). np.atleast_2d
+    would make it (1, N)
+    '''
+
+    if x.ndim == 1:
+        xout = x[..., None]
+    else:
+        xout = x
+
+    return xout
+
 
 def df_mode(df, columns):
     
@@ -677,17 +698,19 @@ def extract_vector(df, estimatename):
     return vector_dict
 
 
-def get_phvar_scalar(phvar_dict):
+def get_firstvalue_dict(input_dict):
     
-    phvar_out = {}
+    dict_out = {}
     
-    for cohort in phvar_dict:
-        phvar_vector = phvar_dict[cohort]
-        phvar_scalar = phvar_vector[~np.isnan(phvar_vector)][0]
+    for cohort in input_dict:
+        input_vec = input_dict[cohort]
+        input_vec = atleast2d_col(input_vec)
 
-        phvar_out[cohort] = phvar_scalar
+        scalar_out = input_vec[~np.any(np.isnan(input_vec),  tuple(range(1, input_vec.ndim)))][0]
+
+        dict_out[cohort] = scalar_out
         
-    return phvar_out
+    return dict_out
 
 
 def transform_estimates_dict(theta_dict, S_dict, args):

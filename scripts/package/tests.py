@@ -55,6 +55,40 @@ class test_functions(unittest.TestCase):
 
         self.assertTrue(all_align)
 
+    def test_extract_first(self):
+        '''
+        tests whether extractor works
+        '''
+
+        dict_of_vecs = dict(
+            A = np.array([1.0, 1.0, 1.0, 1.0]),
+            B = np.array([np.nan, 100.0, 100.0]),
+            C = np.array([
+                [[1.0, 2.0], [2.0, 4.0]],
+                [[1.0, 2.0], [2.0, 4.0]],
+                [[1.0, 2.0], [2.0, 4.0]]
+            ]),
+            D = np.array([
+                [[np.nan, 2.0], [2.0, 4.0]],
+                [[1.0, 2.0], [2.0, 4.0]],
+                [[1.0, 2.0], [2.0, 4.0]]
+            ]),
+            E = np.array([
+                [[np.nan, np.nan], [np.nan, np.nan]],
+                [[1.0, 2.0], [2.0, 4.0]],
+                [[1.0, 2.0], [2.0, 4.0]]
+            ])
+        )
+
+        scalars = get_firstvalue_dict(dict_of_vecs)
+        true1 = np.isclose(scalars['A'], 1.0)
+        true2 = np.isclose(scalars['B'], 100.0)
+        true3 = np.allclose(scalars['C'], np.array([[1.0, 2.0], [2.0, 4.0]]))
+        true4 = np.allclose(scalars['D'], np.array([[1.0, 2.0], [2.0, 4.0]]))
+        true5 = np.allclose(scalars['E'], np.array([[1.0, 2.0], [2.0, 4.0]]))
+
+        self.assertTrue(true1 and true2 and true3 and true4 and true5)
+
     def test_wt_calc(self):
         '''
         tests how we get weights
@@ -171,8 +205,6 @@ class test_functions(unittest.TestCase):
         )
 
         theta_weighted_sum = theta_wted_sum(theta_dict, wt_dict)
-
-        print(theta_a[..., None])
 
         theta_wted_sum_manual = np.linalg.inv(Amat) @ theta_a[..., None]  + np.linalg.inv(Bmat) @ theta_b[..., None]
 

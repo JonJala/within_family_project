@@ -2,7 +2,7 @@ import numpy as np
 import scipy.stats
 from parsedata import *
 
-def max_dim(xdict, axis = 1):
+def min_dim(xdict, axis = 1):
     '''
     Figure out what the highest dimension value is
     along a particular axis
@@ -12,14 +12,50 @@ def max_dim(xdict, axis = 1):
 
     cohorts = list(xdict.keys())
     
-    maxsofar = 0
+    minsofar = 0
     for c in cohorts:
         dimsize = xdict[c].shape[axis]
-        maxsofar = max(maxsofar, dimsize)
+        minsofar = min(dimsize, minsofar)
     
-    return maxsofar
+    # find all cohorts with the maxdimsize
+    mincohorts = []
+    for c in cohorts:
+        dimsize = xdict[c].shape[axis]
+        if dimsize == minsofar:
+            minsofar += c
+
+    return minsofar, mincohorts
+
+def dict_dim(xdict, axis = 1):
+    '''
+    Get dimension/axis size of a set of arrays
+    stored in a dictionray. The function
+    checks also if the dimensions are the same
+    for all elements in the dictionary
+    '''
+
+    cohorts = list(xdict.keys())
+    x1 = xdict[cohorts[0]]
+    dimout = x1.shape[axis]
+
+    cond = True
+    for c in cohorts:
+        dimsame = dimout == xdict[c].shape[axis]
+        cond = cond and dimsame
+    
+    if not cond:
+        print("Warning: Dimenions dont seem to match across dictionary!")
+
+    return dimout
+
+
 
 def adjust_S_by_phvar(S_dict, phvar_dict):
+    '''
+    Dividng a dictionary of S estimates by
+    phenotypic varaince dictionary
+    '''
+
     
     S_out = {}
     assert S_dict.keys() == phvar_dict.keys()
@@ -31,6 +67,11 @@ def adjust_S_by_phvar(S_dict, phvar_dict):
     
     
 def adjust_theta_by_phvar(theta_dict, phvar_dict):
+    '''
+    Diving FGWAS effect estimaates by
+    square root of phenotypic varianace
+    '''
+
     
     theta_out = {}
     assert theta_dict.keys() == phvar_dict.keys()
@@ -49,7 +90,6 @@ def get_wts(A, S_dict):
     '''
     
     wt_dict = {}
-    
     for cohort in S_dict:
         S_mat = np.atleast_2d(S_dict[cohort])
         wt_dict[cohort] = A[cohort].T @ np.linalg.inv(S_mat)
@@ -86,9 +126,11 @@ def get_theta_var(wt, A):
     meta analyzed estimate
     '''
     cohorts = list(wt.keys())
-    ndim1 = max_dim(wt, axis = 1)
-    ndim2 = max_dim(wt, axis = 2)
+    ndim1 = dict_dim(wt, axis = 1)
+    ndim2 = dict_dim(wt, axis = 2)
     wtsum = np.zeros((wt[cohorts[0]].shape[0], ndim1, ndim2))
+
+    import pdb; pdb.set_trace()
 
     for cohort in cohorts:
         wtsum += wt[cohort] @ A[cohort]
@@ -113,9 +155,9 @@ def theta_wted_sum(theta_dict, wt_dict):
 
     assert theta_dict.keys() == wt_dict.keys()
     cohorts = list(theta_dict.keys())
-    ndimout = max_dim(theta_dict)
+    ndimout = dict_dim(wt_dict)
     theta_bar = np.zeros((theta_dict[cohorts[0]].shape[0], ndimout, 1))
-    
+
     for cohort in theta_dict:
         theta_bar += wt_dict[cohort] @ theta_dict[cohort][..., None]
     

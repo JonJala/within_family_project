@@ -34,11 +34,11 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --chunksize 50000
 
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/processed/smoking_ref/Smokinginit.txt \
+# --sumstats ${within_family_path}/processed/smoking_ref/smokinginit.txt \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/processed/smoking_ref/Smokinginit \
-# --N-col EFFECTIVE_N --ignore N --a1 REF --a2 ALT \
-# --chunksize 50000
+# --chunksize 50000 \
+# --a1 REF --a2 ALT
 
 
 # ${ldscpath}/munge_sumstats.py  \
@@ -63,19 +63,28 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --out ${within_family_path}/processed/inc_ref/hourly_wage \
 # --chunksize 50000
 
-# HH Income
-${ldscpath}/munge_sumstats.py  \
---sumstats ${within_family_path}/processed/inc_ref/Household_Income_UKBiobank.txt.gz \
---merge-alleles ${merge_alleles} \
---N 286301 --a1 Effect_Allele --a2 Non_effect_Allele \
---out ${within_family_path}/processed/inc_ref/hh_wage \
---chunksize 50000
+# # HH Income
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats ${within_family_path}/processed/inc_ref/Household_Income_UKBiobank.txt.gz \
+# --merge-alleles ${merge_alleles} \
+# --N 286301 --a1 Effect_Allele --a2 Non_effect_Allele \
+# --out ${within_family_path}/processed/inc_ref/hh_wage \
+# --chunksize 50000
 
-# Fertility / NEB
+# # Fertility / NEB
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats ${within_family_path}/processed/fert_ref/NumberChildrenEverBorn_Male.txt \
+# --merge-alleles ${merge_alleles} \
+# --N 103909 --frq Freq_HapMap \
+# --out ${within_family_path}/processed/fert_ref/fert_ref \
+# --chunksize 50000
+
+
 
 ${ldscpath}/munge_sumstats.py  \
---sumstats ${within_family_path}/processed/fert_ref/NumberChildrenEverBorn_Male.txt \
+--sumstats ${within_family_path}/processed/asthma_ref/HanY_prePMID_asthma_Meta-analysis_UKBB_TAGC.txt.gz \
 --merge-alleles ${merge_alleles} \
---N 103909 --frq Freq_HapMap \
---out ${within_family_path}/processed/fert_ref/fert_ref \
---chunksize 50000
+--out ${within_family_path}/processed/asthma_ref/asthma_ref \
+--chunksize 50000 \
+--a1 EA --a2 NEA

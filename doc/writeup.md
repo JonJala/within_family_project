@@ -5,24 +5,33 @@ subtitle: Everything Done So Far
 
 # Cohorts And Phenotypes
 
-| Cohohort | Phenotype | Passed diagnostics? | Notes |
-| -------- | --------- | ------------------- | ----- |
-| STR | BMI | No | h2 estimate is negative |
-| STR | EA | Yes | Need to plot diag plots |
-| Hunt | EA | Yes | Need to plot diag plots |
-| GS | EA | Yes | Need to plot diag plots |
-| GS | BMI | Yes | Need to plot diag plots |
-| Finnish Twins | EA| No | Negative h2 estiamte|
-| Finnish Twins | BMI | Yes | | Need to plot diag plots |
-| Estonian Biobank | BMI | Yes | Need to plot diag plots |
-|Estonian Biobank | MDD | Yes | Need to plot diag plots | 
-| UKB | BMI | Yes | Need to plot diag plots |
-| UKB | EA | Yes | Need to plot diag plots |
-| MOBA | BMI | Yes | |
-| MOBA | Height | Yes | |
-| MOBA | Depressive symptoms | No | h2 is negative |
-| MOBA | Income | No | h2 is negative |
-| MOBA | Fertility | No | Low power. h2 is negative sometimes in jack knife|
+| Cohohort | Phenotype | LDSC Test | Diag Plots and Tables | Notes |
+| -------- | --------- | ------------------- | ----- | ------------ |
+| STR | BMI | No (h2 estimate is negative) | ||
+| STR | EA | Yes | |  |
+| Hunt | EA | Yes | |  |
+| GS | EA | Yes | |  |
+| GS | BMI | Yes | |  |
+| Finnish Twins | EA| No (Negative h2 estimate) | | |
+| Finnish Twins | BMI | Yes | | |
+| Estonian Biobank | BMI | Yes | | |
+|Estonian Biobank | MDD | Yes | |  | 
+| Estonian Biobank | Ever Smoker | No (-ve 1) | | |
+| UKB | BMI | Yes | | |
+| UKB | EA | Yes | | |
+| MOBA | BMI | Yes | | |
+| MOBA | Height | Yes | | |
+| MOBA | Depressive symptoms | No  (h2 is negative) | | |
+| MOBA | Income | No (h2 is negative) | | |
+| MOBA | Fertility | No (Low power. h2 is negative sometimes in jack knife) | | |
+|Geisinger| BMI | Yes | | |
+| Geisinger | Height | Yes | | |
+| Geisinger | Depression | Yes (Borderline rg) | | |
+| Geisinger | EA | Yes | | |
+| Geisinger | Smoke-Ever | No ( -ve 1) | | |
+| Geisinger | Asthma | Yes | | |
+|
+
 
 # Analysis
 

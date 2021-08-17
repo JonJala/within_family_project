@@ -9,6 +9,15 @@ from metaanalysis import *
 from diagnostics import *
 
 
+def highest_dim(df:pd.DataFrame, colname = 'dims') -> pd.DataFrame:
+
+    colnames = [c for c in df.columns if c.startswith(colname)]
+    df['max_dim'] = df[colnames].max(axis = 1)
+
+    return df
+
+
+
 if __name__ == '__main__':
     
     
@@ -71,16 +80,20 @@ if __name__ == '__main__':
         .pipe(make_array_cols_nas, 'theta_')
         .pipe(make_array_cols_nas, 'S_')
         .pipe(make_array_cols_nas, 'amat_')
+        .pipe(highest_dim)
     )
+
     
-    
+    maxdim = df_toarray['max_dim'].max()
+    df_toarray_dim = df_toarray.loc[df_toarray['max_dim'] == maxdim]
+
     # == Array operations == #
-    theta_vec = extract_vector(df_toarray, "theta")
-    S_vec = extract_vector(df_toarray, "S_")
-    phvar_vec = extract_vector(df_toarray, "phvar")
+    theta_vec = extract_vector(df_toarray_dim, "theta")
+    S_vec = extract_vector(df_toarray_dim, "S_")
+    phvar_vec = extract_vector(df_toarray_dim, "phvar")
     phvar_vec = get_firstvalue_dict(phvar_vec)
     
-    Amat = extract_vector(df_toarray, "amat")
+    Amat = extract_vector(df_toarray_dim, "amat")
     Amat = get_firstvalue_dict(Amat)
 
     theta_vec_adj = adjust_theta_by_phvar(theta_vec, phvar_vec)
@@ -96,16 +109,16 @@ if __name__ == '__main__':
     pval = get_pval(z_bar)
 
     theta_var_out, theta_bar_out = transform_estimates(args.outestimates, 
-                                                   theta_var, 
-                                                   theta_bar.reshape(theta_bar.shape[0], 
-                                                                     theta_bar.shape[1]))
+                                                        theta_var, 
+                                                        theta_bar.reshape(theta_bar.shape[0], 
+                                                                            theta_bar.shape[1]))
     theta_ses_out = get_ses(theta_var_out)
     z_bar_out = theta2z(theta_bar_out, theta_var_out)
     pval_out = get_pval(z_bar_out)
     
     
     # computing weighted f
-    f_vec = extract_vector(df_toarray, "f_")
+    f_vec = extract_vector(df_toarray_dim, "f_")
     nan_to_num_dict(f_vec)
     wt_dir = extract_portion(wt, 0)
     f_bar = freq_wted_sum(f_vec, wt_dir)
@@ -119,14 +132,14 @@ if __name__ == '__main__':
     Neff_dir = neff(f_bar, theta_ses_out[:, 0])
     Neff_effect1 = neff(f_bar, theta_ses[:, 1])
     Neff_effect2 = neff(f_bar, theta_ses_out[:, 1])
-    
+
     # combining everything into a dataframe
     df_out = pd.DataFrame(
         {
-            'SNP' : df_toarray['SNP'],
-            'BP' : df_toarray['BP'].astype(int),
-            'CHR' : df_toarray['CHR'].astype(int),
-            'allele_comb' : df_toarray['allele_consensus'],
+            'SNP' : df_toarray_dim['SNP'],
+            'BP' : df_toarray_dim['BP'].astype(int),
+            'CHR' : df_toarray_dim['CHR'].astype(int),
+            'allele_comb' : df_toarray_dim['allele_consensus'],
             'beta_dir' : theta_bar_out[:, 0].flatten(),
             f'beta_{est1_type}' : theta_bar[:, 1].flatten(),
             f'beta_{est2_type}' : theta_bar_out[:, 1].flatten(),

@@ -7,7 +7,7 @@
         "maf" : 1,
         "rsid_readfrombim" : "",
         "effect_transform" : "full",
-        "Amat" : "1.0 0.0 0.0;0.0 0.5 0.5"
+        "Amat" : "1.0 0.0;0.0 1.0"
 },
 
     "ukb": {
@@ -25,7 +25,7 @@
         "freqs" : "freqs",
         "rsid_readfrombim" : "",
         "maf" : 1,
-        "Amat" : "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0"
+        "Amat" : "1.0 0.0;0.0 1.0;0.0 1.0"
 
 }
 }

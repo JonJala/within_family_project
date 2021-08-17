@@ -521,9 +521,11 @@ def read_file(args, printinfo = True):
     #adding A matrix
     Amat = args['Amat']
     Amat = np.array(np.matrix(Amat))
+    dim = Amat.shape[0]
     N = zdata.shape[0]
     Amatarray = np.array(Amat.tolist() * N).reshape(N, Amat.shape[0], Amat.shape[1])
     zdata['amat'] = Amatarray.tolist()
+    zdata['dims'] = dim
 
     return zdata
 
@@ -635,6 +637,8 @@ def transform_estimates(effect_estimated,
         print("Warning: The given parameters hasn't been converted.")
 
     return S, theta
+
+
 
 
 
@@ -763,6 +767,8 @@ def clean_snps(*varlist, df, snpname):
 
     return varlist_out
 
+
+
 # == Outputting data == #
 
 def encode_str_array(x):
@@ -860,3 +866,4 @@ def write_output(chrom, snp_ids, pos, alleles, outprefix, alpha, alpha_ses, alph
         outfile['sigma2'] = sigma2
         outfile['tau'] = tau
         outfile['freqs'] = freqs
+

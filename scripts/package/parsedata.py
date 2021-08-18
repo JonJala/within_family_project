@@ -638,6 +638,82 @@ def transform_estimates(effect_estimated,
 
     return S, theta
 
+def transform_estimates(fromest,
+                        toest,
+                        S, theta):
+
+    '''
+    Transforms theta (can also be z) and S data into
+    the required format from a given format
+    like direct + average parental to direct + population
+
+    possible effects:
+    - full - refers to (direct, maternal effect, paternal effect) 
+    - direct_averageparental - refers to (direct, average_parental)
+    - direct_population - refers to (direct, population)
+    - population - refers to (population)
+    '''
+
+    if fromest == "full" and toest == "direct_population":
+        print("Converting from full to direct + Population")
+
+        # == keeping direct effect and population effect == #
+        tmatrix = np.array([[1.0, 1.0],
+                            [0.0, 0.5],
+                            [0.0, 0.5]])
+        Sdir = np.empty((len(S), 2, 2))
+        for i in range(len(S)):
+            Sdir[i] = tmatrix.T @ S[i] @ tmatrix
+
+        S = Sdir.reshape((len(S), 2, 2))
+        theta = theta @ tmatrix
+        theta = theta.reshape((theta.shape[0], 2))
+    
+    elif fromest == "full" and toest == "direct_averageparental":
+
+        print("Converting from full to direct + average parental")
+
+        # == Combining indirect effects to make V a 2x2 matrix == #
+        tmatrix = np.array([[1.0, 0.0],
+                            [0.0, 0.5],
+                            [0.0, 0.5]])
+        Sdir = np.empty((len(S), 2, 2))
+        for i in range(len(S)):
+            Sdir[i] = tmatrix.T @ S[i] @ tmatrix
+        S = Sdir.reshape((len(S), 2, 2))
+        theta = theta @ tmatrix
+        theta = theta.reshape((theta.shape[0], 2))
+    
+    elif fromest == "direct_averageparental" and toest == "direct_population":
+
+        print("Converting from direct + average parental to direct + population")
+
+        tmatrix = np.array([[1.0, 1.0],
+                            [0.0, 1.0]])
+        
+        Sdir = tmatrix.T @ S @ tmatrix
+
+        S = Sdir.reshape((len(S), 2, 2))
+        theta = theta @ tmatrix
+        theta = theta.reshape((theta.shape[0], 2))
+    
+    elif fromest == "direct_population" and toest == "direct_averageparental":
+        print("Converting from population to average parental")
+
+        tmatrix = np.array([[1.0, -1.0],
+                            [0.0, 1.0]])
+        Sdir = np.empty((len(S), 2, 2))
+        for i in range(len(S)):
+            Sdir[i] = tmatrix.T @ S[i] @ tmatrix
+
+        S = Sdir.reshape((len(S), 2, 2))
+        theta = theta @ tmatrix
+        theta = theta.reshape((theta.shape[0], 2))
+    else:
+        print("Warning: The given parameters hasn't been converted.")
+
+    return S, theta
+
 
 
 
@@ -706,8 +782,11 @@ def get_firstvalue_dict(input_dict):
     for cohort in input_dict:
         input_vec = input_dict[cohort]
         input_vec = atleast2d_col(input_vec)
-
-        scalar_out = input_vec[~np.any(np.isnan(input_vec),  tuple(range(1, input_vec.ndim)))][0]
+    
+        if len(input_vec) > 0:
+            scalar_out = input_vec[~np.any(np.isnan(input_vec),  tuple(range(1, input_vec.ndim)))][0]
+        else:
+            scalar_out = np.nan
 
         dict_out[cohort] = scalar_out
         

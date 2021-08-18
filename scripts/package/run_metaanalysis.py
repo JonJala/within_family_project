@@ -84,95 +84,120 @@ if __name__ == '__main__':
     )
 
     
-    maxdim = df_toarray['max_dim'].max()
-    df_toarray_dim = df_toarray.loc[df_toarray['max_dim'] == maxdim]
+    dims = df_toarray['max_dim'].unique()
+    dims = dims[dims > 1] # we dont care about SNPs where we only have population effects
+    df_out_list = []
 
-    # == Array operations == #
-    theta_vec = extract_vector(df_toarray_dim, "theta")
-    S_vec = extract_vector(df_toarray_dim, "S_")
-    phvar_vec = extract_vector(df_toarray_dim, "phvar")
-    phvar_vec = get_firstvalue_dict(phvar_vec)
-    
-    Amat = extract_vector(df_toarray_dim, "amat")
-    Amat = get_firstvalue_dict(Amat)
+    for dim in dims:
 
-    theta_vec_adj = adjust_theta_by_phvar(theta_vec, phvar_vec)
-    S_vec_adj = adjust_S_by_phvar(S_vec, phvar_vec)
-    
-    wt = get_wts(Amat, S_vec_adj)
-    nan_to_num_dict(wt, theta_vec_adj)
-    
-    # run analysis
-    theta_bar, theta_var = get_estimates(theta_vec_adj, wt, Amat)
-    theta_ses = get_ses(theta_var)
-    z_bar = theta2z(theta_bar, theta_var)
-    pval = get_pval(z_bar)
+        print(f"Meta analyzing SNPs with effect dimensions {dim}...")
 
-    theta_var_out, theta_bar_out = transform_estimates(args.outestimates, 
+        df_toarray_dim = df_toarray.loc[df_toarray['max_dim'] == dim]
+
+        # == Array operations == #
+        theta_vec = extract_vector(df_toarray_dim, "theta")
+        S_vec = extract_vector(df_toarray_dim, "S_")
+        phvar_vec = extract_vector(df_toarray_dim, "phvar")
+        phvar_vec = get_firstvalue_dict(phvar_vec)
+        
+        Amat = extract_vector(df_toarray_dim, "amat")
+        Amat = get_firstvalue_dict(Amat)
+
+        theta_vec_adj = adjust_theta_by_phvar(theta_vec, phvar_vec)
+        S_vec_adj = adjust_S_by_phvar(S_vec, phvar_vec)
+        
+        wt = get_wts(Amat, S_vec_adj)
+        nan_to_num_dict(wt, theta_vec_adj)
+        
+        # run analysis
+        theta_bar, theta_var = get_estimates(theta_vec_adj, wt, Amat)
+        theta_ses = get_ses(theta_var)
+        z_bar = theta2z(theta_bar, theta_var)
+        pval = get_pval(z_bar)
+        
+
+        # convert effects
+        if dim == 3:
+            theta_var, theta_bar = transform_estimates("full",
+                                                        "direct_averageparental", 
                                                         theta_var, 
                                                         theta_bar.reshape(theta_bar.shape[0], 
                                                                             theta_bar.shape[1]))
-    theta_ses_out = get_ses(theta_var_out)
-    z_bar_out = theta2z(theta_bar_out, theta_var_out)
-    pval_out = get_pval(z_bar_out)
-    
-    
-    # computing weighted f
-    f_vec = extract_vector(df_toarray_dim, "f_")
-    nan_to_num_dict(f_vec)
-    wt_dir = extract_portion(wt, 0)
-    f_bar = freq_wted_sum(f_vec, wt_dir)
-    wt_dir_sum = get_wt_sum(wt_dir)
-    f_bar = f_bar/wt_dir_sum
+            fromest = "direct_averageparental"
+        elif dim == 2:
+            fromest = "direct_averageparental"
 
-    # preparation for outdata
-    est1_type = args.outestimates.split("_")[0]
-    est2_type = args.outestimates.split("_")[-1]
-    
-    Neff_dir = neff(f_bar, theta_ses_out[:, 0])
-    Neff_effect1 = neff(f_bar, theta_ses[:, 1])
-    Neff_effect2 = neff(f_bar, theta_ses_out[:, 1])
+        theta_var_out, theta_bar_out = transform_estimates(fromest,
+                                                            args.outestimates, 
+                                                            theta_var, 
+                                                            theta_bar.reshape(theta_bar.shape[0], 
+                                                                                theta_bar.shape[1]))
+        theta_ses_out = get_ses(theta_var_out)
+        z_bar_out = theta2z(theta_bar_out, theta_var_out)
+        pval_out = get_pval(z_bar_out)
+        
+        
+        # computing weighted f
+        f_vec = extract_vector(df_toarray_dim, "f_")
+        nan_to_num_dict(f_vec)
+        wt_dir = extract_portion(wt, 0)
+        f_bar = freq_wted_sum(f_vec, wt_dir)
+        wt_dir_sum = get_wt_sum(wt_dir)
+        f_bar = f_bar/wt_dir_sum
 
-    # combining everything into a dataframe
-    df_out = pd.DataFrame(
-        {
-            'SNP' : df_toarray_dim['SNP'],
-            'BP' : df_toarray_dim['BP'].astype(int),
-            'CHR' : df_toarray_dim['CHR'].astype(int),
-            'allele_comb' : df_toarray_dim['allele_consensus'],
-            'beta_dir' : theta_bar_out[:, 0].flatten(),
-            f'beta_{est1_type}' : theta_bar[:, 1].flatten(),
-            f'beta_{est2_type}' : theta_bar_out[:, 1].flatten(),
-            'N_dir' : Neff_dir,
-            f'N_{est1_type}' : Neff_effect1,
-            f'N_{est2_type}' : Neff_effect2,
-            'z_dir' : z_bar_out[:, 0].flatten(),
-            f'z_{est1_type}' : z_bar[:, 1].flatten(),
-            f'z_{est2_type}' : z_bar_out[:, 1].flatten(),
-            'beta_se_dir' : theta_ses_out[:, 0],
-            f'beta_se_{est1_type}' : theta_ses[:, 1],
-            f'beta_se_{est2_type}' : theta_ses_out[:, 1],
-            f'beta_cov_{est1_type}': theta_var[:, 0, 1],
-            f'beta_cov_{est2_type}': theta_var_out[:, 0, 1],
-            'pval_dir' : pval_out[:, 0].flatten(),
-            f'pval_{est1_type}' : pval[:, 1].flatten(),
-            f'pval_{est2_type}' : pval_out[:, 1].flatten(),
-            'f' : f_bar
-        }
-    )
+        # preparation for outdata
+        est1_type = args.outestimates.split("_")[0]
+        est2_type = args.outestimates.split("_")[-1]
+        
+        Neff_dir = neff(f_bar, theta_ses_out[:, 0])
+        Neff_effect1 = neff(f_bar, theta_ses[:, 1])
+        Neff_effect2 = neff(f_bar, theta_ses_out[:, 1])
 
-    df_out[['Allele1', 'Allele2']] = df_out['allele_comb'].str.split("", expand = True)[[1, 2]]
-    df_out = df_out.drop(columns = "allele_comb")
+        # combining everything into a dataframe
+        df_out = pd.DataFrame(
+            {
+                'SNP' : df_toarray_dim['SNP'],
+                'BP' : df_toarray_dim['BP'].astype(int),
+                'CHR' : df_toarray_dim['CHR'].astype(int),
+                'allele_comb' : df_toarray_dim['allele_consensus'],
+                'beta_dir' : theta_bar_out[:, 0].flatten(),
+                f'beta_{est1_type}' : theta_bar[:, 1].flatten(),
+                f'beta_{est2_type}' : theta_bar_out[:, 1].flatten(),
+                'N_dir' : Neff_dir,
+                f'N_{est1_type}' : Neff_effect1,
+                f'N_{est2_type}' : Neff_effect2,
+                'z_dir' : z_bar_out[:, 0].flatten(),
+                f'z_{est1_type}' : z_bar[:, 1].flatten(),
+                f'z_{est2_type}' : z_bar_out[:, 1].flatten(),
+                'beta_se_dir' : theta_ses_out[:, 0],
+                f'beta_se_{est1_type}' : theta_ses[:, 1],
+                f'beta_se_{est2_type}' : theta_ses_out[:, 1],
+                f'beta_cov_{est1_type}': theta_var[:, 0, 1],
+                f'beta_cov_{est2_type}': theta_var_out[:, 0, 1],
+                'pval_dir' : pval_out[:, 0].flatten(),
+                f'pval_{est1_type}' : pval[:, 1].flatten(),
+                f'pval_{est2_type}' : pval_out[:, 1].flatten(),
+                'f' : f_bar
+            }
+        )
 
-    n_missing_snps = df_out['SNP'].isna().sum()
-    print(f"Number of missing SNPs {n_missing_snps}")
-    (theta_bar, theta_var_out, z_bar, z_bar_out, 
-    theta_ses, theta_ses_out, theta_var, theta_var_out,
-    pval, pval_out, f_bar, df_out) = clean_snps(theta_bar, theta_bar_out, z_bar, z_bar_out, 
-                                        theta_ses, theta_ses_out, theta_var, theta_var_out,
-                                        pval, pval_out, f_bar,
-                                        df = df_out, snpname = 'SNP')
-    df_out = df_out.dropna(subset = ['SNP'])
+        df_out[['Allele1', 'Allele2']] = df_out['allele_comb'].str.split("", expand = True)[[1, 2]]
+        df_out = df_out.drop(columns = "allele_comb")
+
+        n_missing_snps = df_out['SNP'].isna().sum()
+        print(f"Number of missing SNPs {n_missing_snps}")
+        (theta_bar, theta_var_out, z_bar, z_bar_out, 
+        theta_ses, theta_ses_out, theta_var, theta_var_out,
+        pval, pval_out, f_bar, df_out) = clean_snps(theta_bar, theta_bar_out, z_bar, z_bar_out, 
+                                            theta_ses, theta_ses_out, theta_var, theta_var_out,
+                                            pval, pval_out, f_bar,
+                                            df = df_out, snpname = 'SNP')
+        df_out = df_out.dropna(subset = ['SNP'])
+
+        df_out_list += [df_out]
+
+    # append list of dataframes
+    df_out = pd.concat(df_out_list)
     
     # == Outputting data == #
 

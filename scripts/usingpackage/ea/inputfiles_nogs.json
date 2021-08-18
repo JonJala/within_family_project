@@ -6,7 +6,8 @@
         "txt_effectin" : "avg_parental",
         "maf" : 1,
         "rsid_readfrombim" : "",
-        "effect_transform" : "full"
+        "effect_transform" : "full",
+        "Amat" : "1.0 0.0 0.0;0.0 1.0 0.0; 0.0 0.0 1.0"
 
 },
 
@@ -26,7 +27,8 @@
         "freqs" : "freqs",
         "rsid_readfrombim" : "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPs/chr_*.bim,3,1, ",
         "maf" : 1,
-        "effect_transform" : "full"
+        "effect_transform" : "full",
+        "Amat" : "1.0 0.0 0.0;0.0 1.0 0.0; 0.0 0.0 1.0"
 },
 
     "ukb": {
@@ -44,7 +46,8 @@
         "freqs" : "freqs",
         "rsid_readfrombim" : "",
         "maf" : 1,
-        "effect_transform" : "direct_plus_averageparental"
+        "effect_transform" : "direct_plus_averageparental",
+        "Amat" : "1.0 0.0 0.0;0.0 0.5 0.5"
 },
 
     "ft" : {
@@ -63,7 +66,8 @@
         "freqs" : "freqs",
         "rsid_readfrombim" : "",
         "maf" : 1,
-        "effect_transform" : "full"
+        "effect_transform" : "full",
+        "Amat" : "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0"
 },
 
     "hunt" : {
@@ -82,7 +86,8 @@
         "freqs" : "freqs",
         "rsid_readfrombim" : "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/ea/Eduhunt_results_chr*.bim,2,1, ",
         "maf" : 1,
-        "effect_transform" : "direct_plus_averageparental"
+        "effect_transform" : "direct_plus_averageparental",
+        "Amat" : "1.0 0.0 0.0;0.0 0.5 0.5"
 
 }
 

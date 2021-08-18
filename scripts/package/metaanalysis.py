@@ -12,17 +12,19 @@ def min_dim(xdict, axis = 1):
 
     cohorts = list(xdict.keys())
     
-    minsofar = 0
+    dimsizes = []
     for c in cohorts:
         dimsize = xdict[c].shape[axis]
-        minsofar = min(dimsize, minsofar)
+        dimsizes += [dimsize]
+    
+    minsofar = min(dimsizes)
     
     # find all cohorts with the maxdimsize
     mincohorts = []
     for c in cohorts:
         dimsize = xdict[c].shape[axis]
         if dimsize == minsofar:
-            minsofar += c
+            mincohorts += [c]
 
     return minsofar, mincohorts
 
@@ -125,12 +127,11 @@ def get_theta_var(wt, A):
     Get variance cov matrix of 
     meta analyzed estimate
     '''
+
     cohorts = list(wt.keys())
     ndim1 = dict_dim(wt, axis = 1)
-    ndim2 = dict_dim(wt, axis = 2)
+    ndim2, _ = min_dim(wt, axis = 2)
     wtsum = np.zeros((wt[cohorts[0]].shape[0], ndim1, ndim2))
-
-    import pdb; pdb.set_trace()
 
     for cohort in cohorts:
         wtsum += wt[cohort] @ A[cohort]

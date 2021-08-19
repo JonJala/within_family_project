@@ -111,11 +111,7 @@ if __name__ == '__main__':
         
         # run analysis
         theta_bar, theta_var = get_estimates(theta_vec_adj, wt, Amat)
-        theta_ses = get_ses(theta_var)
-        z_bar = theta2z(theta_bar, theta_var)
-        pval = get_pval(z_bar)
         
-
         # convert effects
         if dim == 3:
             theta_var, theta_bar = transform_estimates("full",
@@ -132,7 +128,12 @@ if __name__ == '__main__':
                                                             theta_var, 
                                                             theta_bar.reshape(theta_bar.shape[0], 
                                                                                 theta_bar.shape[1]))
+    
+        theta_ses = get_ses(theta_var)
         theta_ses_out = get_ses(theta_var_out)
+
+        z_bar = theta2z(theta_bar, theta_var)
+        pval = get_pval(z_bar)
         z_bar_out = theta2z(theta_bar_out, theta_var_out)
         pval_out = get_pval(z_bar_out)
         

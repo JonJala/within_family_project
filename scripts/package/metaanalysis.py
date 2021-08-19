@@ -28,6 +28,33 @@ def min_dim(xdict, axis = 1):
 
     return minsofar, mincohorts
 
+
+def max_dim(xdict, axis = 1):
+    '''
+    Figure out what the highest dimension value is
+    along a particular axis
+
+    xdict: a dictionary of arrays
+    '''
+
+    cohorts = list(xdict.keys())
+    
+    dimsizes = []
+    for c in cohorts:
+        dimsize = xdict[c].shape[axis]
+        dimsizes += [dimsize]
+    
+    maxsofar = max(dimsizes)
+    
+    # find all cohorts with the maxdimsize
+    mincohorts = []
+    for c in cohorts:
+        dimsize = xdict[c].shape[axis]
+        if dimsize == maxsofar:
+            mincohorts += [c]
+
+    return maxsofar, mincohorts
+
 def dict_dim(xdict, axis = 1):
     '''
     Get dimension/axis size of a set of arrays
@@ -37,12 +64,16 @@ def dict_dim(xdict, axis = 1):
     '''
 
     cohorts = list(xdict.keys())
-    x1 = xdict[cohorts[0]]
-    dimout = x1.shape[axis]
+
+    for c in cohorts:
+        x1 = xdict[c]
+        dimout = x1.shape[axis] if x1.ndim >= axis else np.nan
+        if ~np.isnan(dimout):
+            break
 
     cond = True
     for c in cohorts:
-        dimsame = dimout == xdict[c].shape[axis]
+        dimsame = dimout == xdict[c].shape[axis] if xdict[c].ndim >= axis else False
         cond = cond and dimsame
     
     if not cond:
@@ -93,8 +124,14 @@ def get_wts(A, S_dict):
     
     wt_dict = {}
     for cohort in S_dict:
-        S_mat = np.atleast_2d(S_dict[cohort])
-        wt_dict[cohort] = A[cohort].T @ np.linalg.inv(S_mat)
+
+        if np.all(~np.isnan(A[cohort])):
+            S_mat = np.atleast_2d(S_dict[cohort])
+            wt_dict[cohort] = np.atleast_2d(A[cohort]).T @ np.linalg.inv(S_mat)
+        else:
+            wt_dict_tmp = np.empty_like(np.atleast_2d(S_dict[cohort]))
+            wt_dict_tmp[:] = np.nan
+            wt_dict[cohort] = wt_dict_tmp
         
     return wt_dict
 
@@ -128,9 +165,11 @@ def get_theta_var(wt, A):
     meta analyzed estimate
     '''
 
+    import pdb; pdb.set_trace()
+
     cohorts = list(wt.keys())
     ndim1 = dict_dim(wt, axis = 1)
-    ndim2, _ = min_dim(wt, axis = 2)
+    ndim2, _ = max_dim(wt, axis = 2)
     wtsum = np.zeros((wt[cohorts[0]].shape[0], ndim1, ndim2))
 
     for cohort in cohorts:
@@ -153,13 +192,15 @@ def theta_wted_sum(theta_dict, wt_dict):
     
     '''
 
-
     assert theta_dict.keys() == wt_dict.keys()
     cohorts = list(theta_dict.keys())
     ndimout = dict_dim(wt_dict)
-    theta_bar = np.zeros((theta_dict[cohorts[0]].shape[0], ndimout, 1))
+    nobs = dict_dim(wt_dict, 0)
+    nobs_check = dict_dim(theta_dict, 0)
+    assert nobs == nobs_check
+    theta_bar = np.zeros((nobs, ndimout, 1))
 
-    for cohort in theta_dict:
+    for cohort in cohorts:
         theta_bar += wt_dict[cohort] @ theta_dict[cohort][..., None]
     
     return theta_bar
@@ -182,7 +223,12 @@ def get_estimates(theta_dict, wt_dict, A):
 
 def get_ses(var):
     
-    ses = np.zeros((len(var), 2))
+    nobs = var.shape[0]
+    ndims = var.shape[1]
+    ndims_check = var.shape[2]
+    assert ndims == ndims_check
+
+    ses = np.zeros((len(var), ndims))
     for i in range(len(var)):
         ses[i] = np.sqrt(np.diag(var[i]))
         

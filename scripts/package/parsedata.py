@@ -121,7 +121,7 @@ def clean_SNPs(df, dataname):
 
 
 @logdf
-def make_array_cols_nas(df, col_name_pattern):
+def make_array_cols_nas(df, col_name_pattern, ncol, nrow = 1):
 
     '''
     Properly formats NA values for columns of a dataframe
@@ -137,12 +137,13 @@ def make_array_cols_nas(df, col_name_pattern):
     vector_columns = [col for col in df if col.startswith(col_name_pattern)]
 
     for vector_column in vector_columns:
-        # import pdb; pdb.set_trace()
-        ii = df[vector_column].isna()
-        arr = np.array(df[vector_column].dropna().tolist())
-        arr_shape = np.array(arr[0]).shape
-        nan_mat = np.empty(arr_shape)
+        
+        vect = np.array(df[vector_column].values.tolist())
+        ii = np.any(np.isnan(vect), axis = tuple(range(1, vect.ndim)))
+
+        nan_mat = np.empty((int(nrow), int(ncol)))
         nan_mat[:] = np.nan
+        df.loc[ii, vector_column] = None
         df.loc[ii, vector_column] = df.loc[ii, vector_column].apply(lambda x: nan_mat)
 
     return df
@@ -213,6 +214,7 @@ def filter_allele_matches(df, alleles, theta, S):
     df.loc[~ii, cohort_cols] = None
     df.loc[~ii, theta] = df.loc[~ii, theta].apply(lambda x: theta_nan_mat)
     df.loc[~ii, S] = df.loc[~ii, S].apply(lambda x: S_nan_mat)
+
     df = df.reset_index(drop = True)
     
     return df
@@ -507,6 +509,22 @@ def read_txt(args):
 
 def read_file(args, printinfo = True):
 
+    '''
+    Reads files from args.
+
+    Also outputs a dictionary of A matrices
+
+    Note: A variable called `dims` is created.
+    `dims` is a measure of the number of effects
+    a given SNP x Cohort has. If a cohort has estimated
+    direct, paternal and maternal effects `dims` will be 3.
+    This is given by the number of columns in the A matrix
+    prodivided.
+
+    But there is an 
+    '''
+
+
     # what kind of file is it
     reader = args['path2file'].split(".")[-1]
     print(f"Type of file: {reader}")
@@ -518,23 +536,30 @@ def read_file(args, printinfo = True):
     else:
         raise Exception("Input file extension should either be hdf5 or txt")
 
-    #adding A matrix
-    Amat = args['Amat']
-    Amat = np.array(np.matrix(Amat))
-    dim = Amat.shape[0]
-    N = zdata.shape[0]
-    Amatarray = np.array(Amat.tolist() * N).reshape(N, Amat.shape[0], Amat.shape[1])
-    zdata['amat'] = Amatarray.tolist()
-    zdata['dims'] = dim
+    # adding A matrix
+    Amats = args['Amat']
+    Amat_dict = {}
+    dims_out = []
+    for dim in Amats:
+        Amat = np.array(np.matrix(Amats[dim]))
+        n, m = Amat.shape
+        if Amat.flatten().shape[0] == 0:
+            # if array is empty for given dim
+            Amat = np.array(np.nan)
+        dims_out += [n]
+        Amat_dict[dim] = Amat
 
-    return zdata
+    zdata['dims'] = max(dims_out)
+
+    return zdata, Amat_dict
 
 
 def read_from_json(df_args):
     df_dict = {}
+    Amat_dicts = {}
     for cohort in df_args.keys():
         print(f"Reading file for: {cohort}")
-        df_in = read_file(df_args[cohort], printinfo = False)
+        df_in, Amat_dict = read_file(df_args[cohort], printinfo = False)
         df_in = (df_in
          .pipe(begin_pipeline)
          .pipe(combine_allele_cols, "A1", "A2")
@@ -544,9 +569,10 @@ def read_from_json(df_args):
         )
 
         df_dict[cohort] = df_in
+        Amat_dicts[cohort] = Amat_dict
         print("============================")
     
-    return df_dict
+    return df_dict, Amat_dicts
 
 
     
@@ -763,7 +789,7 @@ def extract_vector(df, estimatename):
     dictionary of vectors with names as `cohorts`.
     '''
 
-    
+    import pdb; pdb.set_trace()
     vector_dict = {}
     cols = [col for col in df.columns if col.startswith(estimatename)]
     cohort_names = [col.split('_')[-1] for col in df.columns if col.startswith(estimatename)]
@@ -843,6 +869,7 @@ def clean_snps(*varlist, df, snpname):
     varlist_out.append(dfout)
 
     return varlist_out
+
 
 
 

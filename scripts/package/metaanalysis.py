@@ -121,7 +121,7 @@ def get_wts(A, S_dict):
     Dictionary of S matrices and A matrices
     to be made into weights
     '''
-    
+
     wt_dict = {}
     for cohort in S_dict:
 
@@ -165,15 +165,14 @@ def get_theta_var(wt, A):
     meta analyzed estimate
     '''
 
-    import pdb; pdb.set_trace()
-
     cohorts = list(wt.keys())
     ndim1 = dict_dim(wt, axis = 1)
     ndim2, _ = max_dim(wt, axis = 2)
     wtsum = np.zeros((wt[cohorts[0]].shape[0], ndim1, ndim2))
 
     for cohort in cohorts:
-        wtsum += wt[cohort] @ A[cohort]
+        if np.all(~np.isnan(wt[cohort])) and np.all(~np.isnan(A[cohort])):
+            wtsum += wt[cohort] @ A[cohort]
 
     theta_var = np.linalg.inv(wtsum)
     
@@ -192,6 +191,7 @@ def theta_wted_sum(theta_dict, wt_dict):
     
     '''
 
+
     assert theta_dict.keys() == wt_dict.keys()
     cohorts = list(theta_dict.keys())
     ndimout = dict_dim(wt_dict)
@@ -200,8 +200,10 @@ def theta_wted_sum(theta_dict, wt_dict):
     assert nobs == nobs_check
     theta_bar = np.zeros((nobs, ndimout, 1))
 
+    # import pdb; pdb.set_trace()
     for cohort in cohorts:
-        theta_bar += wt_dict[cohort] @ theta_dict[cohort][..., None]
+        if np.all(~np.isnan(wt_dict[cohort])) and np.all(~np.isnan(theta_dict[cohort])):
+            theta_bar += wt_dict[cohort] @ theta_dict[cohort][..., None]
     
     return theta_bar
 

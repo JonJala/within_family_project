@@ -17,6 +17,20 @@ def highest_dim(df:pd.DataFrame, colname = 'dims') -> pd.DataFrame:
     return df
 
 
+def reverse_nest_dicts(nested_dict):
+    '''
+    Reverses order of nested dictionary
+    '''
+    reverse_nest_dict = {}
+    for k, v in nested_dict.items():
+        for k2, v2 in v.items():
+            try:
+                reverse_nest_dict[k2][k] = v2
+            except KeyError:
+                reverse_nest_dict[k2] = { k : v2 }
+    return reverse_nest_dict
+
+
 
 if __name__ == '__main__':
     
@@ -48,7 +62,8 @@ if __name__ == '__main__':
         data_args = json.load(f)
     
     # parsing
-    df_dict = read_from_json(data_args)
+    df_dict, Amat_dicts = read_from_json(data_args)
+    Amat_dicts = reverse_nest_dicts(Amat_dicts)
 
     if args.diag:
         print("Running diagnostics on input files...")
@@ -69,21 +84,12 @@ if __name__ == '__main__':
     .pipe(begin_pipeline)
     .pipe(combine_cols, 'CHR', [c for c in df_toarray if c.startswith('CHR_')], 0)
     .pipe(combine_cols, 'BP', [c for c in df_toarray if c.startswith('BP_')])
+    .pipe(highest_dim)
     )
     
     df_toarray = df_toarray.sort_values("BP").reset_index(drop = True)
 
-    # properly formatting missing values
-    df_toarray = (
-        df_toarray
-        .pipe(begin_pipeline)
-        .pipe(make_array_cols_nas, 'theta_')
-        .pipe(make_array_cols_nas, 'S_')
-        .pipe(make_array_cols_nas, 'amat_')
-        .pipe(highest_dim)
-    )
 
-    
     dims = df_toarray['max_dim'].unique()
     dims = dims[dims > 1] # we dont care about SNPs where we only have population effects
     df_out_list = []
@@ -92,7 +98,17 @@ if __name__ == '__main__':
 
         print(f"Meta analyzing SNPs with effect dimensions {dim}...")
 
-        df_toarray_dim = df_toarray.loc[df_toarray['max_dim'] == dim]
+        df_toarray_dim = df_toarray.loc[df_toarray['max_dim'] == dim].reset_index(drop = True)
+
+
+        import pdb; pdb.set_trace()
+        # properly formatting missing values
+        df_toarray_dim = (
+            df_toarray_dim
+            .pipe(begin_pipeline)
+            .pipe(make_array_cols_nas, 'theta_', int(dim), 1)
+            .pipe(make_array_cols_nas, 'S_', int(dim), int(dim))
+        )
 
         # == Array operations == #
         theta_vec = extract_vector(df_toarray_dim, "theta")
@@ -100,14 +116,14 @@ if __name__ == '__main__':
         phvar_vec = extract_vector(df_toarray_dim, "phvar")
         phvar_vec = get_firstvalue_dict(phvar_vec)
         
-        Amat = extract_vector(df_toarray_dim, "amat")
-        Amat = get_firstvalue_dict(Amat)
+        Amat = Amat_dicts[str(int(dim))]
+        
 
         theta_vec_adj = adjust_theta_by_phvar(theta_vec, phvar_vec)
         S_vec_adj = adjust_S_by_phvar(S_vec, phvar_vec)
         
         wt = get_wts(Amat, S_vec_adj)
-        nan_to_num_dict(wt, theta_vec_adj)
+        # nan_to_num_dict(wt, theta_vec_adj)
         
         # run analysis
         theta_bar, theta_var = get_estimates(theta_vec_adj, wt, Amat)

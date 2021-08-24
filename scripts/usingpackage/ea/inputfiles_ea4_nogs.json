@@ -1,4 +1,16 @@
 {
+    "ea4" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/ea4/ea4_excl_ukb_str_gs_2020_08_21.txt",
+        "maf" : 1,
+        "rsid_readfrombim" : "",
+        "effect_transform" : "full",
+        "effects" : {
+                "1" : "pop"
+        },
+        "phvar" : 11.56,
+        "Amat" : {"3" : "1.0 0.5 0.5",
+                "2" : "1.0 1.0"}
+    },
 
     "moba" : {
 

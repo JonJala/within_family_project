@@ -6,7 +6,14 @@
         "txt_effectin" : "avg_parental",
         "maf" : 1,
         "rsid_readfrombim" : "",
-        "effect_transform" : "full"
+        "effect_transform" : "full",
+        "effects" : {
+                "1" : "direct",
+                "2" : "avg_parental"
+        },
+        "phvar" : 1,
+        "Amat" : {"3" : "1.0 0.0 0.0;0.0 0.5 0.5",
+                "2" : "1.0 0.0;0.0 1.0"}
 
 },
 

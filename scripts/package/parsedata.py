@@ -121,7 +121,7 @@ def clean_SNPs(df, dataname):
 
 
 @logdf
-def make_array_cols_nas(df, col_name_pattern, ncol, nrow = 1):
+def make_array_cols_nas(df, col_name_pattern, Amat, dim = None):
 
     '''
     Properly formats NA values for columns of a dataframe
@@ -137,11 +137,20 @@ def make_array_cols_nas(df, col_name_pattern, ncol, nrow = 1):
     vector_columns = [col for col in df if col.startswith(col_name_pattern)]
 
     for vector_column in vector_columns:
-        
+
+
+        cohort = vector_column.split("_")[-1]
+        Acohort = Amat[cohort]
+
         vect = np.array(df[vector_column].values.tolist())
         ii = np.any(np.isnan(vect), axis = tuple(range(1, vect.ndim)))
 
-        nan_mat = np.empty((int(nrow), int(ncol)))
+        nrow = Acohort.shape[0] if dim is None else dim
+        if nrow == 0:
+            # only meant to be one dimensional
+            nan_mat = np.empty(Acohort.shape[0])
+        else:
+            nan_mat = np.empty((nrow, Acohort.shape[0]))
         nan_mat[:] = np.nan
         df.loc[ii, vector_column] = None
         df.loc[ii, vector_column] = df.loc[ii, vector_column].apply(lambda x: nan_mat)
@@ -452,25 +461,30 @@ def read_hdf5(args, printinfo = True):
 
 def read_txt(args):
     
-    indirect_effect = args['txt_effectin']
+    effects = args["effects"]
+    effect_list = []
+
+    # get list of effects
+    for effect in effects:
+        effect_list += [effects[effect]]
+
     dfin = pd.read_csv(args['path2file'], delim_whitespace = True)
     N = dfin.shape[0]
     
-    theta = np.zeros((N, 2))
-    theta[:, 0] = np.array(dfin["direct_Beta"].tolist())
-    theta[:, 1] = np.array(dfin[f'{indirect_effect}_Beta'].tolist())   
+    theta = np.zeros((N, len(effect_list)))
+    se = np.zeros((N, len(effect_list)))
+    S = np.zeros((N, len(effect_list), len(effect_list)))
+    for i, effect in enumerate(effect_list):
+        
+        theta[:, i] = np.array(dfin[effect + '_Beta'].tolist())
+        se[:, i] = np.array((dfin[effect + "_SE"]).tolist())
+        S[:, i, i] = np.array((dfin[effect + "_SE"]**2).tolist())
     
+    if len(effects) > 1:
     
-    se = np.zeros((N, 2))
-    se[:, 0] = np.array((dfin["direct_SE"]).tolist())
-    se[:, 1] = np.array((dfin[f'{indirect_effect}_SE']).tolist()) 
-    
-    S = np.zeros((N, 2, 2))
-    S[:, 0, 0] = np.array((dfin["direct_SE"]**2).tolist())
-    S[:, 1, 1] = np.array((dfin[f'{indirect_effect}_SE']**2).tolist()) 
-    
-    cov = dfin["direct_SE"] * dfin[f'{indirect_effect}_SE'] * dfin[f'r_direct_{indirect_effect}']
-    S[:, 0, 1] = np.array(cov.tolist()) 
+        cov = dfin[effect_list[0] + "_SE"] * dfin[f'{effect_list[1]}_SE'] * dfin[f'r_direct_{effect_list[1]}']
+        S[:, 0, 1] = np.array(cov.tolist())
+
     
     zdata = pd.DataFrame({'CHR' : dfin['chromosome'].astype(int),
                     'SNP' : dfin['SNP'].astype(str),
@@ -481,7 +495,7 @@ def read_txt(args):
                     'theta' : theta.tolist(),
                     'se' : se.tolist(),
                     "S" : S.tolist(),
-                    "phvar" : 1.0})
+                    "phvar" : args['phvar']})
     
     if args['rsid_readfrombim'] != '':
 
@@ -502,7 +516,7 @@ def read_txt(args):
         zdata = zdata.rename(columns = {"SNP" : "SNP_old"})
         zdata = zdata.rename(columns = {"rsid" : "SNP"})
 
-    
+
     return zdata
 
 
@@ -541,13 +555,16 @@ def read_file(args, printinfo = True):
     Amat_dict = {}
     dims_out = []
     for dim in Amats:
-        Amat = np.array(np.matrix(Amats[dim]))
+        Amat = np.array(np.matrix(Amats[dim]), dtype = float)
         n, m = Amat.shape
         if Amat.flatten().shape[0] == 0:
             # if array is empty for given dim
-            Amat = np.array(np.nan)
+            Amat = np.array([np.nan])
+        
+        # Reaplce -999 (nan value signifier) with nan
+        Amat[(Amat > -1000) & (Amat < -998)] = np.nan
         dims_out += [n]
-        Amat_dict[dim] = Amat
+        Amat_dict[dim] = np.atleast_2d(Amat)
 
     zdata['dims'] = max(dims_out)
 
@@ -789,7 +806,6 @@ def extract_vector(df, estimatename):
     dictionary of vectors with names as `cohorts`.
     '''
 
-    import pdb; pdb.set_trace()
     vector_dict = {}
     cols = [col for col in df.columns if col.startswith(estimatename)]
     cohort_names = [col.split('_')[-1] for col in df.columns if col.startswith(estimatename)]

@@ -171,7 +171,7 @@ def get_theta_var(wt, A):
     wtsum = np.zeros((wt[cohorts[0]].shape[0], ndim1, ndim2))
 
     for cohort in cohorts:
-        if np.all(~np.isnan(wt[cohort])) and np.all(~np.isnan(A[cohort])):
+        if np.all(~np.isnan(A[cohort])):
             wtsum += wt[cohort] @ A[cohort]
 
     theta_var = np.linalg.inv(wtsum)

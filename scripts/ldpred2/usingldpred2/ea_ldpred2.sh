@@ -43,13 +43,25 @@ gsbed="/disk/genetics/sibling_consortium/GS20k/aokbay/imputed/HRC/plink/HM3/GS_H
 
 
 # Baseline ea4 PGI
+# Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
+#     --bfile $gsbed \
+#     --sumstats "/disk/genetics4/projects/EA4/derived_data/Meta_analysis/5_Excl_UKBrel_STR_GS/2020_08_21/output/EA4_excl_UKBrel_STR_GS_2020_08_21.meta" \
+#     --outfile "${within_family_path}/processed/ldpred2/ea4_ref" \
+#     --chr "Chr" --pos "BP" --rsid "rsID" --a1 "EA" --a2 "OA" --N_col "N" \
+#     --beta "BETA" --beta_se "SE" \
+#     --bed_backup "${within_family_path}/processed/ldpred2/GS_HRC_HM3.bk" \
+#     --predout --scale_pgi
+
+
+# Meta analysis with EA4
 Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
     --bfile $gsbed \
-    --sumstats "/disk/genetics4/projects/EA4/derived_data/Meta_analysis/5_Excl_UKBrel_STR_GS/2020_08_21/output/EA4_excl_UKBrel_STR_GS_2020_08_21.meta" \
-    --outfile "${within_family_path}/processed/ldpred2/ea4_ref" \
-    --chr "Chr" --pos "BP" --rsid "rsID" --a1 "EA" --a2 "OA" --N_col "N" \
-    --beta "BETA" --beta_se "SE" \
+    --sumstats "${within_family_path}/processed/package_output/ea/ea_meta_analysis_amat.csv" \
+    --outfile "${within_family_path}/processed/ldpred2/ea_pgi_with_ea4" \
+    --chr "CHR" --pos "BP" --rsid "SNP" --a1 "Allele1" --a2 "Allele2" --N_col "N_dir" \
+    --beta "beta_dir" --beta_se "beta_se_dir" \
     --bed_backup "${within_family_path}/processed/ldpred2/GS_HRC_HM3.bk" \
     --predout --scale_pgi
+
 
 

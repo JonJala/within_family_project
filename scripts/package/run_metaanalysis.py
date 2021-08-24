@@ -94,36 +94,47 @@ if __name__ == '__main__':
     dims = dims[dims > 1] # we dont care about SNPs where we only have population effects
     df_out_list = []
 
+    # arrays to store
+    theta_tosave = np.empty(shape = (0, 2))
+    theta_ses_tosave = np.empty(shape = (0, 2))
+    theta_var_tosave = np.empty(shape = (0, 2, 2))
+
+    theta_bar_pop_tosave = np.empty(shape = (0, 2))
+    theta_ses_pop_tosave = np.empty(shape = (0, 2))
+    theta_var_pop_tosave = np.empty(shape = (0, 2, 2))
+
+    f_bar_tosave = np.empty(shape = (0, 1))
+
+
     for dim in dims:
 
         print(f"Meta analyzing SNPs with effect dimensions {dim}...")
 
         df_toarray_dim = df_toarray.loc[df_toarray['max_dim'] == dim].reset_index(drop = True)
+        Amat = Amat_dicts[str(int(dim))]
 
-
-        import pdb; pdb.set_trace()
         # properly formatting missing values
         df_toarray_dim = (
             df_toarray_dim
             .pipe(begin_pipeline)
-            .pipe(make_array_cols_nas, 'theta_', int(dim), 1)
-            .pipe(make_array_cols_nas, 'S_', int(dim), int(dim))
+            .pipe(make_array_cols_nas, 'theta_', Amat, 0)
+            .pipe(make_array_cols_nas, 'S_', Amat)
         )
 
         # == Array operations == #
         theta_vec = extract_vector(df_toarray_dim, "theta")
         S_vec = extract_vector(df_toarray_dim, "S_")
         phvar_vec = extract_vector(df_toarray_dim, "phvar")
+        
+        
+        
         phvar_vec = get_firstvalue_dict(phvar_vec)
-        
-        Amat = Amat_dicts[str(int(dim))]
-        
 
         theta_vec_adj = adjust_theta_by_phvar(theta_vec, phvar_vec)
         S_vec_adj = adjust_S_by_phvar(S_vec, phvar_vec)
         
         wt = get_wts(Amat, S_vec_adj)
-        # nan_to_num_dict(wt, theta_vec_adj)
+        nan_to_num_dict(wt, theta_vec_adj)
         
         # run analysis
         theta_bar, theta_var = get_estimates(theta_vec_adj, wt, Amat)
@@ -163,7 +174,7 @@ if __name__ == '__main__':
         f_bar = f_bar/wt_dir_sum
 
         # preparation for outdata
-        est1_type = args.outestimates.split("_")[0]
+        est1_type = "avgparental"
         est2_type = args.outestimates.split("_")[-1]
         
         Neff_dir = neff(f_bar, theta_ses_out[:, 0])
@@ -211,7 +222,21 @@ if __name__ == '__main__':
                                             df = df_out, snpname = 'SNP')
         df_out = df_out.dropna(subset = ['SNP'])
 
+        # appending data
         df_out_list += [df_out]
+
+
+
+        theta_tosave = np.vstack((theta_tosave, theta_bar.reshape((theta_bar.shape[0], theta_bar.shape[1]))))
+        theta_ses_tosave = np.vstack((theta_ses_tosave, theta_ses.reshape((theta_ses.shape[0], theta_ses.shape[1]))))
+        theta_var_tosave = np.vstack((theta_var_tosave, theta_var.reshape((theta_var.shape[0], theta_var.shape[1], theta_var.shape[2]))))
+
+        theta_bar_pop_tosave = np.vstack((theta_bar_pop_tosave, theta_bar_out.reshape((theta_bar.shape[0], theta_bar.shape[1]))))
+        theta_ses_pop_tosave = np.vstack((theta_ses_pop_tosave, theta_ses_out.reshape((theta_ses_out.shape[0], theta_ses_out.shape[1]))))
+        theta_var_pop_tosave = np.vstack((theta_var_pop_tosave, theta_var_out.reshape((theta_var_out.shape[0], theta_var_out.shape[1], theta_var_out.shape[2]))))
+
+        f_bar_tosave = np.vstack((f_bar_tosave, f_bar[..., None]))
+
 
     # append list of dataframes
     df_out = pd.concat(df_out_list)
@@ -219,6 +244,7 @@ if __name__ == '__main__':
     # == Outputting data == #
 
     if not args.no_txt_out:
+        print(f"Writing output to {args.outprefix + '.csv'}")
         df_out.to_csv(args.outprefix + '.csv', sep = ' ', index = False, na_rep = ".")
     
     if not args.no_hdf5_out:
@@ -228,12 +254,12 @@ if __name__ == '__main__':
             df_out['BP'],
             df_out[['Allele1', 'Allele2']],
             args.outprefix  + '_' + est1_type,
-            theta_bar.reshape(theta_bar_out.shape),
-            theta_ses,
-            theta_var,
+            theta_tosave,
+            theta_ses_tosave,
+            theta_var_tosave,
             0.0,
             0.0,
-            f_bar
+            f_bar_tosave.flatten()
         )
 
         write_output(
@@ -242,12 +268,12 @@ if __name__ == '__main__':
             df_out['BP'],
             df_out[['Allele1', 'Allele2']],
             args.outprefix + '_' + est2_type,
-            theta_bar_out.reshape(theta_bar_out.shape),
-            theta_ses_out,
-            theta_var_out,
+            theta_bar_pop_tosave,
+            theta_ses_pop_tosave,
+            theta_var_pop_tosave,
             0.0,
             0.0,
-            f_bar
+            f_bar_tosave.flatten()
         )
     
     

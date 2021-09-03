@@ -38,6 +38,21 @@ FLIP_ALLELES = {''.join(x):
                 ((x[0] == COMPLEMENT[x[3]]) and (x[1] == COMPLEMENT[x[2]]))
                 for x in MATCH_ALLELES}
 
+
+
+def reverse_nest_dicts(nested_dict):
+    '''
+    Reverses order of nested dictionary
+    '''
+    reverse_nest_dict = {}
+    for k, v in nested_dict.items():
+        for k2, v2 in v.items():
+            try:
+                reverse_nest_dict[k2][k] = v2
+            except KeyError:
+                reverse_nest_dict[k2] = { k : v2 }
+    return reverse_nest_dict
+
 def atleast2d_col(x):
     '''
     x: np.array
@@ -160,11 +175,11 @@ def make_array_cols_nas(df, col_name_pattern, Amat, dim = None):
 
 
 @logdf
-def merging_data(df_list):
+def merging_data(df_list, jointype = "outer"):
     
     df_merged = reduce(lambda left,right: pd.merge(left, right, 
                                               on = "SNP",
-                                              how = "outer"
+                                              how = jointype
                                               ),
                   df_list)
     
@@ -188,7 +203,11 @@ def df_fastmode(df, columns):
 
 
 def _filter_alleles_matches(alleles):
-    '''Remove bad variants (mismatched alleles, non-SNPs, strand ambiguous).'''
+    '''
+    Identifies good variants (variants exluding mismatched alleles, non-SNPs, strand ambiguous).
+    Returns valid indexes. (Note: These are the indexes you probably
+    want to keep!)
+    '''
     ii = alleles.apply(lambda y: y in MATCH_ALLELES)
 
     # drop all NaNs as well
@@ -198,34 +217,48 @@ def _filter_alleles_matches(alleles):
     return ii
 
 @logdf
-def filter_allele_matches(df, alleles, theta, S):
+def filter_allele_matches(df, alleles, theta, S, drop = False):
     '''
     Takes out observations where alleles
-    aren't right. The observations arent actually dropped.
+    aren't right. 
+    
+    If `drop` is set to False (default behavior),
+    the observations arent actually dropped.
     Instead the theta, and S values are made into
     NA matrices
+
+    If `drop` is True the observations/SNPs are
+    dropped.
     '''
     
     ii = _filter_alleles_matches(df[alleles])
-    
-    # replace the appropriate nans
-    theta_shape = np.array(df[theta].dropna().iloc[0]).shape
-    theta_nan_mat = np.empty(theta_shape)
-    theta_nan_mat[:] = np.nan
+    initobs = df.shape[0]
+    num_invalid = initobs - ii.sum()
+    print(f"Number of invalid SNPS: {num_invalid}")
 
-    S_shape = np.array(df[S].dropna().iloc[0]).shape
-    S_nan_mat = np.empty(S_shape)
-    S_nan_mat[:] = np.nan
+    # replace the appropriate nans
+    if not drop:
+        theta_shape = np.array(df[theta].dropna().iloc[0]).shape
+        theta_nan_mat = np.empty(theta_shape)
+        theta_nan_mat[:] = np.nan
+
+        S_shape = np.array(df[S].dropna().iloc[0]).shape
+        S_nan_mat = np.empty(S_shape)
+        S_nan_mat[:] = np.nan
+        
+        cohort = alleles.split("_")[-1]
+        cohort_cols = [c for c in df.columns if c.endswith(cohort)]
+        
+        df.loc[~ii, cohort_cols] = None
+        df.loc[~ii, theta] = df.loc[~ii, theta].apply(lambda x: theta_nan_mat)
+        df.loc[~ii, S] = df.loc[~ii, S].apply(lambda x: S_nan_mat)
+    elif drop:
+        print("Dropping bad SNPs (instead of making the matrices NAN)")
+        df = df.loc[ii]
     
-    cohort = alleles.split("_")[-1]
-    cohort_cols = [c for c in df.columns if c.endswith(cohort)]
-    
-    df.loc[~ii, cohort_cols] = None
-    df.loc[~ii, theta] = df.loc[~ii, theta].apply(lambda x: theta_nan_mat)
-    df.loc[~ii, S] = df.loc[~ii, S].apply(lambda x: S_nan_mat)
 
     df = df.reset_index(drop = True)
-    
+
     return df
     
 
@@ -280,7 +313,7 @@ def align_alleles(df, zname, f, alleles, chunksize = 1_000_000):
 
 
 @logdf
-def filter_and_align(df, cohorts):
+def filter_and_align(df, cohorts, drop = False):
     '''
     Drops ambiguous alleles and
     aligns effects if alleles are flipped
@@ -289,7 +322,7 @@ def filter_and_align(df, cohorts):
     dfout = begin_pipeline(df)
     
     for cohort in cohorts:
-        dfout = filter_allele_matches(dfout, f'allele_merge_{cohort}', f'theta_{cohort}', f'S_{cohort}')
+        dfout = filter_allele_matches(dfout, f'allele_merge_{cohort}', f'theta_{cohort}', f'S_{cohort}', drop = drop)
         dfout = align_alleles(dfout, f'theta_{cohort}', f'f_{cohort}', f'allele_merge_{cohort}')
         
     return dfout
@@ -438,6 +471,7 @@ def read_hdf5(args, printinfo = True):
     
     if args['rsid_readfrombim'] != '':
         
+        print("Getting RSIDs from bim files...")
         rsid_parts = args['rsid_readfrombim'].split(",")
         rsidfiles = rsid_parts[0]
         bppos = int(rsid_parts[1])
@@ -451,7 +485,11 @@ def read_hdf5(args, printinfo = True):
             snps = snps.append(snp_i, ignore_index = True)
         
         snps = snps.drop_duplicates(subset=['BP'])
-        zdata = zdata.merge(snps, how = "left", on = "BP")
+        print(f"Shape before merging with bim {zdata.shape}")
+        zdata = zdata.merge(snps, how = "inner", on = "BP")
+        print(f"Shape before merging with bim {zdata.shape}")
+        goodlookingrsids = zdata['SNP'].str.startswith("rs").sum()
+        print(f"RSIDs which look reasonable: {goodlookingrsids} i.e {(goodlookingrsids * 100)/zdata.shape[0]} of SNPs.")
         zdata = zdata.rename(columns = {"SNP" : "SNP_old"})
         zdata = zdata.rename(columns = {"rsid" : "SNP"})
 
@@ -545,10 +583,11 @@ def read_file(args, printinfo = True):
 
     if reader == "hdf5":
         zdata = read_hdf5(args, printinfo)
-    elif reader == "txt":
+    elif reader == "txt" or reader == "sumstats":
         zdata = read_txt(args)
-    else:
-        raise Exception("Input file extension should either be hdf5 or txt")
+    else: 
+        print("There was no recognized extension format. Assuming input is txt")
+        zdata = read_txt(args)
 
     # adding A matrix
     Amats = args['Amat']
@@ -589,97 +628,14 @@ def read_from_json(df_args):
         Amat_dicts[cohort] = Amat_dict
         print("============================")
     
+    
+    Amat_dicts = reverse_nest_dicts(Amat_dicts)
     return df_dict, Amat_dicts
 
 
     
 # == Working with arrays == #
 
-def transform_estimates(effect_estimated,
-                        S, theta):
-    '''
-    Transforms theta (can also be z) and S data into
-    the required format
-    Format types can be:
-    - population (1 dimensional)
-    - direct_plus_averageparental (2 dimensional)
-    - direct_plus_population (2 dimensional)
-    - full - passes estiamtes as is
-    '''
-
-
-    if effect_estimated == "population":
-        
-        print("Converting from full to population")
-
-        Sdir = np.empty(len(S))
-        for i in range(len(S)):
-            Sdir[i] = np.array([[1.0, 0.5, 0.5]]) @ S[i] @ np.array([[1.0, 0.5, 0.5]]).T
-
-        S = Sdir.reshape((len(S), 1, 1))
-        theta = theta @ np.array([1.0, 0.5, 0.5])
-        theta = theta.reshape((theta.shape[0], 1))
-    elif effect_estimated == "direct_plus_averageparental":
-
-        print("Converting from full to direct + average parental")
-
-        # == Combining indirect effects to make V a 2x2 matrix == #
-        tmatrix = np.array([[1.0, 0.0],
-                            [0.0, 0.5],
-                            [0.0, 0.5]])
-        Sdir = np.empty((len(S), 2, 2))
-        for i in range(len(S)):
-            Sdir[i] = tmatrix.T @ S[i] @ tmatrix
-        S = Sdir.reshape((len(S), 2, 2))
-        theta = theta @ tmatrix
-        theta = theta.reshape((theta.shape[0], 2))
-    elif effect_estimated == "direct_plus_population":
-
-        print("Converting from full to direct + Population")
-
-        # == keeping direct effect and population effect == #
-        tmatrix = np.array([[1.0, 1.0],
-                            [0.0, 0.5],
-                            [0.0, 0.5]])
-        Sdir = np.empty((len(S), 2, 2))
-        for i in range(len(S)):
-            Sdir[i] = tmatrix.T @ S[i] @ tmatrix
-
-        S = Sdir.reshape((len(S), 2, 2))
-        theta = theta @ tmatrix
-        theta = theta.reshape((theta.shape[0], 2))
-    elif effect_estimated == "full":
-        print("Not converting to anything")
-        pass
-    elif effect_estimated == "avgparental_to_population":
-
-        print("Converting from average parental to population")
-
-        tmatrix = np.array([[1.0, 1.0],
-                            [0.0, 1.0]])
-        
-        Sdir = tmatrix.T @ S @ tmatrix
-
-        S = Sdir.reshape((len(S), 2, 2))
-        theta = theta @ tmatrix
-        theta = theta.reshape((theta.shape[0], 2))
-    elif effect_estimated == "population_to_avgparental":
-
-        print("Converting from population to average parental")
-
-        tmatrix = np.array([[1.0, -1.0],
-                            [0.0, 1.0]])
-        Sdir = np.empty((len(S), 2, 2))
-        for i in range(len(S)):
-            Sdir[i] = tmatrix.T @ S[i] @ tmatrix
-
-        S = Sdir.reshape((len(S), 2, 2))
-        theta = theta @ tmatrix
-        theta = theta.reshape((theta.shape[0], 2))
-    else:
-        print("Warning: The given parameters hasn't been converted.")
-
-    return S, theta
 
 def transform_estimates(fromest,
                         toest,
@@ -697,7 +653,9 @@ def transform_estimates(fromest,
     - population - refers to (population)
     '''
 
-    if fromest == "full" and toest == "direct_population":
+    if fromest == toest:
+        pass
+    elif fromest == "full" and toest == "direct_population":
         print("Converting from full to direct + Population")
 
         # == keeping direct effect and population effect == #
@@ -756,10 +714,6 @@ def transform_estimates(fromest,
         print("Warning: The given parameters hasn't been converted.")
 
     return S, theta
-
-
-
-
 
 @njit(cache = True)
 def theta2z(theta, S):
@@ -834,6 +788,10 @@ def get_firstvalue_dict(input_dict):
 
 
 def transform_estimates_dict(theta_dict, S_dict, args):
+
+    '''
+    Doesnt work now
+    '''
     
     assert theta_dict.keys() == S_dict.keys()
     

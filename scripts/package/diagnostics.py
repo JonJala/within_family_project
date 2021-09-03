@@ -12,7 +12,7 @@ mpl.rcParams['agg.path.chunksize'] = 10000
 from parsedata import *
 
 
-def print_sumstats(df_dict, df_args, hm3path = "/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"):
+def print_sumstats(df_dict, df_args, transformto, hm3path = "/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"):
     
     hm3 = pd.read_csv(hm3path, delim_whitespace = True)
     df_sumstats = pd.DataFrame(columns = ['Dataset', 'Num. Obs', 'Num. Obs (HM3 SNPs)',
@@ -32,7 +32,7 @@ def print_sumstats(df_dict, df_args, hm3path = "/disk/genetics2/pub/data/PH3_Ref
         
         theta = np.array(dfin[f'theta_{cohort}'].tolist())
         S = np.array(dfin[f'S_{cohort}'].tolist())
-        S, theta = transform_estimates(df_arg['effect_transform'], S, theta)
+        S, theta = transform_estimates(df_arg['effect_transform'], transformto, S, theta)
         indir_effect_name = df_arg['effect_transform'].split('_')[-1]
         print(f'Second effect is: {indir_effect_name}')
         
@@ -73,7 +73,7 @@ def print_sumstats(df_dict, df_args, hm3path = "/disk/genetics2/pub/data/PH3_Ref
 
 
 
-def make_diagnostic_plots(df_dict, df_args, plot_prefix = ".",
+def make_diagnostic_plots(df_dict, df_args, transformto, plot_prefix = ".",
                          REF_file = "/var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.ALLELE_FREQUENCY.MAPFILE.HRC.chr1_22_X.LET.FLIPPED_ALLELE_1000G+UK10K.txt",
                          savefig = True):
     
@@ -100,7 +100,7 @@ def make_diagnostic_plots(df_dict, df_args, plot_prefix = ".",
         
         theta = np.array(df_merged[f'theta_{cohort}'].tolist())
         S = np.array(df_merged[f'S_{cohort}'].tolist())
-        S, theta = transform_estimates(df_arg['effect_transform'], S, theta)
+        S, theta = transform_estimates(df_arg['effect_transform'], transformto, S, theta)
         indir_effect_name = df_arg['effect_transform'].split('_')[-1]
         indir_effect_name = indir_effect_name.replace('_', ' ').title()
         
@@ -149,6 +149,8 @@ if __name__ == '__main__':
     Location to output association statistic hdf5 file. 
     Outputs text output to outprefix.sumstats.gz and HDF5 
     output to outprefix.sumstats.hdf5''', default='')
+    parser.add_argument('--transformto', type=str, help='''
+    What the estimates should be transformed into''', default='direct_averageparental')
     args=parser.parse_args()
 
     startTime = dt.datetime.now()
@@ -159,9 +161,9 @@ if __name__ == '__main__':
         data_args = json.load(f)
     
     # parsing
-    df_dict = read_from_json(data_args)
+    df_dict, _ = read_from_json(data_args)
 
     print("Running diagnostics on input files...")
-    dfdiag = print_sumstats(df_dict, data_args)
+    dfdiag = print_sumstats(df_dict, data_args, args.transformto)
     dfdiag.to_csv(args.outprefix + ".diag.sumstats.csv")
-    make_diagnostic_plots(df_dict, data_args, args.outprefix)
+    make_diagnostic_plots(df_dict, data_args, args.transformto, args.outprefix)

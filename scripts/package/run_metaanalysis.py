@@ -17,18 +17,6 @@ def highest_dim(df:pd.DataFrame, colname = 'dims') -> pd.DataFrame:
     return df
 
 
-def reverse_nest_dicts(nested_dict):
-    '''
-    Reverses order of nested dictionary
-    '''
-    reverse_nest_dict = {}
-    for k, v in nested_dict.items():
-        for k2, v2 in v.items():
-            try:
-                reverse_nest_dict[k2][k] = v2
-            except KeyError:
-                reverse_nest_dict[k2] = { k : v2 }
-    return reverse_nest_dict
 
 
 
@@ -63,7 +51,6 @@ if __name__ == '__main__':
     
     # parsing
     df_dict, Amat_dicts = read_from_json(data_args)
-    Amat_dicts = reverse_nest_dicts(Amat_dicts)
 
     if args.diag:
         print("Running diagnostics on input files...")
@@ -127,7 +114,6 @@ if __name__ == '__main__':
         phvar_vec = extract_vector(df_toarray_dim, "phvar")
         
         
-        
         phvar_vec = get_firstvalue_dict(phvar_vec)
 
         theta_vec_adj = adjust_theta_by_phvar(theta_vec, phvar_vec)
@@ -185,31 +171,31 @@ if __name__ == '__main__':
         df_out = pd.DataFrame(
             {
                 'SNP' : df_toarray_dim['SNP'],
-                'BP' : df_toarray_dim['BP'].astype(int),
-                'CHR' : df_toarray_dim['CHR'].astype(int),
+                'pos' : df_toarray_dim['BP'].astype(int),
+                'chromosome' : df_toarray_dim['CHR'].astype(int),
+                'freq' : f_bar,
                 'allele_comb' : df_toarray_dim['allele_consensus'],
-                'beta_dir' : theta_bar_out[:, 0].flatten(),
-                f'beta_{est1_type}' : theta_bar[:, 1].flatten(),
-                f'beta_{est2_type}' : theta_bar_out[:, 1].flatten(),
-                'N_dir' : Neff_dir,
+                'dir_Beta' : theta_bar_out[:, 0].flatten(),
+                f'{est1_type}_Beta' : theta_bar[:, 1].flatten(),
+                f'{est2_type}_Beta' : theta_bar_out[:, 1].flatten(),
+                'dir_N' : Neff_dir,
                 f'N_{est1_type}' : Neff_effect1,
                 f'N_{est2_type}' : Neff_effect2,
                 'z_dir' : z_bar_out[:, 0].flatten(),
                 f'z_{est1_type}' : z_bar[:, 1].flatten(),
                 f'z_{est2_type}' : z_bar_out[:, 1].flatten(),
-                'beta_se_dir' : theta_ses_out[:, 0],
-                f'beta_se_{est1_type}' : theta_ses[:, 1],
-                f'beta_se_{est2_type}' : theta_ses_out[:, 1],
-                f'beta_cov_{est1_type}': theta_var[:, 0, 1],
-                f'beta_cov_{est2_type}': theta_var_out[:, 0, 1],
-                'pval_dir' : pval_out[:, 0].flatten(),
-                f'pval_{est1_type}' : pval[:, 1].flatten(),
-                f'pval_{est2_type}' : pval_out[:, 1].flatten(),
-                'f' : f_bar
+                'dir_SE' : theta_ses_out[:, 0],
+                f'{est1_type}_SE' : theta_ses[:, 1],
+                f'{est2_type}_SE' : theta_ses_out[:, 1],
+                f'{est1_type}_Cov': theta_var[:, 0, 1],
+                f'{est2_type}_Cov': theta_var_out[:, 0, 1],
+                'dir_pval' : pval_out[:, 0].flatten(),
+                f'{est1_type}_pval' : pval[:, 1].flatten(),
+                f'{est2_type}_pval' : pval_out[:, 1].flatten()
             }
         )
 
-        df_out[['Allele1', 'Allele2']] = df_out['allele_comb'].str.split("", expand = True)[[1, 2]]
+        df_out[['A1', 'A2']] = df_out['allele_comb'].str.split("", expand = True)[[1, 2]]
         df_out = df_out.drop(columns = "allele_comb")
 
         n_missing_snps = df_out['SNP'].isna().sum()
@@ -225,8 +211,6 @@ if __name__ == '__main__':
         # appending data
         df_out_list += [df_out]
 
-
-
         theta_tosave = np.vstack((theta_tosave, theta_bar.reshape((theta_bar.shape[0], theta_bar.shape[1]))))
         theta_ses_tosave = np.vstack((theta_ses_tosave, theta_ses.reshape((theta_ses.shape[0], theta_ses.shape[1]))))
         theta_var_tosave = np.vstack((theta_var_tosave, theta_var.reshape((theta_var.shape[0], theta_var.shape[1], theta_var.shape[2]))))
@@ -240,7 +224,9 @@ if __name__ == '__main__':
 
     # append list of dataframes
     df_out = pd.concat(df_out_list)
-    
+    df_out = df_out.sort_values(by = ["chromosome", "pos"])
+    print(f"Final output shape: {df_out.shape}")
+
     # == Outputting data == #
 
     if not args.no_txt_out:
@@ -249,30 +235,30 @@ if __name__ == '__main__':
     
     if not args.no_hdf5_out:
         write_output(
-            df_out['CHR'],
+            df_out['chromosome'],
             df_out['SNP'],
-            df_out['BP'],
-            df_out[['Allele1', 'Allele2']],
+            df_out['pos'],
+            df_out[['A1', 'A2']],
             args.outprefix  + '_' + est1_type,
             theta_tosave,
             theta_ses_tosave,
             theta_var_tosave,
-            0.0,
-            0.0,
+            1.0,
+            1.0,
             f_bar_tosave.flatten()
         )
 
         write_output(
-            df_out['CHR'],
+            df_out['chromosome'],
             df_out['SNP'],
-            df_out['BP'],
-            df_out[['Allele1', 'Allele2']],
+            df_out['pos'],
+            df_out[['A1', 'A2']],
             args.outprefix + '_' + est2_type,
             theta_bar_pop_tosave,
             theta_ses_pop_tosave,
             theta_var_pop_tosave,
-            0.0,
-            0.0,
+            1.0,
+            1.0,
             f_bar_tosave.flatten()
         )
     

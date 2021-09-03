@@ -12,6 +12,7 @@ bash /var/genetics/data/finn_twin/public/latest/processed/sumstats/fgwas/mksumst
 bash /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mksumstats.sh
 bash /var/genetics/data/ukb/public/latest/processed/sumstats/fgwas/mksumstats.sh
 bash /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/mksumstats.sh
+bash /var/genetics/data/lifelines/public/latest/processed/sumstats/fgwas/mksumstats.sh
 
 
 

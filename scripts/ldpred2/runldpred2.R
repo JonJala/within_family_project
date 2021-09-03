@@ -94,7 +94,11 @@ option_list = list(
     make_option(c("--predout"),  action="store_true", default=FALSE, help="Should PGIs also be calculated and
     outputted. If no the script will only output the weights.", metavar="character"),
     make_option(c("--scale_pgi"),  action="store_true", default=FALSE, help="If true PGI's are standardized
-    to have mean 0 and variance 1. Only works if the predout option is chosen.", metavar="character")
+    to have variance 1. Only works if the predout option is chosen.", metavar="character"),
+    make_option(c("--fast_impute"),  action="store_true", default=FALSE, help="If the bed file provided
+    has some missing values (i.e. the imputation wasn't already done) this option allows
+    a fast impute via the bigsnpr package. Note: Even if this option isn't provided, if NA's
+    are found within the first 1000 SNPs, fast imputation is carried out.", metavar="character")
 )
 
 
@@ -181,10 +185,24 @@ if (opt$read_ldmat != ""){
 # perform SNP matching
 info_snp <- snp_match(sumstats, map)
 # Assign the genotype to a variable for easier downstream analysis
-genotypes <- obj.bigSNP$genotypes <- snp_fastImputeSimple(
-    obj.bigSNP$genotypes,
-    method = "random", ncores = nb_cores()
-)
+genotypes <- obj.bigSNP$genotypes
+num_nas <- sum(is.na(genotypes[, 1:10000])) 
+# 10000 is an arbitrary number of SNPs to check.
+# takes too long to calculate for all SNPs.
+
+if (opt$fast_impute){
+    cat("Fast imputing genotypes because the option was passed in...\n")
+    genotypes <- snp_fastImputeSimple(
+        genotypes,
+        method = "random", ncores = nb_cores()
+    )
+} else if (num_nas > 0) {
+    cat(num_nas, " NAs have been found in the first 10000 SNPs. Carrying out fast imputation...\n")
+    genotypes <- snp_fastImputeSimple(
+        genotypes,
+        method = "random", ncores = nb_cores()
+    )
+}
 
 
 # Rename the data structures
@@ -280,9 +298,10 @@ setnames(df.out.wt,
     new = c("chrom", "pos", "sid", "nt1", "nt2")
 )
 
-cat("Outputting weight file...\n")
+wtoutfilename = paste0(opt$outfile, ".wt.txt")
+cat(paste("Outputting weight file to:", wtoutfilename), "\n")
 print(str(df.out.wt))
-fwrite(df.out.wt, paste0(opt$outfile, ".wt.txt"),  sep = " ", na = ".")
+fwrite(df.out.wt, wtoutfilename,  sep = " ", na = ".")
 
 if (opt$predout) {
     
@@ -295,12 +314,14 @@ if (opt$predout) {
 
     if (opt$scale_pgi) {
 
-        df.out[, PGI := (PGI - mean(PGI, na.rm = TRUE)/sd(PGI, na.rm = TRUE))]
+        df.out[, PGI := (PGI/sd(PGI, na.rm = TRUE))]
         cat("PGI has been standarized!\n")
     }
-    cat("Outputting PGI file...\n")
+    
+    pgioutname = paste0(opt$outfile, ".pgi.txt")
+    cat(paste("Outputting PGI file to:", pgioutname), "\n")
     print(str(df.out))
-    fwrite(df.out, paste0(opt$outfile, ".pgi.txt"), sep = " ", na = ".")
+    fwrite(df.out, pgioutname, sep = " ", na = ".")
 
 }
 

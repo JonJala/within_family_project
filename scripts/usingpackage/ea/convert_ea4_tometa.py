@@ -25,7 +25,7 @@ ea4 = ea4.rename(
 
 
 
-ea4 = ea4[["chromosome", "SNP", "pos", "freq", "A1", "A2", "pop_Beta", "pop_SE", "Z", "P"]]
+ea4 = ea4[["chromosome", "SNP", "pos", "freq", "A1", "A2", "pop_Beta", "pop_SE", "Z", "P", "N"]]
 
 print(ea4.head())
 

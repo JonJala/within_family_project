@@ -1,0 +1,50 @@
+{
+    "bmi18": {
+        "path2file" : "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_bmi18.sumstats",
+        "maf" : 1,
+        "effects" : {"1" : "direct",
+                    "2" : "avg_parental"},
+        "effect_transform" : "direct_averageparental",
+        "phvar" : 1.0,
+        "rsid_readfrombim" : "",
+        "Amat" : {"3" : "1.0 0.0 0.0;0.0 0.5 0.5",
+                "2" : "1.0 0.0;0.0 1.0"}
+    },
+
+    "bmi": {
+        "path2file" : "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_bmi.sumstats",
+        "maf" : 1,
+        "effects" : {"1" : "direct",
+                    "2" : "avg_parental"},
+        "effect_transform" : "direct_averageparental",
+        "phvar" : 1.0,
+        "rsid_readfrombim" : "",
+        "Amat" : {"3" : "1.0 0.0 0.0;0.0 0.5 0.5",
+                "2" : "1.0 0.0;0.0 1.0"}
+    },
+
+    "height18": {
+        "path2file" : "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_height18.sumstats",
+        "maf" : 1,
+        "effects" : {"1" : "direct",
+                    "2" : "avg_parental"},
+        "effect_transform" : "direct_averageparental",
+        "phvar" : 1.0,
+        "rsid_readfrombim" : "",
+        "Amat" : {"3" : "1.0 0.0 0.0;0.0 0.5 0.5",
+                "2" : "1.0 0.0;0.0 1.0"}
+    },
+
+    "height": {
+        "path2file" : "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_height.sumstats",
+        "maf" : 1,
+        "effects" : {"1" : "direct",
+                    "2" : "avg_parental"},
+        "effect_transform" : "direct_averageparental",
+        "phvar" : 1.0,
+        "rsid_readfrombim" : "",
+        "Amat" : {"3" : "1.0 0.0 0.0;0.0 0.5 0.5",
+                "2" : "1.0 0.0;0.0 1.0"}
+    }
+    
+}

@@ -3,14 +3,14 @@ ukbwhitebrit="/var/genetics/data/ukb/private/latest/processed/user/harij/project
 gsbed="/disk/genetics/sibling_consortium/GS20k/aokbay/imputed/HRC/plink/HM3/GS_HRC_HM3"
 
 
-# Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
-#     --bfile $gsbed \
-#     --sumstats "${within_family_path}/processed/package_output/ea/ea_meta_analysis.csv" \
-#     --outfile "${within_family_path}/processed/ldpred2/ea_pgi_direct" \
-#     --chr "CHR" --pos "BP" --rsid "SNP" --a1 "Allele1" --a2 "Allele2" --N_col "wt_dir" \
-#     --beta "beta_dir" --beta_se "beta_se_dir" \
-#     --bed_backup "${within_family_path}/processed/ldpred2/GS_HRC_HM3.bk" \
-#     --predout --scale_pgi
+Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
+    --bfile $gsbed \
+    --sumstats "${within_family_path}/processed/package_output/ea/ea_meta_analysis_amat.csv" \
+    --outfile "${within_family_path}/processed/ldpred2/ea_pgi_direct" \
+    --chr "chromosome" --pos "pos" --rsid "SNP" --a1 "A1" --a2 "A2" --N_col "dir_N" \
+    --beta "dir_Beta" --beta_se "dir_SE" \
+    --bed_backup "${within_family_path}/processed/ldpred2/GS_HRC_HM3.bk" \
+    --predout --scale_pgi
 
 
 # Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
@@ -56,10 +56,20 @@ gsbed="/disk/genetics/sibling_consortium/GS20k/aokbay/imputed/HRC/plink/HM3/GS_H
 # Meta analysis with EA4
 Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
     --bfile $gsbed \
-    --sumstats "${within_family_path}/processed/package_output/ea/ea_meta_analysis_amat.csv" \
+    --sumstats "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.csv" \
     --outfile "${within_family_path}/processed/ldpred2/ea_pgi_with_ea4" \
-    --chr "CHR" --pos "BP" --rsid "SNP" --a1 "Allele1" --a2 "Allele2" --N_col "N_dir" \
-    --beta "beta_dir" --beta_se "beta_se_dir" \
+    --chr "chromosome" --pos "pos" --rsid "SNP" --a1 "A1" --a2 "A2" --N_col "dir_N" \
+    --beta "dir_Beta" --beta_se "dir_SE" \
+    --bed_backup "${within_family_path}/processed/ldpred2/GS_HRC_HM3.bk" \
+    --predout --scale_pgi
+
+# EA4 with sample overlap
+Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
+    --bfile $gsbed \
+    --sumstats "${within_family_path}/scratch/meta_analysis_sampleoverlap/with_ea4.csv" \
+    --outfile "${within_family_path}/scratch/meta_analysis_sampleoverlap/with_ea4" \
+    --chr "chromosome" --pos "pos" --rsid "SNP" --a1 "A1" --a2 "A2" --N_col "dir_N" \
+    --beta "dir_Beta" --beta_se "dir_SE" \
     --bed_backup "${within_family_path}/processed/ldpred2/GS_HRC_HM3.bk" \
     --predout --scale_pgi
 

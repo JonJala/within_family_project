@@ -7,7 +7,7 @@ subtitle: Everything Done So Far
 
 | Cohohort | Phenotype | LDSC Test | Diag Plots and Tables | Notes |
 | -------- | --------- | ------------------- | ----- | ------------ |
-| STR | BMI | No (h2 estimate is negative) | ||
+| STR | BMI | No (h2 estimate is negative) | | |
 | STR | EA | Yes | |  |
 | Hunt | EA | Yes | |  |
 | GS | EA | Yes | |  |
@@ -24,13 +24,14 @@ subtitle: Everything Done So Far
 | MOBA | Depressive symptoms | No  (h2 is negative) | | |
 | MOBA | Income | No (h2 is negative) | | |
 | MOBA | Fertility | No (Low power. h2 is negative sometimes in jack knife) | | |
-|Geisinger| BMI | Yes | | |
+| Geisinger | BMI | Yes | | |
 | Geisinger | Height | Yes | | |
 | Geisinger | Depression | Yes (Borderline rg) | | |
 | Geisinger | EA | Yes | | |
 | Geisinger | Smoke-Ever | No ( -ve 1) | | |
 | Geisinger | Asthma | Yes | | |
-|
+| Lifeline | BMI/BMI18 | Yes | Yes | |
+| Lifeline | Height/Height18 | Yes | Yes | |
 
 
 # Analysis

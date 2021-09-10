@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 within_family_path="/var/genetics/proj/within_family/within_family_project"
-ldsc_path="/homes/nber/harij/ldsc"
+ldscpath="/homes/nber/harij/ldsc"
 eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
@@ -50,3 +50,34 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/eb/ldsc_smokever
 # -0.8936 (0.0351) - reference panel might have flipped effect
+
+
+# ${ldscpath}/ldsc.py \
+# --rg ${within_family_path}/processed/asthma_ref/asthma_ref.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/asthma_pop.sumstats \
+# --ref-ld-chr ${eur_w_ld_chr} \
+# --w-ld-chr ${eur_w_ld_chr} \
+# --out ${within_family_path}/processed/sanity_checks/eb/ldsc_asthma
+# # 1.1249
+
+
+# ${ldscpath}/ldsc.py \
+# --rg ${within_family_path}/processed/dep_ref/DS_Full.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/depression_pop.sumstats \
+# --ref-ld-chr ${eur_w_ld_chr} \
+# --w-ld-chr ${eur_w_ld_chr} \
+# --out ${within_family_path}/processed/sanity_checks/eb/depression
+# # 1.1202
+
+# ${ldscpath}/ldsc.py \
+# --rg ${within_family_path}/processed/fert_ref/fert_ref.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/aafb_pop.sumstats.gz \
+# --ref-ld-chr ${eur_w_ld_chr} \
+# --w-ld-chr ${eur_w_ld_chr} \
+# --out ${within_family_path}/processed/sanity_checks/eb/aafb
+# -0.8578 (0.2634)
+
+
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/eczema_ref/eczema_ref.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/eczema_pop.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/sanity_checks/eb/ldsc_eczema
+# 1.0224 (0.2611)

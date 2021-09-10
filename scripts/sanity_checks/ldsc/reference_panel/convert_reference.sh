@@ -82,9 +82,16 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats ${within_family_path}/processed/asthma_ref/HanY_prePMID_asthma_Meta-analysis_UKBB_TAGC.txt.gz \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/asthma_ref/asthma_ref \
+# --chunksize 50000 \
+# --a1 EA --a2 NEA
+
 ${ldscpath}/munge_sumstats.py  \
---sumstats ${within_family_path}/processed/asthma_ref/HanY_prePMID_asthma_Meta-analysis_UKBB_TAGC.txt.gz \
+--sumstats ${within_family_path}/processed/eczema_ref/EAGLE_AD_no23andme_results_29072015.txt \
 --merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/asthma_ref/asthma_ref \
+--out ${within_family_path}/processed/eczema_ref/eczema_ref \
 --chunksize 50000 \
---a1 EA --a2 NEA
+--a1 referece_allele --a2 other_allele --frq eaf --N-col AllEthnicities_N --p p.value

@@ -4,11 +4,11 @@ eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # Asthma
-# python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/asthma.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/asthma_ref/asthma_ref.sumstats.gz \
-# --ref-ld-chr ${eur_w_ld_chr} \
-# --w-ld-chr ${eur_w_ld_chr} \
-# --out ${within_family_path}/processed/sanity_checks/geisinger/ldsc_asthma
+python ${ldsc_path}/ldsc.py \
+--rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/asthma.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/asthma_ref/asthma_ref.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/sanity_checks/geisinger/ldsc_asthma
 #  1.1864 (0.443)
 
 # BMI

@@ -17,6 +17,10 @@ subtitle: Everything Done So Far
 | Estonian Biobank | BMI | Yes | | |
 |Estonian Biobank | MDD | Yes | |  | 
 | Estonian Biobank | Ever Smoker | No (-ve 1) | | |
+| Estonian Biobank | AAFB| No (-ve 1) | | |
+| Estonian Biobank | Asthma | Yes | | |
+| Estonian Biobank | Depression | Yes | | |
+| Estonian Biobank | Eczema | Yes | | |
 | UKB | BMI | Yes | | |
 | UKB | EA | Yes | | |
 | MOBA | BMI | Yes | | |

@@ -187,8 +187,8 @@ if __name__ == '__main__':
                 'dir_SE' : theta_ses_out[:, 0],
                 f'{est1_type}_SE' : theta_ses[:, 1],
                 f'{est2_type}_SE' : theta_ses_out[:, 1],
-                f'{est1_type}_Cov': theta_var[:, 0, 1],
-                f'{est2_type}_Cov': theta_var_out[:, 0, 1],
+                f'dir_{est1_type}_Cov': theta_var[:, 0, 1],
+                f'dir_{est2_type}_Cov': theta_var_out[:, 0, 1],
                 'dir_pval' : pval_out[:, 0].flatten(),
                 f'{est1_type}_pval' : pval[:, 1].flatten(),
                 f'{est2_type}_pval' : pval_out[:, 1].flatten()
@@ -224,14 +224,9 @@ if __name__ == '__main__':
 
     # append list of dataframes
     df_out = pd.concat(df_out_list)
-    df_out = df_out.sort_values(by = ["chromosome", "pos"])
     print(f"Final output shape: {df_out.shape}")
 
     # == Outputting data == #
-
-    if not args.no_txt_out:
-        print(f"Writing output to {args.outprefix + '.csv'}")
-        df_out.to_csv(args.outprefix + '.csv', sep = ' ', index = False, na_rep = ".")
     
     if not args.no_hdf5_out:
         write_output(
@@ -243,7 +238,7 @@ if __name__ == '__main__':
             theta_tosave,
             theta_ses_tosave,
             theta_var_tosave,
-            1.0,
+            0.5,
             1.0,
             f_bar_tosave.flatten()
         )
@@ -257,11 +252,16 @@ if __name__ == '__main__':
             theta_bar_pop_tosave,
             theta_ses_pop_tosave,
             theta_var_pop_tosave,
-            1.0,
+            0.5,
             1.0,
             f_bar_tosave.flatten()
         )
     
+    
+    if not args.no_txt_out:
+        df_out = df_out.sort_values(by = ["chromosome", "pos"])
+        print(f"Writing output to {args.outprefix + '.csv'}")
+        df_out.to_csv(args.outprefix + '.csv', sep = ' ', index = False, na_rep = ".")
     
 
     print(f'Median sampling correlation: {np.median(theta_var_out[:, 0 ,1]/(theta_ses_out[:, 0] * theta_ses_out[:, 1]))}')

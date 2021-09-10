@@ -54,24 +54,24 @@ Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
 
 
 # Meta analysis with EA4
-Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
-    --bfile $gsbed \
-    --sumstats "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.csv" \
-    --outfile "${within_family_path}/processed/ldpred2/ea_pgi_with_ea4" \
-    --chr "chromosome" --pos "pos" --rsid "SNP" --a1 "A1" --a2 "A2" --N_col "dir_N" \
-    --beta "dir_Beta" --beta_se "dir_SE" \
-    --bed_backup "${within_family_path}/processed/ldpred2/GS_HRC_HM3.bk" \
-    --predout --scale_pgi
+# Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
+#     --bfile $gsbed \
+#     --sumstats "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.csv" \
+#     --outfile "${within_family_path}/processed/ldpred2/ea_pgi_with_ea4" \
+#     --chr "chromosome" --pos "pos" --rsid "SNP" --a1 "A1" --a2 "A2" --N_col "dir_N" \
+#     --beta "dir_Beta" --beta_se "dir_SE" \
+#     --bed_backup "${within_family_path}/processed/ldpred2/GS_HRC_HM3.bk" \
+#     --predout --scale_pgi
 
-# EA4 with sample overlap
-Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
-    --bfile $gsbed \
-    --sumstats "${within_family_path}/scratch/meta_analysis_sampleoverlap/with_ea4.csv" \
-    --outfile "${within_family_path}/scratch/meta_analysis_sampleoverlap/with_ea4" \
-    --chr "chromosome" --pos "pos" --rsid "SNP" --a1 "A1" --a2 "A2" --N_col "dir_N" \
-    --beta "dir_Beta" --beta_se "dir_SE" \
-    --bed_backup "${within_family_path}/processed/ldpred2/GS_HRC_HM3.bk" \
-    --predout --scale_pgi
+# # EA4 with sample overlap
+# Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
+#     --bfile $gsbed \
+#     --sumstats "${within_family_path}/scratch/meta_analysis_sampleoverlap/with_ea4.csv" \
+#     --outfile "${within_family_path}/scratch/meta_analysis_sampleoverlap/with_ea4" \
+#     --chr "chromosome" --pos "pos" --rsid "SNP" --a1 "A1" --a2 "A2" --N_col "dir_N" \
+#     --beta "dir_Beta" --beta_se "dir_SE" \
+#     --bed_backup "${within_family_path}/processed/ldpred2/GS_HRC_HM3.bk" \
+#     --predout --scale_pgi
 
 
 

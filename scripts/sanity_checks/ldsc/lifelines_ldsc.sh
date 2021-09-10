@@ -23,12 +23,12 @@ python ${ldsc_path}/ldsc.py \
 --rg /disk/genetics/data/lifelines/public/latest/processed/sumstats/fgwas/fgwas_ll_height_population.sumstats.gz,/var/genetics/proj/within_family/within_family_project/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/processed/sanity_checks/lifelines/ldsc_bmi
+--out ${within_family_path}/processed/sanity_checks/lifelines/ldsc_ht
 # 0.9362 
 
 python ${ldsc_path}/ldsc.py \
 --rg /disk/genetics/data/lifelines/public/latest/processed/sumstats/fgwas/fgwas_ll_height18_population.sumstats.gz,/var/genetics/proj/within_family/within_family_project/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/processed/sanity_checks/lifelines/ldsc_bmi18
+--out ${within_family_path}/processed/sanity_checks/lifelines/ldsc_ht18
 # 1.0015

@@ -489,7 +489,7 @@ def read_hdf5(args, printinfo = True):
         zdata = zdata.merge(snps, how = "inner", on = "BP")
         print(f"Shape before merging with bim {zdata.shape}")
         goodlookingrsids = zdata['SNP'].str.startswith("rs").sum()
-        print(f"RSIDs which look reasonable: {goodlookingrsids} i.e {(goodlookingrsids * 100)/zdata.shape[0]} of SNPs.")
+        print(f"RSIDs which look reasonable: {goodlookingrsids} i.e {(goodlookingrsids * 100)/zdata.shape[0]} percentage of SNPs.")
         zdata = zdata.rename(columns = {"SNP" : "SNP_old"})
         zdata = zdata.rename(columns = {"rsid" : "SNP"})
 
@@ -519,9 +519,16 @@ def read_txt(args):
         S[:, i, i] = np.array((dfin[effect + "_SE"]**2).tolist())
     
     if len(effects) > 1:
-    
-        cov = dfin[effect_list[0] + "_SE"] * dfin[f'{effect_list[1]}_SE'] * dfin[f'r_direct_{effect_list[1]}']
+        
+        if f'r_direct_{effect_list[1]}' in dfin:
+            cov = dfin[effect_list[0] + "_SE"] * dfin[f'{effect_list[1]}_SE'] * dfin[f'r_direct_{effect_list[1]}']
+        elif f'{effect_list[1]}_Cov' in dfin:
+            cov = dfin[f'{effect_list[1]}_Cov']
+        else:
+            cov = dfin[f'{effect_list[0]}_{effect_list[1]}_Cov']
+            
         S[:, 0, 1] = np.array(cov.tolist())
+        S[:, 1, 0] = np.array(cov.tolist())
 
     
     zdata = pd.DataFrame({'CHR' : dfin['chromosome'].astype(int),

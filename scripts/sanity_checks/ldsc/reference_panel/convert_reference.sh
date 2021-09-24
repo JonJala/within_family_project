@@ -74,10 +74,17 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # # Fertility / NEB
 
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/processed/fert_ref/NumberChildrenEverBorn_Male.txt \
+# --sumstats /var/genetics/data/published/barban_2016_repro/raw/sumstats/NumberChildrenEverBorn_Male.txt \
 # --merge-alleles ${merge_alleles} \
-# --N 103909 --frq Freq_HapMap \
-# --out ${within_family_path}/processed/fert_ref/fert_ref \
+# --N 343072 --frq Freq_HapMap \
+# --out ${within_family_path}/processed/neb_ref/nchildren_male \
+# --chunksize 50000
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/barban_2016_repro/raw/sumstats/NumberChildrenEverBorn_Pooled.txt \
+# --merge-alleles ${merge_alleles} \
+# --N 343072 --frq Freq_HapMap \
+# --out ${within_family_path}/processed/neb_ref/nchildren_pooled \
 # --chunksize 50000
 
 
@@ -89,9 +96,33 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --chunksize 50000 \
 # --a1 EA --a2 NEA
 
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats ${within_family_path}/processed/eczema_ref/EAGLE_AD_no23andme_results_29072015.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/eczema_ref/eczema_ref \
+# --chunksize 50000 \
+# --a1 referece_allele --a2 other_allele --frq eaf --N-col AllEthnicities_N --p p.value
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/barban_2016_repro/raw/sumstats/AgeFirstBirth_Pooled.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/aafb_ref/aafb_ref \
+# --chunksize 50000 \
+# --frq Freq_HapMap --N 251151 --p Pvalue
+
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats within_family_project/processed/drinksperweek_ref/DrinksPerWeek.txt.gz \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/drinksperweek_ref/dpw_ref \
+# --chunksize 50000 \
+# --a1 REF --a2 ALT
+
+
+
 ${ldscpath}/munge_sumstats.py  \
---sumstats ${within_family_path}/processed/eczema_ref/EAGLE_AD_no23andme_results_29072015.txt \
+--sumstats /var/genetics/data/published/nagel_2018b_neuroticism/raw/sumstats/sumstats_neuroticism_ctg_format.txt.gz \
 --merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/eczema_ref/eczema_ref \
+--out ${within_family_path}/processed/neuroticism_ref/neuroticism_ref \
 --chunksize 50000 \
---a1 referece_allele --a2 other_allele --frq eaf --N-col AllEthnicities_N --p p.value
+--frq EAF_UKB --snp RSID --ignore SNP

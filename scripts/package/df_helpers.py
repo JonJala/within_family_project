@@ -5,7 +5,7 @@ import datetime as dt
 
 def dataframe_diagnostics(df):
     
-    return f"Data shape = {df.shape}, SNP NAs = {df['SNP'].isna().sum()}"
+    return f"Data shape = {df.shape}"
     
     
 def logdf(f):

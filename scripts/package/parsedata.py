@@ -127,10 +127,16 @@ def combine_allele_cols(df, a1, a2):
 
 
 @logdf
-def clean_SNPs(df, dataname):
+def clean_SNPs(df, dataname, on_pos = True):
     
-    df = df.add_suffix(f"_{dataname}").rename(columns = {f"SNP_{dataname}" : "SNP"})
-    df = df.drop_duplicates(subset=['SNP'])
+    if on_pos:
+        df = df.add_suffix(f"_{dataname}").rename(columns = {f"CHR_{dataname}" : "CHR",
+                                                            f"BP_{dataname}" : "BP"})
+        df = df.drop_duplicates(subset=['BP', 'CHR'])
+    else:
+        df = df.add_suffix(f"_{dataname}").rename(columns = {f"SNP_{dataname}" : "SNP"})
+        df = df.drop_duplicates(subset='SNP')
+
     
     return df
 
@@ -175,13 +181,20 @@ def make_array_cols_nas(df, col_name_pattern, Amat, dim = None):
 
 
 @logdf
-def merging_data(df_list, jointype = "outer"):
+def merging_data(df_list, jointype = "outer", on_pos = True):
     
-    df_merged = reduce(lambda left,right: pd.merge(left, right, 
-                                              on = "SNP",
+    if on_pos:
+        df_merged = reduce(lambda left,right: pd.merge(left, right, 
+                                              on = ["CHR", "BP"],
                                               how = jointype
                                               ),
-                  df_list)
+                    df_list)
+    else:
+        df_merged = reduce(lambda left,right: pd.merge(left, right, 
+                                                on = "SNP",
+                                                how = jointype
+                                                ),
+                    df_list)
     
     return df_merged
 
@@ -194,8 +207,7 @@ def df_mode(df, columns):
     return dfmode
 
 def df_fastmode(df, columns):
-    
-    # dfmode = df[columns].mode(axis="columns")[0]
+
     dfmode = calc_str_mode(df[columns])
      
     return dfmode
@@ -617,7 +629,7 @@ def read_file(args, printinfo = True):
     return zdata, Amat_dict
 
 
-def read_from_json(df_args):
+def read_from_json(df_args, args):
     df_dict = {}
     Amat_dicts = {}
     for cohort in df_args.keys():
@@ -628,7 +640,7 @@ def read_from_json(df_args):
          .pipe(combine_allele_cols, "A1", "A2")
          .pipe(filter_bad_alleles, "A1", "A2")
          .pipe(maf_filter, df_args[cohort]['maf'])
-         .pipe(clean_SNPs, cohort)
+         .pipe(clean_SNPs, cohort, on_pos = args.on_pos)
         )
 
         df_dict[cohort] = df_in
@@ -827,7 +839,7 @@ def nan_to_num_dict(*args):
             
 
 
-def clean_snps(*varlist, df, snpname):
+def clean_snps(*varlist, df, idname):
     
     '''
     indexes vars with clean SNP names if
@@ -835,7 +847,7 @@ def clean_snps(*varlist, df, snpname):
     '''
     
     varlist_out = []
-    ii = df[snpname].notna()
+    ii = np.all(df[idname].notna(), axis = 1)
     
     if ii.sum() > 0.0:
         for var in varlist:
@@ -843,7 +855,7 @@ def clean_snps(*varlist, df, snpname):
             varlist_out.append(varout)
             
         dfout = df.copy()
-        dfout = dfout.dropna(subset = [snpname])
+        dfout = dfout.dropna(subset = idname)
     else:
         varlist_out = list(varlist)
         

@@ -93,7 +93,7 @@
         "sigma2" : "sigma2",
         "tau" : "tau",
         "freqs" : "freqs",
-        "rsid_readfrombim" : "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/ea/Eduhunt_results_chr*.bim,2,1, ",
+        "rsid_readfrombim" : "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,2,1, ",
         "maf" : 1,
         "effect_transform" : "direct_plus_averageparental",
         "Amat" : {"3" : "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0",

@@ -312,7 +312,7 @@ class test_functions(unittest.TestCase):
             B = atransform
         )
 
-        theta_estimates, _, __ = get_estimates(theta_dict, wt_dict, atransform_dict)
+        theta_estimates, _ = get_estimates(theta_dict, wt_dict, atransform_dict)
         self.assertTrue(np.allclose(theta_estimates, theta_estimates_manual))
 
 

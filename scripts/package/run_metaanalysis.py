@@ -31,7 +31,7 @@ if __name__ == '__main__':
     parser.add_argument('--outestimates', type=str, 
                         help='''What format should the out estimates be. By default it doesnt transform the
                         final estimates but you can transform it to direct_plus_population, or direct_plus_averageparental''',
-                       default = "full")
+                       default = "direct_plus_population")
     parser.add_argument('--outprefix', type=str, help='''
     Location to output association statistic hdf5 file. 
     Outputs text output to outprefix.sumstats.gz and HDF5 
@@ -39,7 +39,11 @@ if __name__ == '__main__':
     parser.add_argument('--no_hdf5_out',action='store_true',help='Suppress HDF5 output of summary statistics',default=False)
     parser.add_argument('--no_txt_out',action='store_true',help='Suppress text output of summary statistics',default=False)
     parser.add_argument('--diag',action='store_true',help='Produce diagnostic plots and summary statistics of input files.',default=False)
+    parser.add_argument('--on-rsid', action='store_false',dest='on_pos', default = True,
+    help = '''Do you want to merge cohorts by rsid instead of default which is pos''')
     args=parser.parse_args()
+
+    print(f"Merging on rsid: {not args.on_pos}")
     
 
     startTime = dt.datetime.now()
@@ -50,29 +54,42 @@ if __name__ == '__main__':
         data_args = json.load(f)
     
     # parsing
-    df_dict, Amat_dicts = read_from_json(data_args)
+    df_dict, Amat_dicts = read_from_json(data_args, args)
 
     if args.diag:
         print("Running diagnostics on input files...")
         dfdiag = print_sumstats(df_dict, data_args)
         dfdiag.to_csv(args.outprefix + ".sumstats.csv")
         make_diagnostic_plots(df_dict, data_args, args.outprefix)
-    df_merged = merging_data(list(df_dict.values()))
+
+    df_merged = merging_data(list(df_dict.values()), on_pos = args.on_pos)
+    if args.on_pos:
+        df_merged = df_merged.dropna(subset = ["BP", "CHR"])
+    else:
+        df_merged = df_merged.dropna(subset = ["SNP"])
 
     # Filtering and aligning alleles/effects
     allele_cols = [col for col in df_merged if col.startswith('alleles')]
     df_merged['allele_consensus'] = df_fastmode(df_merged, allele_cols)
-    df_merged = df_merged.dropna(subset = ["SNP"])
     df_merged = allele_plus_alleleconsensus(df_merged, allele_cols)
     df_toarray = filter_and_align(df_merged, list(data_args.keys()))
 
     # creating data frame ready to become an array
-    df_toarray = (df_toarray
-    .pipe(begin_pipeline)
-    .pipe(combine_cols, 'CHR', [c for c in df_toarray if c.startswith('CHR_')], 0)
-    .pipe(combine_cols, 'BP', [c for c in df_toarray if c.startswith('BP_')])
-    .pipe(highest_dim)
-    )
+
+    if args.on_pos:
+        df_toarray = (df_toarray
+        .pipe(begin_pipeline)
+        .pipe(combine_cols, 'SNP', [c for c in df_toarray if c.startswith('SNP_')])
+        .pipe(highest_dim)
+        )
+    else:
+        df_toarray = (df_toarray
+        .pipe(begin_pipeline)
+        .pipe(combine_cols, 'CHR', [c for c in df_toarray if c.startswith('CHR_')], 0)
+        .pipe(combine_cols, 'BP', [c for c in df_toarray if c.startswith('BP_')])
+        .pipe(highest_dim)
+        )
+
     
     df_toarray = df_toarray.sort_values("BP").reset_index(drop = True)
 
@@ -200,13 +217,25 @@ if __name__ == '__main__':
 
         n_missing_snps = df_out['SNP'].isna().sum()
         print(f"Number of missing SNPs {n_missing_snps}")
-        (theta_bar, theta_var_out, z_bar, z_bar_out, 
-        theta_ses, theta_ses_out, theta_var, theta_var_out,
-        pval, pval_out, f_bar, df_out) = clean_snps(theta_bar, theta_bar_out, z_bar, z_bar_out, 
-                                            theta_ses, theta_ses_out, theta_var, theta_var_out,
-                                            pval, pval_out, f_bar,
-                                            df = df_out, snpname = 'SNP')
-        df_out = df_out.dropna(subset = ['SNP'])
+
+
+        if not args.on_pos:
+            (theta_bar, theta_var_out, z_bar, z_bar_out, 
+            theta_ses, theta_ses_out, theta_var, theta_var_out,
+            pval, pval_out, f_bar, df_out) = clean_snps(theta_bar, theta_bar_out, z_bar, z_bar_out, 
+                                                theta_ses, theta_ses_out, theta_var, theta_var_out,
+                                                pval, pval_out, f_bar,
+                                                df = df_out, idname = 'SNP')
+            df_out = df_out.dropna(subset = ['SNP'])
+        else:
+            (theta_bar, theta_var_out, z_bar, z_bar_out, 
+            theta_ses, theta_ses_out, theta_var, theta_var_out,
+            pval, pval_out, f_bar, df_out) = clean_snps(theta_bar, theta_bar_out, z_bar, z_bar_out, 
+                                                theta_ses, theta_ses_out, theta_var, theta_var_out,
+                                                pval, pval_out, f_bar,
+                                                df = df_out, idname = ['pos', 'chromosome'])
+            df_out = df_out.dropna(subset = ['pos', 'chromosome'])
+        
 
         # appending data
         df_out_list += [df_out]

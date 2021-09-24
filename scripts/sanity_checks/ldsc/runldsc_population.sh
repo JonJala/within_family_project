@@ -36,14 +36,6 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # # # ldsc rg = 1.0072 (0.6595)
 
 
-# # == HUNT == #
-# python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/ea/Eduhunt_ldsc.sumstats,${within_family_path}/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
-# --ref-ld-chr ${eur_w_ld_chr} \
-# --w-ld-chr ${eur_w_ld_chr} \
-# --out /var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/ea/Eduhunt_ldsc
-# # rg = 1.0038 (0.1369)
-
 # # == Generation Scotland == #
 # # 10 = EA
 # python ${ldsc_path}/ldsc.py \

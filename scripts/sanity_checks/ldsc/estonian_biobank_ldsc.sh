@@ -67,17 +67,17 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --out ${within_family_path}/processed/sanity_checks/eb/depression
 # # 1.1202
 
-# ${ldscpath}/ldsc.py \
-# --rg ${within_family_path}/processed/fert_ref/fert_ref.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/aafb_pop.sumstats.gz \
-# --ref-ld-chr ${eur_w_ld_chr} \
-# --w-ld-chr ${eur_w_ld_chr} \
-# --out ${within_family_path}/processed/sanity_checks/eb/aafb
-# -0.8578 (0.2634)
-
-
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/eczema_ref/eczema_ref.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/eczema_pop.sumstats.gz \
+--rg ${within_family_path}/processed/aafb_ref/aafb_ref.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/aafb_pop.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/processed/sanity_checks/eb/ldsc_eczema
+--out ${within_family_path}/processed/sanity_checks/eb/aafb
+# 1.1721 (0.2297)
+
+
+# ${ldscpath}/ldsc.py \
+# --rg ${within_family_path}/processed/eczema_ref/eczema_ref.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/eczema_pop.sumstats.gz \
+# --ref-ld-chr ${eur_w_ld_chr} \
+# --w-ld-chr ${eur_w_ld_chr} \
+# --out ${within_family_path}/processed/sanity_checks/eb/ldsc_eczema
 # 1.0224 (0.2611)

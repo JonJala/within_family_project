@@ -38,7 +38,6 @@ if __name__ == '__main__':
     output to outprefix.sumstats.hdf5''', default='')
     parser.add_argument('--no_hdf5_out',action='store_true',help='Suppress HDF5 output of summary statistics',default=False)
     parser.add_argument('--no_txt_out',action='store_true',help='Suppress text output of summary statistics',default=False)
-    parser.add_argument('--diag',action='store_true',help='Produce diagnostic plots and summary statistics of input files.',default=False)
     parser.add_argument('--on-rsid', action='store_false',dest='on_pos', default = True,
     help = '''Do you want to merge cohorts by rsid instead of default which is pos''')
     args=parser.parse_args()
@@ -55,12 +54,6 @@ if __name__ == '__main__':
     
     # parsing
     df_dict, Amat_dicts = read_from_json(data_args, args)
-
-    if args.diag:
-        print("Running diagnostics on input files...")
-        dfdiag = print_sumstats(df_dict, data_args)
-        dfdiag.to_csv(args.outprefix + ".sumstats.csv")
-        make_diagnostic_plots(df_dict, data_args, args.outprefix)
 
     df_merged = merging_data(list(df_dict.values()), on_pos = args.on_pos)
     if args.on_pos:

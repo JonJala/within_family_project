@@ -48,7 +48,7 @@ def print_sumstats(df_dict, df_args,
             print(f"Number of SNPs after subsetting to HM3: {ii.sum()}")
         dfout = dfin[ii].reset_index(drop=True)
         
-        
+        import pdb; pdb.set_trace()
         theta = np.array(dfin[f'theta_{cohort}'].tolist())
         S = np.array(dfin[f'S_{cohort}'].tolist())
         S, theta = transform_estimates(df_arg['effect_transform'], transformto, S, theta)
@@ -192,18 +192,20 @@ def make_qqplot(df_dict, df_args,
         z = theta2z(theta, S)
         pval = get_pval(z)
 
-        indir_effect_name = df_arg['effect_transform'].split('_')[-1]
+        indir_effect_name = transformto.split('_')[-1]
         print(f'Second effect is: {indir_effect_name}')
 
         print('Making QQ-plot...')
-        fig, ax = plt.subplots(figsize = (8, 10),
-                                nrows = 2)
+        fig, ax = plt.subplots(figsize = (10, 5),
+                                ncols = 2)
 
         # simulate and sort theoretical data
         theoretical = create_theoretical_data(pval.shape[0])
         theoretical = np.sort(theoretical)
 
         for idx, effect in enumerate(['Direct', indir_effect_name.title()]):
+
+            print(effect)
 
 
             # calculate and sort empirical -log(p) values
@@ -228,6 +230,7 @@ def make_qqplot(df_dict, df_args,
                 ha='center', \
                 va='center', \
                 fontsize=17)
+            ax[idx].set_title(effect + " Effect")
 
             # add 45-degree line to plot
             x = np.linspace(*ax[idx].get_xlim())
@@ -288,7 +291,7 @@ if __name__ == '__main__':
     df_dict, _ = read_from_json(data_args, args)
 
     print("Running diagnostics on input files...")
-    # dfdiag = print_sumstats(df_dict, data_args, args, args.transformto)
-    # dfdiag.to_csv(args.outprefix + ".diag.sumstats.csv")
-    # make_af_plot(df_dict, args, plot_prefix=args.outprefix)
+    dfdiag = print_sumstats(df_dict, data_args, args, args.transformto)
+    dfdiag.to_csv(args.outprefix + ".diag.sumstats.csv")
+    make_af_plot(df_dict, args, plot_prefix=args.outprefix)
     make_qqplot(df_dict, data_args, args, args.transformto, plot_prefix=args.outprefix)

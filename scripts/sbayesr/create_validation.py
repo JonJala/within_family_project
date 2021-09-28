@@ -7,7 +7,7 @@ scotland. Intended to be used in sbayesr.
 import pandas as pd
 import numpy as np
 
-sampling_prop = 0.1
+sampling_prop = 1
 
 dat = pd.read_csv(
     "/disk/genetics/sibling_consortium/GS20k/aokbay/imputed/HRC/plink/HM3/GS_HRC_HM3.fam",

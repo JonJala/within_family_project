@@ -120,9 +120,17 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/nagel_2018b_neuroticism/raw/sumstats/sumstats_neuroticism_ctg_format.txt.gz \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/neuroticism_ref/neuroticism_ref \
+# --chunksize 50000 \
+# --frq EAF_UKB --snp RSID --ignore SNP
+
+
+
 ${ldscpath}/munge_sumstats.py  \
---sumstats /var/genetics/data/published/nagel_2018b_neuroticism/raw/sumstats/sumstats_neuroticism_ctg_format.txt.gz \
+--sumstats ${within_family_path}/processed/reference_samples/hayfever_ref/hayfever_ref.txt \
 --merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/neuroticism_ref/neuroticism_ref \
---chunksize 50000 \
---frq EAF_UKB --snp RSID --ignore SNP
+--out ${within_family_path}/processed/reference_samples/hayfever_ref/hayfever_ref \
+--frq 1000G_ALLELE_FREQ

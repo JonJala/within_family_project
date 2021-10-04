@@ -590,9 +590,7 @@ def read_file(args, printinfo = True):
     a given SNP x Cohort has. If a cohort has estimated
     direct, paternal and maternal effects `dims` will be 3.
     This is given by the number of columns in the A matrix
-    prodivided.
-
-    But there is an 
+    provided.
     '''
 
 

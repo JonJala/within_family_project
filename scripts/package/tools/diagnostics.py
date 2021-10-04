@@ -47,8 +47,7 @@ def print_sumstats(df_dict, df_args,
         if ii.sum() == 0:
             print(f"Number of SNPs after subsetting to HM3: {ii.sum()}")
         dfout = dfin[ii].reset_index(drop=True)
-        
-        import pdb; pdb.set_trace()
+
         theta = np.array(dfin[f'theta_{cohort}'].tolist())
         S = np.array(dfin[f'S_{cohort}'].tolist())
         S, theta = transform_estimates(df_arg['effect_transform'], transformto, S, theta)

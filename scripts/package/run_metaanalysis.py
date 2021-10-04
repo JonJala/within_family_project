@@ -16,10 +16,6 @@ def highest_dim(df:pd.DataFrame, colname = 'dims') -> pd.DataFrame:
 
     return df
 
-
-
-
-
 if __name__ == '__main__':
     
     

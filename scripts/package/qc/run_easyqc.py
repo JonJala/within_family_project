@@ -4,10 +4,126 @@ import datetime as dt
 import json
 import argparse
 import glob
+from numba import njit
+import tempfile
+import os
+import subprocess
 
 from easyqc_parsedata import *
 
-def process_dat(dat, effects):
+import sys
+sys.path.append("/var/genetics/proj/within_family/within_family_project/scripts/package")
+from parsedata import transform_estimates
+
+def make_folder(foldername):
+    '''
+    Check if folder exists. If it does, then
+    the function doesn't do anything.
+    If it doesn't it creates the folder
+    '''
+
+    if not os.path.exists(foldername):
+        print(f"Creating folder: {foldername}")
+        os.makedirs(foldername)
+
+@njit(cache = True)
+def correlation_from_covariance(covariance):
+
+    v = np.sqrt(np.diag(covariance))
+    outer_v = np.outer(v, v)
+    correlation = covariance / outer_v
+
+    covflat = covariance.ravel()
+    corflat = correlation.ravel()
+    cov0idx = np.abs(covflat) < 1e-6
+    corflat[cov0idx] = 0
+
+    return correlation
+
+@njit(cache = True)
+def convert_S_to_corr(Smat):
+    
+    n = Smat.shape[0]
+    corrmat = np.zeros_like(Smat)
+    
+    for i in range(n):
+        corrmat[i, :, :] = correlation_from_covariance(Smat[i, :, :])
+        
+    return corrmat
+
+@njit
+def makeDmat(S):
+    '''
+    Makes D matrix =  [[1/sigma_1, 0], [0, 1/sigma_2]]
+    '''
+    ndims = S.shape[0]
+    assert ndims == S.shape[1]
+
+    Dmat = np.zeros(ndims)
+    Dmat = np.diag(Dmat)
+
+    for idx in range(ndims):
+        sigma_tmp = np.sqrt(S[idx, idx])
+        
+        Dmat[idx, idx] = 1/sigma_tmp
+    
+    return Dmat
+
+@njit(cache = True)
+def theta2z(theta, S):
+    '''
+    Transforms vector of theta values
+    into z values based on S
+    '''
+    zval = np.empty_like(theta)
+    for i in range(theta.shape[0]):
+        if ~np.all(S[i] == 0):
+            Dmat = makeDmat(S[i])
+            zval[i, :] = Dmat @ theta[i, :]
+        else:
+            zval[i, :] = np.nan
+
+    return zval
+
+def get_rg_pairs(effects):
+
+    '''
+    Get pairs of effects relevant for sampling correlations
+    '''
+
+    # store rg's
+
+    if len(effects) == 3 or len(effects) == 5:
+        rgpairs = [(effects[0], effects[1]), (effects[0], effects[2]), (effects[1], effects[2])]
+    elif len(effects) == 2:
+        rgpairs = [(effects[0], effects[1])]
+    else:
+        rgpairs = []
+        print("There's probably only one effect passed in!")
+
+    return rgpairs
+    
+def get_effect_list(effects):
+
+    '''
+    Converts from shortform notations for effect names 
+    to full form so that the program can keep track of the names
+    '''
+
+    if effects == "full":
+        effects_out = "direct,paternal,maternal"
+    elif effects == "full_averageparental_population":
+        effects_out = "direct,paternal,maternal,averageparental,population"
+    elif effects == "direct_averageparental" or effects == "direct_avgparental" :
+        effects_out = "direct,averageparental"
+    elif effects == "direct_population":
+        effects_out = "direct,population"
+    else:
+        print("Didn't get what the effects meant!")
+
+    return effects_out
+
+def process_dat(dat, args):
 
     '''
     Typically input file's theta, S and se
@@ -19,23 +135,329 @@ def process_dat(dat, effects):
     datout = dat.copy()
     datout = datout.drop(columns = ['theta', 'S', 'se'])
 
+    phvar = dat.loc[~pd.isna(dat['phvar']), 'phvar'][0]
     theta_vec = np.array(dat['theta'].tolist())
     S_vec = np.array(dat['S'].tolist())
-    se_vec = np.array(dat['se'].tolist())
 
-    effects = effects.split(",")
+
+    # normalize cols by phenotypic variance
+    theta_vec = theta_vec * 1/np.sqrt(phvar)
+    S_vec = S_vec * 1/(phvar)
+
+    effects = dat['estimated_effects'][0]
+
+    if args.toest is not None:
+        S_vec, theta_vec = transform_estimates( 
+            effects,
+            args.toest,
+            S_vec, theta_vec
+        )
+        effects = args.toest
+
+
+    corr_vec = convert_S_to_corr(S_vec)
+    z_vec = theta2z(theta_vec, S_vec)
+
+    effects = effects.split("_")
     
     for idx, effect in enumerate(effects):
         theta_tmp = theta_vec[:, idx]
         datout[f'theta_{effect}'] = theta_tmp
 
-        S_tmp = S_vec[:, idx, idx]
-        datout[f'S_{effect}'] = S_tmp
-
-        se_tmp = se_vec[:, idx]
+        se_tmp = np.sqrt(S_vec[:, idx, idx])
         datout[f'se_{effect}'] = se_tmp
 
+        z_tmp = z_vec[:, idx]
+        datout[f'z_{effect}'] = z_tmp
+
+    # store rg's
+    rgpairs = get_rg_pairs(effects)
+
+    if len(rgpairs) > 0:
+        for pair in rgpairs:
+            idx1 = effects.index(pair[0])
+            idx2 = effects.index(pair[1])
+
+            corr_tmp = corr_vec[:, idx1, idx2]
+            datout[f'rg_{pair[0]}_{pair[1]}'] = corr_tmp
+
     return datout
+
+def init_ecf(f, args, dat, tmpcsvout):
+
+    '''
+    Writes the starting of the ecf file
+
+    f - opened ecf file
+    args - script arguments
+    dat - dataframe with sumarry statistics
+    tmpcsvout - tmpfile directory
+    '''
+
+    colnames = ';'.join(dat.columns)
+    coltype_pandas = dat.dtypes.map(str).tolist()
+    coltype_map = {'int64' : 'numeric', 'int32' : 'numeric', 'float64' : 'numeric', 'float32' : 'numeric', 'object' : 'character'}
+    coltype_easyqc = [coltype_map[c] for c in coltype_pandas]
+    coltype_easyqc = ";".join(coltype_easyqc)
+
+    f.write("#### EasyQC-script to perform study-level and meta-level QC\n")
+    f.write("#### 0. Setup:\n")
+    f.write(f'''DEFINE   --pathOut {args.outprefix}
+--strMissing NA
+--strSeparator COMMA
+--acolIn {colnames}
+--acolInClasses {coltype_easyqc}
+''')
+
+    f.write(f'''EASYIN --fileIn {tmpcsvout}\n''')
+
+def write_ecf_sanitychecks(f, args):
+    '''
+    Write main portion of ecf file which filters stuff
+    '''
+
+    if args.toest is not None:
+        effects = args.toest
+    else:
+        effects = dat['estimated_effects'][0]
+    effects = effects.split("_")
+
+    f.write('''START EASYQC
+## Make alleles capitalized
+EDITCOL --rcdEditCol toupper(A1) --colEdit A1
+EDITCOL --rcdEditCol toupper(A2)  --colEdit A2
+
+#### 1. Sanity checks:
+## Filter out SNPs with missing values
+CLEAN --rcdClean !(A1%in%c('A','C','G','T')) --strCleanName numDrop_invalid_a1 --blnWriteCleaned 0
+CLEAN --rcdClean !(A2%in%c('A','C','G','T')) --strCleanName numDrop_invalid_a2 --blnWriteCleaned 0
+CLEAN --rcdClean is.na(A1)&is.na(A2) --strCleanName numDrop_Missing_Alleles --blnWriteCleaned 0
+CLEAN --rcdClean is.na(SNP) --strCleanName numDrop_Missing_SNP --blnWriteCleaned 0
+CLEAN --rcdClean is.na(f) --strCleanName numDrop_Missing_EAF --blnWriteCleaned 0
+CLEAN --rcdClean f<0|f>1 --strCleanName numDrop_invalid_EAF --blnWriteCleaned 0
+#CLEAN  --rcdClean !CHR%in%c(1:22,NA) --strCleanName numDropSNP_ChrXY --blnWriteCleaned 1\n'''
+    )
+
+
+    for effect in effects:
+        f.write(f'''
+CLEAN --rcdClean is.na(theta_{effect}) --strCleanName numDrop_Missing_theta_{effect} --blnWriteCleaned 0
+CLEAN --rcdClean is.na(se_{effect}) --strCleanName numDrop_Missing_se_{effect} --blnWriteCleaned 0
+CLEAN --rcdClean se_{effect}<=0|se_{effect}==Inf|se_{effect}>=10 --strCleanName numDrop_invalid_se_{effect} --blnWriteCleaned 0
+CLEAN --rcdClean abs(theta_{effect})==Inf --strCleanName numDrop_invalid_theta_{effect} --blnWriteCleaned 0\n
+ADDCOL --rcdAddCol 2*pnorm(q=abs(z_{effect}), lower.tail=FALSE) --colOut PVAL_{effect}
+''')
+
+def write_ecf_filtering(f, args, dat):
+
+    f.write('''#### 2. Prepare files for filtering and apply minimum thresholds:
+    
+## Exclude low MAC SNPs
+    ''')
+
+    if args.toest is not None:
+        effects = args.toest
+    else:
+        effects = dat['estimated_effects'][0]
+    effects = effects.split("_")
+
+    for effect in effects:
+        f.write(f'''
+ADDCOL --rcdAddCol round((2*f*(1-f)*se_{effect}^2)^(-1)) --colOut n_{effect}
+ADDCOL --rcdAddCol signif(2*pmin(f,1-f)*n_{effect},4) --colOut MAC_{effect}
+CLEAN --rcdClean MAC_{effect}<{args.mac} --strCleanName numDrop_MAC_{effect}_{args.mac} --blnWriteCleaned 0\n
+''')
+    f.write(f'''
+## Exclude monomorphic SNPs:
+CLEAN --rcdClean (f==0)|(f==1) --strCleanName numDrop_Monomorph --blnWriteCleaned 0
+## Exclude SNPs with low MAF
+CLEAN --rcdClean f<{args.maf} | f>1-{args.maf} --strCleanName numDrop_MAF_{args.maf} --blnWriteCleaned 0
+'''
+    )
+    # loop through rgs
+    rgpairs = get_rg_pairs(effects)
+    if len(rgpairs) > 0:
+        for pair in rgpairs:
+            f.write(f'''
+CLEAN --rcdClean rg_{pair[0]}_{pair[1]}>mean(rg_{pair[0]}_{pair[1]},na.rm=T) + 6 * sd(rg_{pair[0]}_{pair[1]},na.rm=T) --strCleanName numDrop_rg_greater_6sd_{pair[0]}_{pair[1]} --blnWriteCleaned 0
+CLEAN --rcdClean rg_{pair[0]}_{pair[1]}<mean(rg_{pair[0]}_{pair[1]},na.rm=T) - 6 * sd(rg_{pair[0]}_{pair[1]},na.rm=T) --strCleanName numDrop_rg_less_6sd_{pair[0]}_{pair[1]} --blnWriteCleaned 0\n
+''')
+
+    f.write('''
+HARMONIZEALLELES  --colInA1 A1 --colInA2 A2
+''')
+    if args.cptid:
+        f.write(f'''
+#Create our own CPTID column
+ADDCOL --rcdAddCol paste(CHR, BP, sep = ":") --colOut cptid
+''')
+    else:
+        f.write(f'''
+#### 4. Harmonization of marker names (compile 'cptid')
+CREATECPTID --fileMap /var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.RSMID.MAPFILE.HRC.chr1_22_X.txt
+    --colMapMarker rsmid
+    --colMapChr chr
+    --colMapPos pos
+    --colInMarker SNP
+    --colInA1 A1
+    --colInA2 A2
+    --colInChr CHR
+    --colInPos BP
+    --blnUseInMarker 1
+''')
+
+    f.write('''
+#### 5.Filter duplicate SNPs
+## Aim: For duplicate SNPs keep only the duplicate with highest N
+## Dropped duplicates to be written to *duplicates.txt
+CLEANDUPLICATES --colInMarker cptid --strMode samplesize --colN n_direct
+
+
+#### 6. AF Checks
+## Merge with file containing AFs for 1kG
+MERGE    --colInMarker cptid
+    --fileRef /var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.ALLELE_FREQUENCY.MAPFILE.HRC.chr1_22_X.LET.FLIPPED_ALLELE_1000G+UK10K.txt
+    --acolIn ChrPosID;a1;a2;freq1
+    --acolInClasses character;character;character;numeric
+    --strRefSuffix .ref
+    --colRefMarker ChrPosID
+    --blnWriteNotInRef 1
+    --blnInAll 0
+    --blnRefAll 0
+
+ADDCOL --rcdAddCol freq1.ref --colOut EAF.ref\n
+    ''')
+
+
+    beta_cols = ['theta_' + effect for effect in effects]
+    z_cols = ['z_' + effect for effect in effects]
+    beta_cols_str = ';'.join(beta_cols)
+    z_cols_str = ';'.join(z_cols)
+    f.write(f'''
+## Adjust alleles to all be on the forward strand and to match the reference sample (happens before AFcheck plot!)
+## All mismatches will be removed (e.g. A/T in input, A/C in reference)
+ADJUSTALLELES  --colInA1 A1 --colInA2 A2
+    --colInFreq f 
+    --acolInBeta {beta_cols_str};{z_cols_str}
+    --colRefA1 a1.ref --colRefA2 a2.ref
+    --blnRemoveMismatch 1 --blnWriteMismatch 1
+    --blnRemoveInvalid 1 --blnWriteInvalid 1
+    --blnMetalUseStrand 1
+''')
+
+    
+def make_plots(f, args, dat):
+
+    '''
+    Make the easyqc plots
+    '''
+
+    f.write('''
+#### 9. Plotting
+ADDCOL --rcdAddCol sqrt(f*(1-f)) --colOut normalized_f
+ADDCOL --rcdAddCol abs(f-EAF.ref) --colOut DAF
+
+## Compare allele frequencies to those in the reference sample
+## blnPlotAll 0 --> only outlying SNPs with |Freq-Freq.ref|>0.2 will be plotted (way less computational time)
+AFCHECK --colInFreq f --colRefFreq EAF.ref
+    --numLimOutlier 0.2 --blnRemoveOutlier 1 --blnPlotAll 0
+''')
+
+    if args.toest is not None:
+        effects = args.toest
+    else:
+        effects = dat['estimated_effects'][0]
+    effects = effects.split("_")
+
+
+    for effect in effects:
+        f.write(f'''
+QQPLOT   --acolQQPlot PVAL_{effect} --numPvalOffset 0.05 --strMode subplot --strTitle {effect.title()}
+SPLOT  --rcdSPlotX normalized_f --rcdSPlotY se_{effect}  --strPlotName sef_{effect}
+''')
+
+
+def finish_ecf(f, args, dat):
+
+    colnames = ';'.join(dat.columns)
+
+    if args.toest is not None:
+        effects = args.toest
+    else:
+        effects = dat['estimated_effects'][0]
+    effects = effects.split("_")
+
+    pval_effects = ['PVAL_' + effect for effect in effects]
+    n_col_names = ['n_' +  effect for effect in effects]
+    pval_cols = ';'.join(pval_effects)
+    n_cols = ';'.join(n_col_names)
+    f.write(f'''
+# write output
+#GETCOLS --acolOut cptid;{colnames};{pval_cols};{n_cols}
+WRITE --strPrefix CLEANED. --strMissing . --strMode gz\n
+
+STOP EASYQC''')
+
+
+
+def run_rscript(ecfpath, tmpdir):
+
+    '''
+    Writes the temporary R script to
+    run the ecf file
+    '''
+
+    rcode = '''
+#!/usr/bin/env Rscript
+# Import EasyQC package (from online source if necessary)
+tryCatch(library("EasyQC"),
+  error = function(e) {
+    dir.create("easyqc_libraries", showWarnings=FALSE)
+    .libPaths("easyqc_libraries")
+    install.packages(pkgs="http://homepages.uni-regensburg.de/~wit59712/easyqc/EasyQC_9.2.tar.gz",
+                     lib="easyqc_libraries/", repo=NULL, type="source")
+    library("EasyQC")
+})
+library(EasyQC)\n''' + f"EasyQC('{ecfpath}')"
+
+    with open(f"{tmpdir}/runecf.R", "w") as f:
+        f.write(rcode)
+
+    
+    os.system(f'Rscript --vanilla {tmpdir}/runecf.R')
+
+def run_ldsc_rg(args):
+
+    eur_w_ld_chr = "/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
+    merge_alleles = "/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
+    ldsc_path = "/var/genetics/tools/ldsc/ldsc"
+
+    act = "/disk/genetics/pub/python_env/anaconda2/bin/activate"
+    pyenv = "/disk/genetics/pub/python_env/anaconda2/envs/ldsc"
+    
+    files = glob.glob(args.outprefix + '/CLEANED.out*.gz')
+    files.sort()
+    filein = files[0]
+    subprocess.run(f'''
+# Activating ldsc environment
+source {act} {pyenv}
+
+# munging data
+python {ldsc_path}/munge_sumstats.py \
+    --sumstats {filein} \
+    --merge-alleles {merge_alleles} \
+    --out {args.outprefix}/munged_ecf \
+    --signed-sumstats z_population,0 --p PVAL_population --N-col n_population
+
+# This for loop syntax is Bash only
+python {ldsc_path}/ldsc.py \
+    --rg {args.outprefix}/munged_ecf.sumstats.gz,{args.ldsc_ref} \
+    --ref-ld-chr {eur_w_ld_chr} \
+    --w-ld-chr {eur_w_ld_chr} \
+    --out {args.outprefix}/ldsclog
+    ''',
+    shell=True, check=True,
+    executable='/usr/bin/bash')
 
 
 
@@ -48,21 +470,29 @@ if __name__ == '__main__':
                         help='''Path to raw data. * symbol is wildcard
                         if extension is hdf5 then it reads as such, otherwise
                         it assumes it is a txt file delimited by spaces or tabs''')
-    parser.add_argument('--effects', type = str, default = 'direct,paternal,maternal',
+    parser.add_argument('--effects', type = str, default = None,
     help = '''
-    What are the effect names in the dataset inputted. Seperated by commas
+    What are the effect names in the dataset inputted. Seperated by underscores. 
+    Default is to infer what the hdf5 file has.
     ''')
-    
-    parser.add_argument('--outprefix', default = "", type = str, help = "Output prefix")
+    parser.add_argument('--toest', type = str, default = None,
+    help = '''
+    If anything is passed to this, the estimates will be transformed into this effect.
+    ''')
+    parser.add_argument('--outprefix', default = "./", type = str, help = "Output folder. If doesn't exist, script will create it.")
     parser.add_argument('-maf', '--maf-thresh', dest = "maf", type = float, default = 0.01,
     help = """The threshold of minor allele frequency. All SNPs below this threshold
+    are dropped.""")
+    parser.add_argument('-mac', '--mac-thresh', dest = "mac", type = float, default = 25,
+    help = """The threshold of minor allele count. All SNPs below this threshold
     are dropped.""")
     parser.add_argument('-A', '--Amat', default = "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0", type = str, 
     help = "A matrix which tells us how the effects are transformed.")
 
     # variable names
     parser.add_argument('-bim', default = "bim", type = str, help = "Name of bim column")
-    parser.add_argument('-bim_chromosome', default = 0, type = int, help = "Column index of Chromosome in BIM variable")
+    parser.add_argument('-bim_chromosome', default = 0, type = int, help = '''Column index of Chromosome in BIM variable. If set to 99 
+the reader will try and infer the chromosome number from the file name.''')
     parser.add_argument('-bim_rsid', default = 1, type = int, help = "Column index of SNPID (RSID) in BIM variable")
 
     parser.add_argument('--rsid_readfrombim', type = str, 
@@ -82,25 +512,36 @@ if __name__ == '__main__':
     parser.add_argument('-sigma2', default = "sigma2", type = str, help = "Name of sigma2 column")
     parser.add_argument('-tau', default = "tau", type = str, help = "Name of tau column")
 
+    parser.add_argument('--ldsc-ref', default = None, type = str, help = "Name of reference GWAS sample to run ldsc on. Must be munged")
 
-
+    parser.add_argument('--ldsc-outprefix', default = "./", type = str, 
+    help = "Name of where to save ldsc log output")
+    parser.add_argument('--cptid', default = False, action = 'store_true', 
+    help = "If passed, the SNP identifier for the data is assumed to be chromosome + bp.")
     args = parser.parse_args()
 
 
     # parsing
     dat = read_file(args)
-    dat = process_dat(dat, args.effects)
-    
-    with open(f"{args.outprefix}clean.ecf", "a") as f:
-        f.write("#### EasyQC-script to perform study-level and meta-level QC\n")
-        f.write("#### 0. Setup:\n")
-        f.write(f'''DEFINE   --pathOut {args.outprefix}
-                --strMissing NA
-                --strSeparator WHITESPACE
-                --acolIn SNP;chromosome;pos;A1;A2;beta;SE;P;freq;N
-                --acolInClasses character;numeric;numeric;character;character;numeric;numeric;numeric;numeric;numeric
-    --acolNewName rsID;CHR;POS;EFFECT_ALLELE;OTHER_ALLELE;BETA;SE;PVAL;EAF;N''')
+    dat = process_dat(dat, args)
+    with tempfile.TemporaryDirectory() as csvout:
 
+        tmpcsvout = csvout + '/out'
+        dat.to_csv(tmpcsvout, index = False)
+
+        with open(f"{args.outprefix}/clean.ecf", "w") as f:
+
+            init_ecf(f, args, dat, tmpcsvout)
+            write_ecf_sanitychecks(f, args)
+            write_ecf_filtering(f, args, dat)
+            make_plots(f, args, dat)
+            finish_ecf(f, args, dat)
+
+        run_rscript(f"{args.outprefix}/clean.ecf", csvout)
+
+
+    if args.ldsc_ref is not None:
+        run_ldsc_rg(args)
 
 
 

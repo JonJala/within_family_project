@@ -79,18 +79,19 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # # == UKB == #
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/13/bmi.sumstats,${within_family_path}/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+# --rg /var/genetics/data/ukb/public/latest/processed/sumstats/fgwas/13/bmi_pop.sumstats,${within_family_path}/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
-# --out /var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/bmi_ldsc
-# # # 0.9011 (0.023)
+# --out /var/genetics/proj/within_family/within_family_project/processed/sanity_checks/ukb/bmi_ldsc
+# # 0.9011 (0.023)
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/ea.sumstats,${within_family_path}/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+# --rg /var/genetics/data/ukb/public/latest/processed/sumstats/fgwas/21/ea_pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
-# --out /var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ea_ldsc
-# # # 0.948 (0.0322)
+# --out /var/genetics/proj/within_family/within_family_project/processed/sanity_checks/ukb/ea_ldsc
+# # 1.0256 (0.0335)
+
 
 
 # Depression

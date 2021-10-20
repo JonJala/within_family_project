@@ -370,15 +370,15 @@ def combine_cols(df, colname, cols, na_replace = None):
     return df
 
 
-def return_rsid(file, bp_pos, rsid_pos, filesep):
+def return_rsid(file, chr_pos, bp_pos, rsid_pos, filesep):
     '''
-    Given a bim file, return a numpy array of rsids
+    Given a bim file, return a pandas dataframe of rsids
     '''
     bimfile = pd.read_csv(file, sep = filesep,
                           header = None)
     
-    bimfile = bimfile.loc[:, [bp_pos, rsid_pos]]
-    bimfile = bimfile.rename(columns = {rsid_pos : "rsid", bp_pos : "BP"})
+    bimfile = bimfile.loc[:, [chr_pos, bp_pos, rsid_pos]]
+    bimfile = bimfile.rename(columns = {rsid_pos : "rsid", bp_pos : "BP", chr_pos : "CHR"})
     
     return bimfile
 
@@ -483,25 +483,27 @@ def read_hdf5(args, printinfo = True):
     
     if args['rsid_readfrombim'] != '':
         
+
         print("Getting RSIDs from bim files...")
         rsid_parts = args['rsid_readfrombim'].split(",")
         rsidfiles = rsid_parts[0]
-        bppos = int(rsid_parts[1])
-        rsidpos = int(rsid_parts[2])
-        file_sep = str(rsid_parts[3])
+        chr_pos = int(rsid_parts[1])
+        bppos = int(rsid_parts[2])
+        rsidpos = int(rsid_parts[3])
+        file_sep = str(rsid_parts[4])
         
         rsidfiles = glob.glob(rsidfiles)
-        snps = pd.DataFrame(columns = ["BP", "rsid"])
+        snps = pd.DataFrame(columns = ["CHR", "BP", "rsid"])
         for file in rsidfiles:
-            snp_i = return_rsid(file, bppos, rsidpos, file_sep)
+            snp_i = return_rsid(file, chr_pos, bppos, rsidpos, file_sep)
             snps = snps.append(snp_i, ignore_index = True)
         
-        snps = snps.drop_duplicates(subset=['BP'])
+        snps = snps.drop_duplicates(subset=['CHR', 'BP'])
         print(f"Shape before merging with bim {zdata.shape}")
-        zdata = zdata.merge(snps, how = "inner", on = "BP")
+        zdata = zdata.merge(snps, how = "inner", on = ['CHR', 'BP'])
         print(f"Shape before merging with bim {zdata.shape}")
-        goodlookingrsids = zdata['SNP'].str.startswith("rs").sum()
-        print(f"RSIDs which look reasonable: {goodlookingrsids} i.e {(goodlookingrsids * 100)/zdata.shape[0]} percentage of SNPs.")
+        goodlookingrsids = zdata['rsid'].str.startswith("rs").sum()
+        print(f"RSIDs which look reasonable: {goodlookingrsids} i.e {(goodlookingrsids * 100)/zdata.shape[0]} percent of SNPs.")
         zdata = zdata.rename(columns = {"SNP" : "SNP_old"})
         zdata = zdata.rename(columns = {"rsid" : "SNP"})
 
@@ -670,6 +672,14 @@ def transform_estimates(fromest,
     - population - refers to (population)
     '''
 
+    # preprocess some input possibilities
+    if fromest == "direct_maternal_paternal" or fromest == "direct_paternal_maternal":
+        fromest = "full"
+    if toest == "direct_maternal_paternal" or toest == "direct_paternal_maternal":
+        toest = "full"
+    if fromest == "direct_avgparental":
+        fromest = "direct_averageparental"
+
     if fromest == toest:
         pass
     elif fromest == "full" and toest == "direct_population":
@@ -727,6 +737,19 @@ def transform_estimates(fromest,
         S = Sdir.reshape((len(S), 2, 2))
         theta = theta @ tmatrix
         theta = theta.reshape((theta.shape[0], 2))
+    elif (fromest == "full" and toest == "full_averageparental_population") | (fromest == "full" and toest == "direct_paternal_maternal_averageparental_population"):
+        print("Converting from full to full + average parental  + population")
+
+        # == Combining indirect effects to make V a 2x2 matrix == #
+        tmatrix = np.array([[1.0, 0.0, 0.0, 0.0, 1.0],
+                            [0.0, 1.0, 0.0, 0.5, 0.5],
+                            [0.0, 0.0, 1.0, 0.5, 0.5]])
+        Sdir = np.empty((len(S), 5, 5))
+        for i in range(len(S)):
+            Sdir[i] = tmatrix.T @ S[i] @ tmatrix
+        S = Sdir.reshape((len(S), 5, 5))
+        theta = theta @ tmatrix
+        theta = theta.reshape((theta.shape[0], 5))
     else:
         print("Warning: The given parameters hasn't been converted.")
 

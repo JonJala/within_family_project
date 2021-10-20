@@ -75,7 +75,7 @@
 },
 
     "gs" : {
-        "path2file" : "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/14/chr_*chr_clean.hdf5",
+        "path2file" : "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/14/chr_*.sumstatschr_clean.hdf5",
         "bim" : "bim",
         "bim_chromosome" : 0,
         "bim_bp" : 2,
@@ -88,7 +88,7 @@
         "sigma2" : "sigma2",
         "tau" : "tau",
         "freqs" : "freqs",
-        "rsid_readfrombim" : "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/SNPs/chr_*_rsids.txt,3,1, ",
+        "rsid_readfrombim" : "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/SNPs/chr_*_rsids.txt,0,3,1, ",
         "maf" : 1,
         "effect_transform" : "direct_plus_averageparental",
         "Amat" : "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0"

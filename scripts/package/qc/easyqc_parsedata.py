@@ -36,18 +36,18 @@ FLIP_ALLELES = {''.join(x):
                 for x in MATCH_ALLELES}
 
 
-def return_rsid(file, bp_pos, rsid_pos, filesep):
+
+def return_rsid(file, chr_pos, bp_pos, rsid_pos, filesep):
     '''
-    Given a bim file, return a numpy array of rsids
+    Given a bim file, return a pandas dataframe of rsids
     '''
     bimfile = pd.read_csv(file, sep = filesep,
                           header = None)
     
-    bimfile = bimfile.loc[:, [bp_pos, rsid_pos]]
-    bimfile = bimfile.rename(columns = {rsid_pos : "rsid", bp_pos : "BP"})
+    bimfile = bimfile.loc[:, [chr_pos, bp_pos, rsid_pos]]
+    bimfile = bimfile.rename(columns = {rsid_pos : "rsid", bp_pos : "BP", chr_pos : "CHR"})
     
     return bimfile
-
 
 def parse_chr(args, file):
 
@@ -60,6 +60,18 @@ def parse_chr(args, file):
     print("Chromosome parsed as: ", chromosome)
 
     return chromosome
+
+def decode_byte(x):
+    '''
+    Decodes numpy byte array into an array of strings.
+    '''
+
+    if x.dtype == x.dtype.type is np.bytes_:
+        xout = np.char.decode(x)
+    else:
+        xout = x
+
+    return xout
 
 def read_hdf5(args, printinfo = True):
     # == Reading in data == #
@@ -74,12 +86,19 @@ def read_hdf5(args, printinfo = True):
     if printinfo:
         print("Reading in file: ", file)
     hf = h5py.File(file, 'r')
+
+        
+    # getting estimated effects
+    estimate_cols = hf['estimate_cols'][()].flatten()
+    estimate_cols = [e.decode().replace('_', '') for e in estimate_cols]
+    estimated_effects = '_'.join(estimate_cols)
+
     metadata = hf.get(args.bim)[()]
-    if args.bim_chromosome is not None:
-        chromosome = metadata[:, args.bim_chromosome]
-    else:
+    if args.bim_chromosome == 99:
         chromosome = parse_chr(args, file)
         chromosome = np.repeat(chromosome, metadata.shape[0])
+    else:
+        chromosome = metadata[:, args.bim_chromosome]
     bp = metadata[:, args.bim_bp]
     if args.rsid_readfrombim is not None:
         snp = np.zeros(bp.shape[0])
@@ -105,11 +124,11 @@ def read_hdf5(args, printinfo = True):
                 print("Reading in file: ", file)
             hf = h5py.File(file, 'r')
             metadata = hf.get(args.bim)[()]
-            if args.bim_chromosome is not None:
-                chromosome_file = metadata[:, args.bim_chromosome]
-            else:
+            if args.bim_chromosome == 99:
                 chromosome_file = parse_chr(args, file)
                 chromosome_file = np.repeat(chromosome_file, metadata.shape[0])
+            else:
+                chromosome_file = metadata[:, args.bim_chromosome]
             bp_file = metadata[:, args.bim_bp]
             if args.rsid_readfrombim is not None:
                 snp_file = np.zeros(bp_file.shape[0])
@@ -133,18 +152,18 @@ def read_hdf5(args, printinfo = True):
             f = np.append(f, f_file, axis = 0)
             hf.close()
 
-            
     # Constructing dataframe of data
-    zdata = pd.DataFrame({'CHR' : chromosome.astype(int),
-                        'SNP' : snp.astype(str),
-                        'BP' : bp.astype(int),
+    zdata = pd.DataFrame({'CHR' : decode_byte(chromosome).astype(float).astype(int),
+                        'SNP' : decode_byte(snp).astype(str),
+                        'BP' : decode_byte(bp).astype(float).astype(int),
                         "f" : f,
-                        "A1" : A1.astype(str),
-                        "A2" : A2.astype(str),
+                        "A1" : decode_byte(A1).astype(str),
+                        "A2" : decode_byte(A2).astype(str),
                         'theta' : theta.tolist(),
                         'se' : se.tolist(),
                         "S" : S.tolist(),
-                        "phvar" : phvar})
+                        "phvar" : phvar,
+                        'estimated_effects' : estimated_effects})
     
     
     if args.rsid_readfrombim is not None:
@@ -152,22 +171,23 @@ def read_hdf5(args, printinfo = True):
         print("Getting RSIDs from bim files...")
         rsid_parts = args.rsid_readfrombim.split(",")
         rsidfiles = rsid_parts[0]
-        bppos = int(rsid_parts[1])
-        rsidpos = int(rsid_parts[2])
-        file_sep = str(rsid_parts[3])
+        chr_pos = int(rsid_parts[1])
+        bppos = int(rsid_parts[2])
+        rsidpos = int(rsid_parts[3])
+        file_sep = str(rsid_parts[4])
         
         rsidfiles = glob.glob(rsidfiles)
-        snps = pd.DataFrame(columns = ["BP", "rsid"])
+        snps = pd.DataFrame(columns = ["CHR", "BP", "rsid"])
         for file in rsidfiles:
-            snp_i = return_rsid(file, bppos, rsidpos, file_sep)
+            snp_i = return_rsid(file, chr_pos, bppos, rsidpos, file_sep)
             snps = snps.append(snp_i, ignore_index = True)
         
-        snps = snps.drop_duplicates(subset=['BP'])
+        snps = snps.drop_duplicates(subset=['CHR', 'BP'])
         print(f"Shape before merging with bim {zdata.shape}")
-        zdata = zdata.merge(snps, how = "inner", on = "BP")
+        zdata = zdata.merge(snps, how = "inner", on = ['CHR', 'BP'])
         print(f"Shape before merging with bim {zdata.shape}")
-        goodlookingrsids = zdata['SNP'].str.startswith("rs").sum()
-        print(f"RSIDs which look reasonable: {goodlookingrsids} i.e {(goodlookingrsids * 100)/zdata.shape[0]} percentage of SNPs.")
+        goodlookingrsids = zdata['rsid'].str.startswith("rs").sum()
+        print(f"RSIDs which look reasonable: {goodlookingrsids} i.e {(goodlookingrsids * 100)/zdata.shape[0]} percent of SNPs.")
         zdata = zdata.rename(columns = {"SNP" : "SNP_old"})
         zdata = zdata.rename(columns = {"rsid" : "SNP"})
 

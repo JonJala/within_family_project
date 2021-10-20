@@ -21,10 +21,7 @@ for i in range(1, 15):
         bp = chr_bp.iloc[:, 1].values
         metadata[:, 0] = chromosome
 
-
         hf_write = h5py.File(file[:-5] + "chr_clean.hdf5", 'w')
-        hf_write.create_dataset('N', data=np.array(hf['N']))
-        hf_write.create_dataset('NAs', data=np.array(hf['NAs']))
         hf_write.create_dataset('bim', data=metadata)
         hf_write.create_dataset('estimate', data=np.array(hf['estimate']))
         hf_write.create_dataset('estimate_cols', data=np.array(hf['estimate_cols']))

@@ -1,0 +1,2 @@
+export(EasyQC)
+import(methods,Cairo,plotrix,data.table)

@@ -181,6 +181,30 @@ def process_dat(dat, args):
             corr_tmp = corr_vec[:, idx1, idx2]
             datout[f'rg_{pair[0]}_{pair[1]}'] = corr_tmp
 
+    if args.cptid:
+        
+        hrc = pd.read_csv(
+            "/var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.RSMID.MAPFILE.HRC.chr1_22_X.txt",
+            delim_whitespace = True,
+            dtype = {"rsmid" : str, "chr" : str, "pos" : np.int64}
+        )
+
+        hrc = hrc.loc[hrc["chr"] != "X"]
+        hrc["chr"] = hrc["chr"].map(int)
+
+        datout = pd.merge(
+            datout, 
+            hrc, 
+            left_on = ["CHR", "BP"], 
+            right_on = ["chr", "pos"],
+            how = "inner"
+        )
+
+        datout = datout.drop(["SNP", "chr", "pos"], axis = 1)
+        datout = datout.rename(columns = {"rsmid" : "SNP"})
+        datout["cptid"] = datout["CHR"].astype(str) + ":" + datout["BP"].astype(str)
+        
+
     return datout
 
 def init_ecf(f, args, dat, tmpcsvout):
@@ -251,8 +275,6 @@ ADDCOL --rcdAddCol 2*pnorm(q=abs(z_{effect}), lower.tail=FALSE) --colOut PVAL_{e
 def write_ecf_filtering(f, args, dat):
 
     f.write('''#### 2. Prepare files for filtering and apply minimum thresholds:
-    
-## Exclude low MAC SNPs
     ''')
 
     if args.toest is not None:
@@ -263,9 +285,7 @@ def write_ecf_filtering(f, args, dat):
 
     for effect in effects:
         f.write(f'''
-ADDCOL --rcdAddCol round((2*f*(1-f)*se_{effect}^2)^(-1)) --colOut n_{effect}
-ADDCOL --rcdAddCol signif(2*pmin(f,1-f)*n_{effect},4) --colOut MAC_{effect}
-CLEAN --rcdClean MAC_{effect}<{args.mac} --strCleanName numDrop_MAC_{effect}_{args.mac} --blnWriteCleaned 0\n
+ADDCOL --rcdAddCol round((2*f*(1-f)*se_{effect}^2)^(-1)) --colOut n_{effect}\n
 ''')
     f.write(f'''
 ## Exclude monomorphic SNPs:
@@ -286,12 +306,8 @@ CLEAN --rcdClean rg_{pair[0]}_{pair[1]}<mean(rg_{pair[0]}_{pair[1]},na.rm=T) - 6
     f.write('''
 HARMONIZEALLELES  --colInA1 A1 --colInA2 A2
 ''')
-    if args.cptid:
-        f.write(f'''
-#Create our own CPTID column
-ADDCOL --rcdAddCol paste(CHR, BP, sep = ":") --colOut cptid
-''')
-    else:
+
+    if not args.cptid:
         f.write(f'''
 #### 4. Harmonization of marker names (compile 'cptid')
 CREATECPTID --fileMap /var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.RSMID.MAPFILE.HRC.chr1_22_X.txt
@@ -393,7 +409,7 @@ def finish_ecf(f, args, dat):
     n_cols = ';'.join(n_col_names)
     f.write(f'''
 # write output
-#GETCOLS --acolOut cptid;{colnames};{pval_cols};{n_cols}
+GETCOLS --acolOut cptid;{colnames};{pval_cols};{n_cols};EAF.ref
 WRITE --strPrefix CLEANED. --strMissing . --strMode gz\n
 
 STOP EASYQC''')

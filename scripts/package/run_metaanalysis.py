@@ -8,6 +8,120 @@ from parsedata import *
 from metaanalysis import *
 from diagnostics import *
 
+def process_json_args(json_args_in):
+
+    '''
+    Since individual data/cohort arguments
+    are passed through a json file, we need a 
+    way to set up defaults for it
+
+    Here are the default values
+    "bim_chromosome" : 0,
+    "bim_bp" : 2,
+    "bim_rsid" : 1,
+    "bim_a1" : 3,
+    "bim_a2" : 4,
+    "estimate" : "estimate",
+    "estimate_ses" : "estimate_ses",
+    "estimate_covariance" : "estimate_covariance",
+    "sigma2" : "sigma2",
+    "tau" : "tau",
+    "freqs" : "freqs"
+    "phvar" : 1
+    '''
+
+    json_args = json_args_in.copy()
+
+    if 'bim' not in json_args:
+        json_args['bim'] == 'bim'
+    
+    if 'bim_chromosome' not in json_args:
+        json_args['bim_chromosome'] = 0
+    else:
+        json_args['bim_chromosome'] = int(json_args['bim_chromosome'])
+    
+    if 'bim_bp' not in json_args:
+        json_args['bim_bp'] = 2
+    else:
+        json_args['bim_bp'] = int(json_args['bim_bp'])
+
+    if 'bim_rsid' not in json_args:
+        json_args['bim_rsid'] = 0
+    else:
+        json_args['bim_rsid'] = int(json_args['bim_rsid'])
+
+    if 'a1' not in json_args:
+        json_args['a1'] = 3
+    else:
+        json_args['a1'] = int(json_args['a1'])
+
+    if 'a2' not in json_args:
+        json_args['a2'] = 4
+    else:
+        json_args['a2'] = int(json_args['a2'])
+
+    if 'bim_estimate' not in json_args:
+        json_args['bim_estimate'] = 'estimate'
+
+    if 'estimate_ses' not in json_args:
+        json_args['estimate_ses'] = 'estimate_ses'
+
+    if 'estimate_covariance' not in json_args:
+        json_args['estimate_covariance'] = 'estimate_covariance'
+
+    if 'sigma2' not in json_args:
+        json_args['sigma2'] = 'sigma2'
+
+    if 'tau' not in json_args:
+        json_args['tau'] = 'tau'
+
+    if 'freqs' not in json_args:
+        json_args['freqs'] = 'freqs'
+
+    if 'phvar' not in json_args:
+        json_args['phvar'] = 1.0
+    else:
+        json_args['phvar'] = float(json_args['phvar'])
+
+    return json_args
+
+def effect_hierarchy(effect_list):
+    '''
+    For a list return the 'highest' effect.
+
+    Highest is defined by this
+    hierarchy
+
+    direct_paternal_maternal > direct_population > direct_avgparental > population
+    '''
+
+    if 'direct_paternal_maternal' in effect_list or 'direct_maternal_paternal' in effect_list:
+        highest_effect = 'direct_paternal_maternal'
+    elif 'direct_population' in effect_list:
+        highest_effect = 'direct_population'
+    elif 'direct_avgparental' in effect_list or 'direct_averageparental' in effect_list:
+        highest_effect = 'direct_avgparental'
+    elif 'population' in effect_list:
+        highest_effect = 'population'
+    else:
+        highest_effect = "noeffect"
+
+    return highest_effect
+
+def highest_effect(df, colname = 'effects'):
+
+    '''
+    Looks at all the effects identified per SNP
+    Then takes the 'highest' one. highest is defined by this
+    hierarchy
+
+    direct_paternal_maternal > direct_avgparental = direct_population > population
+    '''
+
+    colnames = [c for c in df.columns if c.startswith(colname)]
+    df['effect_identified'] = df[colnames].apply(effect_hierarchy)
+
+    return df
 
 def highest_dim(df:pd.DataFrame, colname = 'dims') -> pd.DataFrame:
 
@@ -15,6 +129,32 @@ def highest_dim(df:pd.DataFrame, colname = 'dims') -> pd.DataFrame:
     df['max_dim'] = df[colnames].max(axis = 1)
 
     return df
+
+def getamat(dataeffect, targeteffect):
+    '''
+    Constructs A matrix according to what
+    effects the cohort has identified and
+    what effect we want to identify
+    '''
+
+    if targeteffect == 'direct_maternal_paternal':
+        targeteffect = 'direct_paternal_maternal'
+    
+    if dataeffect == 'direct_maternal_paternal':
+        dataeffect = 'direct_paternal_maternal'
+
+    if ((dataeffect == "direct_paternal_maternal") and 
+    (targeteffect == "direct_paternal_maternal")):
+        A = np.eye(3)
+    elif (dataeffect == "direct_population") and (targeteffect == "direct_paternal_maternal"):
+        A = np.array([[1.0, 0.0, 0.0],[0.0, 0.5, 0.5]])
+    elif (dataeffect == "population") and (targeteffect == "direct_paternal_materal"):
+        A = np.array([[1.0, 0.5, 0.5]])
+    elif (dataeffect == "direct_population") and (targeteffect == "direct_population"):
+        A = np.eye(2)
+
+    return A
+
 
 if __name__ == '__main__':
     
@@ -49,6 +189,7 @@ if __name__ == '__main__':
         data_args = json.load(f)
     
     # parsing
+    data_args = process_json_args(data_args)
     df_dict, Amat_dicts = read_from_json(data_args, args)
 
     df_merged = merging_data(list(df_dict.values()), on_pos = args.on_pos)
@@ -58,6 +199,7 @@ if __name__ == '__main__':
         df_merged = df_merged.dropna(subset = ["SNP"])
 
     # Filtering and aligning alleles/effects
+    # may not be necessary anymore!
     allele_cols = [col for col in df_merged if col.startswith('alleles')]
     df_merged['allele_consensus'] = df_fastmode(df_merged, allele_cols)
     df_merged = allele_plus_alleleconsensus(df_merged, allele_cols)
@@ -80,7 +222,7 @@ if __name__ == '__main__':
         )
 
     
-    df_toarray = df_toarray.sort_values("BP").reset_index(drop = True)
+    df_toarray = df_toarray.sort_values(["CHR", "BP"]).reset_index(drop = True)
 
 
     dims = df_toarray['max_dim'].unique()
@@ -104,7 +246,7 @@ if __name__ == '__main__':
         print(f"Meta analyzing SNPs with effect dimensions {dim}...")
 
         df_toarray_dim = df_toarray.loc[df_toarray['max_dim'] == dim].reset_index(drop = True)
-        Amat = Amat_dicts[str(int(dim))]
+        Amat = Amat_dicts[str(int(dim))] # replace this with a simple a func which takes effect, and target effect. return Amat
 
         # properly formatting missing values
         df_toarray_dim = (

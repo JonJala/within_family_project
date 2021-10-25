@@ -196,17 +196,19 @@ def read_hdf5(args, printinfo = True):
 
 
 def read_txt(args):
+
     
-    effects = args.effects.split(",")
-    effect_list = []
-
-    # get list of effects
-    for effect in effects:
-        effect_list += [effects[effect]]
-
     dfin = pd.read_csv(args.datapath, delim_whitespace = True)
     N = dfin.shape[0]
+
+    if args.effects is None:
+        beta_effects = [c for c in dfin.columns if c.endswith("Beta")]
+        effect_list = [c[0:-5] for c in beta_effects]
+    else:
+        effect_list = args.effects.split("_")
+        effect_list = ["avg_parental" if (x == "averageparental" or x == "avgparental") else x for x in effect_list]
     
+
     theta = np.zeros((N, len(effect_list)))
     se = np.zeros((N, len(effect_list)))
     S = np.zeros((N, len(effect_list), len(effect_list)))
@@ -216,7 +218,8 @@ def read_txt(args):
         se[:, i] = np.array((dfin[effect + "_SE"]).tolist())
         S[:, i, i] = np.array((dfin[effect + "_SE"]**2).tolist())
     
-    if len(effects) > 1:
+    import pdb; pdb.set_trace()
+    if len(effect_list) > 1:
         
         if f'r_direct_{effect_list[1]}' in dfin:
             cov = dfin[effect_list[0] + "_SE"] * dfin[f'{effect_list[1]}_SE'] * dfin[f'r_direct_{effect_list[1]}']
@@ -225,10 +228,11 @@ def read_txt(args):
         else:
             cov = dfin[f'{effect_list[0]}_{effect_list[1]}_Cov']
             
-        S[:, 0, 1] = np.array(cov.tolist())
-        S[:, 1, 0] = np.array(cov.tolist())
+    S[:, 0, 1] = np.array(cov.tolist())
+    S[:, 1, 0] = np.array(cov.tolist())
 
-    
+    phvar = args.phvar if args.phvar is not None else 1.0
+
     zdata = pd.DataFrame({'CHR' : dfin['chromosome'].astype(int),
                     'SNP' : dfin['SNP'].astype(str),
                     'BP' : dfin['pos'].astype(int),
@@ -238,20 +242,21 @@ def read_txt(args):
                     'theta' : theta.tolist(),
                     'se' : se.tolist(),
                     "S" : S.tolist(),
-                    "phvar" : args['phvar']})
+                    "phvar" : phvar})
     
     if args.rsid_readfrombim is not None:
 
         rsid_parts = args.rsid_readfrombim.split(",")
         rsidfiles = rsid_parts[0]
-        bppos = int(rsid_parts[1])
-        rsidpos = int(rsid_parts[2])
-        file_sep = str(rsid_parts[3])
+        chr_pos = int(rsid_parts[1])
+        bppos = int(rsid_parts[2])
+        rsidpos = int(rsid_parts[3])
+        file_sep = str(rsid_parts[4])
         
         rsidfiles = glob.glob(rsidfiles)
         snps = pd.DataFrame(columns = ["BP", "rsid"])
         for file in rsidfiles:
-            snp_i = return_rsid(file, bppos, rsidpos, file_sep)
+            snp_i = return_rsid(file, chr_pos, bppos, rsidpos, file_sep)
             snps = snps.append(snp_i, ignore_index = True)
         
         snps = snps.drop_duplicates(subset=['BP'])
@@ -260,6 +265,10 @@ def read_txt(args):
         zdata = zdata.rename(columns = {"rsid" : "SNP"})
 
 
+    effects = [effect.replace("_", "") for effect in effect_list]
+    effects = '_'.join(effects)
+    zdata['estimated_effects'] = effects
+    
     return zdata
 
 

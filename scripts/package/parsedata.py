@@ -512,39 +512,56 @@ def read_hdf5(args, printinfo = True):
 
 
 def read_txt(args):
-    
-    effects = args["effects"]
-    effect_list = []
-
-    # get list of effects
-    for effect in effects:
-        effect_list += [effects[effect]]
 
     dfin = pd.read_csv(args['path2file'], delim_whitespace = True)
     N = dfin.shape[0]
     
+    if 'effects' not in args:
+        effect_list = args["effects"].split("_")
+        effect_list = ["avg_parental" if (x == "averageparental" or x == "avgparental") else x for x in effect_list]
+        if len(effect_list) > 3:
+            effect_list.remove('population')
+            effect_list.remove('avg_parental')
+            effect_list.remove('average_parental')
+    else:
+        beta_effects = [c for c in dfin.columns if c.startswith("theta")]
+        effect_list = [c[0:-5] for c in beta_effects]
+
     theta = np.zeros((N, len(effect_list)))
     se = np.zeros((N, len(effect_list)))
     S = np.zeros((N, len(effect_list), len(effect_list)))
+
     for i, effect in enumerate(effect_list):
         
-        theta[:, i] = np.array(dfin[effect + '_Beta'].tolist())
-        se[:, i] = np.array((dfin[effect + "_SE"]).tolist())
-        S[:, i, i] = np.array((dfin[effect + "_SE"]**2).tolist())
+        theta[:, i] = np.array(dfin['theta_' + effect].tolist())
+        se[:, i] = np.array((dfin['se_' + effect]).tolist())
+        S[:, i, i] = np.array((dfin['se_' + effect]**2).tolist())
     
-    if len(effects) > 1:
-        
-        if f'r_direct_{effect_list[1]}' in dfin:
-            cov = dfin[effect_list[0] + "_SE"] * dfin[f'{effect_list[1]}_SE'] * dfin[f'r_direct_{effect_list[1]}']
-        elif f'{effect_list[1]}_Cov' in dfin:
-            cov = dfin[f'{effect_list[1]}_Cov']
-        else:
-            cov = dfin[f'{effect_list[0]}_{effect_list[1]}_Cov']
+    if len(effect_list) == 2:
+
+        cov = dfin['se_' + effect_list[0]] * dfin[f'se_{effect_list[1]}'] * dfin[f'rg_direct_{effect_list[1]}']
             
         S[:, 0, 1] = np.array(cov.tolist())
         S[:, 1, 0] = np.array(cov.tolist())
-
     
+    elif len(effect_list) == 3:
+
+        cov_dir_eff1 = dfin[f'se_{effect_list[0]}'] * dfin[f'se_{effect_list[1]}'] * dfin[f'rg_direct_{effect_list[1]}']
+        cov_dir_eff2 = dfin[f'se_{effect_list[0]}'] * dfin[f'se_{effect_list[2]}'] * dfin[f'rg_direct_{effect_list[2]}']
+
+        r_eff1_eff2_name = f'rg_{effect_list[1]}_{effect_list[2]}' if f'rg_{effect_list[1]}_{effect_list[2]}' in dfin else f'rg_{effect_list[2]}_{effect_list[1]}'
+        cov_eff1_eff2 = dfin[f'se_{effect_list[1]}'] * dfin[f'se_{effect_list[2]}'] * dfin[r_eff1_eff2_name]
+
+
+        S[:, 0, 1] = np.array(cov_dir_eff1.tolist())
+        S[:, 1, 0] = np.array(cov_dir_eff1.tolist())
+
+        S[:, 0, 2] = np.array(cov_dir_eff2.tolist())
+        S[:, 2, 0] = np.array(cov_dir_eff2.tolist())
+
+        S[:, 1, 2] = np.array(cov_eff1_eff2.tolist())
+        S[:, 2, 1] = np.array(cov_eff1_eff2.tolist())
+
     zdata = pd.DataFrame({'CHR' : dfin['chromosome'].astype(int),
                     'SNP' : dfin['SNP'].astype(str),
                     'BP' : dfin['pos'].astype(int),
@@ -554,9 +571,10 @@ def read_txt(args):
                     'theta' : theta.tolist(),
                     'se' : se.tolist(),
                     "S" : S.tolist(),
-                    "phvar" : args['phvar']})
+                    "phvar" : args['phvar'],
+                    "effects" : effect_list})
     
-    if args['rsid_readfrombim'] != '':
+    if 'rsid_readfrombim' in args:
 
         rsid_parts = args['rsid_readfrombim'].split(",")
         rsidfiles = rsid_parts[0]
@@ -638,9 +656,6 @@ def read_from_json(df_args, args):
         df_in = (df_in
          .pipe(begin_pipeline)
          .pipe(combine_allele_cols, "A1", "A2")
-         .pipe(filter_bad_alleles, "A1", "A2")
-         .pipe(maf_filter, df_args[cohort]['maf'])
-         .pipe(clean_SNPs, cohort, on_pos = args.on_pos)
         )
 
         df_dict[cohort] = df_in

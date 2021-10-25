@@ -8,6 +8,11 @@ import pandas as pd
 import glob
 import h5py
 
+import sys
+sys.path.append('/var/genetics/proj/within_family/within_family_project/scripts/package/qc')
+from easyqc_parsedata import *
+
+# make chromosome column fine
 for i in range(1, 15):
     
     print(i)
@@ -32,3 +37,44 @@ for i in range(1, 15):
         hf_write.create_dataset('tau', data=np.array(hf['tau']))
         hf_write.close()
         hf.close()
+
+
+# Make info files clean
+infopath = "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/chr*.info.gz"
+infofiles = glob.glob(infopath)
+infodat = pd.DataFrame(columns = ["SNP", "Rsq"])
+
+for infofile in infofiles:
+    dattmp = pd.read_csv(
+        infofile,
+        delim_whitespace = True
+    )
+
+    infodat = infodat.append(dattmp, ignore_index=True)
+
+
+infodat[['CHR', 'BP', 'a1', 'a2']] = infodat['SNP'].str.split(":", expand=True)
+infodat[['CHR', 'BP']] = infodat[['CHR', 'BP']].astype(int)
+rsidfiles = "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/SNPs/chr_*_rsids.txt"
+chr_pos = 0
+bppos = 3
+rsidpos = 1
+file_sep = " "
+
+rsidfiles = glob.glob(rsidfiles)
+snps = pd.DataFrame(columns = ["BP", "rsid"])
+for file in rsidfiles:
+    snp_i = return_rsid(file, chr_pos, bppos, rsidpos, file_sep)
+    snps = snps.append(snp_i, ignore_index = True)
+
+snps = snps.drop_duplicates(subset=['CHR', 'BP'])
+infodat = pd.merge(infodat, snps, how = "inner", on = ['CHR', 'BP'])
+infodat = infodat.drop('SNP', axis = 1)
+infodat = infodat.rename(columns = {"rsid" : "SNP"})
+
+infodat.to_csv(
+    '/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz',
+    sep = "\t",
+    index = False
+)
+

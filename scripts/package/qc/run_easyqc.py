@@ -123,6 +123,56 @@ def get_effect_list(effects):
 
     return effects_out
 
+def read_hwe(args):
+    '''
+    Read all teh hwe files and output
+    one single pandas dataframe
+    '''
+
+
+    hwepath = args.hwe
+    hwefiles = glob.glob(hwepath)
+    hwedat = pd.DataFrame(columns = ["SNP", "P"])
+    for hwefile in hwefiles:
+        dattmp = pd.read_csv(
+            hwefile,
+            usecols = ["SNP", "P"],
+            delim_whitespace = True
+        )
+        hwedat = hwedat.append(dattmp, ignore_index=True)
+    
+    hwedat = hwedat.rename(columns = {"P" : "hwe_p"})
+    return hwedat
+    
+
+def read_info(args):
+
+    '''
+    Read imputation quality data
+    and output a dataframe
+    '''
+
+    import pdb; pdb.set_trace()
+    infopath = args.info
+    infofiles = glob.glob(infopath)
+    infodat = pd.DataFrame(columns = ["SNP", "Rsq", "AvgCall"])
+
+    for infofile in infofiles:
+        dattmp = pd.read_csv(
+            infofile,
+            usecols = ["SNP", "Rsq", "AvgCall"],
+            delim_whitespace = True
+        )
+
+        infodat = infodat.append(dattmp, ignore_index=True)
+
+    infodat = infodat.rename(
+        columns = {"Rsq" : "info_r2",
+                "AvgCall" : "callrate"}
+    )
+    return infodat
+
+
 def process_dat(dat, args):
 
     '''
@@ -182,7 +232,7 @@ def process_dat(dat, args):
             datout[f'rg_{pair[0]}_{pair[1]}'] = corr_tmp
 
     if args.cptid:
-        
+        # get rsid from hrc
         hrc = pd.read_csv(
             "/var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.RSMID.MAPFILE.HRC.chr1_22_X.txt",
             delim_whitespace = True,
@@ -203,7 +253,15 @@ def process_dat(dat, args):
         datout = datout.drop(["SNP", "chr", "pos"], axis = 1)
         datout = datout.rename(columns = {"rsmid" : "SNP"})
         datout["cptid"] = datout["CHR"].astype(str) + ":" + datout["BP"].astype(str)
-        
+
+    
+    # read and merge hwe
+    if args.hwe is not None:
+        hwe = read_hwe(args)
+        datout = pd.merge(datout, hwe, on = "SNP", how = 'inner')
+    if args.info is not None:
+        info = read_info(args)
+        datout = pd.merge(datout, info, on = "SNP", how = 'inner')
 
     return datout
 
@@ -294,6 +352,20 @@ CLEAN --rcdClean (f==0)|(f==1) --strCleanName numDrop_Monomorph --blnWriteCleane
 CLEAN --rcdClean f<{args.maf} | f>1-{args.maf} --strCleanName numDrop_MAF_{args.maf} --blnWriteCleaned 0
 '''
     )
+    if args.hwe is not None:
+        f.write(f'''
+## Filter based on HWE:
+CLEAN --rcdClean hwe_p<1e-6 --strCleanName numDrop_hwe --blnWriteCleaned 0
+'''
+        )
+
+    if args.info is not None:
+        f.write(f'''
+## Filter based on imputation quality:
+CLEAN --rcdClean info_r2<0.99 --strCleanName numDrop_infor2 --blnWriteCleaned 0
+CLEAN --rcdClean callrate<0.99 --strCleanName numDrop_callrate --blnWriteCleaned 0
+'''
+        )
     # loop through rgs
     rgpairs = get_rg_pairs(effects)
     if len(rgpairs) > 0:
@@ -489,61 +561,71 @@ if __name__ == '__main__':
     parser.add_argument('--effects', type = str, default = None,
     help = '''
     What are the effect names in the dataset inputted. Seperated by underscores. 
-    Default is to infer what the hdf5 file has.
+    Default is to infer what the hdf5 file or txt file has.
     ''')
     parser.add_argument('--toest', type = str, default = None,
     help = '''
     If anything is passed to this, the estimates will be transformed into this effect.
     ''')
     parser.add_argument('--outprefix', default = "./", type = str, help = "Output folder. If doesn't exist, script will create it.")
+    parser.add_argument('--cptid', default = False, action = 'store_true', 
+    help = "If passed, the SNP identifier for the data is assumed to be chromosome + bp.")
+    parser.add_argument('--hwe', type = str,
+    help = "If passed, the hwe files will be read and also QC-ed for. Filtered at 1e-6")
+    parser.add_argument('--info', type = str,
+    help = "If passed, the info files will be read and also QC-ed for. Filtered at 0.99 for for R2 and call rate")
+    
     parser.add_argument('-maf', '--maf-thresh', dest = "maf", type = float, default = 0.01,
     help = """The threshold of minor allele frequency. All SNPs below this threshold
     are dropped.""")
     parser.add_argument('-mac', '--mac-thresh', dest = "mac", type = float, default = 25,
     help = """The threshold of minor allele count. All SNPs below this threshold
     are dropped.""")
-    parser.add_argument('-A', '--Amat', default = "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0", type = str, 
-    help = "A matrix which tells us how the effects are transformed.")
 
     # variable names
-    parser.add_argument('-bim', default = "bim", type = str, help = "Name of bim column")
-    parser.add_argument('-bim_chromosome', default = 0, type = int, help = '''Column index of Chromosome in BIM variable. If set to 99 
+    parser.add_argument('--bim', default = "bim", type = str, help = "Name of bim column")
+    parser.add_argument('--bim_chromosome', default = 0, type = int, help = '''Column index of Chromosome in BIM variable. If set to 99 
 the reader will try and infer the chromosome number from the file name.''')
-    parser.add_argument('-bim_rsid', default = 1, type = int, help = "Column index of SNPID (RSID) in BIM variable")
+    parser.add_argument('--bim_rsid', default = 1, type = int, help = "Column index of SNPID (RSID) in BIM variable")
 
     parser.add_argument('--rsid_readfrombim', type = str, 
                         help = '''Needs to be a comma seperated string of filename, BP-position, SNP-position, seperator.
                         If provided the variable bim_snp wont be used instead rsid's will be read
                         from the provided file set.''')
-    parser.add_argument('-bim_bp', default = 2, type = int, help = "Column index of BP in BIM variable")
-    parser.add_argument('-bim_a1', default = 3, type = int, help = "Column index of Chromosome in A1 variable")
-    parser.add_argument('-bim_a2', default = 4, type = int, help = "Column index of Chromosome in A2 variable")
+    parser.add_argument('--bim_bp', default = 2, type = int, help = "Column index of BP in BIM variable")
+    parser.add_argument('--bim_a1', default = 3, type = int, help = "Column index of Chromosome in A1 variable")
+    parser.add_argument('--bim_a2', default = 4, type = int, help = "Column index of Chromosome in A2 variable")
 
-    parser.add_argument('-estimate', default = "estimate", type = str, help = "Name of estimate column")
-    parser.add_argument('-estimate_ses', default = "estimate_ses", type = str, help = "Name of estimate_ses column")
-    parser.add_argument('-N', default = "N_L", type = str, help = "Name of N column")
-    parser.add_argument('-estimate_covariance', default = "estimate_covariance", type = str, help = "Name of estimate_covariance column")
-    parser.add_argument('-freqs', default = "freqs", type = str, help = "Name of freqs column")
+    parser.add_argument('--estimate', default = "estimate", type = str, help = "Name of estimate column")
+    parser.add_argument('--estimate_ses', default = "estimate_ses", type = str, help = "Name of estimate_ses column")
+    parser.add_argument('--N', default = "N_L", type = str, help = "Name of N column")
+    parser.add_argument('--estimate_covariance', default = "estimate_covariance", type = str, help = "Name of estimate_covariance column")
+    parser.add_argument('--freqs', default = "freqs", type = str, help = "Name of freqs column")
 
-    parser.add_argument('-sigma2', default = "sigma2", type = str, help = "Name of sigma2 column")
-    parser.add_argument('-tau', default = "tau", type = str, help = "Name of tau column")
+    parser.add_argument('--sigma2', default = "sigma2", type = str, help = "Name of sigma2 column")
+    parser.add_argument('--tau', default = "tau", type = str, help = "Name of tau column")
 
     parser.add_argument('--ldsc-ref', default = None, type = str, help = "Name of reference GWAS sample to run ldsc on. Must be munged")
 
     parser.add_argument('--ldsc-outprefix', default = "./", type = str, 
     help = "Name of where to save ldsc log output")
-    parser.add_argument('--cptid', default = False, action = 'store_true', 
-    help = "If passed, the SNP identifier for the data is assumed to be chromosome + bp.")
+
+    parser.add_argument('--phvar', type = float, 
+    help = '''What is the phenotypic variance of the dataset. If not passed, the phvar will be inferred if it is 
+    an hdf5 file. Otherwise for txt files it becomes 1''')
+    
     args = parser.parse_args()
 
 
     # parsing
     dat = read_file(args)
     dat = process_dat(dat, args)
+
     with tempfile.TemporaryDirectory() as csvout:
 
         tmpcsvout = csvout + '/out'
         dat.to_csv(tmpcsvout, index = False)
+        import pdb; pdb.set_trace()
 
         with open(f"{args.outprefix}/clean.ecf", "w") as f:
 

@@ -97,16 +97,23 @@
 ######
 
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/ea/Eduhunt_results_chr*.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/ea" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, "
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/ea/Eduhunt_results_chr*.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/ea" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, "
 # 1.0875 (0.1359)
 
 #################
 # Minnesotta twins
 #################
 
-# NEED TO PUT THIS IN
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/minn_twins/public/latest/raw/sumstats/fgwas/sumstats/ED_chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/ea" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
+#     --cptid \
+#     --toest "direct_population"
+
+    # 0.5782 (0.2655) probbly not EA

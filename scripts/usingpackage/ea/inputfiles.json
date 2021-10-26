@@ -1,125 +1,50 @@
 {
     "moba" : {
 
-        "path2file" : "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/sumstats/edu_chr*.hdf5",
-        "bim" : "bim",
-        "bim_chromosome" : 0,
-        "bim_bp" : 2,
-        "bim_rsid" : 1,
-        "bim_a1" : 3,
-        "bim_a2" : 4,
-        "estimate" : "estimate",
-        "estimate_ses" : "estimate_ses",
-        "estimate_covariance" : "estimate_covariance",
-        "sigma2" : "sigma2",
-        "tau" : "tau",
-        "freqs" : "freqs",
-        "rsid_readfrombim" : "",
-        "maf" : 1,
-        "effect_transform" : "direct_plus_averageparental",
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/ea/CLEANED.out.gz",
         "Amat" : {"3" : "1.0 0.0 0.0;0.0 0.5 0.5",
                 "2" : "1.0 0.0;0.0 1.0"}
 
 },
 
     "str": {
-        "path2file" : "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/eduYears/eduYears_chr*.hdf5",
-        "bim" : "bim",
-        "bim_chromosome" : 0,
-        "bim_bp" : 3,
-        "bim_rsid" : 1,
-        "bim_a1" : 4,
-        "bim_a2" : 5,
-        "estimate" : "estimate",
-        "estimate_ses" : "estimate_ses",
-        "estimate_covariance" : "estimate_covariance",
-        "sigma2" : "sigma2",
-        "tau" : "tau",
-        "freqs" : "freqs",
-        "rsid_readfrombim" : "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPs/chr_*.bim,3,1, ",
-        "maf" : 1,
-        "effect_transform" : "full",
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/ea/CLEANED.out.gz",
         "Amat" : "1.0 0.0 0.0;0.0 0.5 0.5"
 },
 
     "ukb": {
-        "path2file" : "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/chr_*.sumstats.hdf5",
-        "bim" : "bim",
-        "bim_bp" : 2,
-        "bim_rsid" : 1,
-        "bim_a1" : 3,
-        "bim_a2" : 4,
-        "estimate" : "estimate",
-        "estimate_ses" : "estimate_ses",
-        "estimate_covariance" : "estimate_covariance",
-        "sigma2" : "sigma2",
-        "tau" : "tau",
-        "freqs" : "freqs",
-        "rsid_readfrombim" : "",
-        "maf" : 1,
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/ea/CLEANED.out.gz",
         "Amat" : "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0"
 },
 
     "ft" : {
-        "path2file" : "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/EA.chr*.hdf5",
-        "bim" : "bim",
-        "bim_chromosome" : 0,
-        "bim_bp" : 2,
-        "bim_rsid" : 1,
-        "bim_a1" : 3,
-        "bim_a2" : 4,
-        "estimate" : "estimate",
-        "estimate_ses" : "estimate_ses",
-        "estimate_covariance" : "estimate_covariance",
-        "sigma2" : "sigma2",
-        "tau" : "tau",
-        "freqs" : "freqs",
-        "rsid_readfrombim" : "",
-        "maf" : 1,
-        "effect_transform" : "full",
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/ea/CLEANED.out.gz",
         "Amat" : "1.0 0.0 0.0;0.0 0.5 0.5"
 },
 
     "gs" : {
-        "path2file" : "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/14/chr_*.sumstatschr_clean.hdf5",
-        "bim" : "bim",
-        "bim_chromosome" : 0,
-        "bim_bp" : 2,
-        "bim_rsid" : 1,
-        "bim_a1" : 3,
-        "bim_a2" : 4,
-        "estimate" : "estimate",
-        "estimate_ses" : "estimate_ses",
-        "estimate_covariance" : "estimate_covariance",
-        "sigma2" : "sigma2",
-        "tau" : "tau",
-        "freqs" : "freqs",
-        "rsid_readfrombim" : "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/SNPs/chr_*_rsids.txt,0,3,1, ",
-        "maf" : 1,
-        "effect_transform" : "direct_plus_averageparental",
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/ea/CLEANED.out.gz",
         "Amat" : "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0"
 },
 
     "hunt" : {
-        "path2file" : "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/ea/Eduhunt_results_chr*.hdf5",
-        "bim" : "bim",
-        "bim_chromosome" : 0,
-        "bim_bp" : 2,
-        "bim_rsid" : 1,
-        "bim_a1" : 3,
-        "bim_a2" : 4,
-        "estimate" : "estimate",
-        "estimate_ses" : "estimate_ses",
-        "estimate_covariance" : "estimate_covariance",
-        "sigma2" : "sigma2",
-        "tau" : "tau",
-        "freqs" : "freqs",
-        "rsid_readfrombim" : "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/ea/Eduhunt_results_chr*.bim,2,1, ",
-        "maf" : 1,
-        "effect_transform" : "direct_plus_averageparental",
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/ea/CLEANED.out.gz",
         "Amat" : "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0"
 
-}
+},
+
+    "eb" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/ea/CLEANED.out.gz",
+        "Amat" : "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0"
+    },
+
+    "ll" :{
+
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/ea/CLEANED.out.gz",
+        "Amat" : "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0"
+    }
+
+
 
 
 

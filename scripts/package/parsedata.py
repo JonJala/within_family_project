@@ -185,7 +185,7 @@ def merging_data(df_list, jointype = "outer", on_pos = True):
     
     if on_pos:
         df_merged = reduce(lambda left,right: pd.merge(left, right, 
-                                              on = ["CHR", "BP"],
+                                              on = ["cptid"],
                                               how = jointype
                                               ),
                     df_list)
@@ -513,19 +513,21 @@ def read_hdf5(args, printinfo = True):
 
 def read_txt(args):
 
+    
     dfin = pd.read_csv(args['path2file'], delim_whitespace = True)
     N = dfin.shape[0]
     
-    if 'effects' not in args:
+    if 'effects' in args:
         effect_list = args["effects"].split("_")
-        effect_list = ["avg_parental" if (x == "averageparental" or x == "avgparental") else x for x in effect_list]
-        if len(effect_list) > 3:
-            effect_list.remove('population')
-            effect_list.remove('avg_parental')
-            effect_list.remove('average_parental')
+        effect_list = ["averageparental" if (x == "averageparental" or x == "avgparental") else x for x in effect_list]
     else:
         beta_effects = [c for c in dfin.columns if c.startswith("theta")]
-        effect_list = [c[0:-5] for c in beta_effects]
+        effect_list = [c[6:] for c in beta_effects]
+        effect_list = ["averageparental" if (x == "averageparental" or x == "avgparental") else x for x in effect_list]
+    
+    if len(effect_list) > 3:
+        effect_list.remove('population')
+        effect_list.remove('averageparental')
 
     theta = np.zeros((N, len(effect_list)))
     se = np.zeros((N, len(effect_list)))
@@ -562,17 +564,20 @@ def read_txt(args):
         S[:, 1, 2] = np.array(cov_eff1_eff2.tolist())
         S[:, 2, 1] = np.array(cov_eff1_eff2.tolist())
 
-    zdata = pd.DataFrame({'CHR' : dfin['chromosome'].astype(int),
+    
+    zdata = pd.DataFrame({'cptid' : dfin['cptid'],
+                    'CHR' : dfin['CHR'].astype(int),
                     'SNP' : dfin['SNP'].astype(str),
-                    'BP' : dfin['pos'].astype(int),
-                    "f" : dfin['freq'],
+                    'BP' : dfin['BP'].astype(int),
+                    "f" : dfin['f'],
                     "A1" : dfin['A1'].astype(str),
                     "A2" : dfin['A2'].astype(str),
                     'theta' : theta.tolist(),
                     'se' : se.tolist(),
                     "S" : S.tolist(),
                     "phvar" : args['phvar'],
-                    "effects" : effect_list})
+                    'effects' : '_'.join(effect_list)})
+                    
     
     if 'rsid_readfrombim' in args:
 

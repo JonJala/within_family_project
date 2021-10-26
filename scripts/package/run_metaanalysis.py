@@ -6,7 +6,6 @@ import argparse
 
 from parsedata import *
 from metaanalysis import *
-from diagnostics import *
 
 def process_json_args(json_args_in):
 
@@ -32,56 +31,57 @@ def process_json_args(json_args_in):
 
     json_args = json_args_in.copy()
 
-    if 'bim' not in json_args:
-        json_args['bim'] == 'bim'
-    
-    if 'bim_chromosome' not in json_args:
-        json_args['bim_chromosome'] = 0
-    else:
-        json_args['bim_chromosome'] = int(json_args['bim_chromosome'])
-    
-    if 'bim_bp' not in json_args:
-        json_args['bim_bp'] = 2
-    else:
-        json_args['bim_bp'] = int(json_args['bim_bp'])
+    for c in json_args:
+        if 'bim' not in json_args[c]:
+            json_args[c]['bim'] = 'bim'
+        
+        if 'bim_chromosome' not in json_args[c]:
+            json_args[c]['bim_chromosome'] = 0
+        else:
+            json_args[c]['bim_chromosome'] = int(json_args[c]['bim_chromosome'])
+        
+        if 'bim_bp' not in json_args[c]:
+            json_args[c]['bim_bp'] = 2
+        else:
+            json_args[c]['bim_bp'] = int(json_args[c]['bim_bp'])
 
-    if 'bim_rsid' not in json_args:
-        json_args['bim_rsid'] = 0
-    else:
-        json_args['bim_rsid'] = int(json_args['bim_rsid'])
+        if 'bim_rsid' not in json_args[c]:
+            json_args[c]['bim_rsid'] = 0
+        else:
+            json_args[c]['bim_rsid'] = int(json_args[c]['bim_rsid'])
 
-    if 'a1' not in json_args:
-        json_args['a1'] = 3
-    else:
-        json_args['a1'] = int(json_args['a1'])
+        if 'a1' not in json_args[c]:
+            json_args[c]['a1'] = 3
+        else:
+            json_args[c]['a1'] = int(json_args[c]['a1'])
 
-    if 'a2' not in json_args:
-        json_args['a2'] = 4
-    else:
-        json_args['a2'] = int(json_args['a2'])
+        if 'a2' not in json_args[c]:
+            json_args[c]['a2'] = 4
+        else:
+            json_args[c]['a2'] = int(json_args[c]['a2'])
 
-    if 'bim_estimate' not in json_args:
-        json_args['bim_estimate'] = 'estimate'
+        if 'bim_estimate' not in json_args[c]:
+            json_args[c]['bim_estimate'] = 'estimate'
 
-    if 'estimate_ses' not in json_args:
-        json_args['estimate_ses'] = 'estimate_ses'
+        if 'estimate_ses' not in json_args[c]:
+            json_args[c]['estimate_ses'] = 'estimate_ses'
 
-    if 'estimate_covariance' not in json_args:
-        json_args['estimate_covariance'] = 'estimate_covariance'
+        if 'estimate_covariance' not in json_args[c]:
+            json_args[c]['estimate_covariance'] = 'estimate_covariance'
 
-    if 'sigma2' not in json_args:
-        json_args['sigma2'] = 'sigma2'
+        if 'sigma2' not in json_args[c]:
+            json_args[c]['sigma2'] = 'sigma2'
 
-    if 'tau' not in json_args:
-        json_args['tau'] = 'tau'
+        if 'tau' not in json_args[c]:
+            json_args[c]['tau'] = 'tau'
 
-    if 'freqs' not in json_args:
-        json_args['freqs'] = 'freqs'
+        if 'freqs' not in json_args[c]:
+            json_args[c]['freqs'] = 'freqs'
 
-    if 'phvar' not in json_args:
-        json_args['phvar'] = 1.0
-    else:
-        json_args['phvar'] = float(json_args['phvar'])
+        if 'phvar' not in json_args[c]:
+            json_args[c]['phvar'] = 1.0
+        else:
+            json_args[c]['phvar'] = float(json_args[c]['phvar'])
 
     return json_args
 
@@ -194,7 +194,7 @@ if __name__ == '__main__':
 
     df_merged = merging_data(list(df_dict.values()), on_pos = args.on_pos)
     if args.on_pos:
-        df_merged = df_merged.dropna(subset = ["BP", "CHR"])
+        df_merged = df_merged.dropna(subset = ["cptid"])
     else:
         df_merged = df_merged.dropna(subset = ["SNP"])
 

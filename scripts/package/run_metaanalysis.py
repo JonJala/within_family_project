@@ -85,28 +85,6 @@ def process_json_args(json_args_in):
 
     return json_args
 
-def effect_hierarchy(effect_list):
-    '''
-    For a list return the 'highest' effect.
-
-    Highest is defined by this
-    hierarchy
-
-    direct_paternal_maternal > direct_population > direct_avgparental > population
-    '''
-
-    if 'direct_paternal_maternal' in effect_list or 'direct_maternal_paternal' in effect_list:
-        highest_effect = 'direct_paternal_maternal'
-    elif 'direct_population' in effect_list:
-        highest_effect = 'direct_population'
-    elif 'direct_avgparental' in effect_list or 'direct_averageparental' in effect_list:
-        highest_effect = 'direct_avgparental'
-    elif 'population' in effect_list:
-        highest_effect = 'population'
-    else:
-        highest_effect = "noeffect"
-
-    return highest_effect
 
 def highest_effect(df, colname = 'effects'):
 
@@ -118,8 +96,21 @@ def highest_effect(df, colname = 'effects'):
     direct_paternal_maternal > direct_avgparental = direct_population > population
     '''
 
+    effectmap = {
+        'direct_paternal_maternal' : 3,
+        'direct_population' : 2,
+        'direct_avgparental' : 1,
+        'population' : 0
+    }
+
+    revmap = {v: k for k, v in effectmap.items()}
+
     colnames = [c for c in df.columns if c.startswith(colname)]
-    df['effect_identified'] = df[colnames].apply(effect_hierarchy)
+    effects_ided = df[colnames].stack().map(effectmap).unstack()
+    effects_ided = effects_ided.max(axis = 1)
+    df['effect_identified'] = effects_ided.map(revmap)
+
+
 
     return df
 
@@ -155,6 +146,35 @@ def getamat(dataeffect, targeteffect):
 
     return A
 
+def getamat_dict(df, targeteffect):
+
+    '''
+    Identifies cohorts in data set, automatically determines
+    what the appropriate A matrix should look like for each 
+    and returns a dictionary
+    '''
+
+    theta_cols = [col for col in df.columns if col.startswith('theta_')]
+    cohorts = [c[6:] for c in theta_cols]
+    Amatdict = {}
+
+    for idx, c in enumerate(cohorts):
+        theta_vec_example = np.array(df[theta_cols[idx]][0])
+        theta_vec_dim = theta_vec_example.shape[0]
+
+        dataeffects = df[f'effects_{c}'].dropna().values
+        dataeffect = dataeffects[0] if len(dataeffects) > 0 else ""
+
+        if dataeffect == "":
+            targeteffect_list = targeteffect.split("_")
+            targeteffect_ndims = len(targeteffect_list)
+            Amat = np.zeros((theta_vec_dim, targeteffect_ndims))
+        else:
+            Amat = getamat(dataeffect, targeteffect)
+
+        Amatdict[c] = Amat
+    
+    return Amatdict
 
 if __name__ == '__main__':
     
@@ -178,90 +198,99 @@ if __name__ == '__main__':
     help = '''Do you want to merge cohorts by rsid instead of default which is pos''')
     args=parser.parse_args()
 
-    print(f"Merging on rsid: {not args.on_pos}")
-    
-
     startTime = dt.datetime.now()
     print(f'Start time: {startTime}')
     
+
     # reading in files
     with open(args.path2json) as f:
         data_args = json.load(f)
     
     # parsing
     data_args = process_json_args(data_args)
-    df_dict, Amat_dicts = read_from_json(data_args, args)
+    df_merged, Amat_dicts = read_from_json(data_args, args)
+    df_merged = merging_data(list(df_merged.values()), on_pos = args.on_pos)
 
-    df_merged = merging_data(list(df_dict.values()), on_pos = args.on_pos)
     if args.on_pos:
         df_merged = df_merged.dropna(subset = ["cptid"])
     else:
         df_merged = df_merged.dropna(subset = ["SNP"])
 
-    # Filtering and aligning alleles/effects
-    # may not be necessary anymore!
-    allele_cols = [col for col in df_merged if col.startswith('alleles')]
-    df_merged['allele_consensus'] = df_fastmode(df_merged, allele_cols)
-    df_merged = allele_plus_alleleconsensus(df_merged, allele_cols)
-    df_toarray = filter_and_align(df_merged, list(data_args.keys()))
-
     # creating data frame ready to become an array
+    df_merged = (df_merged
+        .pipe(begin_pipeline)
+        .pipe(combine_cols, 'A1', [c for c in df_merged if c.startswith('A1_')])
+        .pipe(combine_cols, 'A2', [c for c in df_merged if c.startswith('A2_')])
+        )
 
     if args.on_pos:
-        df_toarray = (df_toarray
+        df_merged = (df_merged
         .pipe(begin_pipeline)
-        .pipe(combine_cols, 'SNP', [c for c in df_toarray if c.startswith('SNP_')])
+        .pipe(combine_cols, 'SNP', [c for c in df_merged if c.startswith('SNP_')])
+        .pipe(combine_cols, 'CHR', [c for c in df_merged if c.startswith('CHR_')], 0)
+        .pipe(combine_cols, 'BP', [c for c in df_merged if c.startswith('BP_')])
         .pipe(highest_dim)
+        .pipe(highest_effect)
         )
     else:
-        df_toarray = (df_toarray
+        df_merged = (df_merged
         .pipe(begin_pipeline)
-        .pipe(combine_cols, 'CHR', [c for c in df_toarray if c.startswith('CHR_')], 0)
-        .pipe(combine_cols, 'BP', [c for c in df_toarray if c.startswith('BP_')])
+        .pipe(combine_cols, 'CHR', [c for c in df_merged if c.startswith('CHR_')], 0)
+        .pipe(combine_cols, 'BP', [c for c in df_merged if c.startswith('BP_')])
+        .pipe(combine_cols, 'cptid', [c for c in df_merged if c.startswith('cptid_')])
         .pipe(highest_dim)
+        .pipe(highest_effect)
         )
 
     
-    df_toarray = df_toarray.sort_values(["CHR", "BP"]).reset_index(drop = True)
+    # df_merged = df_merged.sort_values(["CHR", "BP"]).reset_index(drop = True)
 
-
-    dims = df_toarray['max_dim'].unique()
-    dims = dims[dims > 1] # we dont care about SNPs where we only have population effects
+    # dims = df_merged['max_dim'].unique()
+    # dims = dims[dims > 1] # we dont care about SNPs where we only have population effects
     df_out_list = []
+    df_merged = (
+        df_merged
+        .pipe(highest_effect)
+    )
+    dims = df_merged['effect_identified'].unique()
+    if "population" in dims:
+        dims.remove("population")
+
 
     # arrays to store
-    theta_tosave = np.empty(shape = (0, 2))
-    theta_ses_tosave = np.empty(shape = (0, 2))
-    theta_var_tosave = np.empty(shape = (0, 2, 2))
+    theta_tosave = np.empty(shape = (0, 5))
+    theta_ses_tosave = np.empty(shape = (0, 5))
+    theta_var_tosave = np.empty(shape = (0, 5, 5))
 
-    theta_bar_pop_tosave = np.empty(shape = (0, 2))
-    theta_ses_pop_tosave = np.empty(shape = (0, 2))
-    theta_var_pop_tosave = np.empty(shape = (0, 2, 2))
-
-    f_bar_tosave = np.empty(shape = (0, 1))
-
+    f_tosave = np.empty(shape = (0, 1))
 
     for dim in dims:
 
         print(f"Meta analyzing SNPs with effect dimensions {dim}...")
-
-        df_toarray_dim = df_toarray.loc[df_toarray['max_dim'] == dim].reset_index(drop = True)
-        Amat = Amat_dicts[str(int(dim))] # replace this with a simple a func which takes effect, and target effect. return Amat
+        df_toarray_dim = df_merged.loc[df_merged['effect_identified'] == dim].reset_index(drop = True)
 
         # properly formatting missing values
         df_toarray_dim = (
             df_toarray_dim
             .pipe(begin_pipeline)
-            .pipe(make_array_cols_nas, 'theta_', Amat, 0)
-            .pipe(make_array_cols_nas, 'S_', Amat)
+            .pipe(make_array_cols_nas, 'theta_', 0)
+            .pipe(make_array_cols_nas, 'S_', 1)
         )
+        
+        Amat = getamat_dict(df_toarray_dim, dim)
+        Amat_check = Amat_dicts[dim]
+        
+        print("=================")
+        print("Amat calculated")
+        print(Amat)
+        print("Amat Provided")
+        print(Amat_check)
+        print("=================")
 
         # == Array operations == #
         theta_vec = extract_vector(df_toarray_dim, "theta")
         S_vec = extract_vector(df_toarray_dim, "S_")
         phvar_vec = extract_vector(df_toarray_dim, "phvar")
-        
-        
         phvar_vec = get_firstvalue_dict(phvar_vec)
 
         theta_vec_adj = adjust_theta_by_phvar(theta_vec, phvar_vec)
@@ -274,30 +303,17 @@ if __name__ == '__main__':
         theta_bar, theta_var = get_estimates(theta_vec_adj, wt, Amat)
         
         # convert effects
-        if dim == 3:
-            theta_var, theta_bar = transform_estimates("full",
-                                                        "direct_averageparental", 
-                                                        theta_var, 
-                                                        theta_bar.reshape(theta_bar.shape[0], 
-                                                                            theta_bar.shape[1]))
-            fromest = "direct_averageparental"
-        elif dim == 2:
-            fromest = "direct_averageparental"
+        theta_var_out, theta_bar_out = transform_estimates(dim,
+                                                "full_averageparental_population", 
+                                                theta_var, 
+                                                theta_bar.reshape(theta_bar.shape[0], 
+                                                                    theta_bar.shape[1]))
 
-        theta_var_out, theta_bar_out = transform_estimates(fromest,
-                                                            args.outestimates, 
-                                                            theta_var, 
-                                                            theta_bar.reshape(theta_bar.shape[0], 
-                                                                                theta_bar.shape[1]))
-    
-        theta_ses = get_ses(theta_var)
+        
         theta_ses_out = get_ses(theta_var_out)
-
-        z_bar = theta2z(theta_bar, theta_var)
-        pval = get_pval(z_bar)
         z_bar_out = theta2z(theta_bar_out, theta_var_out)
         pval_out = get_pval(z_bar_out)
-        
+        import ipdb; ipdb.set_trace()
         
         # computing weighted f
         f_vec = extract_vector(df_toarray_dim, "f_")
@@ -306,128 +322,107 @@ if __name__ == '__main__':
         f_bar = freq_wted_sum(f_vec, wt_dir)
         wt_dir_sum = get_wt_sum(wt_dir)
         f_bar = f_bar/wt_dir_sum
-
-        # preparation for outdata
-        est1_type = "avgparental"
-        est2_type = args.outestimates.split("_")[-1]
         
         Neff_dir = neff(f_bar, theta_ses_out[:, 0])
-        Neff_effect1 = neff(f_bar, theta_ses[:, 1])
-        Neff_effect2 = neff(f_bar, theta_ses_out[:, 1])
+        Neff_pop = neff(f_bar, theta_ses_out[:, 4])
 
         # combining everything into a dataframe
         df_out = pd.DataFrame(
             {
-                'SNP' : df_toarray_dim['SNP'],
-                'pos' : df_toarray_dim['BP'].astype(int),
-                'chromosome' : df_toarray_dim['CHR'].astype(int),
+                'cptid' : df_toarray_dim['cptid'],
+                'CHR' :  df_toarray_dim['CHR'],
+                'BP' :  df_toarray_dim['BP'],
+                'SNP' :  df_toarray_dim['SNP'],
                 'freq' : f_bar,
-                'allele_comb' : df_toarray_dim['allele_consensus'],
-                'dir_Beta' : theta_bar_out[:, 0].flatten(),
-                f'{est1_type}_Beta' : theta_bar[:, 1].flatten(),
-                f'{est2_type}_Beta' : theta_bar_out[:, 1].flatten(),
+                'A1' : df_toarray_dim['A1'],
+                'A2' : df_toarray_dim['A2'],
                 'dir_N' : Neff_dir,
-                f'N_{est1_type}' : Neff_effect1,
-                f'N_{est2_type}' : Neff_effect2,
-                'z_dir' : z_bar_out[:, 0].flatten(),
-                f'z_{est1_type}' : z_bar[:, 1].flatten(),
-                f'z_{est2_type}' : z_bar_out[:, 1].flatten(),
+                'population_N' : Neff_pop,
+                'dir_Beta' : theta_bar_out[:, 0].flatten(),
+                'paternal_Beta' : theta_bar_out[:, 1].flatten(),
+                'maternal_Beta' : theta_bar_out[:, 2].flatten(),
+                'avgparental_Beta' : theta_bar_out[:, 3].flatten(),
+                'population_Beta' : theta_bar_out[:, 4].flatten(),
+                'dir_z' : z_bar_out[:, 0].flatten(),
+                'paternal_z' : z_bar_out[:, 1].flatten(),
+                'maternal_z' : z_bar_out[:, 2].flatten(),
+                'avgparental_z' : z_bar_out[:, 3].flatten(),
+                'population_z' : z_bar_out[:, 4].flatten(),
                 'dir_SE' : theta_ses_out[:, 0],
-                f'{est1_type}_SE' : theta_ses[:, 1],
-                f'{est2_type}_SE' : theta_ses_out[:, 1],
-                f'dir_{est1_type}_Cov': theta_var[:, 0, 1],
-                f'dir_{est2_type}_Cov': theta_var_out[:, 0, 1],
+                'paternal_SE' : theta_ses_out[:, 1],
+                'maternal_SE' : theta_ses_out[:, 2],
+                'avgparental_SE' : theta_ses_out[:, 3],
+                'population_SE' : theta_ses_out[:, 4],
+                'dir_paternal_rg': get_rg(theta_var_out[:, 0, 1], theta_ses_out[:, 0], theta_ses_out[:, 1]),
+                'dir_maternal_rg': get_rg(theta_var_out[:, 0, 2], theta_ses_out[:, 0], theta_ses_out[:, 2]),
+                'dir_avgparental_rg': get_rg(theta_var_out[:, 0, 3], theta_ses_out[:, 0], theta_ses_out[:, 3]),
+                'dir_population_rg': get_rg(theta_var_out[:, 0, 4], theta_ses_out[:, 0], theta_ses_out[:, 4]),
+                'paternal_maternal_rg': get_rg(theta_var_out[:, 1, 2], theta_ses_out[:, 1], theta_ses_out[:, 2]),
+                'paternal_avgparental_rg': get_rg(theta_var_out[:, 1, 3], theta_ses_out[:, 1], theta_ses_out[:, 3]),
+                'paternal_population_rg': get_rg(theta_var_out[:, 1, 4], theta_ses_out[:, 1], theta_ses_out[:, 4]),
+                'maternal_avgparental_rg': get_rg(theta_var_out[:, 2, 3], theta_ses_out[:, 2], theta_ses_out[:, 3]),
+                'maternal_population_rg': get_rg(theta_var_out[:, 2, 4], theta_ses_out[:, 2], theta_ses_out[:, 4]),
+                'avgparental_population_rg': get_rg(theta_var_out[:, 3, 4], theta_ses_out[:, 3], theta_ses_out[:, 4]),
                 'dir_pval' : pval_out[:, 0].flatten(),
-                f'{est1_type}_pval' : pval[:, 1].flatten(),
-                f'{est2_type}_pval' : pval_out[:, 1].flatten()
+                'paternal_pval' : pval_out[:, 1].flatten(),
+                'maternal_pval' : pval_out[:, 2].flatten(),
+                'avgparental_pval' : pval_out[:, 3].flatten(),
+                'population_pval' : pval_out[:, 4].flatten(),
             }
         )
 
-        df_out[['A1', 'A2']] = df_out['allele_comb'].str.split("", expand = True)[[1, 2]]
-        df_out = df_out.drop(columns = "allele_comb")
-
-        n_missing_snps = df_out['SNP'].isna().sum()
+        n_missing_snps = df_out['cptid'].isna().sum()
         print(f"Number of missing SNPs {n_missing_snps}")
 
 
-        if not args.on_pos:
-            (theta_bar, theta_var_out, z_bar, z_bar_out, 
-            theta_ses, theta_ses_out, theta_var, theta_var_out,
-            pval, pval_out, f_bar, df_out) = clean_snps(theta_bar, theta_bar_out, z_bar, z_bar_out, 
-                                                theta_ses, theta_ses_out, theta_var, theta_var_out,
-                                                pval, pval_out, f_bar,
-                                                df = df_out, idname = 'SNP')
-            df_out = df_out.dropna(subset = ['SNP'])
-        else:
-            (theta_bar, theta_var_out, z_bar, z_bar_out, 
-            theta_ses, theta_ses_out, theta_var, theta_var_out,
-            pval, pval_out, f_bar, df_out) = clean_snps(theta_bar, theta_bar_out, z_bar, z_bar_out, 
-                                                theta_ses, theta_ses_out, theta_var, theta_var_out,
-                                                pval, pval_out, f_bar,
-                                                df = df_out, idname = ['pos', 'chromosome'])
-            df_out = df_out.dropna(subset = ['pos', 'chromosome'])
+        (theta_var_out, z_bar_out, 
+        theta_ses_out, theta_var_out,
+        pval_out, f_bar, df_out) = clean_snps(theta_bar_out, z_bar_out, 
+                                            theta_ses_out, theta_var_out,
+                                            pval_out, f_bar,
+                                            df = df_out, idname = ['cptid'])
+        df_out = df_out.dropna(subset = ['cptid'])
         
 
         # appending data
         df_out_list += [df_out]
+        theta_tosave = np.vstack((theta_tosave, theta_bar_out))
+        theta_ses_tosave = np.vstack((theta_ses_tosave, theta_ses_out))
+        theta_var_tosave = np.vstack((theta_var_tosave, theta_var_out))
 
-        theta_tosave = np.vstack((theta_tosave, theta_bar.reshape((theta_bar.shape[0], theta_bar.shape[1]))))
-        theta_ses_tosave = np.vstack((theta_ses_tosave, theta_ses.reshape((theta_ses.shape[0], theta_ses.shape[1]))))
-        theta_var_tosave = np.vstack((theta_var_tosave, theta_var.reshape((theta_var.shape[0], theta_var.shape[1], theta_var.shape[2]))))
-
-        theta_bar_pop_tosave = np.vstack((theta_bar_pop_tosave, theta_bar_out.reshape((theta_bar.shape[0], theta_bar.shape[1]))))
-        theta_ses_pop_tosave = np.vstack((theta_ses_pop_tosave, theta_ses_out.reshape((theta_ses_out.shape[0], theta_ses_out.shape[1]))))
-        theta_var_pop_tosave = np.vstack((theta_var_pop_tosave, theta_var_out.reshape((theta_var_out.shape[0], theta_var_out.shape[1], theta_var_out.shape[2]))))
-
-        f_bar_tosave = np.vstack((f_bar_tosave, f_bar[..., None]))
+        f_tosave = np.vstack((f_tosave, f_bar[..., None]))
 
 
     # append list of dataframes
     df_out = pd.concat(df_out_list)
     print(f"Final output shape: {df_out.shape}")
+    
 
     # == Outputting data == #
     
     if not args.no_hdf5_out:
         write_output(
-            df_out['chromosome'],
+            df_out['CHR'],
             df_out['SNP'],
-            df_out['pos'],
+            df_out['BP'],
             df_out[['A1', 'A2']],
-            args.outprefix  + '_' + est1_type,
+            args.outprefix,
             theta_tosave,
             theta_ses_tosave,
             theta_var_tosave,
             0.5,
             1.0,
-            f_bar_tosave.flatten()
-        )
-
-        write_output(
-            df_out['chromosome'],
-            df_out['SNP'],
-            df_out['pos'],
-            df_out[['A1', 'A2']],
-            args.outprefix + '_' + est2_type,
-            theta_bar_pop_tosave,
-            theta_ses_pop_tosave,
-            theta_var_pop_tosave,
-            0.5,
-            1.0,
-            f_bar_tosave.flatten()
+            f_tosave.flatten()
         )
     
     
     if not args.no_txt_out:
-        df_out = df_out.sort_values(by = ["chromosome", "pos"])
+        df_out = df_out.sort_values(by = ["CHR", "BP"])
         print(f"Writing output to {args.outprefix + '.csv'}")
-        df_out.to_csv(args.outprefix + '.csv', sep = ' ', index = False, na_rep = ".")
+        df_out.to_csv(args.outprefix + '.csv', sep = '\t', index = False, na_rep = "NAN")
     
-
-    print(f'Median sampling correlation: {np.median(theta_var_out[:, 0 ,1]/(theta_ses_out[:, 0] * theta_ses_out[:, 1]))}')
     endTime = dt.datetime.now()
     print(f'End time: {endTime}')
-
     print(f'Script took {endTime - startTime} to complete.')
     
     

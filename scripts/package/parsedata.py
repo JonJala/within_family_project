@@ -127,12 +127,11 @@ def combine_allele_cols(df, a1, a2):
 
 
 @logdf
-def clean_SNPs(df, dataname, on_pos = True):
+def clean_colnames(df, dataname, on_pos = True):
     
     if on_pos:
-        df = df.add_suffix(f"_{dataname}").rename(columns = {f"CHR_{dataname}" : "CHR",
-                                                            f"BP_{dataname}" : "BP"})
-        df = df.drop_duplicates(subset=['BP', 'CHR'])
+        df = df.add_suffix(f"_{dataname}").rename(columns = {f"cptid_{dataname}" : 'cptid'})
+        df = df.drop_duplicates(subset=['cptid'])
     else:
         df = df.add_suffix(f"_{dataname}").rename(columns = {f"SNP_{dataname}" : "SNP"})
         df = df.drop_duplicates(subset='SNP')
@@ -142,7 +141,7 @@ def clean_SNPs(df, dataname, on_pos = True):
 
 
 @logdf
-def make_array_cols_nas(df, col_name_pattern, Amat, dim = None):
+def make_array_cols_nas(df, col_name_pattern, dim = 0):
 
     '''
     Properly formats NA values for columns of a dataframe
@@ -156,24 +155,20 @@ def make_array_cols_nas(df, col_name_pattern, Amat, dim = None):
     with this string will be read
     '''
     vector_columns = [col for col in df if col.startswith(col_name_pattern)]
-
+    
     for vector_column in vector_columns:
 
-
-        cohort = vector_column.split("_")[-1]
-        Acohort = Amat[cohort]
-
-        vect = np.array(df[vector_column].values.tolist())
-        ii = np.any(np.isnan(vect), axis = tuple(range(1, vect.ndim)))
-
-        nrow = Acohort.shape[0] if dim is None else dim
-        if nrow == 0:
-            # only meant to be one dimensional
-            nan_mat = np.empty(Acohort.shape[0])
+        # vect = np.array(df[vector_column].values.tolist())
+        ii = pd.isna(df[vector_column]).values
+        if np.sum(~ii) > 0:
+            example_vec = np.array(df.loc[~ii, vector_column].values[0])
+            nan_mat = np.zeros_like(example_vec)
+            nan_mat[:] = np.nan
         else:
-            nan_mat = np.empty((nrow, Acohort.shape[0]))
-        nan_mat[:] = np.nan
-        df.loc[ii, vector_column] = None
+            shape = (2) if dim == 0 else (2,2)
+            nan_mat = np.zeros(shape)
+            nan_mat[:] = np.nan
+
         df.loc[ii, vector_column] = df.loc[ii, vector_column].apply(lambda x: nan_mat)
 
     return df
@@ -280,6 +275,8 @@ def _align_alleles(z, f, alleles):
     z = np.array(z.tolist())
     f = np.array(f.tolist())
     flip_idx = np.array(alleles.apply(lambda y: FLIP_ALLELES[y] if pd.notna(y) else False).tolist(), dtype = bool)
+    nflip = flip_idx.sum()
+    print(f"Number of alleles flipped {nflip}")
     # flip z
     mult = (-1) ** flip_idx
     if z.ndim == 1:
@@ -625,7 +622,7 @@ def read_file(args, printinfo = True):
 
     if reader == "hdf5":
         zdata = read_hdf5(args, printinfo)
-    elif reader == "txt" or reader == "sumstats":
+    elif reader == "txt" or reader == "sumstats" or reader == "gz":
         zdata = read_txt(args)
     else: 
         print("There was no recognized extension format. Assuming input is txt")
@@ -661,6 +658,7 @@ def read_from_json(df_args, args):
         df_in = (df_in
          .pipe(begin_pipeline)
          .pipe(combine_allele_cols, "A1", "A2")
+         .pipe(clean_colnames, cohort, args.on_pos)
         )
 
         df_dict[cohort] = df_in
@@ -760,7 +758,6 @@ def transform_estimates(fromest,
     elif (fromest == "full" and toest == "full_averageparental_population") | (fromest == "full" and toest == "direct_paternal_maternal_averageparental_population"):
         print("Converting from full to full + average parental  + population")
 
-        # == Combining indirect effects to make V a 2x2 matrix == #
         tmatrix = np.array([[1.0, 0.0, 0.0, 0.0, 1.0],
                             [0.0, 1.0, 0.0, 0.5, 0.5],
                             [0.0, 0.0, 1.0, 0.5, 0.5]])
@@ -770,17 +767,43 @@ def transform_estimates(fromest,
         S = Sdir.reshape((len(S), 5, 5))
         theta = theta @ tmatrix
         theta = theta.reshape((theta.shape[0], 5))
+    elif (fromest == "direct_population" and toest == "full_averageparental_population") | (fromest == "full" and toest == "direct_paternal_maternal_averageparental_population"):
+
+        print("Converting from direct population to full + average parental + population")
+
+        tmatrix = np.array([[1.0, np.nan, np.nan, -1.0, 0.0],
+                            [0.0, np.nan, np.nan, 1.0, 1.0]])
+        Sdir = np.empty((len(S), 5, 5))
+        for i in range(len(S)):
+            Sdir[i] = tmatrix.T @ S[i] @ tmatrix
+        S = Sdir.reshape((len(S), 5, 5))
+        theta = theta @ tmatrix
+        theta = theta.reshape((theta.shape[0], 5))
+    elif (fromest == "direct_averageparental" and toest == "full_averageparental_population") | (fromest == "full" and toest == "direct_paternal_maternal_averageparental_population"):
+
+        print("Converting from direct population to full + average parental + population")
+
+        tmatrix = np.array([[1.0, np.nan, np.nan, 0.0, 1.0],
+                            [0.0, np.nan, np.nan, 1.0, 1.0]])
+        Sdir = np.empty((len(S), 5, 5))
+        for i in range(len(S)):
+            Sdir[i] = tmatrix.T @ S[i] @ tmatrix
+        S = Sdir.reshape((len(S), 5, 5))
+        theta = theta @ tmatrix
+        theta = theta.reshape((theta.shape[0], 5))
     else:
         print("Warning: The given parameters hasn't been converted.")
+
 
     return S, theta
 
 @njit(cache = True)
-def theta2z(theta, S):
+def theta2z_core(theta, S):
     '''
     Transforms vector of theta values
     into z values based on S
     '''
+
     zval = np.empty_like(theta)
     for i in range(theta.shape[0]):
         if ~np.all(S[i] == 0):
@@ -791,20 +814,64 @@ def theta2z(theta, S):
 
     return zval
 
-@njit
+def theta2z(theta, S):
+    '''
+    Wrapper for theta2z.
+    Converts NaNs to 0s first
+    then converts NaNs back
+    '''
+    theta_nan_idx = np.isnan(theta)
+    theta_0 = np.nan_to_num(theta)
+    S_0 = np.nan_to_num(S, nan = 1.0)
+
+    zval = theta2z_core(theta_0, S_0)
+    zval[theta_nan_idx] = np.nan
+
+    return zval
+
+
+# @njit
+# def makeDmat(S):
+#     '''
+#     Makes D matrix = M [[1/sigma_1, 0], [0, 1/sigma_2]]
+#     '''
+
+#     sigma1 = np.sqrt(S[0, 0])
+#     sigma2 = np.sqrt(S[1, 1])
+    
+#     Dmat = np.array([[1/sigma1, 0], 
+#                     [0, 1/sigma2]])
+    
+#     return Dmat
+
+@njit(cache = True)
 def makeDmat(S):
     '''
-    Makes D matrix = M [[1/sigma_1, 0], [0, 1/sigma_2]]
+    Makes D matrix =  [[1/sigma_1, 0], [0, 1/sigma_2]]
     '''
+    ndims = S.shape[0]
+    assert ndims == S.shape[1]
 
-    sigma1 = np.sqrt(S[0, 0])
-    sigma2 = np.sqrt(S[1, 1])
-    
-    Dmat = np.array([[1/sigma1, 0], 
-                    [0, 1/sigma2]])
+    Dmat = np.zeros(ndims)
+    Dmat = np.diag(Dmat)
+
+    for idx in range(ndims):
+        sigma_tmp = np.sqrt(S[idx, idx])
+        
+        Dmat[idx, idx] = 1/sigma_tmp
     
     return Dmat
 
+def get_rg(sigma12_sq, sigma1, sigma2):
+
+    '''
+    Given vector of covariances, and standard
+    deviations, get rg out
+    '''
+    sigma12 = np.sqrt(sigma12_sq)
+    rg = sigma12/(sigma1 * sigma2)
+
+    return rg
 
 def extract_vector(df, estimatename):
 
@@ -989,7 +1056,7 @@ def write_output(chrom, snp_ids, pos, alleles, outprefix, alpha, alpha_ses, alph
     with h5py.File(outprefix+'.sumstats.hdf5', 'w') as outfile:
         outbim = np.column_stack((chrom,snp_ids,pos,alleles))
         outfile['bim'] = encode_str_array(outbim)
-        X_length = 2
+        X_length = 5
         outcols = ['direct']
         outfile.create_dataset('estimate_covariance', (snp_ids.shape[0], X_length, X_length), dtype='f', chunks=True,
                                compression='gzip', compression_opts=9)

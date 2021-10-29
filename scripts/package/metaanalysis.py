@@ -216,11 +216,10 @@ def get_estimates(theta_dict, wt_dict, A):
     '''
     
     theta_bar = theta_wted_sum(theta_dict, wt_dict)
-    # wt_sum = get_wt_sum(wt_dict)
     theta_var = get_theta_var(wt_dict, A)
     theta_bar = theta_var @ theta_bar
         
-    return theta_bar, theta_var#, wt_sum
+    return theta_bar, theta_var
 
 
 def get_ses(var):

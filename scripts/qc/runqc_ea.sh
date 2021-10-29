@@ -116,4 +116,4 @@
 #     --cptid \
 #     --toest "direct_population"
 
-    # 0.5782 (0.2655) probbly not EA
+    # 0.5782 (0.2655)

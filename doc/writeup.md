@@ -63,28 +63,4 @@ As a command line tool it has only a few options which we shall explore:
 
 These options are not the entire list of options available. `path2json` is the path to the json file listing all the input files and also putting in options for each input. This is more complicated and also important so its worth going into.
 
-INSERT JSON INPUT TUTORIAL HERE.
 
-
-## Constructing A Matrix
-
-(Might automate this later on)
-
-An A matrix is required to be provided for each cohort. We will now go into how you should construct these matrices. Remember all vectors are thought of as column vectors here.
-
-- You need to know what effects you have for a given cohort (like direct plus average parental, or a full set of direct, paternal and maternal effects, etc). Lets name this "base effects".
-- You will need to know to what kind of effect you want to convert this effect to. Lets name this "target effects". This is what the final metanalyzed effects will be.
-- The A matrix will need to satisfy the equation $baseeffect = A \cdot targeteffect$
-
-The number of rows the A matrix will have will correspond to the number of effects your cohort has estimated. The number of columns will correspond to the number of effects you want to get to at the end.
-
-For example:
-- Lets say our cohort has direct and average parental effects
-- We want our meta analysis to output meta analyzed estimates for direct, paternal and maternal effects
-- Our A matrix will be:
-$$
-\begin{bmatrix}
-1 \ 0  \ 0 \\
-0 \ 0.5 \ 0.5
-\end{bmatrix}
-$$

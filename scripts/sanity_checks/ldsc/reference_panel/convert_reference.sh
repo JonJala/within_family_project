@@ -12,14 +12,14 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # testing out ldsc on reference files
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.txt   \
+# --sumstats  /var/genetics/data/published/yengo_2018_bmi/raw/sumstats/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.txt   \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED \
 # --a1 Tested_Allele --a2 Other_Allele \
 # --chunksize 50000
 
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/ea_ref/GWAS_EA_excl23andMe.txt  \
+# --sumstats ${within_family_path}/processed/ea_ref/GWAS_EA_excl23andMe.txt  \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/ea_ref/GWAS_EA_excl23andMe \
 # --N 1100000 \
@@ -42,14 +42,14 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.txt \
+# --sumstats /var/genetics/data/published/yengo_2018_height/raw/sumstats/Meta-analysis_Wood_et_al+UKBiobank_2018.txt \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018 \
 # --N-col EFFECTIVE_N --a1 Tested_Allele --a2 Other_Allele --frq Freq_Tested_Allele_in_HRS \
 # --chunksize 50000
 
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/processed/dep_ref/DS_Full.txt \
+# --sumstats /var/genetics/data/published/okbay_2016_ds/raw/sumstats/DS_Full.txt \
 # --merge-alleles ${merge_alleles} \
 # --N 161460 \
 # --out ${within_family_path}/processed/dep_ref/DS_Full \
@@ -90,14 +90,14 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/processed/asthma_ref/HanY_prePMID_asthma_Meta-analysis_UKBB_TAGC.txt.gz \
+# --sumstats /var/genetics/data/published/han_2020_asthma/raw/sumstats/HanY_prePMID_asthma_Meta-analysis_UKBB_TAGC.txt.gz \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/processed/asthma_ref/asthma_ref \
 # --chunksize 50000 \
 # --a1 EA --a2 NEA
 
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/processed/eczema_ref/EAGLE_AD_no23andme_results_29072015.txt \
+# --sumstats /var/genetics/data/published/paternoster_2015_eczema/raw/sumstats/EAGLE_AD_no23andme_results_29072015.txt \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/processed/eczema_ref/eczema_ref \
 # --chunksize 50000 \
@@ -112,7 +112,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats within_family_project/processed/drinksperweek_ref/DrinksPerWeek.txt.gz \
+# --sumstats/var/genetics/data/published/liu_2019_dpw/raw/sumstats/DrinksPerWeek.txt.gz \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/processed/drinksperweek_ref/dpw_ref \
 # --chunksize 50000 \

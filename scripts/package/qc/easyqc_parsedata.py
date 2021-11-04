@@ -66,7 +66,7 @@ def decode_byte(x):
     Decodes numpy byte array into an array of strings.
     '''
 
-    if x.dtype == x.dtype.type is np.bytes_:
+    if x.dtype.type is np.bytes_:
         xout = np.char.decode(x)
     else:
         xout = x
@@ -218,7 +218,6 @@ def read_txt(args):
         se[:, i] = np.array((dfin[effect + "_SE"]).tolist())
         S[:, i, i] = np.array((dfin[effect + "_SE"]**2).tolist())
     
-    import pdb; pdb.set_trace()
     if len(effect_list) > 1:
         
         if f'r_direct_{effect_list[1]}' in dfin:
@@ -231,7 +230,11 @@ def read_txt(args):
     S[:, 0, 1] = np.array(cov.tolist())
     S[:, 1, 0] = np.array(cov.tolist())
 
-    phvar = args.phvar if args.phvar is not None else 1.0
+    if args.phvar is not None:
+        phvar = args.phvar
+    else:
+        phvar = 2 * dfin['direct_N'] * dfin['freq'] * (1 - dfin['freq']) * S[:, 0, 0]
+        phvar = phvar[0]
 
     zdata = pd.DataFrame({'CHR' : dfin['chromosome'].astype(int),
                     'SNP' : dfin['SNP'].astype(str),

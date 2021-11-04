@@ -152,7 +152,6 @@ def read_info(args):
     and output a dataframe
     '''
 
-    import pdb; pdb.set_trace()
     infopath = args.info
     infofiles = glob.glob(infopath)
     infodat = pd.DataFrame(columns = ["SNP", "Rsq", "AvgCall"])
@@ -625,8 +624,6 @@ the reader will try and infer the chromosome number from the file name.''')
 
         tmpcsvout = csvout + '/out'
         dat.to_csv(tmpcsvout, index = False)
-        import pdb; pdb.set_trace()
-
         with open(f"{args.outprefix}/clean.ecf", "w") as f:
 
             init_ecf(f, args, dat, tmpcsvout)

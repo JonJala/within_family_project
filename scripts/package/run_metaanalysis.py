@@ -216,6 +216,10 @@ if __name__ == '__main__':
     else:
         df_merged = df_merged.dropna(subset = ["SNP"])
 
+    # get number of cohorts identified
+    theta_cols = [c for c in df_merged if c.startswith('theta_')]
+    df_merged['n_cohorts'] = (~df_merged[theta_cols].isna()).sum(axis = 1) 
+
     # creating data frame ready to become an array
     df_merged = (df_merged
         .pipe(begin_pipeline)
@@ -279,13 +283,14 @@ if __name__ == '__main__':
         
         Amat = getamat_dict(df_toarray_dim, dim)
         Amat_check = Amat_dicts[dim]
-        
+
         print("=================")
         print("Amat calculated")
         print(Amat)
         print("Amat Provided")
         print(Amat_check)
         print("=================")
+
 
         # == Array operations == #
         theta_vec = extract_vector(df_toarray_dim, "theta")
@@ -313,8 +318,7 @@ if __name__ == '__main__':
         theta_ses_out = get_ses(theta_var_out)
         z_bar_out = theta2z(theta_bar_out, theta_var_out)
         pval_out = get_pval(z_bar_out)
-        import ipdb; ipdb.set_trace()
-        
+
         # computing weighted f
         f_vec = extract_vector(df_toarray_dim, "f_")
         nan_to_num_dict(f_vec)
@@ -368,6 +372,7 @@ if __name__ == '__main__':
                 'maternal_pval' : pval_out[:, 2].flatten(),
                 'avgparental_pval' : pval_out[:, 3].flatten(),
                 'population_pval' : pval_out[:, 4].flatten(),
+                'n_cohorts' : df_toarray_dim['n_cohorts']
             }
         )
 
@@ -419,8 +424,9 @@ if __name__ == '__main__':
     if not args.no_txt_out:
         df_out = df_out.sort_values(by = ["CHR", "BP"])
         print(f"Writing output to {args.outprefix + '.csv'}")
-        df_out.to_csv(args.outprefix + '.csv', sep = '\t', index = False, na_rep = "NAN")
+        df_out.to_csv(args.outprefix + '.csv', sep = '\t', index = False, na_rep = "nan")
     
+    print(f"Median direct-population effect correlation: {np.median(df_out['dir_population_rg'])}")
     endTime = dt.datetime.now()
     print(f'End time: {endTime}')
     print(f'Script took {endTime - startTime} to complete.')

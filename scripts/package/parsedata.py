@@ -190,7 +190,8 @@ def merging_data(df_list, jointype = "outer", on_pos = True):
                                                 how = jointype
                                                 ),
                     df_list)
-    
+
+
     return df_merged
 
 
@@ -767,7 +768,7 @@ def transform_estimates(fromest,
         S = Sdir.reshape((len(S), 5, 5))
         theta = theta @ tmatrix
         theta = theta.reshape((theta.shape[0], 5))
-    elif (fromest == "direct_population" and toest == "full_averageparental_population") | (fromest == "full" and toest == "direct_paternal_maternal_averageparental_population"):
+    elif (fromest == "direct_population" and toest == "full_averageparental_population") | (fromest == "direct_population" and toest == "direct_paternal_maternal_averageparental_population"):
 
         print("Converting from direct population to full + average parental + population")
 
@@ -779,7 +780,7 @@ def transform_estimates(fromest,
         S = Sdir.reshape((len(S), 5, 5))
         theta = theta @ tmatrix
         theta = theta.reshape((theta.shape[0], 5))
-    elif (fromest == "direct_averageparental" and toest == "full_averageparental_population") | (fromest == "full" and toest == "direct_paternal_maternal_averageparental_population"):
+    elif (fromest == "direct_averageparental" and toest == "full_averageparental_population") | (fromest == "direct_averageparental" and toest == "direct_paternal_maternal_averageparental_population"):
 
         print("Converting from direct population to full + average parental + population")
 
@@ -862,13 +863,13 @@ def makeDmat(S):
     
     return Dmat
 
-def get_rg(sigma12_sq, sigma1, sigma2):
+def get_rg(sigma12, sigma1, sigma2):
 
     '''
     Given vector of covariances, and standard
     deviations, get rg out
     '''
-    sigma12 = np.sqrt(sigma12_sq)
+    
     rg = sigma12/(sigma1 * sigma2)
 
     return rg

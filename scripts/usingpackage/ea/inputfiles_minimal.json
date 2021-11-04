@@ -2,14 +2,46 @@
     "moba" : {
 
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/ea/CLEANED.out.gz",
-        "Amat" : {"3" : "1.0 0.0 0.0;0.0 1.0 0.0;0.0 0.0 1.0",
-                "2" : "-999 -999;-999 -999"}
+        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
+                "direct_population" : "-999 -999;-999 -999"}
 
 },
 
     "str": {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/ea/CLEANED.out.gz",
-        "Amat" : {"3" : "1.0 0.0 0.0;0.0 0.5 0.5",
-            "2" : "1.0 0.0;0.0 1.0"}
-}
+        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.5 0.5",
+            "direct_population" : "1.0 0.0;0.0 1.0"}
+},
+
+    "ukb": {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/ea/CLEANED.out.gz",
+        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
+            "direct_population" : "-999 -999;-999 -999"}
+},
+
+    "ft" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/ea/CLEANED.out.gz",
+        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.5 0.5",
+            "direct_population" : "1.0 0.0;0.0 1.0"}
+},
+
+    "gs" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/ea/CLEANED.out.gz",
+        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
+            "direct_population" : "-999 -999;-999 -999"}
+},
+
+    "hunt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/ea/CLEANED.out.gz",
+        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
+            "direct_population" : "-999 -999;-999 -999"}
+
+},
+
+    "eb" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/ea/controls/CLEANED.out.gz",
+        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
+            "direct_population" : "-999 -999;-999 -999"}
+    }
+
 }

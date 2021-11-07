@@ -334,7 +334,7 @@ if __name__ == '__main__':
         df_out = pd.DataFrame(
             {
                 'cptid' : df_toarray_dim['cptid'],
-                'CHR' :  df_toarray_dim['CHR'],
+                'CHR' :  df_toarray_dim['CHR'].astype(int),
                 'BP' :  df_toarray_dim['BP'],
                 'SNP' :  df_toarray_dim['SNP'],
                 'freq' : f_bar,

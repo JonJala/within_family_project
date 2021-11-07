@@ -9,10 +9,8 @@
 #     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/chr_*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/ea" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
-#     -bim_chromosome 99 \
+#     --bim_chromosome 99 \
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz"
-
-
 
 
 #######################

@@ -138,11 +138,13 @@ def getamat(dataeffect, targeteffect):
     (targeteffect == "direct_paternal_maternal")):
         A = np.eye(3)
     elif (dataeffect == "direct_population") and (targeteffect == "direct_paternal_maternal"):
-        A = np.array([[1.0, 0.0, 0.0],[0.0, 0.5, 0.5]])
+        A = np.array([[1.0, 0.0, 0.0],[1.0, 0.5, 0.5]])
     elif (dataeffect == "population") and (targeteffect == "direct_paternal_materal"):
         A = np.array([[1.0, 0.5, 0.5]])
     elif (dataeffect == "direct_population") and (targeteffect == "direct_population"):
         A = np.eye(2)
+    elif (dataeffect == "population") and (targeteffect == "direct_population"):
+        A = np.array([[0.0, 1.0]])
 
     return A
 
@@ -196,6 +198,8 @@ if __name__ == '__main__':
     parser.add_argument('--no_txt_out',action='store_true',help='Suppress text output of summary statistics',default=False)
     parser.add_argument('--on-rsid', action='store_false',dest='on_pos', default = True,
     help = '''Do you want to merge cohorts by rsid instead of default which is pos''')
+    parser.add_argument('--nohm3', action='store_false',dest='hm3', default = True,
+    help = '''Do you want to not output a txt dataset with only hm3 snps.''')
     args=parser.parse_args()
 
     startTime = dt.datetime.now()
@@ -246,11 +250,6 @@ if __name__ == '__main__':
         .pipe(highest_effect)
         )
 
-    
-    # df_merged = df_merged.sort_values(["CHR", "BP"]).reset_index(drop = True)
-
-    # dims = df_merged['max_dim'].unique()
-    # dims = dims[dims > 1] # we dont care about SNPs where we only have population effects
     df_out_list = []
     df_merged = (
         df_merged
@@ -334,43 +333,43 @@ if __name__ == '__main__':
         df_out = pd.DataFrame(
             {
                 'cptid' : df_toarray_dim['cptid'],
-                'CHR' :  df_toarray_dim['CHR'].astype(int),
-                'BP' :  df_toarray_dim['BP'],
+                'chromosome' :  df_toarray_dim['CHR'].astype(int),
+                'pos' :  df_toarray_dim['BP'],
                 'SNP' :  df_toarray_dim['SNP'],
                 'freq' : f_bar,
                 'A1' : df_toarray_dim['A1'],
                 'A2' : df_toarray_dim['A2'],
-                'dir_N' : Neff_dir,
+                'direct_N' : Neff_dir,
                 'population_N' : Neff_pop,
-                'dir_Beta' : theta_bar_out[:, 0].flatten(),
+                'direct_Beta' : theta_bar_out[:, 0].flatten(),
                 'paternal_Beta' : theta_bar_out[:, 1].flatten(),
                 'maternal_Beta' : theta_bar_out[:, 2].flatten(),
-                'avgparental_Beta' : theta_bar_out[:, 3].flatten(),
+                'avg_parental_Beta' : theta_bar_out[:, 3].flatten(),
                 'population_Beta' : theta_bar_out[:, 4].flatten(),
-                'dir_z' : z_bar_out[:, 0].flatten(),
+                'direct_z' : z_bar_out[:, 0].flatten(),
                 'paternal_z' : z_bar_out[:, 1].flatten(),
                 'maternal_z' : z_bar_out[:, 2].flatten(),
-                'avgparental_z' : z_bar_out[:, 3].flatten(),
+                'avg_parental_z' : z_bar_out[:, 3].flatten(),
                 'population_z' : z_bar_out[:, 4].flatten(),
-                'dir_SE' : theta_ses_out[:, 0],
+                'direct_SE' : theta_ses_out[:, 0],
                 'paternal_SE' : theta_ses_out[:, 1],
                 'maternal_SE' : theta_ses_out[:, 2],
-                'avgparental_SE' : theta_ses_out[:, 3],
+                'avg_parental_SE' : theta_ses_out[:, 3],
                 'population_SE' : theta_ses_out[:, 4],
-                'dir_paternal_rg': get_rg(theta_var_out[:, 0, 1], theta_ses_out[:, 0], theta_ses_out[:, 1]),
-                'dir_maternal_rg': get_rg(theta_var_out[:, 0, 2], theta_ses_out[:, 0], theta_ses_out[:, 2]),
-                'dir_avgparental_rg': get_rg(theta_var_out[:, 0, 3], theta_ses_out[:, 0], theta_ses_out[:, 3]),
-                'dir_population_rg': get_rg(theta_var_out[:, 0, 4], theta_ses_out[:, 0], theta_ses_out[:, 4]),
+                'direct_paternal_rg': get_rg(theta_var_out[:, 0, 1], theta_ses_out[:, 0], theta_ses_out[:, 1]),
+                'direct_maternal_rg': get_rg(theta_var_out[:, 0, 2], theta_ses_out[:, 0], theta_ses_out[:, 2]),
+                'direct_avg_parental_rg': get_rg(theta_var_out[:, 0, 3], theta_ses_out[:, 0], theta_ses_out[:, 3]),
+                'direct_population_rg': get_rg(theta_var_out[:, 0, 4], theta_ses_out[:, 0], theta_ses_out[:, 4]),
                 'paternal_maternal_rg': get_rg(theta_var_out[:, 1, 2], theta_ses_out[:, 1], theta_ses_out[:, 2]),
-                'paternal_avgparental_rg': get_rg(theta_var_out[:, 1, 3], theta_ses_out[:, 1], theta_ses_out[:, 3]),
+                'paternal_avg_parental_rg': get_rg(theta_var_out[:, 1, 3], theta_ses_out[:, 1], theta_ses_out[:, 3]),
                 'paternal_population_rg': get_rg(theta_var_out[:, 1, 4], theta_ses_out[:, 1], theta_ses_out[:, 4]),
-                'maternal_avgparental_rg': get_rg(theta_var_out[:, 2, 3], theta_ses_out[:, 2], theta_ses_out[:, 3]),
+                'maternal_avg_parental_rg': get_rg(theta_var_out[:, 2, 3], theta_ses_out[:, 2], theta_ses_out[:, 3]),
                 'maternal_population_rg': get_rg(theta_var_out[:, 2, 4], theta_ses_out[:, 2], theta_ses_out[:, 4]),
-                'avgparental_population_rg': get_rg(theta_var_out[:, 3, 4], theta_ses_out[:, 3], theta_ses_out[:, 4]),
-                'dir_pval' : pval_out[:, 0].flatten(),
+                'avg_parental_population_rg': get_rg(theta_var_out[:, 3, 4], theta_ses_out[:, 3], theta_ses_out[:, 4]),
+                'direct_pval' : pval_out[:, 0].flatten(),
                 'paternal_pval' : pval_out[:, 1].flatten(),
                 'maternal_pval' : pval_out[:, 2].flatten(),
-                'avgparental_pval' : pval_out[:, 3].flatten(),
+                'avg_parental_pval' : pval_out[:, 3].flatten(),
                 'population_pval' : pval_out[:, 4].flatten(),
                 'n_cohorts' : df_toarray_dim['n_cohorts']
             }
@@ -407,9 +406,9 @@ if __name__ == '__main__':
     
     if not args.no_hdf5_out:
         write_output(
-            df_out['CHR'],
+            df_out['chromosome'],
             df_out['SNP'],
-            df_out['BP'],
+            df_out['pos'],
             df_out[['A1', 'A2']],
             args.outprefix,
             theta_tosave,
@@ -422,11 +421,16 @@ if __name__ == '__main__':
     
     
     if not args.no_txt_out:
-        df_out = df_out.sort_values(by = ["CHR", "BP"])
-        print(f"Writing output to {args.outprefix + '.csv'}")
-        df_out.to_csv(args.outprefix + '.csv', sep = '\t', index = False, na_rep = "nan")
+        df_out = df_out.sort_values(by = ["chromosome", "pos"])
+        print(f"Writing output to {args.outprefix + '.sumstats'}")
+        df_out.to_csv(args.outprefix + '.sumstats', sep = '\t', index = False, na_rep = "nan")
+
+        if args.hm3:
+            hm3dat = pd.read_csv('/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist', delim_whitespace=True)
+            df_out = df_out[df_out['SNP'].isin(hm3dat.SNP)]
+            df_out.to_csv(args.outprefix + '.hm3.sumstats', sep = '\t', index = False, na_rep = "nan")
     
-    print(f"Median direct-population effect correlation: {np.median(df_out['dir_population_rg'])}")
+    print(f"Median direct-population effect correlation: {np.median(df_out['direct_population_rg'])}")
     endTime = dt.datetime.now()
     print(f'End time: {endTime}')
     print(f'Script took {endTime - startTime} to complete.')

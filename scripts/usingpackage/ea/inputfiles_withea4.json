@@ -63,6 +63,13 @@
         "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
             "direct_population" : "-999 -999;-999 -999"}
 
+    },
+    
+    "ea4" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/ea/CLEANED.out.gz",
+        "Amat" : {"direct_paternal_maternal" : "1.0 0.5 0.5",
+            "direct_population" : "0.0 1.0"}
+
     }
 
 

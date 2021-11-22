@@ -1,88 +1,86 @@
 #!/usr/bin/env bash
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 snipar_path="/homes/nber/harij/gitrepos/SNIPar"
-bedfilepath="/disk/genetics/sibling_consortium/GS20k/alextisyoung/HM3/genotypes/chr_~"
-impfilespath="/disk/genetics/sibling_consortium/GS20k/alextisyoung/HM3/imputed_phased/chr_~"
+# bedfilepath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/plink/final/mcs"
+bedfilepath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr~.dose"
+impfilespath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/imputed_parents/chr~"
+# phenofile="/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen"
+# phenofile="/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_eng.phen"
+phenofile="/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_math.phen"
+# phenofile="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/phen.txt"
+
+function withinfam_pred(){
+
+    WTFILE=$1
+    EFFECT=$2
+    PHENONAME=$3
+    PHENOFILE=$4
+    OUTSUFFIX=$5
+    
+    # format ldpred2 weight files for fpgs
+    python ${within_family_path}/scripts/fpgs/format_weights.py \
+        $WTFILE \
+        --chr Chrom --pos Position --rsid Name --a1 A1 --a2 A2 --beta A1Effect \
+        --sep "delim_whitespace" \
+        --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted \
+        --sid-as-chrpos 
+
+    # generate pheno file
+    python $within_family_path/scripts/fpgs/format_pheno.py \
+        $PHENOFILE \
+        --iid Benjamin_ID --phenocol Z_EA \
+        --sep "\t" \
+        --outprefix $within_family_path/processed/fpgs/${PHENONAME} # \
+        # --subsample /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt
+
+    #     # generate pheno file
+    # python $within_family_path/scripts/fpgs/format_pheno.py \
+    #     $phenofile \
+    #     --iid FID --fid FID --phenocol verbalSimsStandardScore \
+    #     --outprefix $within_family_path/processed/fpgs/${PHENONAME} 
+
+    # python $snipar_path/fPGS.py \
+    #     $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME} \
+    #     --bedfiles $bedfilepath \
+    #     --impfiles $impfilespath \
+    #     --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+    #     --scale_pgs
+
+    python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}${OUTSUFFIX} \
+        --pgs $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}.pgs.txt \
+        --phenofile $within_family_path/processed/fpgs/${PHENONAME}.pheno \
+        --pgsreg-r2
 
 
-# format ldpred2 weight files for fpgs
-# python ${within_family_path}/scripts/fpgs/format_weights.py \
-#     ${within_family_path}/processed/ldpred2/ea_pgi_dir.wt.txt.gz \
-#     --compression "gzip" \
-#     --sep " " \
-#     --outfileprefix ${within_family_path}processed/ldpred2/ea_pgi_dir.wt \
-#     --sid-as-chrpos
+}
 
-# python ${within_family_path}/scripts/fpgs/format_weights.py \
-#     ${within_family_path}/processed/ldpred2/ea_pgi_pop.wt.txt.gz \
-#     --compression "gzip" \
-#     --sep " " \
-#     --outfileprefix ${within_family_path}/processed/ldpred2/ea_pgi_pop.wt \
-#     --sid-as-chrpos
+# base
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/dir/weights/meta_weights.snpRes \
+    "dir" "ea" \
+    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+    ""
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
+    "population" "ea" \
+    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+    ""
 
-# python ${within_family_path}/scripts/fpgs/format_weights.py \
-#     ${within_family_path}/processed/ldpred2/ea_pgi_avgparental.wt.txt.gz \
-#     --compression "gzip" \
-#     --sep " " \
-#     --outfileprefix ${within_family_path}/processed/ldpred2/ea_pgi_avgparental.wt \
-#     --sid-as-chrpos
+# english phenotype
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/dir/weights/meta_weights.snpRes \
+    "dir" "ea" \
+    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_eng.phen" \
+    "_english"
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
+    "population" "ea" \
+    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_eng.phen" \
+    "_english"
 
-# generate pheno file
-# python $within_family_path/scripts/fpgs/format_pheno.py \
-#     /disk/genetics/sibling_consortium/GS20k/alextisyoung/processed_traits.fam \
-#     --iid IID --fid FID --phenocol EA \
-#     --outprefix $within_family_path/processed/fpgs/ea 
-
-# == Calculate PGIs == #
-# Direct effects
-# python $snipar_path/fPGS.py \
-#     $within_family_path/processed/fpgs/direct_ea \
-#     --bedfiles $bedfilepath \
-#     --impfiles $impfilespath \
-#     --weights $within_family_path/processed/ldpred2/ea_pgi_dir.wt.txt \
-#     --scale_pgs
-
-python $snipar_path/fPGS.py $within_family_path/processed/fpgs/direct_ea \
-    --pgs $within_family_path/processed/fpgs/direct_ea.pgs.txt \
-    --phenofile $within_family_path/processed/fpgs/ea.pheno \
-    --pgsreg-r2
-
-
-# Population Effects
-# python $snipar_path/fPGS.py \
-#     $within_family_path/processed/fpgs/pop_ea \
-#     --bedfiles $bedfilepath \
-#     --impfiles $impfilespath \
-#     --weights $within_family_path/processed/ldpred2/ea_pgi_pop.wt.txt \
-#     --scale_pgs
-
-python $snipar_path/fPGS.py $within_family_path/processed/fpgs/pop_ea \
-    --pgs $within_family_path/processed/fpgs/pop_ea.pgs.txt \
-    --phenofile $within_family_path/processed/fpgs/ea.pheno \
-    --scale_pgs \
-    --pgsreg-r2
-
-# Average Parental Effects
-# python $snipar_path/fPGS.py \
-#     $within_family_path/processed/fpgs/avgparental_ea \
-#     --bedfiles $bedfilepath \
-#     --impfiles $impfilespath \
-#     --weights $within_family_path/processed/ldpred2/ea_pgi_avgparental.wt.txt \
-#     --scale_pgs
-
-
-python $snipar_path/fPGS.py $within_family_path/processed/fpgs/avgparental_ea \
-    --pgs $within_family_path/processed/fpgs/avgparental_ea.pgs.txt \
-    --phenofile $within_family_path/processed/fpgs/ea.pheno \
-    --scale_pgs \
-    --pgsreg-r2
-
-# Direct effect for proband and avg parental for parents
-# python /var/genetics/proj/within_family/within_family_project/scripts/fpgs/combine_dir_avgpar.py
-python $snipar_path/fPGS.py $within_family_path/processed/fpgs/dir_avgparental_ea \
-    --pgs $within_family_path/processed/fpgs/dir_avgparental_ea.pgs.txt \
-    --phenofile $within_family_path/processed/fpgs/ea.pheno \
-    --scale_pgs \
-    --pgsreg-r2
-
+# maths phenotype
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/dir/weights/meta_weights.snpRes \
+    "dir" "ea" \
+    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_math.phen" \
+    "_maths"
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
+    "population" "ea" \
+    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_math.phen" \
+    "_maths"
 

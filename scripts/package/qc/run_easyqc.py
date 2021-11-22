@@ -393,11 +393,11 @@ CREATECPTID --fileMap /var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.RSMID.MAPFI
     --blnUseInMarker 1
 ''')
 
-    f.write('''
+    f.write(f'''
 #### 5.Filter duplicate SNPs
 ## Aim: For duplicate SNPs keep only the duplicate with highest N
 ## Dropped duplicates to be written to *duplicates.txt
-CLEANDUPLICATES --colInMarker cptid --strMode samplesize --colN n_direct
+CLEANDUPLICATES --colInMarker cptid --strMode samplesize --colN n_{effects[0]}
 
 
 #### 6. AF Checks
@@ -525,6 +525,8 @@ def run_ldsc_rg(args):
     files = glob.glob(args.outprefix + '/CLEANED.out*.gz')
     files.sort()
     filein = files[0]
+    dat = pd.read_csv(filein, delim_whitespace=True)
+
     subprocess.run(f'''
 # Activating ldsc environment
 source {act} {pyenv}
@@ -541,7 +543,7 @@ python {ldsc_path}/ldsc.py \
     --rg {args.outprefix}/munged_ecf.sumstats.gz,{args.ldsc_ref} \
     --ref-ld-chr {eur_w_ld_chr} \
     --w-ld-chr {eur_w_ld_chr} \
-    --out {args.outprefix}/ldsclog
+    --out {args.outprefix}/refldsc
     ''',
     shell=True, check=True,
     executable='/usr/bin/bash')

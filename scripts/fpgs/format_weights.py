@@ -15,12 +15,30 @@ parser.add_argument("--rsid",  type=str, help="rsid column name for sumstats", d
 parser.add_argument("--a1",  type=str, help="A1 column name for sumstats", default = "nt1")
 parser.add_argument("--a2",  type=str, help="A2 column name for sumstats", default = "nt2")
 parser.add_argument("--beta",  type=str, help="A2 column name for sumstats", default = "ldpred_beta")
+parser.add_argument('--subsample', type=str, help='''List of individuals you want to subsample''')
 args=parser.parse_args()
 
-wts = pd.read_csv(args.weightfile, delimiter = args.sep, compression = args.compression)
+if args.sep == 'delim_whitespace':
+    wts = pd.read_csv(args.weightfile, delim_whitespace=True, compression = args.compression)
+else:
+    wts = pd.read_csv(args.weightfile, delimiter = args.sep, compression = args.compression)
+
 wts = wts[[args.chr, args.pos, args.rsid, args.a1, args.a2, args.beta]]
+wts = wts.rename(columns = {
+    args.chr : 'chr',
+    args.pos : 'pos',
+    args.rsid : 'sid',
+    args.a1 : 'nt1',
+    args.a2 : 'nt2',
+    args.beta : 'ldpred_beta'
+})
 
 if args.sid_as_chrpos:
-    wts[args.rsid] = wts[args.chr].astype(str) + ":" + wts[args.pos].astype(str)
+    wts['sid'] = wts['chr'].astype(str) + ":" + wts['pos'].astype(str)
 
-wts.to_csv(args.outfileprefix + ".txt", sep = " ", na_rep='.', index = False)
+print(wts.head())
+
+
+
+
+wts.to_csv(args.outfileprefix + ".txt", sep = " ", na_rep='nan', index = False)

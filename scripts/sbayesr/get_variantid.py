@@ -16,6 +16,7 @@ dat = pd.read_csv(
 
 dat['varid'] = dat['Chrom'].map(str) + ':' + dat['Position'].map(str)
 
+
 dat.to_csv(
     args.out,
     index = False, na_rep = '.', sep = "\t"

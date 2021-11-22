@@ -264,8 +264,8 @@ class test_functions(unittest.TestCase):
         theta_a = np.array([[0.3, 0.6],
                             [0.5, 0.3]])
 
-        theta_b = np.array([[0.1, 0.3],
-                            [0.34, 0.8]])
+        theta_b = np.array([[0.1, 0.3, 0.5],
+                            [0.34, 0.8, 0.6]])
 
         theta_dict = dict(
             A = theta_a,
@@ -284,32 +284,39 @@ class test_functions(unittest.TestCase):
 
         Bmat = np.array(
                 [
-                    [[0.1, 0.5],
-                    [0.5, 0.5]],
+                    [[0.1, 0.5, 0.6],
+                    [0.5, 0.5, 0.5],
+                    [0.6, 0.5, 0.3]],
 
-                    [[0.3, 0.3],
-                    [0.3, 0.55]]
+                    [[0.3, 0.3, 0.3],
+                    [0.3, 0.55, 0.5],
+                    [0.3, 0.5, 0.6]]
                 ]
             )
 
-        atransform = np.random.rand(2, 2)
-        wt_a = atransform.T @ np.linalg.inv(Amat)
-        wt_b = atransform.T @ np.linalg.inv(Bmat)
+        A1 = np.array([[1.0, 0.0, 0.0],
+                        [1.0, 0.5, 0.5]])
+        A2 = np.eye(3)
+        wt_a = A1.T @ np.linalg.inv(Amat)
+        wt_b = A2.T @ np.linalg.inv(Bmat)
 
         theta_wted_sum_manual = wt_a @ theta_a[..., None]  + wt_b @ theta_b[..., None]
         theta_out_manual = theta_wted_sum_manual
-        wtsum = wt_a @ atransform + wt_b @ atransform
+        wtsum = wt_a @ A1 + wt_b @ A2
         theta_var_manual = np.linalg.inv(wtsum)
         theta_estimates_manual = theta_var_manual @ theta_out_manual
 
+
+        A1_test = getamat("direct_population", "direct_maternal_paternal")
+        A2_test = getamat("direct_maternal_paternal", "direct_maternal_paternal")
         wt_dict = dict(
-            A = atransform.T @ np.linalg.inv(Amat),
-            B = atransform.T @ np.linalg.inv(Bmat)
+            A = A1_test.T @ np.linalg.inv(Amat),
+            B = A2_test.T @ np.linalg.inv(Bmat)
         )
 
         atransform_dict = dict(
-            A = atransform,
-            B = atransform
+            A = A1_test,
+            B = A2_test
         )
 
         theta_estimates, _ = get_estimates(theta_dict, wt_dict, atransform_dict)

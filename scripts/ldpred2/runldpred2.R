@@ -55,16 +55,59 @@ import_validation_bed <- function(file, bkfile) {
     return(obj.bigSNP)
 }
 
+import_bgen_file = function(bgenpath, bkfile, sumstats){
+    # Reads bgen files (only the chr:bp from sumstats)
+
+    rds_file = paste0(bkfile, "rds")
+
+    if (file.exists(rds_file)) {
+        cat("Reading RDS File from", rds_file, "\n")
+        obj.bigSNP <- snp_attach(rds_file)
+    } else {
+        list_snp_id <- with(sumstats, split(paste(chr, pos, a0, a1, sep = "_"),
+                                factor(chr, levels = 1:22)))
+        
+        rds <- snp_readBGEN(
+                bgenfiles = glue::glue(bgenpath, chr = 1:22),
+                list_snp_id = list_snp_id,
+                backingfile = bkfile,
+                ind_row = ind.row2,
+                ncores = nb_cores()
+            )
+
+        obj.bigSNP <- snp_attach(rds_file)
+    }
+
+    return(obj.bigSNP)
+
+}
+
+read_genotype = function(opt, sumstats){
+
+    if (!is.null(opt$bfile)){
+        obj.bigSNP <- import_validation_bed(opt$bfile, op$bed_backup)
+    } else {
+        obj.bigSNP <- import_bgen_file(opt$bgenfile, op$bed_backup, sumstats)
+    }
+
+    return(obj.bigSNP)
+}
+
 
 ####### Options ###########
 
 option_list = list(
 
     make_option(c("--bfile"),  type="character", default=NULL, help="Path of bed file. Do not include the extension .bed. 
-                                        Assumes the .bim and .fam files are located in the same place", metavar="character"),
+                                        Assumes the .bim and .fam files are located in the same place.", metavar="character"),
+    make_option(c("--bgenfile"),  type="character", default=NULL, help="Path of bgen files. Include the chr position in the
+        file name with curly braces and specify chr inside. ex bgenfile_{chr}.bgen", metavar="character"),
     make_option(c("--sumstats"),   type="character", default="",  help="Sumstats file", metavar="character"),
     make_option(c("--hm3"),   type="character", default="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist",  help="Sumstats file", metavar="character"),
     make_option(c("--outfile"),   type="character", default="",  help="File of outputted PGI file.", metavar="character"),
+    make_option(c("--read_ldmat"),  type="character", default="", help="Read the LD matrix from an RDS file.
+    If empty will calculate the LD matrix from the genotype data. If non-empty provide two files which are comma
+    seperated - the actual data with the LD matrices with ~ instead of the chromosome, and the map data.", metavar="character"),
 
     # Column names for sumstats
     make_option(c("--chr"),  type="character", default="chr", help="chr column name for sumstats", metavar="character"),
@@ -86,13 +129,10 @@ option_list = list(
                                                 beta and beta_se", metavar="character"),
     make_option(c("--gwas_samplesize"),  type="double", default=0.0, help="GWAS sample size to be used for all SNPs
     Overrides the N_col option", metavar="character"),
-    make_option(c("--read_ldmat"),  type="character", default="", help="Read the LD matrix from an RDS file.
-    If empty will calculate the LD matrix from the genotype data. If non-empty provide two files which are comma
-    seperated - the actual data with the LD matrices with ~ instead of the chromosome, and the map data.", metavar="character"),
     make_option(c("--bed_backup"),  type="character", default="", help="To read the bed file a backup file needs
     to be created. This specifies where that will be. If empty, its the same location as the bed file itself.", metavar="character"),
     make_option(c("--predout"),  action="store_true", default=FALSE, help="Should PGIs also be calculated and
-    outputted. If no the script will only output the weights.", metavar="character"),
+    outputted. If no the script will only output the weights. Wont work if theres no bed file.", metavar="character"),
     make_option(c("--scale_pgi"),  action="store_true", default=FALSE, help="If true PGI's are standardized
     to have variance 1. Only works if the predout option is chosen.", metavar="character"),
     make_option(c("--fast_impute"),  action="store_true", default=FALSE, help="If the bed file provided
@@ -105,7 +145,6 @@ option_list = list(
 opt_parser = OptionParser(option_list = option_list)
 opt = parse_args(opt_parser)
 
-bfile = opt$bfile
 
 sumstats <- fread(opt$sumstats)
 sumstats <- unique(sumstats, by = opt$rsid)
@@ -161,13 +200,6 @@ head(sumstats)
 # Get maximum amount of cores
 NCORES <- nb_cores()
 
-# preprocess the bed file (only need to do once for each data set)
-cat("Reading the bed file...\n")
-obj.bigSNP <- import_validation_bed(bfile, opt$bed_backup)
-n_individuals = nrow(obj.bigSNP$fam)
-n_snps = nrow(obj.bigSNP$map)
-cat("Number of individuals in bed file:", n_individuals, "\n")
-cat("Number of SNPs in bed file:", n_snps, "\n")
 
 # extract the SNP information from the genotype
 # Open a temporary file
@@ -175,35 +207,48 @@ if (opt$read_ldmat != ""){
     ld_path = str_split(opt$read_ldmat, ",")[[1]][[1]]
     map_path = str_split(opt$read_ldmat, ",")[[1]][[2]]
     ld_path = str_split(ld_path, "~")[[1]]
+    cat("Reading map file...")
     map <- readRDS(map_path)
 
 } else {
-    map <- obj.bigSNP$map[-3]
-    names(map) <- c("chr", "rsid", "pos", "a1", "a0")
+    if (opt$bfile != ""){
+        # preprocess the bed file (only need to do once for each data set)
+        cat("Reading the bed file...\n")
+        obj.bigSNP <- import_validation_bed(opt$bfile, opt$bed_backup)
+        # obj.bigSNP <- read_genotype(opt, sumstats)
+
+        n_individuals = nrow(obj.bigSNP$fam)
+        n_snps = nrow(obj.bigSNP$map)
+        cat("Number of individuals in bed file:", n_individuals, "\n")
+        cat("Number of SNPs in bed file:", n_snps, "\n")
+        map <- obj.bigSNP$map[-3]
+        names(map) <- c("chr", "rsid", "pos", "a1", "a0")
+
+        # Assign the genotype to a variable for easier downstream analysis
+        genotypes <- obj.bigSNP$genotypes
+        num_nas <- sum(is.na(genotypes[, 1:10000])) 
+        # 10000 is an arbitrary number of SNPs to check.
+        # takes too long to calculate for all SNPs.
+
+        if (opt$fast_impute){
+            cat("Fast imputing genotypes because the option was passed in...\n")
+            genotypes <- snp_fastImputeSimple(
+                genotypes,
+                method = "random", ncores = nb_cores()
+            )
+        } else if (num_nas > 0) {
+            cat(num_nas, " NAs have been found in the first 10000 SNPs. Carrying out fast imputation...\n")
+            genotypes <- snp_fastImputeSimple(
+                genotypes,
+                method = "random", ncores = nb_cores()
+            )
+        }
+    }
+
 }
 
 # perform SNP matching
 info_snp <- snp_match(sumstats, map)
-# Assign the genotype to a variable for easier downstream analysis
-genotypes <- obj.bigSNP$genotypes
-num_nas <- sum(is.na(genotypes[, 1:10000])) 
-# 10000 is an arbitrary number of SNPs to check.
-# takes too long to calculate for all SNPs.
-
-if (opt$fast_impute){
-    cat("Fast imputing genotypes because the option was passed in...\n")
-    genotypes <- snp_fastImputeSimple(
-        genotypes,
-        method = "random", ncores = nb_cores()
-    )
-} else if (num_nas > 0) {
-    cat(num_nas, " NAs have been found in the first 10000 SNPs. Carrying out fast imputation...\n")
-    genotypes <- snp_fastImputeSimple(
-        genotypes,
-        method = "random", ncores = nb_cores()
-    )
-}
-
 
 # Rename the data structures
 CHR <- map$chr
@@ -220,10 +265,13 @@ for (chr in 1:22) {
     ind.chr2 <- info_snp$`_NUM_ID_`[ind.chr]
 
     if (opt$read_ldmat != "") {
-        cat("Reading LDmatrix\n")
+        cat("Reading LDmatrix from")
+        cat(paste0(ld_path[[1]], chr, ld_path[[2]])))
+        cat("\n")
         # if we are using external LD mat data
         ind.chr3 <- match(ind.chr2, which(CHR == chr))
         corr0 <- readRDS(paste0(ld_path[[1]], chr, ld_path[[2]]))[ind.chr3, ind.chr3]
+        print(str(corr0))
     } else {
         cat("Calculating LD Matrix\n")
         corr0 <- snp_cor(
@@ -242,12 +290,6 @@ for (chr in 1:22) {
         corr$add_columns(corr0, nrow(corr))
     }
 }
-# We assume the fam order is the same across different chromosomes
-df.out <- as.data.table(obj.bigSNP$fam)
-# Rename fam order
-setnames(df.out,
-        old = c("family.ID", "sample.ID"),
-        new = c("FID", "IID"))
 
 # LD score reg
 cat("Conducting the LD-Score Regression\n")
@@ -304,7 +346,18 @@ print(str(df.out.wt))
 fwrite(df.out.wt, wtoutfilename,  sep = " ", na = ".")
 
 if (opt$predout) {
-    
+
+    stopifnot(opt$bfile != "")
+
+    if ()
+
+    # We assume the fam order is the same across different chromosomes
+    df.out <- as.data.table(obj.bigSNP$fam)
+    # Rename fam order
+    setnames(df.out,
+            old = c("family.ID", "sample.ID"),
+            new = c("FID", "IID"))
+
     final_pred_auto <- big_prodVec(
         genotypes, final_beta_auto,
         ind.row = ind.test, ind.col = info_snp$`_NUM_ID_`

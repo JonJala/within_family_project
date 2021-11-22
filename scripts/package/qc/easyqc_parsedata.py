@@ -196,7 +196,6 @@ def read_hdf5(args, printinfo = True):
 
 
 def read_txt(args):
-
     
     dfin = pd.read_csv(args.datapath, delim_whitespace = True)
     N = dfin.shape[0]
@@ -227,8 +226,8 @@ def read_txt(args):
         else:
             cov = dfin[f'{effect_list[0]}_{effect_list[1]}_Cov']
             
-    S[:, 0, 1] = np.array(cov.tolist())
-    S[:, 1, 0] = np.array(cov.tolist())
+        S[:, 0, 1] = np.array(cov.tolist())
+        S[:, 1, 0] = np.array(cov.tolist())
 
     if args.phvar is not None:
         phvar = args.phvar

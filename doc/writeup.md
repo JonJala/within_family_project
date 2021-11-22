@@ -7,42 +7,54 @@ subtitle: Everything Done So Far
 
 | Cohohort | Phenotype | LDSC Test | Diag Plots and Tables | Notes |
 | -------- | --------- | ------------------- | ----- | ------------ |
-| STR | BMI | No (h2 estimate is negative) | | |
-| STR | EA | Yes | |  |
-| Hunt | EA | Yes | |  |
+| STR | BMI | No (h2 estimate is negative) | Yes | |
+| STR | EA | Yes |  Yes |  |
+| Hunt | EA | Yes | Yes |  |
 | Hunt | AAFB | Yes | | |
 | Hunt | N Children | No (too low rg) | | |
 | Hunt | Drinks Per Week | No (rg = -1) | | |
-| Hunt | Height | Yes | | |
+| Hunt | Height | Yes | Yes | |
 | Hunt | Neuoriticism | Yes | | |
 | Hunt | Self Rated Health | 
-| GS | EA | Yes | |  |
-| GS | BMI | Yes | |  |
-| Finnish Twins | EA| No (Negative h2 estimate) | | |
-| Finnish Twins | BMI | Yes | | |
-| Estonian Biobank | BMI | Yes | | |
+| GS | EA | Yes | Yes |  |
+| GS | BMI | Yes | Yes |  |
+| Finnish Twins | EA| No (Negative h2 estimate) | Yes | |
+| Finnish Twins | BMI | Yes | Yes | |
+| Estonian Biobank | BMI | Yes | Yes | |
 | Estonian Biobank | MDD | Yes | |  | 
 | Estonian Biobank | Ever Smoker | No (-ve 1) | | |
 | Estonian Biobank | AAFB | Yes | | |
 | Estonian Biobank | Asthma | Yes | | |
-| Estonian Biobank | Depression | Yes | | |
+| Estonian Biobank | Depression | Yes | Yes | |
 | Estonian Biobank | Eczema | Yes | | |
 | Estonian Biobank | Hayfever | | | |
-| UKB | BMI | Yes | | |
-| UKB | EA | Yes | | |
-| MOBA | BMI | Yes | | |
-| MOBA | Height | Yes | | |
+| UKB | BMI | Yes | Yes | |
+| UKB | EA | Yes | Yes | |
+| MOBA | BMI | Yes | Yes | |
+| MOBA | Height | Yes | Yes | |
 | MOBA | Depressive symptoms | No  (h2 is negative) | | |
 | MOBA | Income | No (h2 is negative) | | |
 | MOBA | Fertility | No (Low power. h2 is negative sometimes in jack knife) | | |
-| Geisinger | BMI | Yes | | |
-| Geisinger | Height | Yes | | |
-| Geisinger | Depression | Yes (Borderline rg) | | |
-| Geisinger | EA | Yes | | |
+| Geisinger | BMI | Yes | Yes | |
+| Geisinger | Height | Yes | Yes | |
+| Geisinger | Depression | Yes | Yes | |
+| Geisinger | EA | Yes | Yes | |
 | Geisinger | Smoke-Ever | No ( -ve 1) | | |
 | Geisinger | Asthma | Yes | | |
 | Lifeline | BMI/BMI18 | Yes | Yes | |
 | Lifeline | Height/Height18 | Yes | Yes | |
+|  Minnesotta twins | EA | Yes | Yes | |
+|  Minnesotta twins | BMI | Yes | Yes | |
+|  Minnesotta twins | Height | Yes | Yes | | 
+|  Minnesotta twins | BPS | | | |
+| Minnesotta twins | CPD | No | | |
+| Minnesotta twins | DPW | No | | |
+| Minnesotta twins | ES | No | | |
+| Minnesotta twins | Income | No | | |
+| Minnesotta twins | IQ | | | |
+| Minnesotta twins | Stress | | | |
+| Minnesotta twins | SWB | | | |
+
 
 
 # Analysis

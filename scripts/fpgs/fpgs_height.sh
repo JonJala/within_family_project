@@ -20,12 +20,12 @@ function withinfam_pred(){
         --chr Chrom --pos Position --rsid Name --a1 A1 --a2 A2 --beta A1Effect \
         --sep "delim_whitespace" \
         --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted \
-        --sid-as-chrpos  
-        
+        --sid-as-chrpos 
+
     # generate pheno file
     python $within_family_path/scripts/fpgs/format_pheno.py \
         $PHENOFILE \
-        --iid IID --fid FID --phenocol bmi \
+        --iid Benjamin_ID --phenocol Z_EA \
         --outprefix $within_family_path/processed/fpgs/${PHENONAME}  \
         --subsample /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt
 
@@ -45,11 +45,11 @@ function withinfam_pred(){
 }
 
 # base
-# withinfam_pred ${within_family_path}/processed/sbayesr/bmi/direct/weights/meta_weights.snpRes \
-#     "direct" "bmi" \
-#     "$phenofile" \
-#     ""
-withinfam_pred ${within_family_path}/processed/sbayesr/bmi/population/weights/meta_weights.snpRes \
-    "population" "bmi" \
+withinfam_pred ${within_family_path}/processed/sbayesr/height/direct/weights/meta_weights.snpRes \
+    "direct" "height" \
+    "$phenofile" \
+    ""
+withinfam_pred ${within_family_path}/processed/sbayesr/height/population/weights/meta_weights.snpRes \
+    "population" "height" \
     "$phenofile" \
     ""

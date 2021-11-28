@@ -120,17 +120,37 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 
-# ${ldscpath}/munge_sumstats.py  \
-# --sumstats /var/genetics/data/published/nagel_2018b_neuroticism/raw/sumstats/sumstats_neuroticism_ctg_format.txt.gz \
-# --merge-alleles ${merge_alleles} \
-# --out ${within_family_path}/processed/neuroticism_ref/neuroticism_ref \
-# --chunksize 50000 \
-# --frq EAF_UKB --snp RSID --ignore SNP
-
-
-
 ${ldscpath}/munge_sumstats.py  \
---sumstats ${within_family_path}/processed/reference_samples/hayfever_ref/hayfever_ref.txt \
+--sumstats /var/genetics/data/published/nagel_2018b_neuroticism/raw/sumstats/sumstats_neuroticism_ctg_format.txt.gz \
 --merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/reference_samples/hayfever_ref/hayfever_ref \
---frq 1000G_ALLELE_FREQ
+--out ${within_family_path}/processed/neuroticism_ref/neuroticism_ref \
+--chunksize 50000 \
+--frq EAF_UKB --snp RSID --ignore SNP
+
+
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats ${within_family_path}/processed/reference_samples/hayfever_ref/hayfever_ref.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/hayfever_ref/hayfever_ref \
+# --frq 1000G_ALLELE_FREQ
+
+
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/ehret_2016_bps/raw/sumstats/Ehret_2016_summstats_formatted.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/bps_ref/bps_ref \
+# --snp rsid --N-col TotalSampleSize_SBP --signed-sumstat ZSCORE,0 --p P_SBP
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/okbay_2016_swb/raw/sumstats/SWB_Full.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/swb_ref/swb_ref \
+# --snp MarkerName --N 298420 
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/sniekers_2017_intelligence/raw/sumstats/sumstats.txt.gz \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/intelligence_ref/intelligence_ref \
+# --N 78308 --signed-sumstat Zscore,0 --a1 ref --a2 alt

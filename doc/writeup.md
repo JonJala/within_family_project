@@ -14,7 +14,7 @@ subtitle: Everything Done So Far
 | Hunt | N Children | No (too low rg) | | |
 | Hunt | Drinks Per Week | No (rg = -1) | | |
 | Hunt | Height | Yes | Yes | |
-| Hunt | Neuoriticism | Yes | | |
+| Hunt | Neuoroticism | Yes | | |
 | Hunt | Self Rated Health | 
 | GS | EA | Yes | Yes |  |
 | GS | BMI | Yes | Yes |  |
@@ -46,14 +46,14 @@ subtitle: Everything Done So Far
 |  Minnesotta twins | EA | Yes | Yes | |
 |  Minnesotta twins | BMI | Yes | Yes | |
 |  Minnesotta twins | Height | Yes | Yes | | 
-|  Minnesotta twins | BPS | | | |
+|  Minnesotta twins | BPS | No | | rg is weird. have to check it out |
 | Minnesotta twins | CPD | No | | |
 | Minnesotta twins | DPW | No | | |
 | Minnesotta twins | ES | No | | |
 | Minnesotta twins | Income | No | | |
-| Minnesotta twins | IQ | | | |
-| Minnesotta twins | Stress | | | |
-| Minnesotta twins | SWB | | | |
+| Minnesotta twins | IQ | No | | |
+| Minnesotta twins | Stress | No | | Equivalent to neuroticism. Should check out why ldsc didnt run |
+| Minnesotta twins | SWB | Yes | | |
 
 
 

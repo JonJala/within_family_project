@@ -9,13 +9,9 @@ import numpy as np
 import pandas as pd
 import argparse
 
-# parser=argparse.ArgumentParser()
-# parser.add_argument('loglocations',type=str,help='Log file locations. Comma seperated')
-# args=parser.parse_args()
-
-logfiles = {"bmi_dir": '/var/genetics/proj/within_family/within_family_project/processed/fpgs/dir_bmi.pgs_effects.txt',
+logfiles = {"bmi_dir": '/var/genetics/proj/within_family/within_family_project/processed/fpgs/direct_bmi.pgs_effects.txt',
             'bmi_pop': '/var/genetics/proj/within_family/within_family_project/processed/fpgs/population_bmi.pgs_effects.txt',
-            'ea_dir' :'/var/genetics/proj/within_family/within_family_project/processed/fpgs/dir_ea.pgs_effects.txt',
+            'ea_dir' :'/var/genetics/proj/within_family/within_family_project/processed/fpgs/direct_ea.pgs_effects.txt',
             'ea_pop' : '/var/genetics/proj/within_family/within_family_project/processed/fpgs/population_ea.pgs_effects.txt'}
 
 dat = pd.DataFrame(columns = ['regvariable', 'estimate', 'se', 'r2', 'phenotype', 'meta_effect'])
@@ -38,4 +34,5 @@ dat.to_csv(
     na_rep = "nan",
     index=False
 )
+
 

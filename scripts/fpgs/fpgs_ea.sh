@@ -4,10 +4,6 @@ snipar_path="/homes/nber/harij/gitrepos/SNIPar"
 # bedfilepath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/plink/final/mcs"
 bedfilepath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr~.dose"
 impfilespath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/imputed_parents/chr~"
-# phenofile="/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen"
-# phenofile="/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_eng.phen"
-phenofile="/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_math.phen"
-# phenofile="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/phen.txt"
 
 function withinfam_pred(){
 
@@ -30,21 +26,15 @@ function withinfam_pred(){
         $PHENOFILE \
         --iid Benjamin_ID --phenocol Z_EA \
         --sep "\t" \
-        --outprefix $within_family_path/processed/fpgs/${PHENONAME} # \
-        # --subsample /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt
+        --outprefix $within_family_path/processed/fpgs/${PHENONAME}  \
+        --subsample /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt
 
-    #     # generate pheno file
-    # python $within_family_path/scripts/fpgs/format_pheno.py \
-    #     $phenofile \
-    #     --iid FID --fid FID --phenocol verbalSimsStandardScore \
-    #     --outprefix $within_family_path/processed/fpgs/${PHENONAME} 
-
-    # python $snipar_path/fPGS.py \
-    #     $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME} \
-    #     --bedfiles $bedfilepath \
-    #     --impfiles $impfilespath \
-    #     --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
-    #     --scale_pgs
+    python $snipar_path/fPGS.py \
+        $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME} \
+        --bedfiles $bedfilepath \
+        --impfiles $impfilespath \
+        --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+        --scale_pgs
 
     python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}${OUTSUFFIX} \
         --pgs $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}.pgs.txt \
@@ -55,18 +45,18 @@ function withinfam_pred(){
 }
 
 # base
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/dir/weights/meta_weights.snpRes \
-    "dir" "ea" \
-    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-    ""
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
-    "population" "ea" \
-    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-    ""
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
+#     "direct" "ea" \
+#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+#     ""
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
+#     "population" "ea" \
+#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+#     ""
 
 # english phenotype
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/dir/weights/meta_weights.snpRes \
-    "dir" "ea" \
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
+    "direct" "ea" \
     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_eng.phen" \
     "_english"
 withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
@@ -75,8 +65,8 @@ withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/met
     "_english"
 
 # maths phenotype
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/dir/weights/meta_weights.snpRes \
-    "dir" "ea" \
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
+    "direct" "ea" \
     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_math.phen" \
     "_maths"
 withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \

@@ -12,8 +12,6 @@ cd $dirout
 mkdir -p tmp
 mkdir -p logs
 
-rm bmi/* -rf
-
 function run_pgi(){
 
     METAFILE=$1
@@ -64,6 +62,6 @@ function run_pgi(){
 }
 
 # ============= Execution ============= #
-run_pgi "${within_family_path}/processed/package_output/bmi/bmi_meta_newqc.csv" "dir" "bmi"
-run_pgi "${within_family_path}/processed/package_output/bmi/bmi_meta_newqc.csv" "population" "bmi"
+run_pgi "${within_family_path}/processed/package_output/bmi/bmi_meta.sumstats" "direct" "bmi"
+run_pgi "${within_family_path}/processed/package_output/bmi/bmi_meta.sumstats" "population" "bmi"
 

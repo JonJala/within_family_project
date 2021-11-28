@@ -62,24 +62,6 @@ function run_pgi(){
 }
 
 # ============= Execution ============= #
-run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats" "direct" "ea"
-run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats" "population" "ea"
+run_pgi "${within_family_path}/processed/package_output/height/height_meta.sumstats" "direct" "height"
+run_pgi "${within_family_path}/processed/package_output/height/height_meta.sumstats" "population" "height"
 
-######################
-# EA4
-#####################
-# getting weights
-# mkdir logs/ea4/ -p
-# mkdir ea/ea4/weights/ -p
-
-# $gctb --sbayes R \
-#     --mldm /disk/genetics/tools/gctb/ld_reference/ukbEURu_hm3_shrunk_sparse/ukbEURu_mldmlist.txt \
-#     --exclude-mhc \
-#     --seed 123 \
-#     --pi 0.95,0.02,0.02,0.01 \
-#     --gamma 0.0,0.01,0.1,1 \
-#     --gwas-summary /var/genetics/proj/within_family/within_family_project/processed/ea4/ea4_full_forsabyesr.sumstats \
-#     --chain-length 10000 \
-#     --burn-in 2000 \
-#     --out-freq 100 \
-#     --out ea/ea4/weights/meta_weights | tee "logs/ea4/ea4_meta_weights_sbayesr"

@@ -7,6 +7,7 @@ library(rlang)
 library(ggplot2)
 library(ggpubr)
 library(optparse)
+library(stringr)
 theme_set(theme_pubr())
 
 standardize = function(x){

@@ -46,13 +46,13 @@ subtitle: Everything Done So Far
 |  Minnesotta twins | EA | Yes | Yes | |
 |  Minnesotta twins | BMI | Yes | Yes | |
 |  Minnesotta twins | Height | Yes | Yes | | 
-|  Minnesotta twins | BPS | No | | rg is weird. have to check it out |
+|  Minnesotta twins | BPS | No | | rg is weird. Very few valid alleles |
 | Minnesotta twins | CPD | No | | |
 | Minnesotta twins | DPW | No | | |
 | Minnesotta twins | ES | No | | |
 | Minnesotta twins | Income | No | | |
 | Minnesotta twins | IQ | No | | |
-| Minnesotta twins | Stress | No | | Equivalent to neuroticism. Should check out why ldsc didnt run |
+| Minnesotta twins | Stress | Yes | | Equivalent to neuroticism. |
 | Minnesotta twins | SWB | Yes | | |
 
 

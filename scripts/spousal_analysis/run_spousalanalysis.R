@@ -50,12 +50,13 @@ option_list = list(
     make_option(c("--pgi_col_name"), type="character", default="PGI", help="name of PGI column", metavar="character"),
     make_option(c("--pheno"),  type="character", default=NULL, help="Path of file going through phenotype observations for each individual", metavar="character"),
     make_option(c("--pheno_col_name"),  type="character", default="pheno", help="name of phenotype column name", metavar="character"),
+    make_option(c("--pheno_iid"),  type="character", default="", help="name of IID name in phenotype file", metavar="character"),
     make_option(c("--pedigree"),  type="character", default=NULL, help="Path of file listing each proband IID and going
 detailing their parental IDs. Has to have columns FID, IDD, FATHER_ID, MOTHER_ID", metavar="character"),
     make_option(c("--standarize_pgi"),  action="store_true", default=FALSE, help="Standarizes PGI to mean 1 var 0",  metavar="character"),
     make_option(c("--standarize_pheno"),  action="store_true", default=FALSE, help="Standarizes Phenotype to mean 1 var 0",  metavar="character"),
-    make_option(c("--outprefix"),  type="character", default=NULL, help="Outprefix for data output",  metavar="character")
-
+    make_option(c("--outprefix"),  type="character", default=NULL, help="Outprefix for data output",  metavar="character"),
+    make_option(c("--subsample"), type="character", default='', help='The subsample you want to use')
 )
 
 
@@ -63,38 +64,39 @@ opt_parser = OptionParser(option_list = option_list)
 opt = parse_args(opt_parser)
 
 dat = fread(opt$pgi)
-pheno = fread(opt$pheno)
-
+pheno = fread(opt$pheno, col.names=c('IID', 'FID', opt$pheno_col_name))
 dat = dat[pheno, on = "IID"]
 
-print(head(dat))
+if (opt$subsample != ''){
+    subsample = fread(opt$subsample, col.names = c("IID", "FID"))
+    dat = dat[dat$IID %in% subsample$IID]
+}
+
+print(str(dat))
 
 if (isTRUE(opt$standarize_pgi)){
-    dat[,get(opt$pgi_col_name) := standarize(get(opt$pgi_col_name))]
+    dat[,get(opt$pgi_col_name) := standardize(get(opt$pgi_col_name))]
 }
 
 if (isTRUE(opt$standardize_pheno)) {
-    dat[,get(opt$pheno_col_name) := standarize(get(opt$pheno_col_name))]
+    dat[,get(opt$pheno_col_name) := standardize(get(opt$pheno_col_name))]
 }
 
 dat_pedig <- fread(opt$pedigree)
-dat_pedig[, fid := as.numeric(FATHER_ID)]
-dat_pedig[, mid := as.numeric(MOTHER_ID)]
 
-dat_pedig[, spousal_pair := case_when(complete.cases(fid) & complete.cases(mid) ~ 1,
+dat_pedig[, spousal_pair := case_when(complete.cases(FATHER_ID) & complete.cases(MOTHER_ID) ~ 1,
                                      TRUE ~ 0)]
 
-spousalpairs = dat_pedig[spousal_pair == 1, .(fid, mid)]
+spousalpairs = dat_pedig[spousal_pair == 1, .(FATHER_ID, MOTHER_ID)]
 spousalpairs = unique(spousalpairs)
 
-dat_fathers = dat[dat$IID %in% spousalpairs$fid]
-dat_mothers = dat[dat$IID %in% spousalpairs$mid]
+dat_fathers = dat[dat$IID %in% spousalpairs$FATHER_ID]
+dat_mothers = dat[dat$IID %in% spousalpairs$MOTHER_ID]
 
-dat_mothers = merge(dat_mothers, spousalpairs, by.x = "IID", by.y = "mid", how = "left")
+dat_mothers = merge(dat_mothers, spousalpairs, by.x = "IID", by.y = "MOTHER_ID", how = "left")
 
-dat_spousal = merge(dat_fathers, dat_mothers, by.x = "IID", by.y = "fid", how = "inner",
+dat_spousal = merge(dat_fathers, dat_mothers, by.x = "IID", by.y = "FATHER_ID", how = "inner",
                    suffixes = c(".father", ".mother"))
-
 
 df_toplot = get_estimates(dat_spousal, paste0(opt$pheno_col_name ,".father"), 
                           paste0(opt$pheno_col_name ,".mother"), 

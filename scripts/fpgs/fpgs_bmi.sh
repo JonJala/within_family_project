@@ -45,10 +45,10 @@ function withinfam_pred(){
 }
 
 # base
-# withinfam_pred ${within_family_path}/processed/sbayesr/bmi/direct/weights/meta_weights.snpRes \
-#     "direct" "bmi" \
-#     "$phenofile" \
-#     ""
+withinfam_pred ${within_family_path}/processed/sbayesr/bmi/direct/weights/meta_weights.snpRes \
+    "direct" "bmi" \
+    "$phenofile" \
+    ""
 withinfam_pred ${within_family_path}/processed/sbayesr/bmi/population/weights/meta_weights.snpRes \
     "population" "bmi" \
     "$phenofile" \

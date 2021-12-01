@@ -93,8 +93,16 @@ def get_rg_pairs(effects):
 
     # store rg's
 
-    if len(effects) == 3 or len(effects) == 5:
+    if len(effects) == 3:
         rgpairs = [(effects[0], effects[1]), (effects[0], effects[2]), (effects[1], effects[2])]
+    elif len(effects) == 5:
+        rgpairs = [
+            (effects[0], effects[1]), 
+            (effects[0], effects[2]), 
+            (effects[1], effects[2]),
+            (effects[0], 'averageparental'),
+            (effects[0], 'population')
+            ]
     elif len(effects) == 2:
         rgpairs = [(effects[0], effects[1])]
     else:
@@ -220,12 +228,13 @@ def process_dat(dat, args):
         datout[f'z_{effect}'] = z_tmp
 
     # store rg's
-    rgpairs = get_rg_pairs(effects)
+    effectset = effects if args.toest is None else args.toest.split('_')
+    rgpairs = get_rg_pairs(effectset)
 
     if len(rgpairs) > 0:
         for pair in rgpairs:
-            idx1 = effects.index(pair[0])
-            idx2 = effects.index(pair[1])
+            idx1 = effectset.index(pair[0])
+            idx2 = effectset.index(pair[1])
 
             corr_tmp = corr_vec[:, idx1, idx2]
             datout[f'rg_{pair[0]}_{pair[1]}'] = corr_tmp

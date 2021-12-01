@@ -58,6 +58,10 @@ function run_pgi(){
         --out ${PHENONAME}/${EFFECT}/scores_mcs_${chr}
     done
 
+    python /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sumscores.py \
+        "${PHENONAME}/${EFFECT}/scores_mcs_*.sscore" \
+        --outprefix "${PHENONAME}/${EFFECT}/scoresout.sscore"
+
 
 }
 

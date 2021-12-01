@@ -1,6 +1,7 @@
 library(rhdf5)
 library(data.table)
 library(optparse)
+library(stringr)
 
 estimate_r = function(d,effect_1,effect_2,ld,n_blocks=200, return_delete=F){
   # Match LD scores
@@ -53,9 +54,51 @@ block_jacknife = function(d,n_blocks=200,return_delete=F){
     return(sqrt(r_var))}
 }
 
+process_dat = function(d){
+
+  colnames = names(d)
+  thetacols = colnames[stringr::str_detect(colnames, "theta_")]
+  n = nrow(d)
+  if (length(thetacols) > 2){
+
+    # this means we have full range of estimates. we dont
+    # have rg_direct_population and rg_direct_avgparental
+    # so we calculate that
+  
+    S = array(0, c(n, 3, 3))
+
+    S[,1,1] = d[,se_direct]^2
+    S[,2,2] = d[,se_paternal]^2
+    S[,3,3] = d[,se_maternal]^2
+
+    cov_dir_eff1 = d[,se_direct] * d[,se_paternal] * d[, rg_direct_paternal]
+    cov_dir_eff2 = d[,se_direct] * d[,se_maternal] * d[, rg_direct_maternal]
+
+    S[,1,2] = cov_dir_eff1
+    S[,2,1] = cov_dir_eff1
+    S[,1,3] = cov_dir_eff2
+    S[,3,1] = cov_dir_eff2
+
+    # convert data
+    tmatrix = rbind(
+      c(1.0, 0.0, 0.0, 0.0, 1.0),
+      c(0.0, 1.0, 0.0, 0.5, 0.5),
+      c(0.0, 0.0, 1.0, 0.5, 0.5)
+    )
+
+    Sout = plyr::alply(S, 1, function(x) t(tmatrix) %*% x %*% tmatrix)
+
+    
+
+  }
+  
+
+}
+
 option_list = list(
   make_option(c("--file"),  type="character", default=NULL, help="Within family meta file path", metavar="character"),
   make_option(c("--outprefix"),  type="character", default=".", help="Out prefix", metavar="character"),
+  make_option(c("--notmeta"), action="store_true", default=FALSE, help="Is file an output of meta analysis? if not script does some preprocessing"),
   make_option(c("--dir_pop_rg_name"),  type="character", default="direct_population_rg", help="Name of direct-population-rg col", metavar="character"),
   make_option(c("--dir_avgpar_rg_name"),  type="character", default="direct_avg_parental_rg", help="Name of direct-avgparental-rg col", metavar="character"),
   make_option(c("--dir_name"),  type="character", default="direct", help="Name of direct effects", metavar="character"),
@@ -66,6 +109,10 @@ opt_parser = OptionParser(option_list = option_list)
 opt = parse_args(opt_parser)
 
 d=fread(opt$file)
+if (opt$notmeta){
+  d = process_dat(d)
+}
+
 
 # Remove SNPs with outlying correlations
 print('Removing SNPs with outlying sampling correlations between direct and population effects')

@@ -2,7 +2,7 @@ within_family_path="/var/genetics/proj/within_family/within_family_project"
 gsbed="/disk/genetics/sibling_consortium/GS20k/aokbay/imputed/HRC/plink/HM3/GS_HRC_HM3"
 
 
-for pheno in ea
+for pheno in bmi
 do
 
 echo ${pheno}
@@ -15,12 +15,10 @@ echo ${pheno}
     Rscript ${within_family_path}/scripts/spousal_analysis/run_spousalanalysis.R \
         --pgi ${within_family_path}/processed/sbayesr/${pheno}/${effect}/scoresout.sscore \
         --pgi_col_name "SCORE" \
-        --pheno "/var/genetics/proj/within_family/within_family_project/processed/fpgs/ea.pheno" \
-        --pheno_col_name "Z_EA" \
+        --pheno "/var/genetics/proj/within_family/within_family_project/processed/fpgs/bmi.pheno" \
+        --pheno_col_name "bmi" \
         --pedigree "/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt" \
-        --outprefix "${within_family_path}/processed/spousal_analysis/${pheno}_${effect}" \
-        --subsample "/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt"
-
+        --outprefix "${within_family_path}/processed/spousal_analysis/${pheno}_${effect}"
     done
 
 done

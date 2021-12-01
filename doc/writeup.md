@@ -9,17 +9,22 @@ subtitle: Everything Done So Far
 | -------- | --------- | ------------------- | ----- | ------------ |
 | STR | BMI | No (h2 estimate is negative) | Yes | |
 | STR | EA | Yes |  Yes |  |
+| STR | Height | Yes |  Yes |  |
 | Hunt | EA | Yes | Yes |  |
+| Hunt | Height | Yes | Yes |  |
 | Hunt | AAFB | Yes | | |
 | Hunt | N Children | No (too low rg) | | |
 | Hunt | Drinks Per Week | No (rg = -1) | | |
 | Hunt | Height | Yes | Yes | |
 | Hunt | Neuoroticism | Yes | | |
-| Hunt | Self Rated Health | 
+| Hunt | Self Rated Health | | | |
 | GS | EA | Yes | Yes |  |
 | GS | BMI | Yes | Yes |  |
+| GS | Height | Yes | Yes |  |
 | Finnish Twins | EA| No (Negative h2 estimate) | Yes | |
 | Finnish Twins | BMI | Yes | Yes | |
+| Finnish Twins | Height | Yes | Yes | |
+| Estonian Biobank | EA | Yes | Yes | |
 | Estonian Biobank | BMI | Yes | Yes | |
 | Estonian Biobank | MDD | Yes | |  | 
 | Estonian Biobank | Ever Smoker | No (-ve 1) | | |
@@ -27,9 +32,10 @@ subtitle: Everything Done So Far
 | Estonian Biobank | Asthma | Yes | | |
 | Estonian Biobank | Depression | Yes | Yes | |
 | Estonian Biobank | Eczema | Yes | | |
-| Estonian Biobank | Hayfever | | | |
+| Estonian Biobank | Hayfever | Yes | | |
 | UKB | BMI | Yes | Yes | |
 | UKB | EA | Yes | Yes | |
+| UKB | Height | Yes | Yes | |
 | MOBA | BMI | Yes | Yes | |
 | MOBA | Height | Yes | Yes | |
 | MOBA | Depressive symptoms | No  (h2 is negative) | | |
@@ -43,10 +49,11 @@ subtitle: Everything Done So Far
 | Geisinger | Asthma | Yes | | |
 | Lifeline | BMI/BMI18 | Yes | Yes | |
 | Lifeline | Height/Height18 | Yes | Yes | |
-|  Minnesotta twins | EA | Yes | Yes | |
-|  Minnesotta twins | BMI | Yes | Yes | |
-|  Minnesotta twins | Height | Yes | Yes | | 
-|  Minnesotta twins | BPS | No | | rg is weird. Very few valid alleles |
+| Lifeline | EA | Yes | Yes  | |
+| Minnesotta twins | EA | Yes | Yes | |
+| Minnesotta twins | BMI | Yes | Yes | |
+| Minnesotta twins | Height | Yes | Yes | | 
+| Minnesotta twins | BPS | No | | rg is weird. Very few valid alleles |
 | Minnesotta twins | CPD | No | | |
 | Minnesotta twins | DPW | No | | |
 | Minnesotta twins | ES | No | | |

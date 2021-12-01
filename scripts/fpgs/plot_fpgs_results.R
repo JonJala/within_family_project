@@ -3,14 +3,24 @@ library(dplyr)
 library(ggplot2)
 library(ggpubr)
 library(latex2exp)
-theme_set(theme_pubr() +
-              theme(
-                  axis.line.x = element_blank(),
-                  legend.title = element_text(size = 8),
-                  legend.box.background = element_rect(colour = "black"),
-                  legend.background = element_blank()
-              ))
+library(forcats)
 library(purrr)
+library(stringr)
+
+
+theme_set(theme_minimal() +
+              theme(
+                  axis.line.y = element_line(),
+                  legend.title = element_text(size = 11),
+                  legend.box.background = element_rect(colour = "black"),
+                  legend.background = element_blank(),
+                  panel.grid.major.x = element_blank(),
+                  panel.grid.minor.x = element_blank(),
+                  axis.text = element_text(size = 11),
+                  axis.title = element_text(size = 13),
+                  legend.text = element_text(size=11)
+              ))
+
 
 dat = fread("/var/genetics/proj/within_family/within_family_project/processed/fpgs/effects.table")
 
@@ -27,6 +37,8 @@ dat[, meta_effect_regvariable := factor(paste(meta_effect, regvariable, sep = "-
                                         ))]
 
 p1 = dat %>% 
+    mutate(regvariable = fct_relabel(regvariable, str_to_title),
+            meta_effect = fct_relabel(meta_effect, ~ ifelse(. == "dir", "Direct", "Population") )) %>%
     ggplot(aes(group = meta_effect_regvariable)) +
     geom_col(aes(phenotype, estimate, fill = regvariable, alpha = meta_effect),
              width = 0.5, color = "black",
@@ -35,12 +47,13 @@ p1 = dat %>%
                   position = position_dodge(width=0.5),
                   width = 0.3) +
     geom_hline(yintercept = 0, color = "black") +
-    scale_fill_brewer(palette = "Set1") +
-    labs(fill = "", x = "", y = "Coefficients", alpha = "PGI Constructed From") +
-    scale_alpha_manual(values = c(0.5, 1))
+    scale_fill_brewer(palette = "Dark2") +
+    labs(fill = "Coefficient", x = "", y = "Estimate", alpha = "PGI Constructed From") +
+    scale_alpha_manual(values = c(0.5, 1)) +
+    scale_x_discrete(labels = c("BMI", "EA"))
 
 ggsave(
-    '/var/genetics/proj/within_family/within_family_project/processed/fpgs/plots/coefficients.pdf', 
+    '/var/genetics/proj/within_family/within_family_project/processed/fpgs/plots/coefficients.png', 
     plot = p1,
     height = 6, width = 9
 )
@@ -48,18 +61,24 @@ ggsave(
 
 
 p2 = dat %>% 
+    filter(regvariable %in% c("population", "proband")) %>%
+    mutate(regvariable = fct_relabel(regvariable, ~ ifelse(. == "population", "Proband only", "Full Model")),
+            meta_effect = fct_relabel(meta_effect, ~ ifelse(. == "dir", "Direct", "Population") )) %>% 
     ggplot(aes(group = meta_effect_regvariable)) +
     geom_col(aes(phenotype, r2, fill = regvariable, alpha = meta_effect),
              width = 0.5, color = "black",
              position = position_dodge(width=0.5)) +
     geom_hline(yintercept = 0, color = "black") +
-    scale_fill_brewer(palette = "Set1") +
+    scale_fill_brewer(palette = "Dark2") +
     scale_alpha_manual(values = c(0.5, 1)) + 
-    labs(fill = "", x = "", y = TeX("$\\textit{R}^2$"),  alpha = "PGI Constructed From")
+    labs(fill = "Model Used", x = "", y = TeX("$\\textit{R}^2$ (%)"),  alpha = "PGI Constructed From") +
+    scale_x_discrete(labels = c("BMI", "EA")) +
+    scale_y_continuous(labels = function(x) x * 100)
+
 
 
 ggsave(
-    '/var/genetics/proj/within_family/within_family_project/processed/fpgs/plots/r2.pdf', 
+    '/var/genetics/proj/within_family/within_family_project/processed/fpgs/plots/r2.png', 
     plot = p2,
     height = 6, width = 9
 )
@@ -161,14 +180,16 @@ p3 = dat.ratios %>%
     geom_errorbar(aes(x = phenotype, ymin = ci_lo, ymax = ci_hi),
                   position = position_dodge(width=0.5),
                   width = 0.3) +
-    geom_hline(yintercept = 0, color = "black") +
-    scale_color_brewer(palette = "Set1") +
-    labs(fill = "", x = "", y = "Coefficients", color = "PGI Constructed From") +
-    scale_alpha_manual(values = c(0.5, 1))
+    scale_color_brewer(palette = "Dark2") +
+    labs(fill = "", x = "", y = "Coefficient Ratios", color = "PGI Constructed From") +
+    scale_alpha_manual(values = c(0.5, 1)) +
+    theme(
+        axis.line = element_line()
+    )
 
 
 ggsave(
-    '/var/genetics/proj/within_family/within_family_project/processed/fpgs/plots/ratios.pdf', 
+    '/var/genetics/proj/within_family/within_family_project/processed/fpgs/plots/ratios.png', 
     plot = p3,
     height = 6, width = 9
 )

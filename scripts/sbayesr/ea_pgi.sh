@@ -66,8 +66,11 @@ function run_pgi(){
 }
 
 # ============= Execution ============= #
-run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats" "direct" "ea"
-run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats" "population" "ea"
+# run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats" "direct" "ea"
+# run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats" "population" "ea"
+
+run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "direct" "ea_ea4"
+run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "population" "ea_ea4"
 
 ######################
 # EA4

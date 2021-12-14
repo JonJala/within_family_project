@@ -22,7 +22,7 @@ function withinfam_pred(){
         --sid-as-chrpos 
 
     # generate pheno file
-    python $within_family_path/scripts/fpgs/format_pheno.py \
+    python ${within_family_path}/scripts/fpgs/format_pheno.py \
         $PHENOFILE \
         --iid Benjamin_ID --phenocol Z_EA \
         --sep "\t" \
@@ -55,22 +55,27 @@ function withinfam_pred(){
 #     ""
 
 # english phenotype
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
-    "direct" "ea" \
-    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_eng.phen" \
-    "_english"
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
-    "population" "ea" \
-    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_eng.phen" \
-    "_english"
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
+#     "direct" "ea" \
+#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_eng.phen" \
+#     "_english"
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
+#     "population" "ea" \
+#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_eng.phen" \
+#     "_english"
 
-# maths phenotype
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
-    "direct" "ea" \
-    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_math.phen" \
-    "_maths"
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
-    "population" "ea" \
-    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_math.phen" \
-    "_maths"
+# # maths phenotype
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
+#     "direct" "ea" \
+#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_math.phen" \
+#     "_maths"
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
+#     "population" "ea" \
+#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_math.phen" \
+#     "_maths"
 
+# ea4
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/ea4/weights/meta_weights.snpRes \
+    "ea4" "ea" \
+    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+    ""

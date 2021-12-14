@@ -13,11 +13,11 @@ subtitle: Everything Done So Far
 | Hunt | EA | Yes | Yes |  |
 | Hunt | Height | Yes | Yes |  |
 | Hunt | AAFB | Yes | | |
-| Hunt | N Children | No (too low rg) | | |
+| Hunt | N Children | Yes | | Low ish rg|
 | Hunt | Drinks Per Week | No (rg = -1) | | |
 | Hunt | Height | Yes | Yes | |
 | Hunt | Neuoroticism | Yes | | |
-| Hunt | Self Rated Health | | | |
+| Hunt | Self Rated Health | Yes | | |
 | GS | EA | Yes | Yes |  |
 | GS | BMI | Yes | Yes |  |
 | GS | Height | Yes | Yes |  |
@@ -46,7 +46,7 @@ subtitle: Everything Done So Far
 | Geisinger | Depression | Yes | Yes | |
 | Geisinger | EA | Yes | Yes | |
 | Geisinger | Smoke-Ever | No ( -ve 1) | | |
-| Geisinger | Asthma | Yes | | |
+| Geisinger | Asthma | No | | |
 | Lifeline | BMI/BMI18 | Yes | Yes | |
 | Lifeline | Height/Height18 | Yes | Yes | |
 | Lifeline | EA | Yes | Yes  | |

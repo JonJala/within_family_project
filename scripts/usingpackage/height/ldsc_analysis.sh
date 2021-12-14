@@ -33,6 +33,9 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 echo "Calculating rg between population and direct effects"
 Rscript $scriptpath/estimate_marginal_correlations_meta.R \
 --file "${within_family_path}/processed/package_output/height/height_meta.sumstats" \
---outprefix "${within_family_path}/processed/package_output/height/"
+--outprefix "${within_family_path}/processed/package_output/height/" \
+--merge_alleles ${hm3snps}
 #  "r=0.8354 S.E.=0.0125"
 #  "r=-0.0107 S.E.=0.0419"
+# hm3
+# "r=0.8747 S.E.=0.0092"

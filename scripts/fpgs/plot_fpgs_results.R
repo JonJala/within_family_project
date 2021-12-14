@@ -6,6 +6,7 @@ library(latex2exp)
 library(forcats)
 library(purrr)
 library(stringr)
+library(ggforce)
 
 
 theme_set(theme_minimal() +
@@ -37,25 +38,34 @@ dat[, meta_effect_regvariable := factor(paste(meta_effect, regvariable, sep = "-
                                         ))]
 
 p1 = dat %>% 
-    mutate(regvariable = fct_relabel(regvariable, str_to_title),
-            meta_effect = fct_relabel(meta_effect, ~ ifelse(. == "dir", "Direct", "Population") )) %>%
+    mutate(regvariable = fct_relabel(regvariable, ~case_when(
+        . == "population" ~ "theta_population",
+        . == "proband" ~ "theta_direct",
+        . == "maternal" ~ "theta_maternal",
+        . == "paternal" ~ "theta_paternal",)),
+            meta_effect = fct_relabel(
+                meta_effect, ~ ifelse(. == "dir", 
+                                      "PGI constructed from Direct Effects", 
+                                      "PGI constructed from Population Effects") 
+                )) %>%
     ggplot(aes(group = meta_effect_regvariable)) +
-    geom_col(aes(phenotype, estimate, fill = regvariable, alpha = meta_effect),
+    geom_col(aes(phenotype, estimate, fill = regvariable),
              width = 0.5, color = "black",
              position = position_dodge(width=0.5)) +
     geom_errorbar(aes(x = phenotype, ymin = ci_lo, ymax = ci_hi),
                   position = position_dodge(width=0.5),
                   width = 0.3) +
+    facet_row(~meta_effect, scales='free') +
     geom_hline(yintercept = 0, color = "black") +
     scale_fill_brewer(palette = "Dark2") +
     labs(fill = "Coefficient", x = "", y = "Estimate", alpha = "PGI Constructed From") +
-    scale_alpha_manual(values = c(0.5, 1)) +
-    scale_x_discrete(labels = c("BMI", "EA"))
+    scale_x_discrete(labels = c("BMI", "EA")) +
+    ylim(-0.03, 0.25)
 
 ggsave(
     '/var/genetics/proj/within_family/within_family_project/processed/fpgs/plots/coefficients.png', 
     plot = p1,
-    height = 6, width = 9
+    height = 5, width = 9
 )
 
 
@@ -63,24 +73,28 @@ ggsave(
 p2 = dat %>% 
     filter(regvariable %in% c("population", "proband")) %>%
     mutate(regvariable = fct_relabel(regvariable, ~ ifelse(. == "population", "Proband only", "Full Model")),
-            meta_effect = fct_relabel(meta_effect, ~ ifelse(. == "dir", "Direct", "Population") )) %>% 
+            regvariable = fct_relevel(regvariable, "Proband only", "Full Model"),
+             meta_effect = fct_relabel( meta_effect, ~ ifelse(. == "dir", 
+                                        "PGI constructed from Direct Effects", 
+                                        "PGI constructed from Population Effects") 
+                )) %>%
     ggplot(aes(group = meta_effect_regvariable)) +
-    geom_col(aes(phenotype, r2, fill = regvariable, alpha = meta_effect),
+    geom_col(aes(phenotype, r2, fill = regvariable),
              width = 0.5, color = "black",
              position = position_dodge(width=0.5)) +
+    facet_row(~meta_effect, scales='free') +
     geom_hline(yintercept = 0, color = "black") +
     scale_fill_brewer(palette = "Dark2") +
-    scale_alpha_manual(values = c(0.5, 1)) + 
     labs(fill = "Model Used", x = "", y = TeX("$\\textit{R}^2$ (%)"),  alpha = "PGI Constructed From") +
     scale_x_discrete(labels = c("BMI", "EA")) +
-    scale_y_continuous(labels = function(x) x * 100)
+    scale_y_continuous(labels = function(x) x * 100, limits = c(0, .08))
 
 
 
 ggsave(
     '/var/genetics/proj/within_family/within_family_project/processed/fpgs/plots/r2.png', 
     plot = p2,
-    height = 6, width = 9
+    height = 5, width = 9
 )
 
 ############################

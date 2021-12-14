@@ -41,7 +41,6 @@ function withinfam_pred(){
         --phenofile $within_family_path/processed/fpgs/${PHENONAME}.pheno \
         --pgsreg-r2
 
-
 }
 
 # base

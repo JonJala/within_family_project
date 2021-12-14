@@ -2,6 +2,142 @@ import unittest
 import numpy as np
 import pandas as pd
 from run_metaanalysis import *
+import subprocess
+import json
+import os
+import h5py
+
+def correlation_from_covariance(covariance):
+
+    v = np.sqrt(np.diag(covariance))
+    outer_v = np.outer(v, v)
+    correlation = covariance / outer_v
+
+    covflat = covariance.ravel()
+    corflat = correlation.ravel()
+    cov0idx = np.abs(covflat) < 1e-6
+    corflat[cov0idx] = 0
+
+    return correlation
+
+def convert_S_to_corr(Smat):
+    
+    n = Smat.shape[0]
+    corrmat = np.zeros_like(Smat)
+    
+    for i in range(n):
+        corrmat[i, :, :] = correlation_from_covariance(Smat[i, :, :])
+        
+    return corrmat
+
+
+def gen_test_vectors():
+
+    
+        theta_a = np.array([[0.3, 0.6],
+                            [0.5, 0.3]])
+
+        theta_b = np.array([[0.1, 0.3, 0.5],
+                            [0.34, 0.8, 0.6]])
+
+        Amat = np.array(
+                [
+                    [[0.8, 0.4],
+                    [0.4, 0.3]],
+
+                    [[0.9, 0.4],
+                    [0.4, 0.5]]
+                ]
+            )
+
+        Bmat = np.array(
+                [
+                    [[0.5, 0.3, 0.3],
+                    [0.3, 0.5, 0.5],
+                    [0.3, 0.5, 0.9]],
+
+                    [[0.7, 0.3, 0.3],
+                    [0.3, 0.55, 0.5],
+                    [0.3, 0.5, 0.85]]
+                ]
+            )
+
+        A1 = np.array([[1.0, 0.0, 0.0],
+                        [1.0, 0.5, 0.5]])
+        A2 = np.eye(3)
+
+        return theta_a, theta_b, Amat, Bmat, A1, A2
+
+
+def gen_test_data(theta_a, theta_b, Amat, Bmat):
+
+    '''
+    theta_a, theta_b = theta vectors of two diff datasets
+    Amat, Bmat = S matrices of two different dataset
+    '''
+
+
+    z_a = theta2z(theta_a, Amat)
+    corra = convert_S_to_corr(Amat)
+
+    adat = pd.DataFrame(
+        {
+            'cptid' : ['1:1', '1:2'],
+            'CHR' : [1, 1],
+            'SNP' : [10, 20],
+            'BP' : [1, 2],
+            'f' : [0.4, 0.6],
+            'A1' : ['A', 'T'],
+            'A2' : ['G', "C"],
+            'phvar' : [1.0, 1.0],
+            'estimated_effects' : ['direct_averageperental', 'direct_averageperental'],
+            'theta_direct' : theta_a[:, 0],
+            'se_direct' : np.sqrt(Amat[:, 0, 0]),
+            'z_direct' : z_a[:, 0],
+            'theta_population' : theta_a[:, 1],
+            'se_population' : np.sqrt(Amat[:, 1, 1]),
+            'z_population' : z_a[:, 1],
+            'rg_direct_population': corra[:, 0, 1],
+            'n_direct' : [100, 100],
+            'n_population' : [200, 200]
+        }
+    )
+
+    z_b = theta2z(theta_b, Bmat)
+    corrb = convert_S_to_corr(Bmat)
+
+    bdat = pd.DataFrame(
+        {
+            'cptid' : ['1:1', '1:2'],
+            'CHR' : [1, 1],
+            'SNP' : [10, 20],
+            'BP' : [1, 2],
+            'f' : [0.4, 0.6],
+            'A1' : ['A', 'T'],
+            'A2' : ['G', "C"],
+            'phvar' : [1.0, 1.0],
+            'estimated_effects' : ['direct_averageperental', 'direct_averageperental'],
+            'theta_direct' : theta_b[:, 0],
+            'se_direct' : np.sqrt(Bmat[:, 0, 0]),
+            'z_direct' : z_b[:, 0],
+            'theta_paternal' : theta_b[:, 1],
+            'se_paternal' : np.sqrt(Bmat[:, 1, 1]),
+            'z_paternal' : z_b[:, 1],
+            'rg_direct_paternal': corrb[:, 0, 1],
+            'rg_paternal_maternal': corrb[:, 1, 2],
+            'theta_maternal' : theta_b[:, 2],
+            'se_maternal' : np.sqrt(Bmat[:, 2, 2]),
+            'z_maternal' : z_b[:, 2],
+            'rg_direct_maternal': corrb[:, 0, 2],
+            'n_direct' : [100, 100],
+            'n_maternal' : [200, 200],
+            'n_paternal' : [200, 200]
+        }
+    )
+
+    return adat, bdat
+
+
 
 
 
@@ -93,38 +229,20 @@ class test_functions(unittest.TestCase):
         '''
         tests how we get weights
         '''
-        Amat = np.array(
-                [
-                    [[0.5, 0.3],
-                    [ 0.3, 0.5]],
+        theta_a, theta_b, Amat, Bmat, A1, A2 = gen_test_vectors()
 
-                    [[0.3, 0.6],
-                    [0.6, 0.1]]
-                ]
-            )
-
-        Bmat = np.array(
-                [
-                    [[0.1, 0.5],
-                    [0.5, 0.5]],
-
-                    [[0.3, 0.3],
-                    [0.3, 0.55]]
-                ]
-            )
         S_dict = dict(
             A = Amat,
             B = Bmat
         )
 
         
-        atransform = np.random.rand(2, 2)
-        wt_a = atransform.T @ np.linalg.inv(Amat)
-        wt_b = atransform.T @ np.linalg.inv(Bmat)
+        wt_a = A1.T @ np.linalg.inv(Amat)
+        wt_b = A2.T @ np.linalg.inv(Bmat)
 
         atransform_dict = dict(
-            A = atransform,
-            B = atransform
+            A = A1,
+            B = A2
         )
     
         wt_dict = get_wts(atransform_dict, S_dict)
@@ -136,124 +254,45 @@ class test_functions(unittest.TestCase):
 
         self.assertTrue(bothclose)
 
-    def test_wtsum(self):
-
-        Amat = np.array(
-                [
-                    [[0.5, 0.3],
-                    [ 0.3, 0.5]],
-
-                    [[0.3, 0.6],
-                    [0.6, 0.1]]
-                ]
-            )
-
-        Bmat = np.array(
-                [
-                    [[0.1, 0.5],
-                    [0.5, 0.5]],
-
-                    [[0.3, 0.3],
-                    [0.3, 0.55]]
-                ]
-            )
-
-        wt_a = np.linalg.inv(Amat)
-        wt_b = np.linalg.inv(Bmat)
-
-        wt_sum_manual = wt_a + wt_b
-
-        wt_dict = dict(
-            A = wt_a,
-            B = wt_b
-        )
-
-        wt_sum = get_wt_sum(wt_dict)
-
-        self.assertTrue(np.allclose(wt_sum, wt_sum_manual))
 
     def test_theta_wted_sum(self):
-        theta_a = np.array([[0.3, 0.6],
-                            [0.5, 0.3]])
 
-        theta_b = np.array([[0.1, 0.3],
-                            [0.34, 0.8]])
+        theta_a, theta_b, Amat, Bmat, A1, A2 = gen_test_vectors()
 
         theta_dict = dict(
             A = theta_a,
             B = theta_b
         )
 
-        Amat = np.array(
-                [
-                    [[0.5, 0.3],
-                    [ 0.3, 0.5]],
-
-                    [[0.3, 0.6],
-                    [0.6, 0.1]]
-                ]
-            )
-
-        Bmat = np.array(
-                [
-                    [[0.1, 0.5],
-                    [0.5, 0.5]],
-
-                    [[0.3, 0.3],
-                    [0.3, 0.55]]
-                ]
-            )
-
         wt_dict = dict(
-            A = np.linalg.inv(Amat),
-            B = np.linalg.inv(Bmat)
+            A = A1.T @ np.linalg.inv(Amat),
+            B = A2.T @ np.linalg.inv(Bmat)
         )
 
-        
         theta_weighted_sum = theta_wted_sum(theta_dict, wt_dict)
 
-        theta_wted_sum_manual = np.linalg.inv(Amat) @ theta_a[..., None]  + np.linalg.inv(Bmat) @ theta_b[..., None]
+        theta_wted_sum_manual = A1.T @ np.linalg.inv(Amat) @ theta_a[..., None]  + A2.T @ np.linalg.inv(Bmat) @ theta_b[..., None]
 
         self.assertTrue(np.allclose(theta_weighted_sum, theta_wted_sum_manual))
 
     def test_theta_var(self):
-        Amat = np.array(
-                [
-                    [[0.5, 0.3],
-                    [ 0.3, 0.5]],
 
-                    [[0.3, 0.6],
-                    [0.6, 0.1]]
-                ]
-            )
-
-        Bmat = np.array(
-                [
-                    [[0.1, 0.5],
-                    [0.5, 0.5]],
-
-                    [[0.3, 0.3],
-                    [0.3, 0.55]]
-                ]
-            )
-
-
+        theta_a, theta_b, Amat, Bmat, A1, A2 = gen_test_vectors()
         
-        atransform = np.random.rand(2, 2)
-        wt_a = atransform.T @ np.linalg.inv(Amat)
-        wt_b = atransform.T @ np.linalg.inv(Bmat)
+        wt_a = A1.T @ np.linalg.inv(Amat)
+        wt_b = A2.T @ np.linalg.inv(Bmat)
 
         wt_dict = dict(
-            A = atransform.T @ np.linalg.inv(Amat),
-            B = atransform.T @ np.linalg.inv(Bmat)
+            A = A1.T @ np.linalg.inv(Amat),
+            B = A2.T @ np.linalg.inv(Bmat)
         )
 
-        wtsum = wt_a @ atransform + wt_b @ atransform
+        wtsum = wt_a @ A1 + wt_b @ A2
         theta_var_manual = np.linalg.inv(wtsum)
 
         atransform_dict = dict(
-            A = atransform,
-            B = atransform
+            A = A1,
+            B = A2
         )
         theta_var = get_theta_var(wt_dict, atransform_dict)
 
@@ -261,42 +300,13 @@ class test_functions(unittest.TestCase):
 
     def test_full_meta(self):
 
-        theta_a = np.array([[0.3, 0.6],
-                            [0.5, 0.3]])
-
-        theta_b = np.array([[0.1, 0.3, 0.5],
-                            [0.34, 0.8, 0.6]])
+        theta_a, theta_b, Amat, Bmat, A1, A2 = gen_test_vectors()
 
         theta_dict = dict(
             A = theta_a,
             B = theta_b
         )
 
-        Amat = np.array(
-                [
-                    [[0.5, 0.3],
-                    [ 0.3, 0.5]],
-
-                    [[0.3, 0.6],
-                    [0.6, 0.1]]
-                ]
-            )
-
-        Bmat = np.array(
-                [
-                    [[0.1, 0.5, 0.6],
-                    [0.5, 0.5, 0.5],
-                    [0.6, 0.5, 0.3]],
-
-                    [[0.3, 0.3, 0.3],
-                    [0.3, 0.55, 0.5],
-                    [0.3, 0.5, 0.6]]
-                ]
-            )
-
-        A1 = np.array([[1.0, 0.0, 0.0],
-                        [1.0, 0.5, 0.5]])
-        A2 = np.eye(3)
         wt_a = A1.T @ np.linalg.inv(Amat)
         wt_b = A2.T @ np.linalg.inv(Bmat)
 
@@ -322,7 +332,111 @@ class test_functions(unittest.TestCase):
         theta_estimates, _ = get_estimates(theta_dict, wt_dict, atransform_dict)
         self.assertTrue(np.allclose(theta_estimates, theta_estimates_manual))
 
+    def test_endtoend(self):
 
+        '''
+        Tests the package end to end
+        '''
+
+        theta_a, theta_b, Amat, Bmat, A1, A2 = gen_test_vectors()
+        adat, bdat = gen_test_data(theta_a, theta_b, Amat, Bmat)
+        adat.to_csv("tmp_adat.gz", sep=" ", index=False)
+        bdat.to_csv("tmp_bdat.gz", sep=" ", index=False)
+
+        # =========== manual answers ============== #
+        wt_a = A1.T @ np.linalg.inv(Amat)
+        wt_b = A2.T @ np.linalg.inv(Bmat)
+
+        theta_wted_sum_manual = wt_a @ theta_a[..., None]  + wt_b @ theta_b[..., None]
+        theta_out_manual = theta_wted_sum_manual
+        wtsum = wt_a @ A1 + wt_b @ A2
+        theta_var_manual = np.linalg.inv(wtsum)
+        theta_estimates_manual = theta_var_manual @ theta_out_manual
+
+        # =========== package answers ============== #
+
+        inputopts = {
+            "a" : {
+
+                "path2file" : "tmp_adat.gz",
+                "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
+                        "direct_population" : "-999 -999;-999 -999"}
+
+            },
+
+            "b": {
+                "path2file" : "tmp_bdat.gz",
+                "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.5 0.5",
+                    "direct_population" : "1.0 0.0;0.0 1.0"}
+            }
+        }
+
+        json_data = json.dumps(inputopts, indent = 4)
+        with open("tmp_inputopts.json", "w") as outfile:
+            outfile.write(json_data)
+
+        # run meta analysis
+        command = ["python",
+                   "/var/genetics/proj/within_family/within_family_project/scripts/package/run_metaanalysis.py",
+                   'tmp_inputopts.json',
+                   '--outestimates', "direct_population",
+                   '--outprefix', 'tmp_out',
+                   '--nohm3'
+                   ]
+        subprocess.check_call(command)
+
+        # read in outputted data
+        datout = pd.read_csv('tmp_out.sumstats', delim_whitespace=True)
+        
+        # reading hdf5
+        with h5py.File('tmp_out.sumstats.hdf5', 'r') as hf:
+            theta_hf = hf['estimate'][()][:, :3, None]
+            s_sf = hf['estimate_covariance'][()][:, :3, :3]
+
+        
+        # clean up files
+        os.remove('tmp_out.sumstats')
+        os.remove('tmp_out.sumstats.hdf5')
+        os.remove('tmp_inputopts.json')
+        os.remove('tmp_adat.gz')
+        os.remove('tmp_bdat.gz')
+        
+
+        thetadir = datout['direct_Beta'].values
+        thetapat = datout['paternal_Beta'].values
+        thetamat = datout['maternal_Beta'].values
+        thetaout = np.vstack((thetadir, thetapat, thetamat)).T[..., None]
+        
+        
+        sdir = datout['direct_SE'].values**2
+        spat = datout['paternal_SE'].values**2
+        smat = datout['maternal_SE'].values**2
+
+        rg_dirpat  = datout['direct_paternal_rg'].values
+        rg_dirmat  = datout['direct_maternal_rg'].values
+        rg_patmat  = datout['paternal_maternal_rg'].values
+
+        cov_dirpat = rg_dirpat * np.sqrt(sdir) * np.sqrt(spat)
+        cov_dirmat = rg_dirmat * np.sqrt(sdir) * np.sqrt(smat)
+        cov_patmat = rg_patmat * np.sqrt(spat) * np.sqrt(smat)
+
+        sout = np.zeros((2, 3, 3))
+        sout[:, 0, 0] = sdir
+        sout[:, 1, 1] = spat
+        sout[:, 2, 2] = smat
+        sout[:, 0, 1] = cov_dirpat
+        sout[:, 1, 0] = cov_dirpat
+        sout[:, 0, 2] = cov_dirmat
+        sout[:, 2, 0] = cov_dirmat
+        sout[:, 1, 2] = cov_patmat
+        sout[:, 2, 1] = cov_patmat
+
+        thetasame_txt = np.allclose(thetaout, theta_estimates_manual)
+        ssame_txt = np.allclose(sout, theta_var_manual)
+        thetasame_hf = np.allclose(theta_hf, theta_estimates_manual)
+        ssame_hf = np.allclose(s_sf, theta_var_manual)
+
+        self.assertTrue(thetasame_txt and ssame_txt and thetasame_hf and ssame_hf)
 
 
 

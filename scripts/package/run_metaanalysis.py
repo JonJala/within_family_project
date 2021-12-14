@@ -98,6 +98,7 @@ def highest_effect(df, colname = 'effects'):
 
     effectmap = {
         'direct_paternal_maternal' : 3,
+        'direct_maternal_paternal' : 3,
         'direct_population' : 2,
         'direct_avgparental' : 1,
         'population' : 0
@@ -286,13 +287,10 @@ def main(args):
         )
         
         Amat = getamat_dict(df_toarray_dim, dim)
-        Amat_check = Amat_dicts[dim]
 
         print("=================")
-        print("Amat calculated")
+        print("Amat calculated:")
         print(Amat)
-        print("Amat Provided")
-        print(Amat_check)
         print("=================")
 
 
@@ -318,6 +316,7 @@ def main(args):
                                                 theta_bar.reshape(theta_bar.shape[0], 
                                                                     theta_bar.shape[1]))
 
+        
         
         theta_ses_out = get_ses(theta_var_out)
         z_bar_out = theta2z(theta_bar_out, theta_var_out)
@@ -408,7 +407,6 @@ def main(args):
     
 
     # == Outputting data == #
-    
     if not args.no_hdf5_out:
         write_output(
             df_out['chromosome'],

@@ -10,7 +10,6 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 
 echo "Munging!!"
 
-
 ${ldscpath}/munge_sumstats.py \
 --sumstats ${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats \
 --out ${within_family_path}/processed/package_output/ea/meta_analysis_new_qc_dir \

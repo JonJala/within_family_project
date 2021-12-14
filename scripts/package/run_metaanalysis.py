@@ -178,9 +178,8 @@ def getamat_dict(df, targeteffect):
     
     return Amatdict
 
-if __name__ == '__main__':
-    
-    
+def process_args():
+
     # parse arguments
     parser=argparse.ArgumentParser()
     parser.add_argument('path2json', type=str, 
@@ -202,9 +201,15 @@ if __name__ == '__main__':
     help = '''Do you want to not output a txt dataset with only hm3 snps.''')
     args=parser.parse_args()
 
+    return args
+
+def main(args):
+    '''
+    Run entire meta analysis
+    '''
+
     startTime = dt.datetime.now()
     print(f'Start time: {startTime}')
-    
 
     # reading in files
     with open(args.path2json) as f:
@@ -434,12 +439,9 @@ if __name__ == '__main__':
     endTime = dt.datetime.now()
     print(f'End time: {endTime}')
     print(f'Script took {endTime - startTime} to complete.')
+
+
+if __name__ == '__main__':
     
-    
-    
-    
-        
-    
-    
-    
-    
+    args = process_args()
+    main(args)

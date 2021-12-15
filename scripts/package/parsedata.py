@@ -777,9 +777,11 @@ def transform_estimates(fromest,
         Sdir = np.empty((len(S), 5, 5))
         for i in range(len(S)):
             Sdir[i] = tmatrix.T @ S[i] @ tmatrix
+
         S = Sdir.reshape((len(S), 5, 5))
-        theta = theta @ tmatrix
+        theta = np.atleast_2d(theta @ tmatrix)
         theta = theta.reshape((theta.shape[0], 5))
+
     elif (fromest == "direct_averageparental" and toest == "full_averageparental_population") | (fromest == "direct_averageparental" and toest == "direct_paternal_maternal_averageparental_population"):
 
         print("Converting from direct population to full + average parental + population")

@@ -82,10 +82,10 @@ def gen_test_data(theta_a, theta_b, Amat, Bmat):
 
     adat = pd.DataFrame(
         {
-            'cptid' : ['1:1', '1:2'],
+            'cptid' : ['1:1', '1:3'],
             'CHR' : [1, 1],
             'SNP' : [10, 20],
-            'BP' : [1, 2],
+            'BP' : [1, 3],
             'f' : [0.4, 0.6],
             'A1' : ['A', 'T'],
             'A2' : ['G', "C"],
@@ -135,7 +135,11 @@ def gen_test_data(theta_a, theta_b, Amat, Bmat):
         }
     )
 
-    return adat, bdat
+
+    missidxa = 1
+    missidxb = 2
+
+    return adat, bdat, missidxa, missidxb
 
 
 
@@ -298,7 +302,11 @@ class test_functions(unittest.TestCase):
 
         self.assertTrue(np.allclose(theta_var, theta_var_manual))
 
-    def test_full_meta(self):
+    def test_core_meta(self):
+
+        '''
+        Tests the core meta analysis pipeline (just the numpy stuff)
+        '''
 
         theta_a, theta_b, Amat, Bmat, A1, A2 = gen_test_vectors()
 
@@ -339,19 +347,56 @@ class test_functions(unittest.TestCase):
         '''
 
         theta_a, theta_b, Amat, Bmat, A1, A2 = gen_test_vectors()
-        adat, bdat = gen_test_data(theta_a, theta_b, Amat, Bmat)
+        adat, bdat, missidxa, missidxb = gen_test_data(theta_a, theta_b, Amat, Bmat)
         adat.to_csv("tmp_adat.gz", sep=" ", index=False)
         bdat.to_csv("tmp_bdat.gz", sep=" ", index=False)
 
         # =========== manual answers ============== #
-        wt_a = A1.T @ np.linalg.inv(Amat)
-        wt_b = A2.T @ np.linalg.inv(Bmat)
 
-        theta_wted_sum_manual = wt_a @ theta_a[..., None]  + wt_b @ theta_b[..., None]
-        theta_out_manual = theta_wted_sum_manual
-        wtsum = wt_a @ A1 + wt_b @ A2
-        theta_var_manual = np.linalg.inv(wtsum)
-        theta_estimates_manual = theta_var_manual @ theta_out_manual
+        # insert missing values into numpy vectors
+        theta_a = np.insert(theta_a, [missidxa], [0, 0],axis=0)
+        theta_b = np.insert(theta_b, [missidxb], [0, 0, 0],axis=0)
+
+        Amatinv = np.linalg.inv(Amat)
+        Bmatinv = np.linalg.inv(Bmat)
+
+        Amatinv = np.insert(Amatinv, [missidxa], [[0, 0], [0, 0]],axis=0)
+        Bmatinv = np.insert(Bmatinv, [missidxb], [[0, 0, 0], [0, 0, 0], [0, 0, 0]],axis=0)
+
+
+        theta_estimates_manual = np.empty(shape = (0, 5))
+        theta_var_manual = np.empty(shape = (0, 5, 5))
+
+        for snps in [(0, 1), (2)]:
+
+            # we need to meta analyze the snp where we have
+            # only direct_population effect seperately
+            # b is the cohort where we have all effects
+            effect = 'full' if snps == (0,1) else 'direct_population'
+
+            A1_mat = A1 if snps == (0, 1) else np.eye(2)
+            A2_mat = A2 if snps == (0, 1) else np.zeros((3,2))
+
+            wt_a = A1_mat.T @ Amatinv[snps, ...]
+            wt_b = A2_mat.T @ Bmatinv[snps, ...]
+
+            theta_wted_sum_manual = wt_a @ theta_a[snps, ..., None]  + wt_b @ theta_b[snps, ..., None]
+            theta_out_manual = theta_wted_sum_manual
+            wtsum = wt_a @ A1_mat + wt_b @ A2_mat
+            theta_var_manual_tmp = np.linalg.inv(wtsum)
+            theta_est_manual_tmp = theta_var_manual_tmp @ theta_out_manual
+
+            if snps != (0,1):
+                theta_var_manual_tmp = theta_var_manual_tmp[None, ...]
+
+            theta_var_manual_tmp, theta_est_manual_tmp = transform_estimates(
+                effect,
+                "full_averageparental_population",
+                theta_var_manual_tmp, 
+                theta_est_manual_tmp[..., 0]
+            )
+            theta_var_manual = np.vstack((theta_var_manual, theta_var_manual_tmp))
+            theta_estimates_manual= np.vstack((theta_estimates_manual, theta_est_manual_tmp)) 
 
         # =========== package answers ============== #
 
@@ -390,8 +435,8 @@ class test_functions(unittest.TestCase):
         
         # reading hdf5
         with h5py.File('tmp_out.sumstats.hdf5', 'r') as hf:
-            theta_hf = hf['estimate'][()][:, :3, None]
-            s_sf = hf['estimate_covariance'][()][:, :3, :3]
+            theta_hf = hf['estimate'][()]
+            s_sf = hf['estimate_covariance'][()]
 
         
         # clean up files
@@ -401,40 +446,68 @@ class test_functions(unittest.TestCase):
         os.remove('tmp_adat.gz')
         os.remove('tmp_bdat.gz')
         
-
-        thetadir = datout['direct_Beta'].values
-        thetapat = datout['paternal_Beta'].values
-        thetamat = datout['maternal_Beta'].values
-        thetaout = np.vstack((thetadir, thetapat, thetamat)).T[..., None]
+        thetaout = datout[['direct_Beta', 'paternal_Beta', 'maternal_Beta', 'avg_parental_Beta', 'population_Beta']].values
         
         
         sdir = datout['direct_SE'].values**2
         spat = datout['paternal_SE'].values**2
         smat = datout['maternal_SE'].values**2
+        sap = datout['avg_parental_SE'].values**2
+        spop = datout['population_SE'].values**2
 
         rg_dirpat  = datout['direct_paternal_rg'].values
         rg_dirmat  = datout['direct_maternal_rg'].values
         rg_patmat  = datout['paternal_maternal_rg'].values
+        rg_dirap = datout['direct_avg_parental_rg'].values
+        rg_dirpop = datout['direct_population_rg'].values
+        rg_patap = datout['paternal_avg_parental_rg'].values
+        rg_matap = datout['maternal_avg_parental_rg'].values
+        rg_patpop = datout['paternal_population_rg'].values
+        rg_matpop = datout['maternal_population_rg'].values
+        rg_avgpar_pop = datout['avg_parental_population_rg'].values
 
         cov_dirpat = rg_dirpat * np.sqrt(sdir) * np.sqrt(spat)
         cov_dirmat = rg_dirmat * np.sqrt(sdir) * np.sqrt(smat)
         cov_patmat = rg_patmat * np.sqrt(spat) * np.sqrt(smat)
+        cov_dirap = rg_dirap * np.sqrt(sdir) * np.sqrt(sap)
+        cov_dirpop = rg_dirpop * np.sqrt(sdir) * np.sqrt(spop)
+        cov_patap = rg_patap * np.sqrt(spat) * np.sqrt(sap)
+        cov_matap = rg_matap * np.sqrt(smat) * np.sqrt(sap)
+        cov_patpop = rg_patpop * np.sqrt(spat) * np.sqrt(spop)
+        cov_matpop = rg_matpop * np.sqrt(smat) * np.sqrt(spop)
+        cov_appop = rg_avgpar_pop * np.sqrt(sap) * np.sqrt(spop)
 
-        sout = np.zeros((2, 3, 3))
+        sout = np.zeros((3, 5, 5))
         sout[:, 0, 0] = sdir
         sout[:, 1, 1] = spat
         sout[:, 2, 2] = smat
+        sout[:, 3, 3] = sap
+        sout[:, 4, 4] = spop
         sout[:, 0, 1] = cov_dirpat
         sout[:, 1, 0] = cov_dirpat
         sout[:, 0, 2] = cov_dirmat
         sout[:, 2, 0] = cov_dirmat
         sout[:, 1, 2] = cov_patmat
         sout[:, 2, 1] = cov_patmat
+        sout[:, 0, 3] = cov_dirap
+        sout[:, 3, 0] = cov_dirap
+        sout[:, 0, 4] = cov_dirpop
+        sout[:, 4, 0] = cov_dirpop
+        sout[:, 1, 3] = cov_patap
+        sout[:, 3, 1] = cov_patap
+        sout[:, 2, 3] = cov_matap
+        sout[:, 3, 2] = cov_matap
+        sout[:, 1, 4] = cov_patpop
+        sout[:, 4, 1] = cov_patpop
+        sout[:, 2, 4] = cov_matpop
+        sout[:, 4, 2] = cov_matpop
+        sout[:, 3, 4] = cov_appop
+        sout[:, 4, 3] = cov_appop
 
-        thetasame_txt = np.allclose(thetaout, theta_estimates_manual)
-        ssame_txt = np.allclose(sout, theta_var_manual)
-        thetasame_hf = np.allclose(theta_hf, theta_estimates_manual)
-        ssame_hf = np.allclose(s_sf, theta_var_manual)
+        thetasame_txt = np.allclose(thetaout, theta_estimates_manual, equal_nan=True)
+        ssame_txt = np.allclose(sout, theta_var_manual, equal_nan=True)
+        thetasame_hf = np.allclose(theta_hf, theta_estimates_manual, equal_nan=True)
+        ssame_hf = np.allclose(s_sf, theta_var_manual, equal_nan=True)
 
         self.assertTrue(thetasame_txt and ssame_txt and thetasame_hf and ssame_hf)
 

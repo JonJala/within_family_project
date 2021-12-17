@@ -94,14 +94,14 @@ if (opt$merge_alleles != ""){
 print('Removing SNPs with outlying sampling correlations between direct and population effects')
 
 delta_b_corr_Z = as.numeric(scale(d[[opt$dir_pop_rg_name]]))
-bad_snps = abs(delta_b_corr_Z)>6 
+
 if (opt$dir_avgpar_rg_name %in% names(d)){
   delta_eta_corr_Z = as.numeric(scale(d[[opt$dir_avgpar_rg_name]]))
   bad_snps = abs(delta_b_corr_Z)>6 | abs(delta_eta_corr_Z)>6
 } else {
   bad_snps = abs(delta_b_corr_Z)>6 
 }
-n_bad_snps = sum(bad_snps)
+n_bad_snps = sum(bad_snps, na.rm=TRUE)
 print(paste('Removing',n_bad_snps,'SNPs with outlying sampling correlations'))
 if (n_bad_snps>0){
   d = d[!bad_snps]

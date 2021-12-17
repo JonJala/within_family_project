@@ -54,6 +54,7 @@ function run_pgi(){
     do
         echo $chr
         plink200a2 --bfile /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose  \
+        --chr $chr \
         --score ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted 12 5 8 header center cols=+scoresums \
         --out ${PHENONAME}/${EFFECT}/scores_mcs_${chr}
     done
@@ -66,11 +67,11 @@ function run_pgi(){
 }
 
 # ============= Execution ============= #
-# run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats" "direct" "ea"
-# run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats" "population" "ea"
+run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats" "direct" "ea"
+run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis.sumstats" "population" "ea"
 
-run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "direct" "ea_ea4"
-run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "population" "ea_ea4"
+# run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "direct" "ea_ea4"
+# run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "population" "ea_ea4"
 
 ######################
 # EA4

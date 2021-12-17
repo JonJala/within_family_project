@@ -140,7 +140,7 @@ def getamat(dataeffect, targeteffect):
         A = np.eye(3)
     elif (dataeffect == "direct_population") and (targeteffect == "direct_paternal_maternal"):
         A = np.array([[1.0, 0.0, 0.0],[1.0, 0.5, 0.5]])
-    elif (dataeffect == "population") and (targeteffect == "direct_paternal_materal"):
+    elif (dataeffect == "population") and (targeteffect == "direct_paternal_maternal"):
         A = np.array([[1.0, 0.5, 0.5]])
     elif (dataeffect == "direct_population") and (targeteffect == "direct_population"):
         A = np.eye(2)
@@ -261,7 +261,9 @@ def main(args):
         df_merged
         .pipe(highest_effect)
     )
-    dims = df_merged['effect_identified'].unique()
+
+    
+    dims = df_merged['effect_identified'].unique().tolist()
     if "population" in dims:
         dims.remove("population")
 
@@ -433,7 +435,9 @@ def main(args):
             df_out = df_out[df_out['SNP'].isin(hm3dat.SNP)]
             df_out.to_csv(args.outprefix + '.hm3.sumstats', sep = '\t', index = False, na_rep = "nan")
     
-    print(f"Median direct-population effect correlation: {np.median(df_out['direct_population_rg'])}")
+    print(f"Median direct-population effect correlation HM3: {np.median(df_out['direct_population_rg'])}")
+    print(f"Median Direct N HM3: {np.median(df_out['direct_N'])}")
+    print(f"Median Population N HM3: {np.median(df_out['population_N'])}")
     endTime = dt.datetime.now()
     print(f'End time: {endTime}')
     print(f'Script took {endTime - startTime} to complete.')

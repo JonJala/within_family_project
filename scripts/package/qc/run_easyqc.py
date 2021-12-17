@@ -623,10 +623,19 @@ the reader will try and infer the chromosome number from the file name.''')
     parser.add_argument('--phvar', type = float, 
     help = '''What is the phenotypic variance of the dataset. If not passed, the phvar will be inferred if it is 
     an hdf5 file. Otherwise for txt files it becomes 1''')
+
+    parser.add_argument('--normfiles', default=True, action='store_false',
+    help = '''Should all files from output directory specified be removed before running analysis.''')
+    
     
     args = parser.parse_args()
 
-
+    if args.normfiles:
+        files = glob.glob(args.outprefix + '/*')
+        print("Deleting files...")
+        print(files)
+        for file in files:
+            os.remove(file)
     # parsing
     dat = read_file(args)
     dat = process_dat(dat, args)
@@ -635,6 +644,7 @@ the reader will try and infer the chromosome number from the file name.''')
 
         tmpcsvout = csvout + '/out'
         dat.to_csv(tmpcsvout, index = False)
+
         with open(f"{args.outprefix}/clean.ecf", "w") as f:
 
             init_ecf(f, args, dat, tmpcsvout)

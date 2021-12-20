@@ -4,7 +4,7 @@ snipar_path="/homes/nber/harij/gitrepos/SNIPar"
 # bedfilepath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/plink/final/mcs"
 bedfilepath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr~.dose"
 impfilespath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/imputed_parents/chr~"
-phenofile="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/phen.txt"
+phenofile="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/bmi_height_sweep7.txt"
 
 function withinfam_pred(){
 
@@ -25,7 +25,7 @@ function withinfam_pred(){
     # generate pheno file
     python $within_family_path/scripts/fpgs/format_pheno.py \
         $PHENOFILE \
-        --iid IID --fid FID --phenocol bmi \
+        --iid IID --fid FID --phenocol bmi7 \
         --outprefix $within_family_path/processed/fpgs/${PHENONAME}  \
         --subsample /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt
 

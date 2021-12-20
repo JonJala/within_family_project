@@ -24,7 +24,7 @@ function run_pgi(){
     python ${within_family_path}/scripts/sbayesr/format_gwas.py \
         "$METAFILE" \
         --effecttype "${EFFECT}" \
-        --nmin 10000 \
+        --median-n \
         --outpath "${PHENONAME}/${EFFECT}/meta.sumstats"
 
     mkdir -p ${PHENONAME}/${EFFECT}/weights/

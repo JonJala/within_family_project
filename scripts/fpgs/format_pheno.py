@@ -29,7 +29,6 @@ else:
     dat = dat.rename(columns = {args.iid : 'IID'})
 
 dat[args.phenocol] = dat[args.phenocol]/dat[args.phenocol].std()
-print(dat.head())
 
 
 if not args.keep_na:
@@ -41,7 +40,9 @@ if args.subsample is not None:
     subsample = pd.read_csv(args.subsample, delim_whitespace=True, names = ['IID', 'FID'])
     dat = pd.merge(dat, subsample, on = ['FID', 'IID'], how = 'inner')
 
+
 print("Number of observations: ", dat.shape[0])
+print(dat.head())
 
 dat.to_csv(args.outprefix + ".pheno", sep = " ", na_rep = ".", index = False, header = False)
 

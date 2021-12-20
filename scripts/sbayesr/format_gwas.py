@@ -16,6 +16,7 @@ if __name__ == '__main__':
     parser.add_argument('--effecttype', type = str, default = 'dir', help = '''
     Which effect type do you want to output. Can be dir, paternal, maternal, population, avgparental''')
     parser.add_argument('--nmin', type=int, default=5000, help='''What is the N cutoff you want''')
+    parser.add_argument('--median-n', action='store_true', default=False, help='''Instead of the N cutoff use the median N as cutoff''')
     parser.add_argument('--outpath', type = str, help = "Where to store data")
     parser.add_argument('--mincohorts', type=int, default=5, help='''What is the n_cohort cutoff you want. ''')
     args = parser.parse_args()
@@ -41,7 +42,12 @@ if __name__ == '__main__':
     NHM3 = dat.shape[0]
     print(f"Observations after filtering for HM3 SNPs: {NHM3}")
 
-    dat = dat.loc[dat[f'{e}_N'] > args.nmin,].reset_index(drop = True)
+    if args.median_n:
+        print(f"Median N is {dat[f'{e}_N'].median()}")
+        dat = dat.loc[dat[f'{e}_N'] > dat[f'{e}_N'].median(),].reset_index(drop = True)
+    else:
+        dat = dat.loc[dat[f'{e}_N'] > args.nmin,].reset_index(drop = True)
+
     NEFFN = dat.shape[0]
     print(f"Observations after filtering for minimum effective N: {NEFFN}")
 

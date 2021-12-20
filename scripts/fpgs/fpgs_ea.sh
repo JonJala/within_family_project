@@ -21,24 +21,41 @@ function withinfam_pred(){
         --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted \
         --sid-as-chrpos 
 
-    # generate pheno file
+    echo "Converting phenotype $PHENOFILE to $within_family_path/processed/fpgs/${PHENONAME}.pheno"
     python ${within_family_path}/scripts/fpgs/format_pheno.py \
         $PHENOFILE \
         --iid Benjamin_ID --phenocol Z_EA \
         --sep "\t" \
-        --outprefix $within_family_path/processed/fpgs/${PHENONAME}  \
+        --outprefix ${within_family_path}/processed/fpgs/${PHENONAME}  \
         --subsample /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt
 
     python $snipar_path/fPGS.py \
-        $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME} \
+        ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME} \
         --bedfiles $bedfilepath \
         --impfiles $impfilespath \
         --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
         --scale_pgs
 
-    python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}${OUTSUFFIX} \
-        --pgs $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}.pgs.txt \
-        --phenofile $within_family_path/processed/fpgs/${PHENONAME}.pheno \
+    python ${within_family_path}/scripts/fpgs/attach_covar.py \
+        ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}.pgs.txt \
+        --covariates /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar.txt \
+        --outprefix ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}_full
+
+    python ${within_family_path}/scripts/fpgs/attach_covar.py \
+        ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}.pgs.txt \
+        --keepeffect "proband" \
+        --covariates /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar.txt \
+        --outprefix ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}_proband
+
+    echo "Reading phenotype: $within_family_path/processed/fpgs/${PHENONAME}.pheno"
+    python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}${OUTSUFFIX}_full \
+        --pgs ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}_full.pgs.txt \
+        --phenofile ${within_family_path}/processed/fpgs/${PHENONAME}.pheno \
+        --pgsreg-r2
+
+    python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}${OUTSUFFIX}_proband \
+        --pgs ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}_proband.pgs.txt \
+        --phenofile ${within_family_path}/processed/fpgs/${PHENONAME}.pheno \
         --pgsreg-r2
 
 }
@@ -80,7 +97,6 @@ withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/met
 #     ""
 
 # meta + ea4
-
 withinfam_pred ${within_family_path}/processed/sbayesr/ea_ea4/direct/weights/meta_weights.snpRes \
     "direct" "ea_ea4" \
     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \

@@ -47,6 +47,12 @@ function withinfam_pred(){
         --covariates /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar.txt \
         --outprefix ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}_proband
 
+    echo "Running fpgi with only covariates"
+    python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${PHENONAME}${OUTSUFFIX}_covariates \
+        --pgs /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar.txt \
+        --phenofile ${within_family_path}/processed/fpgs/${PHENONAME}.pheno \
+        --pgsreg-r2
+
     echo "Reading phenotype: $within_family_path/processed/fpgs/${PHENONAME}.pheno"
     python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}${OUTSUFFIX}_full \
         --pgs ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}_full.pgs.txt \
@@ -61,14 +67,14 @@ function withinfam_pred(){
 }
 
 # base
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
-    "direct" "ea" \
-    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-    ""
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
-    "population" "ea" \
-    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-    ""
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
+#     "direct" "ea" \
+#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+#     ""
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
+#     "population" "ea" \
+#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+#     ""
 
 # english phenotype
 # withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
@@ -91,17 +97,17 @@ withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/met
 #     "_maths"
 
 # ea4
-# withinfam_pred ${within_family_path}/processed/sbayesr/ea/ea4/weights/meta_weights.snpRes \
-#     "ea4" "ea" \
-#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-#     ""
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/ea4/weights/meta_weights.snpRes \
+    "ea4" "ea" \
+    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+    ""
 
 # meta + ea4
-withinfam_pred ${within_family_path}/processed/sbayesr/ea_ea4/direct/weights/meta_weights.snpRes \
-    "direct" "ea_ea4" \
-    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-    ""
-withinfam_pred ${within_family_path}/processed/sbayesr/ea_ea4/population/weights/meta_weights.snpRes \
-    "population" "ea_ea4" \
-    "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-    ""
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea_ea4/direct/weights/meta_weights.snpRes \
+#     "direct" "ea_ea4" \
+#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+#     ""
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea_ea4/population/weights/meta_weights.snpRes \
+#     "population" "ea_ea4" \
+#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+#     ""

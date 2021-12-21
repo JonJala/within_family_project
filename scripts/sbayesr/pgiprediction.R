@@ -8,7 +8,9 @@ option_list = list(
   make_option(c("--pgi"),  type="character", default=NULL, help="PGI File", metavar="character"),
   make_option(c("--iid_pheno"),  type="character", default="IID", help="IID col name in phenotype file", metavar="character"),
   make_option(c("--fid_pheno"),  type="character", default=NULL, help="FID col name in phenotype file", metavar="character"),
-  make_option(c("--pheno_name"),  type="character", default="phenotype", help="Phenotype col in phenotype file", metavar="character")
+  make_option(c("--covariates"),  type="character", default=NULL, help="File with covariates", metavar="character"),
+  make_option(c("--pheno_name"),  type="character", default="phenotype", help="Phenotype col in phenotype file", metavar="character"),
+  make_option(c("--outprefix"),  type="character", default="", help="Outprefix to save regression results.", metavar="character")
 )
 opt_parser = OptionParser(option_list = option_list)
 opt = parse_args(opt_parser)
@@ -30,10 +32,38 @@ pgifile = fread(opt$pgi)
 
 dat = pgifile[pheno, on = c("FID", "IID")]
 
+if (!is.null(opt$covariates)){
+    covar = fread(opt$covariates)
+    covarnames = names(covar)[!(names(covar) %in% c("FID", "IID"))]
+    dat = dat[covar, on=c("FID", "IID")]
+} else {
+    covarnames = c()
+}
+
+
 nmatches = sum(complete.cases(dat$SCORE) & complete.cases(dat$phenotype), na.rm = TRUE)
 print(paste("Number of non missing scores and phenotypes after match:", nmatches))
 
-pgi.model.1 <- as.formula("phenotype~SCORE") %>%
+pgimodelbase <- paste0(covarnames, collapse="+") %>%
+    paste("phenotype", ., sep="~") %>%
+    as.formula() %>%
     lm(., data = dat) %>%
     summary
-print(pgi.model.1)
+
+pgi.model.1 <- paste0(covarnames, collapse="+") %>%
+    paste("phenotype~SCORE", ., sep="+") %>%
+    as.formula() %>%
+    lm(., data = dat) %>%
+    summary
+
+
+regout = data.table(
+    pgicoeff = pgi.model.1$coefficients["SCORE", "Estimate"],
+    pgise = pgi.model.1$coefficients["SCORE", "Std. Error"],
+    r2 =  pgi.model.1$r.squared,
+    icr.r2 = pgi.model.1$r.squared - pgimodelbase$r.squared
+)
+
+print(regout)
+regout %>% fwrite(paste0(opt$outprefix, ".regresults"))
+print(paste("Model outputted to", paste0(opt$outprefix, ".regresults")))

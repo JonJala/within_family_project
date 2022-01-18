@@ -10,7 +10,8 @@ option_list = list(
   make_option(c("--fid_pheno"),  type="character", default=NULL, help="FID col name in phenotype file", metavar="character"),
   make_option(c("--covariates"),  type="character", default=NULL, help="File with covariates", metavar="character"),
   make_option(c("--pheno_name"),  type="character", default="phenotype", help="Phenotype col in phenotype file", metavar="character"),
-  make_option(c("--outprefix"),  type="character", default="", help="Outprefix to save regression results.", metavar="character")
+  make_option(c("--outprefix"),  type="character", default="", help="Outprefix to save regression results.", metavar="character"),
+  make_option(c("--iidnamenorep"),  , default=FALSE, help="Should the IID name in phenotype be repeated.", action='store_true', metavar="character")
 )
 opt_parser = OptionParser(option_list = option_list)
 opt = parse_args(opt_parser)
@@ -19,8 +20,13 @@ opt = parse_args(opt_parser)
 pheno = fread(opt$pheno)
 if (is.null(opt$fid_pheno)){
     setnames(pheno, old = c(opt$iid_pheno, opt$pheno_name), new=c("IID", "phenotype"))
-    pheno[,IID:= paste(IID, IID, sep="_")]
-    pheno[,FID:=IID]
+
+    if (opt$iidnamenorep){
+        pheno[,FID:=IID]
+    } else {
+        pheno[,IID:= paste(IID, IID, sep="_")]
+        pheno[,FID:=IID]
+    }
 
 } else {
     setnames(pheno, old = c(opt$iid_pheno, opt$fid_pheno, opt$pheno_name), new=c("IID", "FID", "phenotype"))
@@ -40,6 +46,10 @@ if (!is.null(opt$covariates)){
     covarnames = c()
 }
 
+
+dat[, SCORE := SCORE/sd(SCORE, na.rm=TRUE)]
+dat[,phenotype := phenotype/sd(phenotype, na.rm=TRUE)]
+print(sd(dat$SCORE, na.rm=TRUE))
 
 nmatches = sum(complete.cases(dat$SCORE) & complete.cases(dat$phenotype), na.rm = TRUE)
 print(paste("Number of non missing scores and phenotypes after match:", nmatches))

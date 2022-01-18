@@ -30,12 +30,20 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 # --out ${within_family_path}/processed/package_output/height/ht_ref_sample
 # 0.901 (0.0059)
 
-echo "Calculating rg between population and direct effects"
-Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "${within_family_path}/processed/package_output/height/height_meta.sumstats" \
---outprefix "${within_family_path}/processed/package_output/height/" \
---merge_alleles ${hm3snps}
+# echo "Calculating rg between population and direct effects"
+# Rscript $scriptpath/estimate_marginal_correlations_meta.R \
+# --file "${within_family_path}/processed/package_output/height/height_meta.sumstats" \
+# --outprefix "${within_family_path}/processed/package_output/height/" \
+# --merge_alleles ${hm3snps}
 #  "r=0.8354 S.E.=0.0125"
 #  "r=-0.0107 S.E.=0.0419"
 # hm3
 # "r=0.8747 S.E.=0.0092"
+
+
+${ldscpath}/ldsc.py \
+--h2 ${within_family_path}/processed/package_output/height/height_meta_dir.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/height/dir_h2
+#  0.3274 (0.0175)

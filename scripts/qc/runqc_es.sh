@@ -31,8 +31,27 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # Geisinger
 #############
 
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/smoke_ever/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.SMOKE_EVER.chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/smoking" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population"
+
+##############
+# Lifeline
+##############
+
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/smoke_ever/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.SMOKE_EVER.chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/smoking" \
+    "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_smk18.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/es18" \
     --ldsc-ref "$reffile" \
-    --toest "direct_paternal_maternal_averageparental_population"
+    --effects "direct_averageparental" \
+    --toest "direct_population"
+
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_smk.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/es" \
+    --ldsc-ref "$reffile" \
+    --effects "direct_averageparental" \
+    --toest "direct_population"

@@ -83,10 +83,11 @@ echo "Munging!!"
 # --out ${within_family_path}/processed/package_output/ea/meta_analysis_new_qc_avgpar_h2
 # 0.0367 (0.0072)
 
-Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/ea_meta_analysis.sumstats" \
---outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/" \
---dir_pop_rg_name "paternal_maternal_rg" --dirbeta "paternal_Beta" --popbeta "maternal_Beta" \
---dirse "paternal_SE" --popse "maternal_SE" \
---merge_alleles ${hm3snps}
-# r=1.9783 S.E.=0.2345
+
+# Rscript $scriptpath/estimate_marginal_correlations_meta.R \
+# --file "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/ea_meta_analysis.sumstats" \
+# --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/" \
+# --dir_pop_rg_name "paternal_maternal_rg" --dirbeta "paternal_Beta" --popbeta "maternal_Beta" \
+# --dirse "paternal_SE" --popse "maternal_SE" \
+# --merge_alleles ${hm3snps}
+# # r=1.9783 S.E.=0.2345

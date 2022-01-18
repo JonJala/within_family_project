@@ -10,14 +10,14 @@ subtitle: Everything Done So Far
 | STR | BMI | No (h2 estimate is negative) | Yes | |
 | STR | EA | Yes |  Yes |  |
 | STR | Height | Yes |  Yes |  |
-| Hunt | EA | Yes | Yes |  |
+| Hunt | EA | Yes| Yes |  |
+| Hunt | BMI | Yes | Yes |  |
 | Hunt | Height | Yes | Yes |  |
-| Hunt | AAFB | Yes | | |
-| Hunt | N Children | Yes | | Low ish rg|
-| Hunt | Drinks Per Week | No (rg = -1) | | |
-| Hunt | Height | Yes | Yes | |
-| Hunt | Neuoroticism | Yes | | |
-| Hunt | Self Rated Health | Yes | | |
+| Hunt | AAFB | Yes |Yes | |
+| Hunt | N Children | | | |
+| Hunt | Drinks Per Week | | | |
+| Hunt | Neuoroticism |  | | |
+| Hunt | Self Rated Health |  | | |
 | GS | EA | Yes | Yes |  |
 | GS | BMI | Yes | Yes |  |
 | GS | Height | Yes | Yes |  |
@@ -50,6 +50,12 @@ subtitle: Everything Done So Far
 | Lifeline | BMI/BMI18 | Yes | Yes | |
 | Lifeline | Height/Height18 | Yes | Yes | |
 | Lifeline | EA | Yes | Yes  | |
+| Lifeline | HDL | Yes|Yes | |
+| LIfeline | LDL | Yes | Yes | |
+| Lifeline | TGL | No (low rg) | Yes | |
+| Lifeline | Cholestrol | Yes |Yes  | | 
+| Lifeline | Smoking | No (-ve) |Yes | |
+| Lifeline | Cognition (unique) | Yes |Yes | |
 | Minnesotta twins | EA | Yes | Yes | |
 | Minnesotta twins | BMI | Yes | Yes | |
 | Minnesotta twins | Height | Yes | Yes | | 
@@ -61,6 +67,14 @@ subtitle: Everything Done So Far
 | Minnesotta twins | IQ | No | | |
 | Minnesotta twins | Stress | Yes | | Equivalent to neuroticism. |
 | Minnesotta twins | SWB | Yes | | |
+| Dutch Twins | Asthma | Yes | Yes | |
+| Dutch Twins | BMI | Yes | Yes | |
+| Dutch Twins | Cannabis |  |  | |
+| Dutch Twins | CPD | No (-ve h2)  | Yes | |
+| Dutch Twins | DBP | no (no ref file) | Yes  | |
+| Dutch Twins | Depression | Yes | Yes  | |
+| Dutch Twins | EA |Yes |Yes  | |
+
 
 
 

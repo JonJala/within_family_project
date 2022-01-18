@@ -239,7 +239,16 @@ def process_dat(dat, args):
             corr_tmp = corr_vec[:, idx1, idx2]
             datout[f'rg_{pair[0]}_{pair[1]}'] = corr_tmp
 
+    # read and merge hwe
+    if args.hwe is not None:
+        hwe = read_hwe(args)
+        datout = pd.merge(datout, hwe, on = "SNP", how = 'inner')
+    if args.info is not None:
+        info = read_info(args)
+        datout = pd.merge(datout, info, on = "SNP", how = 'inner')
+
     if args.cptid:
+        print('The cptid option has been passed. HRC will be used to read in the rsids.')
         # get rsid from hrc
         hrc = pd.read_csv(
             "/var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.RSMID.MAPFILE.HRC.chr1_22_X.txt",
@@ -250,6 +259,7 @@ def process_dat(dat, args):
         hrc = hrc.loc[hrc["chr"] != "X"]
         hrc["chr"] = hrc["chr"].map(int)
 
+        print(f'Number of observations before merging with HRC: {datout.shape[0]}')
         datout = pd.merge(
             datout, 
             hrc, 
@@ -257,19 +267,11 @@ def process_dat(dat, args):
             right_on = ["chr", "pos"],
             how = "inner"
         )
+        print(f'Number of obs after merging with hrc: {datout.shape[0]}')
 
         datout = datout.drop(["SNP", "chr", "pos"], axis = 1)
         datout = datout.rename(columns = {"rsmid" : "SNP"})
         datout["cptid"] = datout["CHR"].astype(str) + ":" + datout["BP"].astype(str)
-
-    
-    # read and merge hwe
-    if args.hwe is not None:
-        hwe = read_hwe(args)
-        datout = pd.merge(datout, hwe, on = "SNP", how = 'inner')
-    if args.info is not None:
-        info = read_info(args)
-        datout = pd.merge(datout, info, on = "SNP", how = 'inner')
 
     return datout
 
@@ -508,10 +510,8 @@ def run_rscript(ecfpath, tmpdir):
 # Import EasyQC package (from online source if necessary)
 tryCatch(library("EasyQC"),
   error = function(e) {
-    dir.create("easyqc_libraries", showWarnings=FALSE)
-    .libPaths("easyqc_libraries")
     install.packages(pkgs="http://homepages.uni-regensburg.de/~wit59712/easyqc/EasyQC_9.2.tar.gz",
-                     lib="easyqc_libraries/", repo=NULL, type="source")
+                     repo=NULL, type="source")
     library("EasyQC")
 })
 library(EasyQC)\n''' + f"EasyQC('{ecfpath}')"
@@ -622,7 +622,7 @@ the reader will try and infer the chromosome number from the file name.''')
 
     parser.add_argument('--phvar', type = float, 
     help = '''What is the phenotypic variance of the dataset. If not passed, the phvar will be inferred if it is 
-    an hdf5 file. Otherwise for txt files it becomes 1''')
+    an file.''')
 
     parser.add_argument('--normfiles', default=True, action='store_false',
     help = '''Should all files from output directory specified be removed before running analysis.''')

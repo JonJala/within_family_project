@@ -24,7 +24,7 @@
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
 #     --cptid \
 #     --toest "direct_population"
-# 1.1505 (0.9728)
+# # 1.1505 (0.9728)
 
 
 # #######################
@@ -40,6 +40,7 @@
 #     --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
 #     --info "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz"
 # 0.9903 (0.0854)
+
 # #############
 # # LIfelines
 # ##########
@@ -50,7 +51,7 @@
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" 
-# 0.8591 (0.0775)
+# # 0.8591 (0.0775)
 
 # ###########
 # # MOBA
@@ -61,28 +62,19 @@
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/bmi" \
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
 #     --toest "direct_paternal_maternal_averageparental_population"
-    # 0.9627 (0.2823)
+#     # 0.9627 (0.2823)
 
 # #########
 # # Estonian Biobank
 # #########
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/bmi/BMI/BMI_chr*_results.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/bmi" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
-    --info "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz"
-    # 0.915 (0.0426)
-
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/bmi/BMI/controls/BMI_ext/BMI_chr*_results.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/bmi/controls" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
-    --info "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/bmi/BMI/controls/BMI_ext/BMI_chr*_results.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/bmi/controls" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
+#     --info "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz"
 
 # ##########
 # # STR
@@ -94,7 +86,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
 #     --toest "direct_population" \
 #     --bim_bp 3 --bim_a1 4 --bim_a2 5
-# NA
+# # NA
 
 # #####
 # # Finnish twins
@@ -108,7 +100,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 
 #  0.8264 (0.1247)
 
-################
+############
 # Geisinger
 ############
 
@@ -116,5 +108,32 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/bmi/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.BMI.chr*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/bmi" \
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
-#     --toest "direct_paternal_maternal_averageparental_population"
+#     --toest "direct_paternal_maternal_averageparental_population" \
 # 0.941 (0.031)
+
+#############
+# Dutch Twins
+#############
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/BMI/NTR_BMI_CHR*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/bmi" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid \
+#     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
+#     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
+
+
+############
+# HUNT
+############
+
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bmi/bmi_chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/bmi" \
+    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, "
+# 1.0875 (0.1359)

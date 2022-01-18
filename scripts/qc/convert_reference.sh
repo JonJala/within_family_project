@@ -129,11 +129,11 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 
-${ldscpath}/munge_sumstats.py  \
---sumstats /var/genetics/data/published/ferreira_2017_hayfever/raw/sumstats/hayfever_ref_rsids.txt \
---merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/reference_samples/hayfever_ref/hayfever_ref \
---frq 1000G_ALLELE_FREQ --snp rsmid
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/ferreira_2017_hayfever/raw/sumstats/hayfever_ref_rsids.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/hayfever_ref/hayfever_ref \
+# --frq 1000G_ALLELE_FREQ --snp rsmid
 
 
 
@@ -154,3 +154,42 @@ ${ldscpath}/munge_sumstats.py  \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/processed/reference_samples/intelligence_ref/intelligence_ref \
 # --N 78308 --signed-sumstat Zscore,0 --a1 ref --a2 alt
+
+
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/teslovich_2010_bloodlipids/raw/sumstats/HDL_with_Effect.tbl \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/hdl_ref/hdl_ref \
+# --N 100000 --signed-sumstat GC.Zscore,0 --snp MarkerName
+
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/teslovich_2010_bloodlipids/raw/sumstats/LDL_with_Effect.tbl \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/ldl_ref/ldl_ref \
+# --N 100000 --signed-sumstat GC.Zscore,0 --snp MarkerName
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/teslovich_2010_bloodlipids/raw/sumstats/TG_with_Effect.tbl \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/tg_ref/tg_ref \
+# --N 100000 --signed-sumstat GC.Zscore,0 --snp MarkerName
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/teslovich_2010_bloodlipids/raw/sumstats/TC_with_Effect.tbl \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/cholestrol_ref/cholestrol_ref \
+# --N 100000 --signed-sumstat GC.Zscore,0 --snp MarkerName
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/backman_2021_cannabis/raw/sumstats/GCST90078474_buildGRCh38_rsmid.tsv.gz \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/cannabis_ref/cannabis_ref \
+# --N 454787 --signed-sumstat odds_ratio,1 --snp rsmid --a1 effect_allele --a2 other_allele
+
+${ldscpath}/munge_sumstats.py  \
+--sumstats /var/genetics/data/published/loh_2017_agemenarche/raw/sumstats/GCST90029036_buildGRCh37.tsv \
+--merge-alleles ${merge_alleles} \
+--out ${within_family_path}/processed/reference_samples/age_menarche_ref/age_menarche_ref \
+--N 279470 --snp variant_id --a1 effect_allele --a2 other_allele

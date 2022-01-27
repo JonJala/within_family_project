@@ -138,10 +138,16 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats /var/genetics/data/published/ehret_2016_bps/raw/sumstats/Ehret_2016_summstats_formatted.txt \
+# --sumstats /var/genetics/data/published/ehret_2016_bp/raw/sumstats/Ehret_2016_summstats_formatted.txt \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/processed/reference_samples/bps_ref/bps_ref \
-# --snp rsid --N-col TotalSampleSize_SBP --signed-sumstat ZSCORE,0 --p P_SBP
+# --snp rsid --N-col TotalSampleSize_SBP --signed-sumstat SBP_ZSCORE,0 --p P_SBP
+
+${ldscpath}/munge_sumstats.py  \
+--sumstats /var/genetics/data/published/ehret_2016_bp/raw/sumstats/Ehret_2016_summstats_formatted.txt \
+--merge-alleles ${merge_alleles} \
+--out ${within_family_path}/processed/reference_samples/bpd_ref/bpd_ref \
+--snp rsid --N-col TotalSampleSize_DBP --signed-sumstat DBP_ZSCORE,0 --p P_DBP
 
 # ${ldscpath}/munge_sumstats.py  \
 # --sumstats /var/genetics/data/published/okbay_2016_swb/raw/sumstats/SWB_Full.txt \
@@ -188,8 +194,38 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --out ${within_family_path}/processed/reference_samples/cannabis_ref/cannabis_ref \
 # --N 454787 --signed-sumstat odds_ratio,1 --snp rsmid --a1 effect_allele --a2 other_allele
 
-${ldscpath}/munge_sumstats.py  \
---sumstats /var/genetics/data/published/loh_2017_agemenarche/raw/sumstats/GCST90029036_buildGRCh37.tsv \
---merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/reference_samples/age_menarche_ref/age_menarche_ref \
---N 279470 --snp variant_id --a1 effect_allele --a2 other_allele
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/loh_2017_agemenarche/raw/sumstats/GCST90029036_buildGRCh37.tsv \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/age_menarche_ref/age_menarche_ref \
+# --N 279470 --snp variant_id --a1 effect_allele --a2 other_allele
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/shrine_2019_fev1/raw/sumstats/Shrine_30804560_FEV1_meta-analysis.txt.gz \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/fev1_ref/fev1_ref \
+# --N-col TotalN --snp "#SNP" --a1 Coded --a2 Non_coded
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/harris_2017_srh/raw/sumstats/Harris2016_UKB_self_rated_health_summary_results_10112016.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/health_ref/health_ref \
+# --N 111749
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/backman_2021_rhinitis/raw/sumstats/GCST90080105_buildGRCh38_rsids.tsv.gz \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/rhinitis_ref/rhinitis_ref \
+# --N 454787 --snp rsmid --signed-sumstats odds_ratio,1
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/demontis_2018_adhd/raw/sumstats/adhd.meta \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/adhd_ref/adhd_ref \
+# --N 20183 --signed-sumstats OR,1 --frq FRQ_A_19099
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/backman_2021_migraine/raw/sumstats/GCST90079827_buildGRCh38_rsmid.tsv.gz \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/migarine_ref/migraine_ref \
+# --N 378172 --signed-sumstat odds_ratio,1 --snp rsmid --a1 effect_allele --a2 other_allele

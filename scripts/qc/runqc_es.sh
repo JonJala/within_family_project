@@ -31,11 +31,11 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # Geisinger
 #############
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/smoke_ever/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.SMOKE_EVER.chr*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/smoking" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_paternal_maternal_averageparental_population"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.SMOKE_EVER.chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/smoking" \
+    --ldsc-ref "$reffile" \
+    --toest "direct_paternal_maternal_averageparental_population"
 
 ##############
 # Lifeline
@@ -46,7 +46,9 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/es18" \
     --ldsc-ref "$reffile" \
     --effects "direct_averageparental" \
-    --toest "direct_population"
+    --toest "direct_population" \
+    --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+    --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
 
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
@@ -54,4 +56,17 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/es" \
     --ldsc-ref "$reffile" \
     --effects "direct_averageparental" \
-    --toest "direct_population"
+    --toest "direct_population" \
+    --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+    --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+
+#########
+# Hunt
+######
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/smoEv/smoEv_chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/es" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, "

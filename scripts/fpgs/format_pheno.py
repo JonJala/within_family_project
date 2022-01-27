@@ -32,7 +32,6 @@ dat[args.phenocol] = dat[args.phenocol]/dat[args.phenocol].std()
 
 
 if not args.keep_na:
-    
     dat = dat.dropna()
     print("Number of observations after dropping NAs: ", dat.shape[0])
 

@@ -1,116 +1,101 @@
 #!/usr/bin/env bash
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 snipar_path="/homes/nber/harij/gitrepos/SNIPar"
-# bedfilepath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/plink/final/mcs"
 bedfilepath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr~.dose"
 impfilespath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/imputed_parents/chr~"
+phenofile="/var/genetics/proj/within_family/within_family_project/processed/fpgs/phenotypes.txt"
 
-function withinfam_pred(){
-
-    WTFILE=$1
-    EFFECT=$2
-    PHENONAME=$3
-    PHENOFILE=$4
-    OUTSUFFIX=$5
-    
-    # format ldpred2 weight files for fpgs
-    python ${within_family_path}/scripts/fpgs/format_weights.py \
-        $WTFILE \
-        --chr Chrom --pos Position --rsid Name --a1 A1 --a2 A2 --beta A1Effect \
-        --sep "delim_whitespace" \
-        --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted \
-        --sid-as-chrpos 
-
-    echo "Converting phenotype $PHENOFILE to $within_family_path/processed/fpgs/${PHENONAME}.pheno"
-    python ${within_family_path}/scripts/fpgs/format_pheno.py \
-        $PHENOFILE \
-        --iid Benjamin_ID --phenocol Z_EA \
-        --sep "\t" \
-        --outprefix ${within_family_path}/processed/fpgs/${PHENONAME}  \
-        --subsample /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt
-
-    python $snipar_path/fPGS.py \
-        ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME} \
-        --bedfiles $bedfilepath \
-        --impfiles $impfilespath \
-        --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
-        --scale_pgs
-
-    python ${within_family_path}/scripts/fpgs/attach_covar.py \
-        ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}.pgs.txt \
-        --covariates /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar.txt \
-        --outprefix ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}_full
-
-    python ${within_family_path}/scripts/fpgs/attach_covar.py \
-        ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}.pgs.txt \
-        --keepeffect "proband" \
-        --covariates /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar.txt \
-        --outprefix ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}_proband
-
-    echo "Reading phenotype: $within_family_path/processed/fpgs/${PHENONAME}.pheno"
-    python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}${OUTSUFFIX}_full \
-        --pgs ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}_full.pgs.txt \
-        --phenofile ${within_family_path}/processed/fpgs/${PHENONAME}.pheno \
-        --pgsreg-r2
-
-    python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${EFFECT}_${PHENONAME}${OUTSUFFIX}_proband \
-        --pgs ${within_family_path}/processed/fpgs/${EFFECT}_${PHENONAME}_proband.pgs.txt \
-        --phenofile ${within_family_path}/processed/fpgs/${PHENONAME}.pheno \
-        --pgsreg-r2
-    
-
-
-}
+source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-# withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
-#     "direct" "ea" \
-#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-#     ""
-# withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
-#     "population" "ea" \
-#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-#     ""
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
+    "direct" "ea" \
+    "$phenofile" \
+    ""
+withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
+    "population" "ea" \
+    "$phenofile" \
+    ""
+
+echo "Running covariates only regression"
+python $snipar_path/fPGS.py $within_family_path/processed/fpgs/bmi/covariates \
+    --pgs /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt \
+    --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
+    --pgsreg-r2
 
 # calculate ratio between direct and population effects
 # python ${within_family_path}/scripts/fpgs/bootstrapest.py \
-#     ${within_family_path}/processed/fpgs/ea_direct_coeffratio \
-#     --pgs ${within_family_path}/processed/fpgs/direct_ea_full.pgs.txt \
-#     --pgs2 ${within_family_path}/processed/fpgs/direct_ea_proband.pgs.txt \
-#     --phenofile ${within_family_path}/processed/fpgs/ea.pheno \
+#     ${within_family_path}/processed/fpgs/ea/direct_coeffratio \
+#     --pgs ${within_family_path}/processed/fpgs/ea/direct_full.pgs.txt \
+#     --pgs2 ${within_family_path}/processed/fpgs/ea/direct_proband.pgs.txt \
+#     --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
 #     --pgsreg-r2 \
 #     --bootstrapfunc d
 
 # python ${within_family_path}/scripts/fpgs/bootstrapest.py \
-#     ${within_family_path}/processed/fpgs/ea_population_coeffratio \
-#     --pgs ${within_family_path}/processed/fpgs/population_ea_full.pgs.txt \
-#     --pgs2 ${within_family_path}/processed/fpgs/population_ea_proband.pgs.txt \
-#     --phenofile ${within_family_path}/processed/fpgs/ea.pheno \
+#     ${within_family_path}/processed/fpgs/ea/population_coeffratio \
+#     --pgs ${within_family_path}/processed/fpgs/ea/population_full.pgs.txt \
+#     --pgs2 ${within_family_path}/processed/fpgs/ea/population_proband.pgs.txt \
+#     --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
 #     --pgsreg-r2 \
 #     --bootstrapfunc d
 
 
 python ${within_family_path}/scripts/fpgs/bootstrapest.py \
-    ${within_family_path}/processed/fpgs/ea_dirpop_ceoffratiodiff \
-    --pgsgroup1 ${within_family_path}/processed/fpgs/population_ea_full.pgs.txt,${within_family_path}/processed/fpgs/population_ea_proband.pgs.txt \
-    --pgsgroup2 ${within_family_path}/processed/fpgs/direct_ea_full.pgs.txt,${within_family_path}/processed/fpgs/direct_ea_proband.pgs.txt \
-    --phenofile ${within_family_path}/processed/fpgs/ea.pheno \
+    ${within_family_path}/processed/fpgs/ea/dirpop_ceoffratiodiff \
+    --pgsgroup1 ${within_family_path}/processed/fpgs/ea/population_full.pgs.txt,${within_family_path}/processed/fpgs/ea/population_proband.pgs.txt \
+    --pgsgroup2 ${within_family_path}/processed/fpgs/ea/direct_full.pgs.txt,${within_family_path}/processed/fpgs/ea/direct_proband.pgs.txt \
+    --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
     --pgsreg-r2 
 
 
 # ea4
 # withinfam_pred ${within_family_path}/processed/sbayesr/ea/ea4/weights/meta_weights.snpRes \
 #     "ea4" "ea" \
-#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
+#     "$phenofile" \
 #     ""
+
+python ${within_family_path}/scripts/fpgs/bootstrapest.py \
+    ${within_family_path}/processed/fpgs/ea_ea4/direct_coeffratio \
+    --pgs ${within_family_path}/processed/fpgs/ea/ea4_full.pgs.txt \
+    --pgs2 ${within_family_path}/processed/fpgs/ea/ea4_proband.pgs.txt \
+    --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
+    --pgsreg-r2 \
+    --bootstrapfunc d
+
 
 # meta + ea4
 # withinfam_pred ${within_family_path}/processed/sbayesr/ea_ea4/direct/weights/meta_weights.snpRes \
-#     "direct" "ea_ea4" \
-#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-#     ""
+#     "direct" "ea" \
+#     "$phenofile" \
+#     "_withea4"
 # withinfam_pred ${within_family_path}/processed/sbayesr/ea_ea4/population/weights/meta_weights.snpRes \
-#     "population" "ea_ea4" \
-#     "/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen" \
-#     ""
+#     "population" "ea" \
+#     "$phenofile" \
+#     "_withea4"
 
+
+# # calculate ratio between direct and population effects
+# python ${within_family_path}/scripts/fpgs/bootstrapest.py \
+#     ${within_family_path}/processed/fpgs/ea/direct_coeffratio_withea4 \
+#     --pgs ${within_family_path}/processed/fpgs/ea/direct_withea4_full.pgs.txt \
+#     --pgs2 ${within_family_path}/processed/fpgs/ea/direct_withea4_proband.pgs.txt \
+#     --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
+#     --pgsreg-r2 \
+#     --bootstrapfunc d
+
+# python ${within_family_path}/scripts/fpgs/bootstrapest.py \
+#     ${within_family_path}/processed/fpgs/ea/population_coeffratio_withea4 \
+#     --pgs ${within_family_path}/processed/fpgs/ea/population_withea4_full.pgs.txt \
+#     --pgs2 ${within_family_path}/processed/fpgs/ea/population_withea4_proband.pgs.txt \
+#     --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
+#     --pgsreg-r2 \
+#     --bootstrapfunc d
+
+
+# python ${within_family_path}/scripts/fpgs/bootstrapest.py \
+#     ${within_family_path}/processed/fpgs/ea/dirpop_ceoffratiodiff_withea4 \
+#     --pgsgroup1 ${within_family_path}/processed/fpgs/ea/population_withea4_full.pgs.txt,${within_family_path}/processed/fpgs/ea/population_withea4_proband.pgs.txt \
+#     --pgsgroup2 ${within_family_path}/processed/fpgs/ea/direct_withea4_full.pgs.txt,${within_family_path}/processed/fpgs/ea/direct_withea4_proband.pgs.txt \
+#     --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
+#     --pgsreg-r2 

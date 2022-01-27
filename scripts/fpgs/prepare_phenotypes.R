@@ -14,13 +14,13 @@ ea[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
 ea[,FID := IID]
 ea[, Benjamin_ID := NULL]
 
-setnames(ea, old=c("Z_EA"), new=c("EA"))
+setnames(ea, old=c("Z_EA"), new=c("ea"))
 setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
 
 phenotypes = merge(ht_bmi, ea, by=c("FID", "IID"), all=TRUE)
 phenotypes = merge(phenotypes, covariates, by=c("FID", "IID"), all=TRUE)
 
-phenotypes[, bmi_std := standardize(bmi), by=sex]
-phenotypes[, height_std := standardize(height), by=sex]
+phenotypes[, bmi := standardize(bmi), by=sex]
+phenotypes[, height := standardize(height), by=sex]
 
 fwrite(phenotypes, file="/var/genetics/proj/within_family/within_family_project/processed/fpgs/phenotypes.txt", sep=" ")

@@ -13,26 +13,37 @@ subtitle: Everything Done So Far
 | Hunt | EA | Yes| Yes |  |
 | Hunt | BMI | Yes | Yes |  |
 | Hunt | Height | Yes | Yes |  |
-| Hunt | AAFB | Yes |Yes | |
-| Hunt | N Children | | | |
-| Hunt | Drinks Per Week | | | |
-| Hunt | Neuoroticism |  | | |
-| Hunt | Self Rated Health |  | | |
+| Hunt | AAFB | Yes | Yes | |
+| Hunt | Asthma | Yes | Yes | |
+| Hunt | N Children |Yes | Yes | |
+| Hunt | Drinks Per Week | No (-ve) |Yes | |
+| Hunt | Neuoroticism | Yes  |Yes | |
+| Hunt | Self Rated Health |  yes|Yes | |
+| Hunt | Age Menarche | Yes |Yes | |
+| Hunt | BPD | No | Yes | |
+| Hunt | FEV1 | No (-ve)|Yes | |
+| Hunt | Non-HDL |Yes | Yes | |
+| Hunt | HDL |Yes | Yes | |
+| Hunt | Health |Yes | Yes | |
+| Hunt | BPS | No | Yes ||
+| Hunt | Smoke ever | No (-ve) | Yes ||
+| Hunt | SWB | Yes | Yes ||
 | GS | EA | Yes | Yes |  |
 | GS | BMI | Yes | Yes |  |
 | GS | Height | Yes | Yes |  |
 | Finnish Twins | EA| No (Negative h2 estimate) | Yes | |
 | Finnish Twins | BMI | Yes | Yes | |
 | Finnish Twins | Height | Yes | Yes | |
-| Estonian Biobank | EA | Yes | Yes | |
-| Estonian Biobank | BMI | Yes | Yes | |
+| Estonian Biobank | EA | Yes | Yes | Got batch controlled results |
+| Estonian Biobank | BMI | Yes | Yes | Got batch controlled results |
 | Estonian Biobank | MDD | Yes | |  | 
 | Estonian Biobank | Ever Smoker | No (-ve 1) | | |
 | Estonian Biobank | AAFB | Yes | | |
 | Estonian Biobank | Asthma | Yes | | |
 | Estonian Biobank | Depression | Yes | Yes | |
-| Estonian Biobank | Eczema | Yes | | |
+| Estonian Biobank | Eczema |  | | Got batch controlled results|
 | Estonian Biobank | Hayfever | Yes | | |
+| Estonian Biobank | Migraine |  | | Got batch controlled results|
 | UKB | BMI | Yes | Yes | |
 | UKB | EA | Yes | Yes | |
 | UKB | Height | Yes | Yes | |
@@ -45,17 +56,27 @@ subtitle: Everything Done So Far
 | Geisinger | Height | Yes | Yes | |
 | Geisinger | Depression | Yes | Yes | |
 | Geisinger | EA | Yes | Yes | |
-| Geisinger | Smoke-Ever | No ( -ve 1) | | |
-| Geisinger | Asthma | No | | |
-| Lifeline | BMI/BMI18 | Yes | Yes | |
+| Geisinger | Smoke-Ever | No ( -ve 1) | Yes | |
+| Geisinger | Asthma | No (Couldnt compute) | Yes | |
+| Geisinger | ADHD | Yes | Yes | |
+| Geisinger | Eczema | No  | Yes | |
+| Geisinger | BPD | no |  Yes | |
+| Geisinger | BPS | No | Yes  | |
+| Geisinger | Hayfever | Yes  | Yes | |
+| Geisinger | HDL | Yes  | Yes | |
+| Geisinger | Migraine | No (Couldnt compute)  | Yes | |
+| Geisinger | Non-HDL | Yes  | Yes | |
+| Geisinger | Non-HDL | Yes  | Yes | |
+| Geisinger | FEV1 | Yes  | Yes | |
+| Lifeline | BMI/BMI18 | Yes  | Yes  | |
 | Lifeline | Height/Height18 | Yes | Yes | |
 | Lifeline | EA | Yes | Yes  | |
-| Lifeline | HDL | Yes|Yes | |
-| LIfeline | LDL | Yes | Yes | |
-| Lifeline | TGL | No (low rg) | Yes | |
-| Lifeline | Cholestrol | Yes |Yes  | | 
-| Lifeline | Smoking | No (-ve) |Yes | |
-| Lifeline | Cognition (unique) | Yes |Yes | |
+| Lifeline | HDL | Yes| Yes | |
+| LIfeline | LDL | Yes  |  Yes | |
+| Lifeline | TGL | Yes  | Yes  | |
+| Lifeline | Cholestrol | Yes | Yes  | | 
+| Lifeline | Smoking | No (-ve) | Yes | |
+| Lifeline | Cognition (unique) | Yes | Yes | |
 | Minnesotta twins | EA | Yes | Yes | |
 | Minnesotta twins | BMI | Yes | Yes | |
 | Minnesotta twins | Height | Yes | Yes | | 
@@ -71,29 +92,12 @@ subtitle: Everything Done So Far
 | Dutch Twins | BMI | Yes | Yes | |
 | Dutch Twins | Cannabis |  |  | |
 | Dutch Twins | CPD | No (-ve h2)  | Yes | |
-| Dutch Twins | DBP | no (no ref file) | Yes  | |
+| Dutch Twins | BPD | No (not enough power) | Yes  | |
 | Dutch Twins | Depression | Yes | Yes  | |
 | Dutch Twins | EA |Yes |Yes  | |
 
 
+Notes:
 
-
-# Analysis
-
-## Meta analysis
-
-The actual meta analysis comes first. It is done using `/var/genetics/proj/within_family/within_family_project/scripts/package/run_metaanalysis.py`. It is meant to be used as a command line tool. Its useful to go through how to use it since it isn't very straightforward,
-
-### Options
-
-As a command line tool it has only a few options which we shall explore:
-
-1. `path2json` - This is the first positional argument and you'll need to pass in a json file into this. We will see what this json file should look like but for now its enough to know that the json file lists all the cohorts you want to pass in along with cohort specific options.
-2. `--outestimates` - This is what the final output should look like. You should write down something like "direct_plus_averageparental" or "direct_plus_population". Note that for now the default is direct_plus_population and the script might not work well if its something different - especially if the output is expected to be more than a 2 dimensional output.
-3.  `--outprefix` - This just defines where the output should be saved and what they should be saved as.
-4. `--no_hdf5_out` and `--no_txt_out` - These are indicators to disable either outputting the hdf5 file or the txt file. You can put in both but then nothing will be outputted from the script.
-5. `--diag` - This is an option which if passed will also produce diagnostic plots and summary statistics for every cohort passed. Not entirely recommended as it is a bit slow. You should use the diagnostics script for this.
-
-These options are not the entire list of options available. `path2json` is the path to the json file listing all the input files and also putting in options for each input. This is more complicated and also important so its worth going into.
-
+1. LDL is taken as the reference for non-HDL cholestrol
 

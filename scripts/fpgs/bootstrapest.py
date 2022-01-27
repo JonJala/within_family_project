@@ -211,7 +211,6 @@ def bootstrap_est(args):
             pgigroup1 = args.pgsgroup1.split(',')
             pgigroup2 = args.pgsgroup2.split(',')
 
-            import pdb; pdb.set_trace()
             datg1f1 = runpgi_reg(pgigroup1[0], args.phenofile, tmpdir, args.pgsreg_r2).iloc[:, 1]
             datg1f2 = runpgi_reg(pgigroup1[1], args.phenofile, tmpdir, args.pgsreg_r2).iloc[:, 1]
             datg2f1 = runpgi_reg(pgigroup2[0], args.phenofile, tmpdir, args.pgsreg_r2).iloc[:, 1]

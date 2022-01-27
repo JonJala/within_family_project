@@ -33,16 +33,18 @@
 # LIfelines
 ##########
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_edu.sumstats" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/ea" \
-#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
-#     --effects "direct_averageparental" \
-#     --toest "direct_population"
-# # 0.8028 (0.1378)
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_edu.sumstats" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/ea" \
+    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+    --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+# 0.8028 (0.1378)
 
 
-###########
+##########
 # MOBA
 ############
 
@@ -60,7 +62,7 @@
 
 # estonian bio bnak with controls
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/EduYears/controls/EduYears_ext/EduYears_chr*_results.sumstats.hdf5" \
+#     "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/EduYears/controls/EduYears_ext/EduYears_chr*_results.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/ea/controls" \
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
@@ -98,13 +100,12 @@
 ######
 
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/edu/edu_chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/ea" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, "
-# 1.0875 (0.1359)
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/edu/edu_chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/ea" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, "
 
 ################
 # Minnesotta twins
@@ -124,11 +125,11 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 ############
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/edu_years/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.Edu_Years.chr*.sumstats.hdf5" \
+#     "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.Edu_Years.chr*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/ea" \
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
 #     --toest "direct_paternal_maternal_averageparental_population"
-# # # 1.0865 (0.332)
+# # 1.0865 (0.332)
 
 #############
 # Dutch Twins

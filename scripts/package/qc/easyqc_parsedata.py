@@ -165,6 +165,7 @@ def read_hdf5(args, printinfo = True):
                         "phvar" : phvar,
                         'estimated_effects' : estimated_effects})
     
+
     
     if args.rsid_readfrombim is not None:
         
@@ -185,12 +186,11 @@ def read_hdf5(args, printinfo = True):
         snps = snps.drop_duplicates(subset=['CHR', 'BP'])
         print(f"Shape before merging with bim {zdata.shape}")
         zdata = zdata.merge(snps, how = "inner", on = ['CHR', 'BP'])
-        print(f"Shape before merging with bim {zdata.shape}")
+        print(f"Shape after merging with bim {zdata.shape}")
         goodlookingrsids = zdata['rsid'].str.startswith("rs").sum()
         print(f"RSIDs which look reasonable: {goodlookingrsids} i.e {(goodlookingrsids * 100)/zdata.shape[0]} percent of SNPs.")
         zdata = zdata.rename(columns = {"SNP" : "SNP_old"})
         zdata = zdata.rename(columns = {"rsid" : "SNP"})
-
     
     return zdata
 

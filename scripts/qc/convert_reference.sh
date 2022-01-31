@@ -143,11 +143,11 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --out ${within_family_path}/processed/reference_samples/bps_ref/bps_ref \
 # --snp rsid --N-col TotalSampleSize_SBP --signed-sumstat SBP_ZSCORE,0 --p P_SBP
 
-${ldscpath}/munge_sumstats.py  \
---sumstats /var/genetics/data/published/ehret_2016_bp/raw/sumstats/Ehret_2016_summstats_formatted.txt \
---merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/reference_samples/bpd_ref/bpd_ref \
---snp rsid --N-col TotalSampleSize_DBP --signed-sumstat DBP_ZSCORE,0 --p P_DBP
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/ehret_2016_bp/raw/sumstats/Ehret_2016_summstats_formatted.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/bpd_ref/bpd_ref \
+# --snp rsid --N-col TotalSampleSize_DBP --signed-sumstat DBP_ZSCORE,0 --p P_DBP
 
 # ${ldscpath}/munge_sumstats.py  \
 # --sumstats /var/genetics/data/published/okbay_2016_swb/raw/sumstats/SWB_Full.txt \
@@ -229,3 +229,15 @@ ${ldscpath}/munge_sumstats.py  \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/processed/reference_samples/migarine_ref/migraine_ref \
 # --N 378172 --signed-sumstat odds_ratio,1 --snp rsmid --a1 effect_allele --a2 other_allele
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/berg_2015_extraversion/raw/sumstats/GPC-2.EXTRAVERSION_formatted.full.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/extraversion_ref/extraversion_ref \
+# --N 63030 --signed-sumstat Z,0 --snp RSNUMBER
+
+${ldscpath}/munge_sumstats.py  \
+--sumstats /var/genetics/data/published/jones_2019_morningperson/raw/sumstats/chronotype_raw_BOLT.output_HRC.only_plus.metrics_maf0.001_hwep1em12_info0.3.txt.gz \
+--merge-alleles ${merge_alleles} \
+--out ${within_family_path}/processed/reference_samples/morningpersion_ref/morningperson_ref \
+--N 697828

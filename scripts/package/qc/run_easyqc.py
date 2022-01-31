@@ -243,9 +243,11 @@ def process_dat(dat, args):
     if args.hwe is not None:
         hwe = read_hwe(args)
         datout = pd.merge(datout, hwe, on = "SNP", how = 'inner')
+        print(f"Shape after merging with hwe: {datout.shape}")
     if args.info is not None:
         info = read_info(args)
         datout = pd.merge(datout, info, on = "SNP", how = 'inner')
+        print(f"Shape after merging with info: {datout.shape}")
 
     if args.cptid:
         print('The cptid option has been passed. HRC will be used to read in the rsids.')

@@ -23,7 +23,8 @@
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/bmi" \
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
 #     --cptid \
-#     --toest "direct_population"
+#     --toest "direct_population" \
+#     --hwe '/disk/genetics3/data_dirs/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 # # 1.1505 (0.9728)
 
 
@@ -45,15 +46,15 @@
 # # LIfelines
 # ##########
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_bmi.sumstats" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/bmi" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
-    --effects "direct_averageparental" \
-    --toest "direct_population"  \
-    --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
-    --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
-# 0.8591 (0.0775)
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_bmi.sumstats" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/bmi" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population"  \
+#     --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+#     --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+# # 0.8591 (0.0775)
 
 # ###########
 # # MOBA
@@ -87,18 +88,24 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/str/bmi" \
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
 #     --toest "direct_population" \
-#     --bim_bp 3 --bim_a1 4 --bim_a2 5
-# # NA
+#     --bim_bp 3 --bim_a1 4 --bim_a2 5 \
+#     --info "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/info.txt.gz" \
+#     --hwe "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/hardy.txt.gz" \
+#     --rsid_readfrombim "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPs/chr_*.bim,0,3,1, "
+
+# NA
 
 # #####
 # # Finnish twins
 # #####
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/BMI.chr*.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/bmi" \
-#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
-#     --toest "direct_population"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/BMI.chr*.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/bmi" \
+    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
+    --toest "direct_population" \
+    --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
+    --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
 
 #  0.8264 (0.1247)
 

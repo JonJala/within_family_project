@@ -11,7 +11,8 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/cpd/" \
 #     --ldsc-ref $reffile \
 #     --cptid \
-#     --toest "direct_population"
+#     --toest "direct_population" \
+#     --hwe '/disk/genetics3/data_dirs/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
 #############
 # Dutch Twins
@@ -31,9 +32,35 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 ######
 
 
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/cigPerDay/cigPerDay_chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/cpd" \
+#     --ldsc-ref $reffile \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, "
+
+# ##########
+# # STR
+# ##########
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/cigsperday/cigsperday_chr*.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/str/cpd" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_population" \
+#     --bim_bp 3 --bim_a1 4 --bim_a2 5 \
+#     --info "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/info.txt.gz" \
+#     --hwe "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/hardy.txt.gz" \
+#     --rsid_readfrombim "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPs/chr_*.bim,0,3,1, "
+
+# #####
+# # Finnish twins
+# #####
+
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/cigPerDay/cigPerDay_chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/cpd" \
+    "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/cpd.chr*.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/cpd" \
     --ldsc-ref $reffile \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, "
+    --toest "direct_population" \
+    --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
+    --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt

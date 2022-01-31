@@ -41,11 +41,11 @@ echo "Munging!!"
 
 
 
-${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats \
---out ${within_family_path}/processed/package_output/ea/meta_analysis_avgpar_wea4 \
---N-col direct_N --p avg_parental_pval --signed-sumstats avg_parental_z,0 \
---merge-alleles ${hm3snps}
+# ${ldscpath}/munge_sumstats.py \
+# --sumstats ${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats \
+# --out ${within_family_path}/processed/package_output/ea/meta_analysis_avgpar_wea4 \
+# --N-col direct_N --p avg_parental_pval --signed-sumstats avg_parental_z,0 \
+# --merge-alleles ${hm3snps}
 
 # echo "Calcualting RG of population effect with reference EA sample"
 # ${ldscpath}/ldsc.py \
@@ -72,24 +72,38 @@ ${ldscpath}/munge_sumstats.py \
 # -0.12 (0.3343)
 
 
-${ldscpath}/ldsc.py \
---h2 ${within_family_path}/processed/package_output/ea/meta_analysis_dir_wea4.sumstats.gz \
---ref-ld-chr ${eur_w_ld_chr} \
---w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/processed/package_output/ea/meta_analysis_dir_wea4_h2
-# 0.0714 (0.0056)
+# ${ldscpath}/ldsc.py \
+# --h2 ${within_family_path}/processed/package_output/ea/meta_analysis_dir_wea4.sumstats.gz \
+# --ref-ld-chr ${eur_w_ld_chr} \
+# --w-ld-chr ${eur_w_ld_chr} \
+# --out ${within_family_path}/processed/package_output/ea/meta_analysis_dir_wea4_h2
+# # 0.0714 (0.0056)
+
+# ${ldscpath}/ldsc.py \
+# --h2 ${within_family_path}/processed/package_output/ea/meta_analysis_avgpar_wea4.sumstats.gz \
+# --ref-ld-chr ${eur_w_ld_chr} \
+# --w-ld-chr ${eur_w_ld_chr} \
+# --out ${within_family_path}/processed/package_output/ea/meta_analysis_avgpar_wea4_h2
+# # 0.0266 (0.0048)
+
+# Rscript $scriptpath/estimate_marginal_correlations_meta.R \
+# --file "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" \
+# --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/" \
+# --dir_pop_rg_name "paternal_maternal_rg" --dirbeta "paternal_Beta" --popbeta "maternal_Beta" \
+# --dirse "paternal_SE" --popse "maternal_SE" \
+# --merge_alleles ${hm3snps}
+# # "r=2.2437 S.E.=0.3554"
 
 ${ldscpath}/ldsc.py \
---h2 ${within_family_path}/processed/package_output/ea/meta_analysis_avgpar_wea4.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/ea/meta_analysis_pop_wea4.sumstats.gz,${within_family_path}/processed/ea4/ea4_formetanalysis_munged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/processed/package_output/ea/meta_analysis_avgpar_wea4_h2
-# 0.0266 (0.0048)
+--out ${within_family_path}/processed/package_output/ea/ea4_metaanalysis_wea4_rg
 
-Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" \
---outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/" \
---dir_pop_rg_name "paternal_maternal_rg" --dirbeta "paternal_Beta" --popbeta "maternal_Beta" \
---dirse "paternal_SE" --popse "maternal_SE" \
---merge_alleles ${hm3snps}
-# "r=2.2437 S.E.=0.3554"
+# 1.0077 (0.0004)
+
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/ea/meta_analysis_dir_wea4.sumstats.gz,${within_family_path}/processed/ea4/ea4_formetanalysis_munged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/ea/ea4_metaanalysis_wea4_rg

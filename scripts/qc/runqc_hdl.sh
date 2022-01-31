@@ -5,24 +5,24 @@
 # LIfelines
 ##########
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_HDC18.sumstats.gz" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/hdl18" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz" \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
-    --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
-    --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_HDC18.sumstats.gz" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/hdl18" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+#     --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
 
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_HDC.sumstats.gz" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/hdl" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz" \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
-    --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
-    --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_HDC.sumstats.gz" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/hdl" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+#     --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
 
 #########
 # Hunt
@@ -46,3 +46,28 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz" \
 #     --toest "direct_paternal_maternal_averageparental_population"
 
+
+# #####
+# # Finnish twins
+# #####
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/HDL.chr*.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/hdl" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz" \
+#     --toest "direct_population" \
+#     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
+#     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
+
+#############
+# Dutch Twins
+#############
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/HDL/NTR_HDL_CHR*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/hdl" \
+    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --cptid \
+    --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
+    --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"

@@ -79,18 +79,23 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/str/ea" \
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
 #     --toest "direct_population" \
-#     --bim_bp 3 --bim_a1 4 --bim_a2 5
-# # 0.9303 (0.5006)
+#     --bim_bp 3 --bim_a1 4 --bim_a2 5 \
+#     --info "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/info.txt.gz" \
+#     --hwe "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/hardy.txt.gz"
+
+# 0.9303 (0.5006)
 
 #####
 # Finnish twins
 #####
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/EA.chr*.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/ea" \
-#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
-#     --toest "direct_population"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/EA.chr*.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/ea" \
+    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
+    --toest "direct_population" \
+    --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
+    --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
 
 # cant be computed
 
@@ -116,9 +121,10 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/ea" \
 #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
 #     --cptid \
-#     --toest "direct_population"
+#     --toest "direct_population" \
+#     --hwe '/disk/genetics3/data_dirs/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
-    # 0.5782 (0.2655)
+# 0.5782 (0.2655)
 
 ################
 # Geisinger

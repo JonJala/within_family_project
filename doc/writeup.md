@@ -118,7 +118,7 @@ subtitle: Everything Done So Far
 | Minnesotta twins | SWB | Yes | | |
 | Dutch Twins | Asthma | Yes | Yes | |
 | Dutch Twins | BMI | Yes | Yes | |
-| Dutch Twins | Cannabis |  |  | |
+| Dutch Twins | Cannabis |  No (Couldn't compute) | Yes  | |
 | Dutch Twins | CPD | No (-ve h2)  | Yes | |
 | Dutch Twins | BPD | No (not enough power) | Yes  | |
 | Dutch Twins | Depression | Yes | Yes  | |
@@ -144,3 +144,50 @@ Notes:
 1. LDL is taken as the reference for non-HDL cholestrol
 
 # Methodology
+
+## Quality control
+
+Each cohort goes through some quality control checks. 
+
+- First we look at the genetic correlation of the population effects with a reference sample where possible (in cases where the summary statistics aren't well powered LDSC might fail to give an estimate). We expect this genetic correlation to be around 1.
+- We look at the QQ-plots of every effect from each cohort
+- We plot standard errors of each effect from the summary statistics against $\sqrt{(f)(1-f)}$. We expect this to show a downward sloping curve.
+
+The cohort level data also goes through a couple of filters:
+
+- We apply an MAF filter of 0.01
+- We exclude SNPs with Hardy-Weinberg equilibrium exact test $P$ values lower than $10^{-6}$
+- We exclude SNPs which have an imputation $R^2$ less than 0.99 and an average call rate less than 0.99. 
+- We compute the sampling correlations between all combinations of effects (direct-paternal, direct-maternal, paternal-maternal, etc.) and drop SNPs which have values outside of 6 standard deviations from the mean. This metric is useful since it captures SNPs which have imputation issues either with the proband or parental genotypes.
+- We use Haplotype Reference Consortium reference panel to check for strand misalignment, position mismatch, allele concordance, and allele frequency discrepancies.
+
+## Meta analysis
+
+We want to estimate the parameters of the model:
+
+$$
+Y_i = \delta g_i + \eta_p g_{p(i)} + \eta_m g_{m(i)} + \epsilon_i
+$$
+
+Where $\epsilon$ is uncorrelated with $g_i, g_{p(i)}, g_{m(i)}$. We want to estimate $\theta := \begin{bmatrix} \delta & \eta_p & \eta_m \end{bmatrix}^T$ using different samples and different observations of sibling and parental alleles. Let sample 1 be a sample where only proband genotypes are available and to which standard GWAS analysis has been applied. Let sample 2 be a sample of sibling pairs with observed genotype and phenotype, to which the sib-difference method has been applied. Let sample 3 be a sample where only proband and paternal genotype has been observed, and the estimate comes from regression of proband phenotype jointly onto proband and paternal genotype. Let sample 4 be a sample where only proband and maternal genotype has been observed, and the estimate comes from regression of proband phenotype jointly onto proband and maternal genotype. And let sample 5 be a sample where proband and both parents genotypes have been observed, and the estimate comes from regression of proband phenotype jointly onto proband, maternal, and paternal genotypes. Then we can combine the estimates from these regressions using the following matrices that give the linear transformation between $\theta$ and the expected estimates from the regressions in each subsample:
+
+| Sample | Observed Genotype | Regression | $\mathbb{E}(z_i)$ | $A_i$ |
+| ------ | ---------------- | ----------- | ---------------- | -------- |
+| 1 | Proband | $Y_{ij} \sim g_i$ | $\delta + \frac{\eta_m + \eta_p}{2}$| $\begin{bmatrix} 1 & 0.5 & 0.5 \end{bmatrix}$| 
+| 2 | Sibling Pair | $(Y_{i1} - Y_{i2}) \sim (g_{i1} - g_{i2})$ | $\delta$| $\begin{bmatrix} 1 & 0 & 0 \end{bmatrix}$| 
+| 3 | Proband and Paternal | $Y_{i} \sim g_i + g_{p(i)}$ | $\begin{bmatrix} \delta + \frac{2}{3} \eta_m \\ \eta_p - \frac{1}{3} \eta_m \end{bmatrix}$| $\begin{bmatrix} 1 & 0 & \frac{2}{3} \\ 0 & 1 & -\frac{1}{3} \end{bmatrix}$| 
+| 4 | Proband and Maternal | $Y_{i} \sim g_i + g_{m(i)}$ | $\begin{bmatrix} \delta + \frac{2}{3} \eta_p \\ \eta_m - \frac{1}{3} \eta_p \end{bmatrix}$| $\begin{bmatrix} 1 &  \frac{2}{3} & 0 \\ 0 & -\frac{1}{3} & 1 \end{bmatrix}$| 
+| 5 | Proband, Maternal, Paternal | $Y_i \sim g_i + g_{p(i)} + g_{m(i)}$ | $\begin{bmatrix} \delta \\ \eta_p \\ \eta_m \end{bmatrix}$| $I_3$| 
+
+We want to estimate the parameter vector $\theta$ and we observe $z_i \sim \mathbb{N}(A_i \theta, \Sigma_i)$ for $i \in {1, ..., k}$ where $i$ indexes the cohort. $A_i$ is a matrix which when applied to $\alpha$ linearly transforms it into the resulting parameters for which we have the sample analogs. The MLE for $\theta$ is:
+
+$$
+\hat{\theta} = \left(\sum_{i=1}^k A_i^T \Sigma^{-1} A_i \right) \left( \sum_{i=1}^{k} A_i^T \Sigma^{-1} z_i \right)
+$$
+
+and
+
+$$
+\text{Var}(\hat{\theta}) = \left(\sum_{i=1}^k A_i^T \Sigma_i^{-1} A_i \right)^{-1}
+$$
+

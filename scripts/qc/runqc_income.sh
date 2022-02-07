@@ -53,10 +53,22 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # # Finnish twins
 # #####
 
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/income.chr*.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/income" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_population" \
+#     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
+#     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
+
+#####################
+# ====== UKB ====== #
+#####################
+
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/income.chr*.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/income" \
-    --ldsc-ref "$reffile" \
-    --toest "direct_population" \
-    --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
-    --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
+    "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/19/chr_*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/income" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --bim_chromosome 99 \
+    --ldsc-ref "$reffile"
+

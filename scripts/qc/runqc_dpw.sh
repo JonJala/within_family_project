@@ -44,11 +44,22 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # Dutch Twins
 #############
 
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/DPW/NTR_DPW_CHR*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/dpw" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid \
+#     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
+#     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
+
+#####################
+# ====== UKB ====== #
+#####################
+
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/DPW/NTR_DPW_CHR*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/dpw" \
-    --ldsc-ref "$reffile" \
+    "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/11/chr_*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/dpw" \
     --toest "direct_paternal_maternal_averageparental_population" \
-    --cptid \
-    --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
-    --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
+    --bim_chromosome 99 \
+    --ldsc-ref "$reffile"

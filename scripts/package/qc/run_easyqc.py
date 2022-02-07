@@ -640,6 +640,7 @@ the reader will try and infer the chromosome number from the file name.''')
             os.remove(file)
     # parsing
     dat = read_file(args)
+    print(f'Initial number of observations: {dat.shape[0]}')
     dat = process_dat(dat, args)
 
     with tempfile.TemporaryDirectory() as csvout:

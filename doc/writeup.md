@@ -6,12 +6,12 @@ subtitle: Everything Done So Far
 # Cohorts And Phenotypes
 
 | Cohohort | Phenotype | LDSC Test | Diag Plots and Tables | Notes |
-| -------- | --------- | ------------------- | ----- | ------------ |
-| STR | BMI | Yes | Yes| |
+| -------- |  | ------------------- | ----- | ------------ |
+| STR | BMI | No (Couldn't compute) | Yes| |
 | STR | EA | No  |  Yes  |  |
 | STR | Height | Yes | Yes  |  |
 | STR | CESD |  |  |  |
-| STR | CPD | Yes  |  Yes |  |
+| STR | CPD | No (-ve)  |  Yes |  |
 | STR | DPW | No  |  Yes  |  |
 | STR | Extraversion | No (Too low power)  | Yes   |  |
 | STR | HH Income |  No  (might be too low power)|  Yes  |  |
@@ -20,7 +20,7 @@ subtitle: Everything Done So Far
 | STR | SRH | No (Low power) | Yes   |  | 
 | STR | IQ | Yes  |  Yes  |  |
 | STR | SWB | Yes  | Yes   |  |
-| Hunt | EA | Yes| Yes |  |
+| Hunt | EA | Yes| Yes | |
 | Hunt | BMI | Yes | Yes |  |
 | Hunt | Height | Yes | Yes |  |
 | Hunt | AAFB | Yes | Yes | |
@@ -30,21 +30,32 @@ subtitle: Everything Done So Far
 | Hunt | Drinks Per Week | No (-ve) |Yes | |
 | Hunt | Neuoroticism | Yes  |Yes | |
 | Hunt | Age Menarche | Yes |Yes | |
-| Hunt | BPD | No | Yes | |
+| Hunt | BPD | Yes | Yes | |
 | Hunt | FEV1 | No (-ve)|Yes | |
 | Hunt | Non-HDL |Yes | Yes | |
 | Hunt | HDL |Yes | Yes | |
 | Hunt | Health |Yes | Yes | |
-| Hunt | BPS | No | Yes ||
+| Hunt | BPS | Yes | Yes ||
 | Hunt | Smoke ever | No (-ve) | Yes ||
 | Hunt | SWB | Yes | Yes ||
 | Hunt | Deprcat | Yes | Yes ||
 | Hunt | Deprcont | Yes | Yes ||
-| Hunt | Eczema |  |  ||
+| Hunt | Eczema | Yes  | Yes ||
 | Hunt | Rhinitis | No (cant compute)  |  Yes ||
-| GS | EA | Yes | Yes |  |
-| GS | BMI | Yes | Yes |  |
-| GS | Height | Yes | Yes |  |
+| Generation Scotland | Glucose |  |  | Not analyzing  |
+| Generation Scotland | Non-HDL| Yes  | Yes  |  |
+| Generation Scotland | HDL |  Yes | Yes  |  |
+| Generation Scotland | FEV1 | Yes  | Yes  |  |
+| Generation Scotland | Height | Yes | Yes |  |
+| Generation Scotland | BMI | Yes | Yes |  |
+| Generation Scotland | CPD |  No (Not enough power) | Yes  |  |
+| Generation Scotland | Cognitive ability | Yes  | Yes  |  |
+| Generation Scotland | Vocabulary |  |  | Not analyzed |
+| Generation Scotland | EA | Yes | Yes |  |
+| Generation Scotland | BPS | Yes  | Yes  |  |
+| Generation Scotland | BPD |  Yes | Yes  |  |
+| Generation Scotland | Neuroticism | No (Couldn't compute)  | Yes  |  |
+| Generation Scotland | EA Years | Yes | Yes  |  |
 | Finnish Twins | EA| No (Negative h2 estimate) | Yes | |
 | Finnish Twins | BMI | Yes  | Yes  | |
 | Finnish Twins | Height | Yes  |  Yes | |
@@ -59,7 +70,7 @@ subtitle: Everything Done So Far
 | Finnish Twins | LDL | No (Couldn't compute) | Yes  | |
 | Finnish Twins | N Children | No (high se) |  Yes | |
 | Finnish Twins | Neuroticism | No (Couldn't compute) | Yes  | |
-| Finnish Twins | BPS | No  | No | Direct SEF plot looks odd |
+| Finnish Twins | BPS | Yes  | No | Direct SEF plot looks odd |
 | Finnish Twins | TG | No (High se) | Yes  | I assume this is TGL |
 | Finnish Twins | wellbeing |  No (Couldn't compute) | Yes | |
 | Estonian Biobank | EA | Yes | Yes | Got batch controlled results |
@@ -72,9 +83,29 @@ subtitle: Everything Done So Far
 | Estonian Biobank | Eczema | Yes  | Yes | Got batch controlled results|
 | Estonian Biobank | Hayfever | Yes | | |
 | Estonian Biobank | Migraine | No (rg out of bounds) | Yes | Got batch controlled results|
-| UKB | BMI | Yes | Yes | |
-| UKB | EA | Yes | Yes | |
+| UKB | SWB | Yes | Yes  | |
+| UKB | Glucose |  |  | Not analyzing  |
+| UKB | Non-HDL | Yes  | Yes  | |
+| UKB | HDL | Yes  | Yes  | |
+| UKB | BPS | Yes | Yes  | |
+| UKB | BPD |  Yes | Yes  | |
+| UKB | SRH | No (-ve) | Yes  | |
+| UKB | FEV1 | Yes  | Yes  | |
+| UKB | Ever-smoked | No (-ve) | Yes  | |
+| UKB | CPD | No (-ve)  | Yes  | |
+| UKB | DPW | No (-ve) | Yes   | |
 | UKB | Height | Yes | Yes | |
+| UKB | BMI | Yes | Yes | |
+| UKB | Cognitive ability  |  Yes | Yes  | |
+| UKB | Neuroticism  |  Yes | Yes  | |
+| UKB | AAFB  | Yes | Yes  | |
+| UKB | N Children Male  |  |  | Not analyzed |
+| UKB | N Children Female  |  |  |  Not analyzed|
+| UKB | Household Income  |  Yes | Yes  | |
+| UKB | Depression  | Yes  | Yes  | |
+| UKB | EA | Yes | Yes | |
+| UKB | Log hourly income  |  |  |  No data|
+| UKB | N Children  | Yes  | Yes  | |
 | MOBA | BMI | Yes | Yes | |
 | MOBA | Height | Yes | Yes | |
 | MOBA | Depressive symptoms | No  (h2 is negative) | | |
@@ -89,8 +120,8 @@ subtitle: Everything Done So Far
 | Geisinger | Asthma | No (Couldnt compute) | Yes | |
 | Geisinger | ADHD | Yes | Yes | |
 | Geisinger | Eczema | No  | Yes | |
-| Geisinger | BPD | no |  Yes | |
-| Geisinger | BPS | No | Yes  | |
+| Geisinger | BPD | Yes |  Yes | |
+| Geisinger | BPS | Yes | Yes  | |
 | Geisinger | Hayfever | Yes  | Yes | |
 | Geisinger | HDL | Yes  | Yes | |
 | Geisinger | Migraine | No (Couldnt compute)  | Yes | |
@@ -108,8 +139,8 @@ subtitle: Everything Done So Far
 | Minnesotta twins | EA | Yes | Yes | |
 | Minnesotta twins | BMI | Yes | Yes | |
 | Minnesotta twins | Height | Yes | Yes | | 
-| Minnesotta twins | BPS | No | | rg is weird. Very few valid alleles |
-| Minnesotta twins | CPD | No | | |
+| Minnesotta twins | BPS | No (not enough power) | Yes | rg is weird. Very few valid alleles |
+| Minnesotta twins | CPD | No (high se) | | |
 | Minnesotta twins | DPW | No | | |
 | Minnesotta twins | ES | No | | |
 | Minnesotta twins | Income | No | | |
@@ -137,11 +168,13 @@ subtitle: Everything Done So Far
 | Dutch Twins | Satisfaction With life | No (Couldn't Compute) | Yes | Ref file is SWB |
 | Dutch Twins | BPS  | No (Couldn't compute) | Yes  | |
 | Dutch Twins | Self Rated Health  | No (-ve) | Yes  | |
+| QIMR | EA  | Yes (borderline) | Yes  |  |
 
 
 Notes:
 
 1. LDL is taken as the reference for non-HDL cholestrol
+2. QIMR's info-R2 cutoff should be 0.95 instead of 0.99
 
 # Methodology
 

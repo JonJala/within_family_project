@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 ### Run the easyqc pipeline
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/smoking_ref/Smokinginit.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/smoking_ref/cpd.sumstats.gz"
 
 #################
 # Minnesotta twins
@@ -19,7 +19,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #############
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Cannabis/NTR_Cannabis_CHR*.sumstats.hdf5" \
+#     "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/CPD/NTR_CPD_CHR*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/cpd" \
 #     --ldsc-ref "$reffile" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
@@ -57,10 +57,34 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # # Finnish twins
 # #####
 
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/cpd.chr*.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/cpd" \
+#     --ldsc-ref $reffile \
+#     --toest "direct_population" \
+#     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
+#     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
+
+#####################
+# ====== UKB ====== #
+#####################
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/10/chr_*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/cpd" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "$reffile"
+
+#######################
+# generation scotland
+#######################
+
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/cpd.chr*.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/cpd" \
-    --ldsc-ref $reffile \
-    --toest "direct_population" \
-    --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
-    --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
+    "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/7/chr_*.sumstatschr_clean.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/cpd" \
+    --ldsc-ref "$reffile" \
+    --rsid_readfrombim "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/SNPs/chr_*_rsids.txt,0,3,1, " \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
+    --info "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz"

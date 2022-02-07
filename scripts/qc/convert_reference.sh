@@ -33,12 +33,19 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --N 807553 --signed-sumstat LogOR,0 \
 # --chunksize 50000
 
-# ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/processed/smoking_ref/smokinginit.txt \
-# --merge-alleles ${merge_alleles} \
-# --out ${within_family_path}/processed/smoking_ref/Smokinginit \
-# --chunksize 50000 \
-# --a1 REF --a2 ALT
+${ldscpath}/munge_sumstats.py  \
+--sumstats /var/genetics/data/published/liu_2019_smoking/raw/sumstats/smokinginit.txt \
+--merge-alleles ${merge_alleles} \
+--out ${within_family_path}/processed/reference_samples/smoking_ref/Smokinginit \
+--chunksize 50000 \
+--a1 REF --a2 ALT
+
+${ldscpath}/munge_sumstats.py  \
+--sumstats /var/genetics/data/published/liu_2019_smoking/raw/sumstats/CigarettesPerDay.txt.gz \
+--merge-alleles ${merge_alleles} \
+--out ${within_family_path}/processed/reference_samples/smoking_ref/cpd \
+--chunksize 50000 \
+--a1 REF --a2 ALT
 
 
 # ${ldscpath}/munge_sumstats.py  \
@@ -137,17 +144,19 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 
-# ${ldscpath}/munge_sumstats.py  \
-# --sumstats /var/genetics/data/published/ehret_2016_bp/raw/sumstats/Ehret_2016_summstats_formatted.txt \
-# --merge-alleles ${merge_alleles} \
-# --out ${within_family_path}/processed/reference_samples/bps_ref/bps_ref \
-# --snp rsid --N-col TotalSampleSize_SBP --signed-sumstat SBP_ZSCORE,0 --p P_SBP
 
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats /var/genetics/data/published/ehret_2016_bp/raw/sumstats/Ehret_2016_summstats_formatted.txt \
+# --sumstats  /var/genetics/data/published/loh_2018_bp/raw/sumstats/GCST90029011_buildGRCh37_bps.tsv \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/bps_ref/bps_ref \
+# --snp variant_id --N-col n --p p_value --a1 effect_allele --a2 other_allele
+
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats  /var/genetics/data/published/loh_2018_bp/raw/sumstats/GCST90029010_buildGRCh37_bpd.tsv \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/processed/reference_samples/bpd_ref/bpd_ref \
-# --snp rsid --N-col TotalSampleSize_DBP --signed-sumstat DBP_ZSCORE,0 --p P_DBP
+# --snp variant_id --N-col n --p p_value --a1 effect_allele --a2 other_allele
+
 
 # ${ldscpath}/munge_sumstats.py  \
 # --sumstats /var/genetics/data/published/okbay_2016_swb/raw/sumstats/SWB_Full.txt \
@@ -236,8 +245,8 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --out ${within_family_path}/processed/reference_samples/extraversion_ref/extraversion_ref \
 # --N 63030 --signed-sumstat Z,0 --snp RSNUMBER
 
-${ldscpath}/munge_sumstats.py  \
---sumstats /var/genetics/data/published/jones_2019_morningperson/raw/sumstats/chronotype_raw_BOLT.output_HRC.only_plus.metrics_maf0.001_hwep1em12_info0.3.txt.gz \
---merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/reference_samples/morningpersion_ref/morningperson_ref \
---N 697828
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/jones_2019_morningperson/raw/sumstats/chronotype_raw_BOLT.output_HRC.only_plus.metrics_maf0.001_hwep1em12_info0.3.txt.gz \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/morningpersion_ref/morningperson_ref \
+# --N 697828

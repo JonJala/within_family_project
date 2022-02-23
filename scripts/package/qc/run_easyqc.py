@@ -461,6 +461,7 @@ ADDCOL --rcdAddCol abs(f-EAF.ref) --colOut DAF
 ## blnPlotAll 0 --> only outlying SNPs with |Freq-Freq.ref|>0.2 will be plotted (way less computational time)
 AFCHECK --colInFreq f --colRefFreq EAF.ref
     --numLimOutlier 0.2 --blnRemoveOutlier 1 --blnPlotAll 0
+    --strXlab Reference allele frequency --strYlab Observed Allele Frequency
 ''')
 
     if args.toest is not None:

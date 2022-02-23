@@ -39,7 +39,7 @@
 },
 
     "eb" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/ea/controls/CLEANED.out.gz",
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/ea/CLEANED.out.gz",
         "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
             "direct_population" : "-999 -999;-999 -999"}
     },
@@ -63,7 +63,13 @@
         "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
             "direct_population" : "-999 -999;-999 -999"}
 
+    },
+
+    "dutchtwins" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/ea/CLEANED.out.gz",
+        "Amat" : {}
     }
+
 
 
 }

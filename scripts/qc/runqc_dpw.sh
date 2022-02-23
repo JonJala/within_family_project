@@ -7,13 +7,13 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # Minnesotta twins
 #################
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/minn_twins/public/latest/raw/sumstats/fgwas/sumstats/DPW_chr*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/dpw" \
-#     --ldsc-ref "$reffile" \
-#     --cptid \
-#     --toest "direct_population" \
-#     --hwe '/disk/genetics3/data_dirs/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/minn_twins/public/latest/raw/sumstats/fgwas/sumstats/DPW_chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/dpw" \
+    --ldsc-ref "$reffile" \
+    --cptid \
+    --toest "direct_population" \
+    --hwe '/disk/genetics3/data_dirs/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
 
 #############
@@ -57,9 +57,9 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ====== UKB ====== #
 #####################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/11/chr_*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/dpw" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --bim_chromosome 99 \
-    --ldsc-ref "$reffile"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/11/chr_*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/dpw" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "$reffile"

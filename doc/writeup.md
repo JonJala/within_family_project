@@ -28,7 +28,7 @@ subtitle: Everything Done So Far
 | Hunt | N Children |Yes | Yes | |
 | Hunt | CPD | No (-ve) | Yes | |
 | Hunt | Drinks Per Week | No (-ve) |Yes | |
-| Hunt | Neuoroticism | Yes  |Yes | |
+| Hunt | Neuroticism | Yes  |Yes | |
 | Hunt | Age Menarche | Yes |Yes | |
 | Hunt | BPD | Yes | Yes | |
 | Hunt | FEV1 | No (-ve)|Yes | |
@@ -77,11 +77,11 @@ subtitle: Everything Done So Far
 | Estonian Biobank | BMI | Yes | Yes | Got batch controlled results |
 | Estonian Biobank | MDD | Yes | |  | 
 | Estonian Biobank | Ever Smoker | No (-ve 1) | | |
-| Estonian Biobank | AAFB | Yes | | |
+| Estonian Biobank | AAFB | Yes | Yes | Got batch controlled results |
 | Estonian Biobank | Asthma | Yes | | |
 | Estonian Biobank | Depression | Yes | Yes | |
 | Estonian Biobank | Eczema | Yes  | Yes | Got batch controlled results|
-| Estonian Biobank | Hayfever | Yes | | |
+| Estonian Biobank | Hayfever | No (rg out of bounds) | Yes | Got batch controlled results|
 | Estonian Biobank | Migraine | No (rg out of bounds) | Yes | Got batch controlled results|
 | UKB | SWB | Yes | Yes  | |
 | UKB | Glucose |  |  | Not analyzing  |
@@ -108,9 +108,9 @@ subtitle: Everything Done So Far
 | UKB | N Children  | Yes  | Yes  | |
 | MOBA | BMI | Yes | Yes | |
 | MOBA | Height | Yes | Yes | |
-| MOBA | Depressive symptoms | No  (h2 is negative) | | |
-| MOBA | Income | No (h2 is negative) | | |
-| MOBA | Fertility | No (Low power. h2 is negative sometimes in jack knife) | | |
+| MOBA | Depressive symptoms | No  (h2 is negative) | Yes | |
+| MOBA | Income | No (h2 is negative) |  Yes | |
+| MOBA | Fertility | Yes | Yes | |
 | MOBA | EA | Yes| Yes| |
 | Geisinger | BMI | Yes | Yes | |
 | Geisinger | Height | Yes | Yes | |
@@ -169,6 +169,8 @@ subtitle: Everything Done So Far
 | Dutch Twins | BPS  | No (Couldn't compute) | Yes  | |
 | Dutch Twins | Self Rated Health  | No (-ve) | Yes  | |
 | QIMR | EA  | Yes (borderline) | Yes  |  |
+| QIMR | BMI  | Yes  | Yes  |  |
+| QIMR | Height  | Yes  | No (QQ plot direct effect is off)  |  |
 
 
 Notes:

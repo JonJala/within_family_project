@@ -18,11 +18,13 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # MOBA
 ###############
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/sumstats/fert_chr*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/nchildren" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_paternal_maternal_averageparental_population"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/sumstats/fert_chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/nchildren" \
+    --ldsc-ref "$reffile" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+    --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 
 # ##########
 # # STR
@@ -67,9 +69,9 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ====== UKB ====== #
 #####################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/23/chr_*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/nchildren" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --bim_chromosome 99 \
-    --ldsc-ref "$reffile"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/23/chr_*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/nchildren" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "$reffile"

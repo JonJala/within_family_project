@@ -23,7 +23,9 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/sumstats/inc_chr*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/income" \
 #     --ldsc-ref "$reffile" \
-#     --toest "direct_paternal_maternal_averageparental_population"
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+#     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 
 # ##########
 # # STR
@@ -65,10 +67,10 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ====== UKB ====== #
 #####################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/19/chr_*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/income" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --bim_chromosome 99 \
-    --ldsc-ref "$reffile"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/19/chr_*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/income" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "$reffile"
 

@@ -30,8 +30,6 @@ python /homes/nber/harij/gitrepos/SNIPar/fPGS.py {outpath} \
     else:
         colnames = ['variable', 'estimate', 'se']
     
-    # subprocess.run(f'cat {outpath}.pgs_effects.txt',
-    # shell = True, check=True, executable='/usr/bin/bash')
 
     df = pd.read_csv(outpath + '.pgs_effects.txt', delim_whitespace=True, 
             names = colnames)
@@ -245,7 +243,7 @@ if __name__ == '__main__':
     parser.add_argument('--pgsgroup2', type=str, help='''PGS group 2. The direct/pop ratio will be
     constructed between these. Then that will be subtracted from the ratio constructed in group 1''')
     parser.add_argument('--pgsreg-r2', action='store_true', default=False, help='''Should R squares be reported''')
-    parser.add_argument('--bootstrap-niter', default=100, help='''Number of bootstrap iterations''')
+    parser.add_argument('--bootstrap-niter', default=1000, help='''Number of bootstrap iterations''')
     parser.add_argument('--bootstrapfunc', default='d', help='''Should estimates be divided (d) or subtracted (s). 
     Takes in s or d as possible arguments''')
     

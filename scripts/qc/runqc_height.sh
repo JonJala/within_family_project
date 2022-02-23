@@ -34,14 +34,14 @@ refsample="/var/genetics/proj/within_family/within_family_project/processed/refe
 # # LIfelines
 # ##########
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_height.sumstats" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/height" \
-#     --ldsc-ref $refsample  \
-#     --effects "direct_averageparental" \
-#     --toest "direct_population" \
-#     --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
-#     --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_height.sumstats" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/height" \
+    --ldsc-ref $refsample  \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+    --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
 
 # 0.9362 (0.1175)
 
@@ -53,8 +53,11 @@ refsample="/var/genetics/proj/within_family/within_family_project/processed/refe
 #     "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/sumstats/ht_chr*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/height" \
 #     --ldsc-ref $refsample \
-#     --toest "direct_paternal_maternal_averageparental_population"
-# # 0.8788 (0.1061)
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+#     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
+
+# 0.8788 (0.1061)
 
 ##########
 # STR
@@ -127,11 +130,22 @@ refsample="/var/genetics/proj/within_family/within_family_project/processed/refe
 # Dutch Twins
 #############
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Height/NTR_Height_CHR*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/height" \
-    --ldsc-ref "$refsample" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --cptid \
-    --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
-    --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Height/NTR_Height_CHR*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/height" \
+#     --ldsc-ref "$refsample" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid \
+#     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
+#     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
+
+#############
+# QIMR
+############
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/qimr/public/latest/raw/sumstats/fgwas/QIMR_FamilyGWAS/Height/Height_Chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/height" \
+#     --ldsc-ref "$refsample" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid

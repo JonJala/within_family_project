@@ -7,13 +7,13 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # Estonian Biobank
 ##############
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/aafb/AGE-First-BIRTH/AGE_chr*_results.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/aafb" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_paternal_maternal_averageparental_population" \
-#     --hwe "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/HWE/chr*.hwe" \
-#     --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/AGE-First-BIRTH-ext/AGE_chr*_results.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/aafb" \
+    --ldsc-ref "$reffile" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --hwe "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/HWE/chr*.hwe" \
+    --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT"
 
 
 ##############
@@ -44,9 +44,9 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ====== UKB ====== #
 #####################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/16/chr_*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/aafb" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --bim_chromosome 99 \
-    --ldsc-ref "$reffile"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/16/chr_*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/aafb" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "$reffile"

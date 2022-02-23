@@ -72,7 +72,7 @@ ${ldscpath}/munge_sumstats.py  \
 
 # # HH Income
 # ${ldscpath}/munge_sumstats.py  \
-# --sumstats ${within_family_path}/processed/inc_ref/Household_Income_UKBiobank.txt.gz \
+# --sumstats /var/genetics/data/published/hill_2019_income/raw/sumstats/Household_Income_UKBiobank.txt.gz \
 # --merge-alleles ${merge_alleles} \
 # --N 286301 --a1 Effect_Allele --a2 Non_effect_Allele \
 # --out ${within_family_path}/processed/inc_ref/hh_wage \

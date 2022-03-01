@@ -218,7 +218,7 @@ def main(args):
     
     # parsing
     data_args = process_json_args(data_args)
-    df_merged, Amat_dicts = read_from_json(data_args, args)
+    df_merged = read_from_json(data_args, args)
     df_merged = merging_data(list(df_merged.values()), on_pos = args.on_pos)
 
     if args.on_pos:

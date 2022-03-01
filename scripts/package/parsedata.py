@@ -629,33 +629,14 @@ def read_file(args, printinfo = True):
         print("There was no recognized extension format. Assuming input is txt")
         zdata = read_txt(args)
 
-    # adding A matrix
-    Amats = args['Amat']
-    Amat_dict = {}
-    dims_out = []
-    for dim in Amats:
-        Amat = np.array(np.matrix(Amats[dim]), dtype = float)
-        n, m = Amat.shape
-        if Amat.flatten().shape[0] == 0:
-            # if array is empty for given dim
-            Amat = np.array([np.nan])
-        
-        # Reaplce -999 (nan value signifier) with nan
-        Amat[(Amat > -1000) & (Amat < -998)] = np.nan
-        dims_out += [n]
-        Amat_dict[dim] = np.atleast_2d(Amat)
-
-    zdata['dims'] = max(dims_out)
-
-    return zdata, Amat_dict
+    return zdata
 
 
 def read_from_json(df_args, args):
     df_dict = {}
-    Amat_dicts = {}
     for cohort in df_args.keys():
         print(f"Reading file for: {cohort}")
-        df_in, Amat_dict = read_file(df_args[cohort], printinfo = False)
+        df_in = read_file(df_args[cohort], printinfo = False)
         df_in = (df_in
          .pipe(begin_pipeline)
          .pipe(combine_allele_cols, "A1", "A2")
@@ -663,12 +644,10 @@ def read_from_json(df_args, args):
         )
 
         df_dict[cohort] = df_in
-        Amat_dicts[cohort] = Amat_dict
         print("============================")
     
     
-    Amat_dicts = reverse_nest_dicts(Amat_dicts)
-    return df_dict, Amat_dicts
+    return df_dict
 
 
     

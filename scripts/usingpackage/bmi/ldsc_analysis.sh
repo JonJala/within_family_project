@@ -72,7 +72,7 @@ Rscript $scriptpath/estimate_marginal_correlations_meta.R \
 # --out ${within_family_path}/processed/package_output/bmi/maternal_vs_paternal
 
 # ${ldscpath}/ldsc.py \
-# --h2 ${within_family_path}/processed/package_output/bmi/dirmunged.sumstats.gz \
+# --h2 ${within_family_path}/processed/package_output/bmi/directmunged.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/package_output/bmi/direct_h2

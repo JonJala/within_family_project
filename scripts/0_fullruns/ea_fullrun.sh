@@ -9,8 +9,8 @@ cd ${within_family_directory}
 function main(){
 
     source ${act} ${sniparenv}
-    bash scripts/qc/runqc_ea.sh
-    bash scripts/usingpackage/ea/runmeta.sh
+    # bash scripts/qc/runqc_ea.sh
+    # bash scripts/usingpackage/ea/runmeta.sh
     bash scripts/sbayesr/ea_pgi.sh
     bash scripts/fpgs/fpgs_ea.sh
     

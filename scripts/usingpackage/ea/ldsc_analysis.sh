@@ -76,13 +76,6 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/ea/maternal_vs_paternal
 # -0.0501 (0.3567)
 
-${ldscpath}/ldsc.py \
---h2 ${within_family_path}/processed/package_output/ea/directmunged.sumstats.gz \
---ref-ld-chr ${eur_w_ld_chr} \
---w-ld-chr ${eur_w_ld_chr} \
---out ${within_family_path}/processed/package_output/ea/meta_analysis_new_qc_dir_h2
-# 0.0633 (0.0062)
-
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/ea/ntcmunged.sumstats.gz \
@@ -100,14 +93,14 @@ ${ldscpath}/ldsc.py \
 # --merge_alleles ${hm3snps}
 # 0.204 (0.0164) # r=1.9783 S.E.=0.2345
 
-# ${ldscpath}/ldsc.py \
-# --h2 ${within_family_path}/processed/package_output/ea/directmunged.sumstats.gz \
-# --ref-ld-chr ${eur_w_ld_chr} \
-# --w-ld-chr ${eur_w_ld_chr} \
-# --out ${within_family_path}/processed/package_output/ea/direct_h2
+${ldscpath}/ldsc.py \
+--h2 ${within_family_path}/processed/package_output/ea/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/ea/direct_h2
 
-# ${ldscpath}/ldsc.py \
-# --h2 ${within_family_path}/processed/package_output/ea/populationmunged.sumstats.gz \
-# --ref-ld-chr ${eur_w_ld_chr} \
-# --w-ld-chr ${eur_w_ld_chr} \
-# --out ${within_family_path}/processed/package_output/ea/population_h2
+${ldscpath}/ldsc.py \
+--h2 ${within_family_path}/processed/package_output/ea/populationmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/ea/population_h2

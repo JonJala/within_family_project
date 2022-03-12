@@ -15,11 +15,6 @@
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/cognition/CLEANED.out.gz"
 },
 
-    "mt" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/iq/CLEANED.out.gz"
-
-    },
-
     "str" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/IQ/CLEANED.out.gz"
 

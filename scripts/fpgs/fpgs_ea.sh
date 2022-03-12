@@ -32,7 +32,7 @@ python ${within_family_path}/scripts/fpgs/bootstrapest.py \
     --pgsreg-r2 \
     --bootstrapfunc d
 
-# python ${within_family_path}/scripts/fpgs/bootstrapest.py \
+python ${within_family_path}/scripts/fpgs/bootstrapest.py \
     ${within_family_path}/processed/fpgs/ea/population_coeffratio \
     --pgs ${within_family_path}/processed/fpgs/ea/population_full.pgs.txt \
     --pgs2 ${within_family_path}/processed/fpgs/ea/population_proband.pgs.txt \

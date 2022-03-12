@@ -19,58 +19,58 @@ function run_pgi(){
     EFFECT=$2
     PHENONAME=$3
 
-    # mkdir -p ${PHENONAME}/${EFFECT}
+    mkdir -p ${PHENONAME}/${EFFECT}
 
-    # echo "Formatting summary statistics..."
-    # python ${within_family_path}/scripts/sbayesr/format_gwas.py \
-    #     "$METAFILE" \
-    #     --effecttype "${EFFECT}" \
-    #     --median-n \
-    #     --outpath "${PHENONAME}/${EFFECT}/meta.sumstats"
+    echo "Formatting summary statistics..."
+    python ${within_family_path}/scripts/sbayesr/format_gwas.py \
+        "$METAFILE" \
+        --effecttype "${EFFECT}" \
+        --median-n \
+        --outpath "${PHENONAME}/${EFFECT}/meta.sumstats"
 
-    # mkdir -p ${PHENONAME}/${EFFECT}/weights/
-    # mkdir -p logs/${EFFECT}
+    mkdir -p ${PHENONAME}/${EFFECT}/weights/
+    mkdir -p logs/${EFFECT}
 
-    # # getting weights
-    # $gctb --sbayes R \
-    # --mldm /disk/genetics/tools/gctb/ld_reference/ukbEURu_hm3_shrunk_sparse/ukbEURu_mldmlist.txt \
-    # --exclude-mhc \
-    # --seed 123 \
-    # --pi 0.95,0.02,0.02,0.01 \
-    # --gamma 0.0,0.01,0.1,1 \
-    # --gwas-summary ${PHENONAME}/${EFFECT}/meta.sumstats \
-    # --chain-length 10000 \
-    # --burn-in 2000 \
-    # --out-freq 100 \
-    # --out ${PHENONAME}/${EFFECT}/weights/meta_weights | tee "logs/${EFFECT}/${PHENONAME}_meta_weights_sbayesr"
+    # getting weights
+    $gctb --sbayes R \
+    --mldm /disk/genetics/tools/gctb/ld_reference/ukbEURu_hm3_shrunk_sparse/ukbEURu_mldmlist.txt \
+    --exclude-mhc \
+    --seed 123 \
+    --pi 0.95,0.02,0.02,0.01 \
+    --gamma 0.0,0.01,0.1,1 \
+    --gwas-summary ${PHENONAME}/${EFFECT}/meta.sumstats \
+    --chain-length 10000 \
+    --burn-in 2000 \
+    --out-freq 100 \
+    --out ${PHENONAME}/${EFFECT}/weights/meta_weights | tee "logs/${EFFECT}/${PHENONAME}_meta_weights_sbayesr"
 
 
-    # echo "Formatting sbayesr weights to create scores"
-    # python ${within_family_path}/scripts/sbayesr/get_variantid.py \
-    #     ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes \
-    #     --out ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted
+    echo "Formatting sbayesr weights to create scores"
+    python ${within_family_path}/scripts/sbayesr/get_variantid.py \
+        ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes \
+        --out ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted
 
-    # # create PGIs
-    # for chr in {1..22}
-    # do
-    #     echo $chr
-    #     plink200a2 --bfile /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose  \
-    #     --score ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted 12 5 8 header center cols=+scoresums \
-    #     --out ${PHENONAME}/${EFFECT}/scores_mcs_${chr}
-    # done
+    # create PGIs
+    for chr in {1..22}
+    do
+        echo $chr
+        plink200a2 --bfile /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose  \
+        --score ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted 12 5 8 header center cols=+scoresums \
+        --out ${PHENONAME}/${EFFECT}/scores_mcs_${chr}
+    done
 
-    # python /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sumscores.py \
-    #     "${PHENONAME}/${EFFECT}/scores_mcs_*.sscore" \
-    #     --outprefix "${PHENONAME}/${EFFECT}/scoresout.sscore"
+    python /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sumscores.py \
+        "${PHENONAME}/${EFFECT}/scores_mcs_*.sscore" \
+        --outprefix "${PHENONAME}/${EFFECT}/scoresout.sscore"
 
-    # Rscript /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/pgiprediction.R \
-    #     --pgi "${PHENONAME}/${EFFECT}/scoresout.sscore" \
-    #     --pheno $pheno \
-    #     --iid_pheno "IID" \
-    #     --pheno_name "bmi7" \
-    #     --covariates $covariates \
-    #     --outprefix "${PHENONAME}/${EFFECT}/pgipred" \
-    #     --iidnamenorep
+    Rscript /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/pgiprediction.R \
+        --pgi "${PHENONAME}/${EFFECT}/scoresout.sscore" \
+        --pheno $pheno \
+        --iid_pheno "IID" \
+        --pheno_name "bmi7" \
+        --covariates $covariates \
+        --outprefix "${PHENONAME}/${EFFECT}/pgipred" \
+        --iidnamenorep
 
     python ${within_family_path}/scripts/sbayesr/parental_pgi_corr.py \
     "${PHENONAME}/${EFFECT}/scoresout.sscore" \
@@ -79,6 +79,6 @@ function run_pgi(){
 }
 
 # ============= Execution ============= #
-run_pgi "${within_family_path}/processed/package_output/bmi/bmi_meta.sumstats" "direct" "bmi"
-run_pgi "${within_family_path}/processed/package_output/bmi/bmi_meta.sumstats" "population" "bmi"
+run_pgi "${within_family_path}/processed/package_output/bmi/meta.sumstats" "direct" "bmi"
+run_pgi "${within_family_path}/processed/package_output/bmi/meta.sumstats" "population" "bmi"
 

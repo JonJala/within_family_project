@@ -177,6 +177,7 @@ Notes:
 
 1. LDL is taken as the reference for non-HDL cholestrol
 2. QIMR's info-R2 cutoff should be 0.95 instead of 0.99
+3. Ignore minnesotta twins for now - messes up results
 
 # Methodology
 

@@ -38,12 +38,6 @@
             "direct_population" : "1.0 0.0;0.0 1.0"}
     },
 
-    "mt" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/height/CLEANED.out.gz",
-        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.5 0.5",
-            "direct_population" : "1.0 0.0;0.0 1.0"}
-
-    },
 
     "geisinger" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/height/CLEANED.out.gz",

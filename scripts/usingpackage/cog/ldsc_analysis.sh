@@ -47,11 +47,11 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/cog/population_reference_sample
 
 
-# echo "Calculating rg between population and direct effects"
-# Rscript $scriptpath/estimate_marginal_correlations_meta.R \
-# --file "/var/genetics/proj/within_family/within_family_project/processed/package_output/cog/meta.sumstats" \
-# --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/cog/" \
-# --merge_alleles ${hm3snps}
+echo "Calculating rg between population and direct effects"
+Rscript $scriptpath/estimate_marginal_correlations_meta.R \
+--file "/var/genetics/proj/within_family/within_family_project/processed/package_output/cog/meta.sumstats" \
+--outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/cog/" \
+--merge_alleles ${hm3snps}
 
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/cog/maternalmunged.sumstats.gz,${within_family_path}/processed/package_output/cog/paternalmunged.sumstats.gz \

@@ -40,4 +40,4 @@ phenotypes = merge(phenotypes, covariates, by = c("FID", "IID"), all=TRUE)
 phenotypes[, bmi := standardize(bmi), by=sex]
 phenotypes[, height := standardize(height), by=sex]
 
-fwrite(phenotypes, file="/var/genetics/proj/within_family/within_family_project/processed/fpgs/phenotypes.txt", sep=" ", na=".")
+fwrite(phenotypes, file="/var/genetics/proj/within_family/within_family_project/processed/fpgs/phenotypes.txt", sep=" ", na="NA")

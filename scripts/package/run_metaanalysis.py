@@ -200,6 +200,10 @@ def process_args():
     help = '''Do you want to merge cohorts by rsid instead of default which is pos''')
     parser.add_argument('--nohm3', action='store_false',dest='hm3', default = True,
     help = '''Do you want to not output a txt dataset with only hm3 snps.''')
+    parser.add_argument('--nomediannfilter', action='store_false',dest='median_n_filter', default = True,
+    help = '''Should median N cutoff be used. Default is 0.8 * median_effective_n (direct)''')
+    parser.add_argument('--mediannthresh', dest='median_n_thresh', default = True,
+    help = '''Should median N cutoff be used. Default is 0.8 * median_effective_n (direct)''')
     args=parser.parse_args()
 
     return args
@@ -426,15 +430,19 @@ def main(args):
     
     
     if not args.no_txt_out:
+
+        if args.hm3:
+            hm3dat = pd.read_csv('/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist', delim_whitespace=True)
+            df_out_hm3 = df_out[df_out['SNP'].isin(hm3dat.SNP)]
+            df_out_hm3 = df_out_hm3.sort_values(by = ['chromosome', 'pos'])
+            df_out_hm3.to_csv(args.outprefix + '.hm3.sumstats', sep = '\t', index = False, na_rep = "nan")
+
+        if args.median_n_filter:
+            df_out = df_out.loc[df_out['direct_N'] > args.median_n_thresh * df_out['direct_N'].median(), :]
         df_out = df_out.sort_values(by = ["chromosome", "pos"])
         print(f"Writing output to {args.outprefix + '.sumstats'}")
         df_out.to_csv(args.outprefix + '.sumstats', sep = '\t', index = False, na_rep = "nan")
 
-        if args.hm3:
-            hm3dat = pd.read_csv('/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist', delim_whitespace=True)
-            df_out = df_out[df_out['SNP'].isin(hm3dat.SNP)]
-            df_out.to_csv(args.outprefix + '.hm3.sumstats', sep = '\t', index = False, na_rep = "nan")
-    
     print(f"Median direct-population effect correlation HM3: {np.median(df_out['direct_population_rg'])}")
     print(f"Median Direct N HM3: {np.median(df_out['direct_N'])}")
     print(f"Median Population N HM3: {np.median(df_out['population_N'])}")

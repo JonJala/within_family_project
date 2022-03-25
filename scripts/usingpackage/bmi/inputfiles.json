@@ -1,55 +1,47 @@
 {
     "moba" : {
 
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/bmi/CLEANED.out.gz",
-        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
-                "direct_population" : "-999 -999;-999 -999"}
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/bmi/CLEANED.out.gz"
 
 },
 
     "str": {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/bmi/CLEANED.out.gz",
-        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.5 0.5",
-            "direct_population" : "1.0 0.0;0.0 1.0"}
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/bmi/CLEANED.out.gz"
 },
 
     "ukb": {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bmi/CLEANED.out.gz",
-        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
-            "direct_population" : "-999 -999;-999 -999"}
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bmi/CLEANED.out.gz"
 },
 
     "ft" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/bmi/CLEANED.out.gz",
-        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.5 0.5",
-            "direct_population" : "1.0 0.0;0.0 1.0"}
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/bmi/CLEANED.out.gz"
 },
 
     "gs" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/bmi/CLEANED.out.gz",
-        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
-            "direct_population" : "-999 -999;-999 -999"}
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/bmi/CLEANED.out.gz"
 },
 
     "eb" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/bmi/CLEANED.out.gz",
-        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
-            "direct_population" : "-999 -999;-999 -999"}
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/bmi/CLEANED.out.gz"
     },
 
     "ll" :{
 
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/bmi/CLEANED.out.gz",
-        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.5 0.5",
-            "direct_population" : "1.0 0.0;0.0 1.0"}
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/bmi/CLEANED.out.gz"
     },
 
 
     "geisinger" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/bmi/CLEANED.out.gz",
-        "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
-            "direct_population" : "-999 -999;-999 -999"}
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/bmi/CLEANED.out.gz"
 
+    },
+
+    "dutch_twin" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/bmi/CLEANED.out.gz"
+    },
+
+    "hunt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/bmi/CLEANED.out.gz"
     }
 
 

@@ -19,9 +19,6 @@ function main(){
     source ${act} ${ldscev}
     bash scripts/usingpackage/bmi/ldsc_analysis.sh
 
-    # compiling results
-    source ${act} ${sniparenv}
-    python scripts/usingpackage/compile_results.py
 }
 
 

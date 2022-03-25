@@ -11,8 +11,8 @@ source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sb
 run_pgi "${within_family_path}/processed/package_output/ea/meta.sumstats" "direct" "ea"
 run_pgi "${within_family_path}/processed/package_output/ea/meta.sumstats" "population" "ea"
 
-run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "direct" "ea_ea4"
-run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "population" "ea_ea4"
+# run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "direct" "ea_ea4"
+# run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "population" "ea_ea4"
 
 ######################
 # EA4

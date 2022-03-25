@@ -30,12 +30,12 @@ function withinfam_pred(){
         --outprefix $within_family_path/processed/fpgs/${PHENONAME}/pheno  \
         --subsample /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt
 
-    python $snipar_path/fPGS.py \
-        $within_family_path/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
-        --bedfiles $bedfilepath \
-        --impfiles $impfilespath \
-        --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
-        --scale_pgs
+    # python $snipar_path/fPGS.py \
+    #     $within_family_path/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
+    #     --bedfiles $bedfilepath \
+    #     --impfiles $impfilespath \
+    #     --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+    #     --scale_pgs
 
     python ${within_family_path}/scripts/fpgs/attach_covar.py \
         ${within_family_path}/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.pgs.txt \

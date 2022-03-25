@@ -46,6 +46,11 @@ ${ldscpath}/ldsc.py \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/cog/population_reference_sample
 
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/cog/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/intelligence_ref/intelligence_ref.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/cog/direct_reference_sample
 
 echo "Calculating rg between population and direct effects"
 Rscript $scriptpath/estimate_marginal_correlations_meta.R \

@@ -17,10 +17,6 @@ function main(){
     # ldsc stuff
     source ${act} ${ldscev}
     bash scripts/usingpackage/ea/ldsc_analysis.sh
-
-    # compiling results
-    source ${act} ${sniparenv}
-    python scripts/usingpackage/compile_results.py
 }
 
 

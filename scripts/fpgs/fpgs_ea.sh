@@ -8,37 +8,37 @@ phenofile="/var/genetics/proj/within_family/within_family_project/processed/fpgs
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
-    "direct" "ea" \
-    "$phenofile" \
-    ""
-withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
-    "population" "ea" \
-    "$phenofile" \
-    ""
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
+#     "direct" "ea" \
+#     "$phenofile" \
+#     ""
+# withinfam_pred ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
+#     "population" "ea" \
+#     "$phenofile" \
+#     ""
 
-echo "Running covariates only regression"
-python $snipar_path/fPGS.py $within_family_path/processed/fpgs/ea/covariates \
-    --pgs /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt \
-    --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
-    --pgsreg-r2
+# # echo "Running covariates only regression"
+# python $snipar_path/fPGS.py $within_family_path/processed/fpgs/ea/covariates \
+#     --pgs /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt \
+#     --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
+#     --pgsreg-r2
 
-# calculate ratio between direct and population effects
-python ${within_family_path}/scripts/fpgs/bootstrapest.py \
-    ${within_family_path}/processed/fpgs/ea/direct_coeffratio \
-    --pgs ${within_family_path}/processed/fpgs/ea/direct_full.pgs.txt \
-    --pgs2 ${within_family_path}/processed/fpgs/ea/direct_proband.pgs.txt \
-    --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
-    --pgsreg-r2 \
-    --bootstrapfunc d
+# # # calculate ratio between direct and population effects
+# python ${within_family_path}/scripts/fpgs/bootstrapest.py \
+#     ${within_family_path}/processed/fpgs/ea/direct_coeffratio \
+#     --pgs ${within_family_path}/processed/fpgs/ea/direct_full.pgs.txt \
+#     --pgs2 ${within_family_path}/processed/fpgs/ea/direct_proband.pgs.txt \
+#     --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
+#     --pgsreg-r2 \
+#     --bootstrapfunc d
 
-python ${within_family_path}/scripts/fpgs/bootstrapest.py \
-    ${within_family_path}/processed/fpgs/ea/population_coeffratio \
-    --pgs ${within_family_path}/processed/fpgs/ea/population_full.pgs.txt \
-    --pgs2 ${within_family_path}/processed/fpgs/ea/population_proband.pgs.txt \
-    --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
-    --pgsreg-r2 \
-    --bootstrapfunc d
+# python ${within_family_path}/scripts/fpgs/bootstrapest.py \
+#     ${within_family_path}/processed/fpgs/ea/population_coeffratio \
+#     --pgs ${within_family_path}/processed/fpgs/ea/population_full.pgs.txt \
+#     --pgs2 ${within_family_path}/processed/fpgs/ea/population_proband.pgs.txt \
+#     --phenofile ${within_family_path}/processed/fpgs/ea/pheno.pheno \
+#     --pgsreg-r2 \
+#     --bootstrapfunc d
 
 
 python ${within_family_path}/scripts/fpgs/bootstrapest.py \

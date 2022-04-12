@@ -15,6 +15,8 @@ library(purrr)
 # 6. merge all the phenos by FID and IID
 # 7. save
 
+
+# define functions to help with processing
 standardize <- function(x) {
     out = (x - mean(x, na.rm=TRUE))/sd(x, na.rm=TRUE)
     return(out)
@@ -43,15 +45,14 @@ read_and_rename <- function(pheno_code, pheno_name, file_path = "/var/genetics/d
     return(pheno)
 }
 
+# read in covariates
 covariates = fread("/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt")
-ht_bmi = fread("/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/bmi_height_sweep7.txt")
-ea = fread("/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen")
-cog = fread("/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv")
-dep = fread("/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv")
 
 #---------------------------------------------------------------------------------------------------------------------
 # ea
 #---------------------------------------------------------------------------------------------------------------------
+
+ea = fread("/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen")
 
 # formatting ea
 ea[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
@@ -65,12 +66,16 @@ setnames(ea, old=c("Z_EA"), new=c("ea"))
 # height and bmi
 #---------------------------------------------------------------------------------------------------------------------
 
+ht_bmi = fread("/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/bmi_height_sweep7.txt")
+
 # rename
 setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
 
 #---------------------------------------------------------------------------------------------------------------------
 # cognition
 #---------------------------------------------------------------------------------------------------------------------
+
+cog = fread("/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv")
 
 # formatting cognition
 cog = cog[, c(grep("(GCNAAS0|Benjamin*)", names(cog))), with=FALSE]
@@ -88,15 +93,9 @@ cog[, grep("GCNAAS0", names(cog)) := NULL]
 #---------------------------------------------------------------------------------------------------------------------
 
 # depression is reverse coded compared to our cohorts
-dep = dep[,.(Benjamin_ID, Benjamin_FID, GCDEAN00)]
-dep[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
-dep[,FID := IID]
-dep[, Benjamin_ID := NULL]
-dep[, Benjamin_FID := NULL]
-dep[, depression := GCDEAN00]
+dep <- read_and_rename("GCDEAN00", "depression")
 dep[depression == 2, depression := 0]
 dep = dep[depression %in% c(0, 1)]
-dep[, GCDEAN00 := NULL]
 
 #---------------------------------------------------------------------------------------------------------------------
 # adhd

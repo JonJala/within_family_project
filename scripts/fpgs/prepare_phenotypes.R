@@ -15,7 +15,6 @@ library(purrr)
 # 6. merge all the phenos by FID and IID
 # 7. save
 
-
 # define functions to help with processing
 standardize <- function(x) {
     out = (x - mean(x, na.rm=TRUE))/sd(x, na.rm=TRUE)
@@ -131,7 +130,7 @@ summary(eczema) # coded as 0 1 binary variable
 #---------------------------------------------------------------------------------------------------------------------
 
 cann <- read_and_rename("GCDRUA00", "cannabis")
-table(cann$cannabis) # coded as 2, 1, -1; 2 = no, 1 = yes, -1 = missing? (https://cls.ucl.ac.uk/wp-content/uploads/2020/01/MCS7-Young-Person-Self-Completion-Questionnaire.pdf)
+# table(cann$cannabis) # coded as 2, 1, -1; 2 = no, 1 = yes, -1 = missing? (https://cls.ucl.ac.uk/wp-content/uploads/2020/01/MCS7-Young-Person-Self-Completion-Questionnaire.pdf)
 
 # reverse coding and remove missing values
 cann[cannabis == 2, cannabis := 0]
@@ -155,7 +154,7 @@ drinks_12 <- read_and_rename("GCALCN00", "drinks_12_months")
 drinks_12 = drinks_12[drinks_12_months %in% seq(1, 7)]
 
 # take midpoint of each bin
-# 1 = 0; 2 = 1.5; 3 = 4; 4 = 7.5; 5 = 14.5; 6 = 29.5; 7 = 40??
+# 1 = 0; 2 = 1.5; 3 = 4; 4 = 7.5; 5 = 14.5; 6 = 29.5; 7 = 40
 drinks_12[drinks_12_months == 1, drinks_12_months := 0]
 drinks_12[drinks_12_months == 2, drinks_12_months := 1.5]
 drinks_12[drinks_12_months == 3, drinks_12_months := 4]
@@ -185,7 +184,7 @@ drinks_4 <- read_and_rename("GCALNF00", "drinks_4_weeks")
 drinks_4 = drinks_4[drinks_4_weeks %in% seq(1, 7)]
 
 # take midpoint of each bin
-# 1 = 0; 2 = 1.5; 3 = 4; 4 = 7.5; 5 = 14.5; 6 = 29.5; 7 = 40??
+# 1 = 0; 2 = 1.5; 3 = 4; 4 = 7.5; 5 = 14.5; 6 = 29.5; 7 = 40
 drinks_4[drinks_4_weeks == 1, drinks_4_weeks := 0]
 drinks_4[drinks_4_weeks == 2, drinks_4_weeks := 1.5]
 drinks_4[drinks_4_weeks == 3, drinks_4_weeks := 4]
@@ -202,7 +201,7 @@ drinks_4[, drinks_4_weeks := standardize(drinks_4_weeks)]
 #---------------------------------------------------------------------------------------------------------------------
 
 dep_symp <- read_and_rename("GDCKESSL", "depressive_symptoms")
-table(dep_symp$depressive_symptoms) # 0 to 24
+# table(dep_symp$depressive_symptoms) # 0 to 24
 
 # standardize
 dep_symp[, depressive_symptoms := standardize(depressive_symptoms)]
@@ -212,7 +211,7 @@ dep_symp[, depressive_symptoms := standardize(depressive_symptoms)]
 #---------------------------------------------------------------------------------------------------------------------
 
 es <- read_and_rename("GCSMOK00", "ever_smoker")
-table(es$ever_smoker) # coded 1-6, -1 = missing?
+# table(es$ever_smoker) # coded 1-6, -1 = missing?
 
 # 1 I have never smoked cigarettes
 # 2 I have only ever tried smoking cigarettes once
@@ -231,7 +230,7 @@ es = es[ever_smoker %in% c(0, 1)]
 #---------------------------------------------------------------------------------------------------------------------
 
 extra <- read_and_rename("GDCEXTRAV", "extraversion")
-table(extra$extraversion) # -27 to 21? probably 0-25 or something, then -27, -11, and -25 are data entry errors? 0 might also be an error?
+# table(extra$extraversion)
 
 # remove 0 and negative values
 extra = extra[extraversion > 0]
@@ -254,6 +253,7 @@ hayfever[, eczema := NULL]
 #---------------------------------------------------------------------------------------------------------------------
 
 neuro <- read_and_rename("GDCNEUROT", "neuroticism")
+table(neuro$neuroticism)
 
 # remove 0 and negative values
 neuro = neuro[neuroticism > 0]
@@ -266,7 +266,7 @@ neuro[, neuroticism := standardize(neuroticism)]
 #---------------------------------------------------------------------------------------------------------------------
 
 health <- read_and_rename("GCCGHE00", "health")
-table(health$health) # 1 to 5, -1 = missing? need to reverse order of scale
+# table(health$health) # 1 to 5, -1 = missing? need to reverse order of scale so that higher values = higher level of wellbeing
 
 # reorder scale
 health[health == 1, self_rated_health := 5]
@@ -287,7 +287,7 @@ health[, self_rated_health := standardize(self_rated_health)]
 #---------------------------------------------------------------------------------------------------------------------
 
 swb <- read_and_rename("GDWEMWBS", "swb")
-table(swb$swb)
+# table(swb$swb)
 
 # standardize
 swb[, swb := standardize(swb)]

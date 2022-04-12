@@ -20,7 +20,7 @@ standardize <- function(x) {
     return(out)
 }
 
-read_and_rename <- function(file_path, pheno_code, pheno_name) {
+read_and_rename <- function(pheno_code, pheno_name, file_path = "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv") {
     # read in the file
     pheno = fread(file_path)
     
@@ -65,6 +65,7 @@ setnames(ea, old=c("Z_EA"), new=c("ea"))
 # height and bmi
 #---------------------------------------------------------------------------------------------------------------------
 
+# rename
 setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
 
 #---------------------------------------------------------------------------------------------------------------------
@@ -101,18 +102,16 @@ dep[, GCDEAN00 := NULL]
 # adhd
 #---------------------------------------------------------------------------------------------------------------------
 
-adhd_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-adhd <- read_and_rename(adhd_path, "GHYPER_C", "adhd")
+adhd <- read_and_rename("GHYPER_C", "adhd")
 
 # standardize
-adhd[, adhd := standardize(adhd)]
+adhd[, adhd := standardize(adhd)] 
 
 #---------------------------------------------------------------------------------------------------------------------
 # age at first menarche
 #---------------------------------------------------------------------------------------------------------------------
 
-menarche_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-menarche <- read_and_rename(menarche_path, "GCAGMN00", "menarche")
+menarche <- read_and_rename("GCAGMN00", "menarche")
 
 # remove outliers
 menarche[menarche<quantile(menarche,0.001,na.rm=T)] = NA
@@ -125,18 +124,15 @@ menarche[, menarche := standardize(menarche)]
 # eczema
 #---------------------------------------------------------------------------------------------------------------------
 
-eczema_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-eczema <- read_and_rename(eczema_path, "GCCLSM0P", "eczema")
+eczema <- read_and_rename("GCCLSM0P", "eczema")
 summary(eczema) # coded as 0 1 binary variable
 
 #---------------------------------------------------------------------------------------------------------------------
 # ever cannabis
 #---------------------------------------------------------------------------------------------------------------------
 
-cann_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-cann <- read_and_rename(cann_path, "GCDRUA00", "cannabis")
-summary(cann)
-unique(cann$GCDRUA00) # coded as 2, 1, -1; 2 = no, 1 = yes, -1 = missing? (https://cls.ucl.ac.uk/wp-content/uploads/2020/01/MCS7-Young-Person-Self-Completion-Questionnaire.pdf)
+cann <- read_and_rename("GCDRUA00", "cannabis")
+table(cann$cannabis) # coded as 2, 1, -1; 2 = no, 1 = yes, -1 = missing? (https://cls.ucl.ac.uk/wp-content/uploads/2020/01/MCS7-Young-Person-Self-Completion-Questionnaire.pdf)
 
 # reverse coding and remove missing values
 cann[cannabis == 2, cannabis := 0]
@@ -146,10 +142,7 @@ cann = cann[cannabis %in% c(0, 1)]
 # drinks in last 12 months
 #---------------------------------------------------------------------------------------------------------------------
 
-drinks_12_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-drinks_12 <- read_and_rename(drinks_12_path, "GCALCN00", "drinks_12_months")
-summary(drinks_12)
-unique(drinks_12$GCALCN00)
+drinks_12 <- read_and_rename("GCALCN00", "drinks_12_months")
 
 # 1 Never
 # 2 1-2 times
@@ -179,10 +172,7 @@ drinks_12[, drinks_12_months := standardize(drinks_12_months)]
 # drinks in last 4 weeks
 #---------------------------------------------------------------------------------------------------------------------
 
-drinks_4_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-drinks_4 <- read_and_rename(drinks_4_path, "GCALNF00", "drinks_4_weeks")
-summary(drinks_4)
-unique(drinks_4$GCALNF00)
+drinks_4 <- read_and_rename("GCALNF00", "drinks_4_weeks")
 
 # 1 Never
 # 2 1-2 times
@@ -212,10 +202,8 @@ drinks_4[, drinks_4_weeks := standardize(drinks_4_weeks)]
 # depressive symptoms
 #---------------------------------------------------------------------------------------------------------------------
 
-dep_symp_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-dep_symp <- read_and_rename(dep_symp_path, "GDCKESSL", "depressive_symptoms")
-summary(dep_symp)
-unique(dep_symp$GDCKESSL) # 0 to 24
+dep_symp <- read_and_rename("GDCKESSL", "depressive_symptoms")
+table(dep_symp$depressive_symptoms) # 0 to 24
 
 # standardize
 dep_symp[, depressive_symptoms := standardize(depressive_symptoms)]
@@ -224,10 +212,8 @@ dep_symp[, depressive_symptoms := standardize(depressive_symptoms)]
 # ever smoker
 #---------------------------------------------------------------------------------------------------------------------
 
-es_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-es <- read_and_rename(es_path, "GCSMOK00", "ever_smoker")
-summary(es)
-unique(es$GCSMOK00) # coded 1-6, -1 = missing?
+es <- read_and_rename("GCSMOK00", "ever_smoker")
+table(es$ever_smoker) # coded 1-6, -1 = missing?
 
 # 1 I have never smoked cigarettes
 # 2 I have only ever tried smoking cigarettes once
@@ -245,11 +231,8 @@ es = es[ever_smoker %in% c(0, 1)]
 # extraversion
 #---------------------------------------------------------------------------------------------------------------------
 
-extra_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-extra <- read_and_rename(extra_path, "GDCEXTRAV", "extraversion")
-summary(extra)
-unique(extra$GDCEXTRAV) # -27 to 21? probably 0-25 or something, then -27, -11, and -25 are data entry errors? 0 might also be an error?
-table(extra$GDCEXTRAV)
+extra <- read_and_rename("GDCEXTRAV", "extraversion")
+table(extra$extraversion) # -27 to 21? probably 0-25 or something, then -27, -11, and -25 are data entry errors? 0 might also be an error?
 
 # remove 0 and negative values
 extra = extra[extraversion > 0]
@@ -271,11 +254,7 @@ hayfever[, eczema := NULL]
 # neuroticism
 #---------------------------------------------------------------------------------------------------------------------
 
-neuro_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-neuro <- read_and_rename(neuro_path, "GDCNEUROT", "neuroticism")
-summary(neuro)
-unique(neuro$GDCNEUROT)
-table(neuro$GDCNEUROT)
+neuro <- read_and_rename("GDCNEUROT", "neuroticism")
 
 # remove 0 and negative values
 neuro = neuro[neuroticism > 0]
@@ -287,9 +266,7 @@ neuro[, neuroticism := standardize(neuroticism)]
 # self-rated health
 #---------------------------------------------------------------------------------------------------------------------
 
-health_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-health <- read_and_rename(health_path, "GCCGHE00", "health")
-summary(health)
+health <- read_and_rename("GCCGHE00", "health")
 table(health$health) # 1 to 5, -1 = missing? need to reverse order of scale
 
 # reorder scale
@@ -310,10 +287,8 @@ health[, self_rated_health := standardize(self_rated_health)]
 # subjective well-being
 #---------------------------------------------------------------------------------------------------------------------
 
-swb_path <- "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv"
-swb <- read_and_rename(swb_path, "GDWEMWBS", "swb")
-summary(swb)
-table(swb$GDWEMWBS)
+swb <- read_and_rename("GDWEMWBS", "swb")
+table(swb$swb)
 
 # standardize
 swb[, swb := standardize(swb)]
@@ -322,21 +297,15 @@ swb[, swb := standardize(swb)]
 # merge phenos
 #---------------------------------------------------------------------------------------------------------------------
 
-# setting names properly
-setnames(ea, old=c("Z_EA"), new=c("ea"))
-setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
-
-phenotypes = reduce(list(ht_bmi, ea, cog, dep), merge, by = c("FID", "IID"), all=TRUE)
+phenotypes = reduce(list(ht_bmi, ea, cog, dep, adhd, menarche, eczema, cann, drinks_12, drinks_4, dep_symp, es, extra, hayfever, neuro, health, swb), merge, by = c("FID", "IID"), all=TRUE)
 phenotypes = merge(phenotypes, covariates, by = c("FID", "IID"), all=TRUE)
 
-# formatting bmi and height
+# standardize bmi and height by sex
 phenotypes[, bmi := standardize(bmi), by=sex]
 phenotypes[, height := standardize(height), by=sex]
 
 # make cognition same as ea
-
 phenotypes[, cog := ea]
 
+# save
 fwrite(phenotypes, file="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt", sep=" ", na="NA")
-
-phenos <- read.table("/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt")

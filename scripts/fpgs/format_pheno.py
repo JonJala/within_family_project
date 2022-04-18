@@ -12,6 +12,7 @@ parser.add_argument('--phenocol',type=str,help='Name of phenotype column', defau
 parser.add_argument('--outprefix',type=str,help='Output prefix. Will add .pheno to the end', default = ".")
 parser.add_argument('--keep-na', action='store_true', default = False, help = "Should we keep the NA values")
 parser.add_argument('--subsample', type=str, help='''List of individuals you want to subsample''', default = None)
+parser.add_argument('--binary', type=str, default='0', help='''Is pheno a binary phenotype''')
 args=parser.parse_args()
 
 
@@ -28,7 +29,8 @@ else:
     dat = dat[['FID', args.iid, args.phenocol]]
     dat = dat.rename(columns = {args.iid : 'IID'})
 
-dat[args.phenocol] = dat[args.phenocol]/dat[args.phenocol].std()
+if args.binary != '1':
+    dat[args.phenocol] = dat[args.phenocol]/dat[args.phenocol].std()
 
 
 if not args.keep_na:

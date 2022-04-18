@@ -344,44 +344,44 @@ def main(args):
             {
                 'cptid' : df_toarray_dim['cptid'],
                 'chromosome' :  df_toarray_dim['CHR'].astype(int),
-                'pos' :  df_toarray_dim['BP'],
+                'pos' :  df_toarray_dim['BP'].astype(int),
                 'SNP' :  df_toarray_dim['SNP'],
                 'freq' : f_bar,
                 'A1' : df_toarray_dim['A1'],
                 'A2' : df_toarray_dim['A2'],
-                'direct_N' : Neff_dir,
-                'population_N' : Neff_pop,
+                'direct_N' : Neff_dir.astype(int),
+                'population_N' : Neff_pop.astype(int),
                 'direct_Beta' : theta_bar_out[:, 0].flatten(),
                 'paternal_Beta' : theta_bar_out[:, 1].flatten(),
                 'maternal_Beta' : theta_bar_out[:, 2].flatten(),
-                'avg_parental_Beta' : theta_bar_out[:, 3].flatten(),
+                'avg_NTC_Beta' : theta_bar_out[:, 3].flatten(),
                 'population_Beta' : theta_bar_out[:, 4].flatten(),
-                'direct_z' : z_bar_out[:, 0].flatten(),
-                'paternal_z' : z_bar_out[:, 1].flatten(),
-                'maternal_z' : z_bar_out[:, 2].flatten(),
-                'avg_parental_z' : z_bar_out[:, 3].flatten(),
-                'population_z' : z_bar_out[:, 4].flatten(),
+                'direct_Z' : z_bar_out[:, 0].flatten(),
+                'paternal_Z' : z_bar_out[:, 1].flatten(),
+                'maternal_Z' : z_bar_out[:, 2].flatten(),
+                'avg_NTC_Z' : z_bar_out[:, 3].flatten(),
+                'population_Z' : z_bar_out[:, 4].flatten(),
                 'direct_SE' : theta_ses_out[:, 0],
                 'paternal_SE' : theta_ses_out[:, 1],
                 'maternal_SE' : theta_ses_out[:, 2],
-                'avg_parental_SE' : theta_ses_out[:, 3],
+                'avg_NTC_SE' : theta_ses_out[:, 3],
                 'population_SE' : theta_ses_out[:, 4],
-                'direct_paternal_rg': get_rg(theta_var_out[:, 0, 1], theta_ses_out[:, 0], theta_ses_out[:, 1]),
-                'direct_maternal_rg': get_rg(theta_var_out[:, 0, 2], theta_ses_out[:, 0], theta_ses_out[:, 2]),
-                'direct_avg_parental_rg': get_rg(theta_var_out[:, 0, 3], theta_ses_out[:, 0], theta_ses_out[:, 3]),
-                'direct_population_rg': get_rg(theta_var_out[:, 0, 4], theta_ses_out[:, 0], theta_ses_out[:, 4]),
-                'paternal_maternal_rg': get_rg(theta_var_out[:, 1, 2], theta_ses_out[:, 1], theta_ses_out[:, 2]),
-                'paternal_avg_parental_rg': get_rg(theta_var_out[:, 1, 3], theta_ses_out[:, 1], theta_ses_out[:, 3]),
-                'paternal_population_rg': get_rg(theta_var_out[:, 1, 4], theta_ses_out[:, 1], theta_ses_out[:, 4]),
-                'maternal_avg_parental_rg': get_rg(theta_var_out[:, 2, 3], theta_ses_out[:, 2], theta_ses_out[:, 3]),
-                'maternal_population_rg': get_rg(theta_var_out[:, 2, 4], theta_ses_out[:, 2], theta_ses_out[:, 4]),
-                'avg_parental_population_rg': get_rg(theta_var_out[:, 3, 4], theta_ses_out[:, 3], theta_ses_out[:, 4]),
+                'r_direct_paternal': get_rg(theta_var_out[:, 0, 1], theta_ses_out[:, 0], theta_ses_out[:, 1]),
+                'r_direct_maternal': get_rg(theta_var_out[:, 0, 2], theta_ses_out[:, 0], theta_ses_out[:, 2]),
+                'r_direct_avg_NTC': get_rg(theta_var_out[:, 0, 3], theta_ses_out[:, 0], theta_ses_out[:, 3]),
+                'r_direct_population': get_rg(theta_var_out[:, 0, 4], theta_ses_out[:, 0], theta_ses_out[:, 4]),
+                'r_paternal_maternal': get_rg(theta_var_out[:, 1, 2], theta_ses_out[:, 1], theta_ses_out[:, 2]),
+                'r_paternal_avg_NTC': get_rg(theta_var_out[:, 1, 3], theta_ses_out[:, 1], theta_ses_out[:, 3]),
+                'r_paternal_population': get_rg(theta_var_out[:, 1, 4], theta_ses_out[:, 1], theta_ses_out[:, 4]),
+                'r_maternal_avg_NTC': get_rg(theta_var_out[:, 2, 3], theta_ses_out[:, 2], theta_ses_out[:, 3]),
+                'r_maternal_population': get_rg(theta_var_out[:, 2, 4], theta_ses_out[:, 2], theta_ses_out[:, 4]),
+                'r_avg_parental_population': get_rg(theta_var_out[:, 3, 4], theta_ses_out[:, 3], theta_ses_out[:, 4]),
                 'direct_pval' : pval_out[:, 0].flatten(),
                 'paternal_pval' : pval_out[:, 1].flatten(),
                 'maternal_pval' : pval_out[:, 2].flatten(),
-                'avg_parental_pval' : pval_out[:, 3].flatten(),
+                'avg_NTC_pval' : pval_out[:, 3].flatten(),
                 'population_pval' : pval_out[:, 4].flatten(),
-                'n_cohorts' : df_toarray_dim['n_cohorts']
+                'n_cohorts' : df_toarray_dim['n_cohorts'].astype(int)
             }
         )
 
@@ -435,15 +435,15 @@ def main(args):
             hm3dat = pd.read_csv('/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist', delim_whitespace=True)
             df_out_hm3 = df_out[df_out['SNP'].isin(hm3dat.SNP)]
             df_out_hm3 = df_out_hm3.sort_values(by = ['chromosome', 'pos'])
-            df_out_hm3.to_csv(args.outprefix + '.hm3.sumstats', sep = '\t', index = False, na_rep = "nan")
+            df_out_hm3.to_csv(args.outprefix + '.hm3.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
 
         if args.median_n_filter:
             df_out = df_out.loc[df_out['direct_N'] > args.median_n_thresh * df_out['direct_N'].median(), :]
         df_out = df_out.sort_values(by = ["chromosome", "pos"])
         print(f"Writing output to {args.outprefix + '.sumstats'}")
-        df_out.to_csv(args.outprefix + '.sumstats', sep = '\t', index = False, na_rep = "nan")
+        df_out.to_csv(args.outprefix + '.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
 
-    print(f"Median direct-population effect correlation HM3: {np.median(df_out['direct_population_rg'])}")
+    print(f"Median direct-population effect correlation HM3: {np.median(df_out['r_direct_population'])}")
     print(f"Median Direct N HM3: {np.median(df_out['direct_N'])}")
     print(f"Median Population N HM3: {np.median(df_out['population_N'])}")
     endTime = dt.datetime.now()

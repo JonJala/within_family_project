@@ -9,33 +9,33 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 
 echo "Munging!!"
 
-# ${ldscpath}/munge_sumstats.py \
-# --sumstats ${within_family_path}/processed/package_output/cog/meta.sumstats \
-# --out ${within_family_path}/processed/package_output/cog/directmunged \
-# --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
-# --merge-alleles ${hm3snps} \
-# --n-min 1.0
+${ldscpath}/munge_sumstats.py \
+--sumstats ${within_family_path}/processed/package_output/cog/meta.sumstats \
+--out ${within_family_path}/processed/package_output/cog/directmunged \
+--N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
+--merge-alleles ${hm3snps} \
+--n-min 1.0
 
-# ${ldscpath}/munge_sumstats.py \
-# --sumstats ${within_family_path}/processed/package_output/cog/meta.sumstats \
-# --out ${within_family_path}/processed/package_output/cog/populationmunged \
-# --N-col population_N --p population_pval --signed-sumstats population_z,0 \
-# --merge-alleles ${hm3snps} \
-# --n-min 1.0
+${ldscpath}/munge_sumstats.py \
+--sumstats ${within_family_path}/processed/package_output/cog/meta.sumstats \
+--out ${within_family_path}/processed/package_output/cog/populationmunged \
+--N-col population_N --p population_pval --signed-sumstats population_z,0 \
+--merge-alleles ${hm3snps} \
+--n-min 1.0
 
-# ${ldscpath}/munge_sumstats.py \
-# --sumstats ${within_family_path}/processed/package_output/cog/meta.sumstats \
-# --out ${within_family_path}/processed/package_output/cog/maternalmunged \
-# --N-col direct_N --p maternal_pval --signed-sumstats maternal_z,0 \
-# --merge-alleles ${hm3snps} \
-# --n-min 1.0
+${ldscpath}/munge_sumstats.py \
+--sumstats ${within_family_path}/processed/package_output/cog/meta.sumstats \
+--out ${within_family_path}/processed/package_output/cog/maternalmunged \
+--N-col direct_N --p maternal_pval --signed-sumstats maternal_z,0 \
+--merge-alleles ${hm3snps} \
+--n-min 1.0
 
-# ${ldscpath}/munge_sumstats.py \
-# --sumstats ${within_family_path}/processed/package_output/cog/meta.sumstats \
-# --out ${within_family_path}/processed/package_output/cog/paternalmunged \
-# --N-col direct_N --p paternal_pval --signed-sumstats paternal_z,0 \
-# --merge-alleles ${hm3snps} \
-# --n-min 1.0
+${ldscpath}/munge_sumstats.py \
+--sumstats ${within_family_path}/processed/package_output/cog/meta.sumstats \
+--out ${within_family_path}/processed/package_output/cog/paternalmunged \
+--N-col direct_N --p paternal_pval --signed-sumstats paternal_z,0 \
+--merge-alleles ${hm3snps} \
+--n-min 1.0
 
 
 
@@ -54,7 +54,7 @@ ${ldscpath}/ldsc.py \
 
 echo "Calculating rg between population and direct effects"
 Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "/var/genetics/proj/within_family/within_family_project/processed/package_output/cog/meta.sumstats" \
+--file "/var/genetics/proj/within_family/within_family_project/processed/package_output/cog/meta.sumstats.gz" \
 --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/cog/" \
 --merge_alleles ${hm3snps}
 

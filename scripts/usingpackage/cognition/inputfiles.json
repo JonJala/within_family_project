@@ -23,6 +23,10 @@
     "ft" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/iq/CLEANED.out.gz"
 
+    },
+
+    "mt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/iq/CLEANED.out.gz"
     }
 
 }

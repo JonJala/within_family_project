@@ -8,7 +8,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 ##############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/asthma/ASTHMA/ASTHMA_chr*_results.sumstats.hdf5" \
+    "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/ASTHMA_ext/ASTHMA_chr*_results.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/asthma" \
     --ldsc-ref "$reffile" \
     --toest "direct_paternal_maternal_averageparental_population" \

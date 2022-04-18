@@ -57,7 +57,7 @@ ${ldscpath}/ldsc.py \
 
 echo "Calculating rg between population and direct effects"
 Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "/var/genetics/proj/within_family/within_family_project/processed/package_output/bmi/meta.sumstats" \
+--file "/var/genetics/proj/within_family/within_family_project/processed/package_output/bmi/meta.sumstats.gz" \
 --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/bmi/" \
 --merge_alleles ${hm3snps}
 # "r=0.7561 S.E.=0.0283"
@@ -65,22 +65,18 @@ Rscript $scriptpath/estimate_marginal_correlations_meta.R \
 # "r=0.8778 S.E.=0.0163" for direct-population
 # r=-0.4494 S.E.=0.0526 for direct-avgparental
 
-# ${ldscpath}/ldsc.py \
-# --rg ${within_family_path}/processed/package_output/bmi/maternalmunged.sumstats.gz,${within_family_path}/processed/package_output/bmi/paternalmunged.sumstats.gz \
-# --ref-ld-chr ${eur_w_ld_chr} \
-# --w-ld-chr ${eur_w_ld_chr} \
-# --out ${within_family_path}/processed/package_output/bmi/maternal_vs_paternal
 
-# ${ldscpath}/ldsc.py \
-# --h2 ${within_family_path}/processed/package_output/bmi/directmunged.sumstats.gz \
-# --ref-ld-chr ${eur_w_ld_chr} \
-# --w-ld-chr ${eur_w_ld_chr} \
-# --out ${within_family_path}/processed/package_output/bmi/direct_h2
-# # 0.204 (0.0164)
 
-# ${ldscpath}/ldsc.py \
-# --h2 ${within_family_path}/processed/package_output/bmi/populationmunged.sumstats.gz \
-# --ref-ld-chr ${eur_w_ld_chr} \
-# --w-ld-chr ${eur_w_ld_chr} \
-# --out ${within_family_path}/processed/package_output/bmi/population_h2
-# # 0.204 (0.0164)
+${ldscpath}/ldsc.py \
+--h2 ${within_family_path}/processed/package_output/bmi/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/bmi/direct_h2
+# 0.204 (0.0164)
+
+${ldscpath}/ldsc.py \
+--h2 ${within_family_path}/processed/package_output/bmi/populationmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/bmi/population_h2
+# 0.204 (0.0164)

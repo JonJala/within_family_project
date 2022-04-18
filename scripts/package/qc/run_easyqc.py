@@ -475,6 +475,7 @@ AFCHECK --colInFreq f --colRefFreq EAF.ref
         f.write(f'''
 QQPLOT   --acolQQPlot PVAL_{effect} --numPvalOffset 0.05 --strMode subplot --strTitle {effect.title()}
 SPLOT  --rcdSPlotX normalized_f --rcdSPlotY se_{effect}  --strPlotName sef_{effect}
+SPLOT --rcdSPlotX f --rcdSPlotY n_{effect}
 ''')
 
 

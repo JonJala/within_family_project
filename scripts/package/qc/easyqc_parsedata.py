@@ -152,6 +152,9 @@ def read_hdf5(args, printinfo = True):
             f = np.append(f, f_file, axis = 0)
             hf.close()
 
+    if args.phvar is not None:
+        phvar = args.phvar
+
     # Constructing dataframe of data
     zdata = pd.DataFrame({'CHR' : decode_byte(chromosome).astype(float).astype(int),
                         'SNP' : decode_byte(snp).astype(str),

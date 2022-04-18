@@ -9,17 +9,22 @@ cd ${within_family_directory}
 
 function main(){
 
+    PHENO=$1
+
     source ${act} ${sniparenv}
-    # bash scripts/qc/runqc_height.sh
-    # bash scripts/usingpackage/height/runmeta.sh
-    bash scripts/sbayesr/height_pgi.sh
-    bash scripts/fpgs/fpgs_height.sh
+    bash scripts/qc/runqc_${PHENO}.sh
+    bash scripts/usingpackage/${PHENO}/runmeta.sh
+    bash scripts/sbayesr/${PHENO}_pgi.sh
+    bash scripts/fpgs/fpgs_${PHENO}.sh
     
     # ldsc stuff
-    source ${act} ${ldscev}
-    bash scripts/usingpackage/height/ldsc_analysis.sh
+    source ${act} ${ldscenv}
+    bash scripts/usingpackage/${PHENO}/ldsc_analysis.sh
 
 }
 
-
-time main
+# time main ea &
+# time main bmi &
+time main height &
+# time main cognition &
+# time main depression &

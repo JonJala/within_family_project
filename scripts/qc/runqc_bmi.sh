@@ -124,6 +124,8 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/bmi" \
     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
     --toest "direct_paternal_maternal_averageparental_population" \
+    --info '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/info.formatted.txt' \
+    --hwe '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/hwe.formatted.txt'
 # 0.941 (0.031)
 
 #############
@@ -150,7 +152,9 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/bmi" \
     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" \
     --toest "direct_paternal_maternal_averageparental_population" \
-    --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, "
+    --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, " \
+    --info '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/info.formatted.gz' \
+    --hwe '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/hwe.formatted.gz'
 # 1.0875 (0.1359)
 
 #############

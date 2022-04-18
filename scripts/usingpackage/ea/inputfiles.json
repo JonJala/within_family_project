@@ -35,6 +35,10 @@
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/ea/CLEANED.out.gz"
     },
 
+    "dutchtwin" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/ea/CLEANED.out.gz" 
+    },
+
 
     "geisinger" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/ea/CLEANED.out.gz"

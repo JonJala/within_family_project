@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 snipar_path="/homes/nber/harij/gitrepos/SNIPar"
-bedfilepath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr~.dose"
-impfilespath="/var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/imputed_parents/chr~"
-phenofile="/var/genetics/proj/within_family/within_family_project/processed/fpgs/phenotypes.txt"
+bedfilepath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr~.dose"
+impfilespath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/chr~"
+phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
 
 function withinfam_pred(){
 
@@ -12,8 +12,11 @@ function withinfam_pred(){
     PHENONAME=$3
     PHENOFILE=$4
     OUTSUFFIX=$5
+    BINARY=$6
 
     mkdir -p $within_family_path/processed/fpgs/${PHENONAME} 
+    mkdir -p /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/${PHENONAME}
+    mkdir -p /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/
 
     # format ldpred2 weight files for fpgs
     python ${within_family_path}/scripts/fpgs/format_weights.py \
@@ -27,38 +30,40 @@ function withinfam_pred(){
     python $within_family_path/scripts/fpgs/format_pheno.py \
         $PHENOFILE \
         --iid IID --fid FID --phenocol $PHENONAME \
-        --outprefix $within_family_path/processed/fpgs/${PHENONAME}/pheno  \
-        --subsample /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt
+        --outprefix /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/${PHENONAME}/pheno  \
+        --subsample /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt \
+        --binary $BINARY
 
-    # python $snipar_path/fPGS.py \
-    #     $within_family_path/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
-    #     --bedfiles $bedfilepath \
-    #     --impfiles $impfilespath \
-    #     --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
-    #     --scale_pgs
 
-    python ${within_family_path}/scripts/fpgs/attach_covar.py \
-        ${within_family_path}/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.pgs.txt \
-        --covariates /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar.txt \
-        --outprefix ${within_family_path}/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_full
+    python $snipar_path/fPGS.py \
+        /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
+        --bedfiles $bedfilepath \
+        --impfiles $impfilespath \
+        --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+        --scale_pgs | tee "/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.pgs.log"
 
     python ${within_family_path}/scripts/fpgs/attach_covar.py \
-        ${within_family_path}/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.pgs.txt \
+        /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.pgs.txt \
+        --covariates /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt \
+        --outprefix /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_full
+
+    python ${within_family_path}/scripts/fpgs/attach_covar.py \
+        /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.pgs.txt \
         --keepeffect "proband" \
-        --covariates /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar.txt \
-        --outprefix ${within_family_path}/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_proband
+        --covariates /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt \
+        --outprefix /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_proband
 
 
     echo "Reading phenotype: $within_family_path/processed/fpgs/${PHENONAME}/phenotype.pheno"
     python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_full \
-        --pgs ${within_family_path}/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
-        --phenofile ${within_family_path}/processed/fpgs/${PHENONAME}/pheno.pheno \
-        --pgsreg-r2
+        --pgs /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
+        --phenofile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/${PHENONAME}/pheno.pheno \
+        --pgsreg-r2 | tee "$within_family_path/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_full.reg.log"
 
     python $snipar_path/fPGS.py $within_family_path/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_proband \
-        --pgs ${within_family_path}/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_proband.pgs.txt \
-        --phenofile ${within_family_path}/processed/fpgs/${PHENONAME}/pheno.pheno \
-        --pgsreg-r2
+        --pgs /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_proband.pgs.txt \
+        --phenofile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/${PHENONAME}/pheno.pheno \
+        --pgsreg-r2 | tee "$within_family_path/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_proband.reg.log"
 
 
 }

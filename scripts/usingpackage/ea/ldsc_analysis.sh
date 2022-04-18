@@ -41,7 +41,7 @@ ${ldscpath}/munge_sumstats.py \
 ${ldscpath}/munge_sumstats.py \
 --sumstats ${within_family_path}/processed/package_output/ea/meta.sumstats \
 --out ${within_family_path}/processed/package_output/ea/ntcmunged \
---N-col direct_N --p avg_parental_pval --signed-sumstats avg_parental_z,0 \
+--N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
 --merge-alleles ${hm3snps}
 
 echo "Calcualting RG of population effect with reference EA sample"
@@ -62,12 +62,11 @@ ${ldscpath}/ldsc.py \
 
 echo "Calculating rg between population and direct effects"
 Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta.sumstats" \
+--file "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta.sumstats.gz" \
 --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/" \
 --merge_alleles ${hm3snps}
-# -Direct-population: r=0.6781 S.E.=0.024
-# -Direct-average parental: r=0.0939 S.E.=0.0637
-# hm3 "r=0.6888 S.E.=0.0214"
+
+
 
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/ea/paternalmunged.sumstats.gz,${within_family_path}/processed/package_output/ea/maternalmunged.sumstats.gz \
@@ -85,12 +84,12 @@ ${ldscpath}/ldsc.py \
 # 0.0367 (0.0072)
 
 
-# Rscript $scriptpath/estimate_marginal_correlations_meta.R \
-# --file "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta.sumstats" \
-# --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/" \
-# --dir_pop_rg_name "paternal_maternal_rg" --dirbeta "paternal_Beta" --popbeta "maternal_Beta" \
-# --dirse "paternal_SE" --popse "maternal_SE" \
-# --merge_alleles ${hm3snps}
+Rscript $scriptpath/estimate_marginal_correlations_meta.R \
+--file "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta.sumstats" \
+--outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/pat_mat" \
+--dir_pop_rg_name "r_paternal_maternal" --dirbeta "paternal_Beta" --popbeta "maternal_Beta" \
+--dirse "paternal_SE" --popse "maternal_SE" \
+--merge_alleles ${hm3snps}
 # 0.204 (0.0164) # r=1.9783 S.E.=0.2345
 
 ${ldscpath}/ldsc.py \
@@ -104,3 +103,9 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/ea/population_h2
+
+# Changing env
+source /disk/genetics/pub/python_env/anaconda2/bin/activate /homes/nber/harij/.conda/envs/sniparenv
+correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta \
+/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/ \
+--ldscores /var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/~

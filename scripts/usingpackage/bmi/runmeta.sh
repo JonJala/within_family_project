@@ -6,5 +6,5 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 python $scriptpath/run_metaanalysis.py \
 "/var/genetics/proj/within_family/within_family_project/scripts/usingpackage/bmi/inputfiles.json" \
 --outestimates "avgparental_to_population" \
---outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/bmi/meta"
+--outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/bmi/meta" | tee /var/genetics/proj/within_family/within_family_project/processed/package_output/bmi/meta.log
 

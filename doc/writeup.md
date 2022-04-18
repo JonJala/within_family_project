@@ -73,16 +73,17 @@ subtitle: Everything Done So Far
 | Finnish Twins | BPS | Yes  | No | Direct SEF plot looks odd |
 | Finnish Twins | TG | No (High se) | Yes  | I assume this is TGL |
 | Finnish Twins | wellbeing |  No (Couldn't compute) | Yes | |
-| Estonian Biobank | EA | Yes | Yes | Got batch controlled results |
-| Estonian Biobank | BMI | Yes | Yes | Got batch controlled results |
+| Estonian Biobank | EA | Yes | Yes | |
+| Estonian Biobank | BMI | Yes | Yes | |
 | Estonian Biobank | MDD | Yes | |  | 
 | Estonian Biobank | Ever Smoker | No (-ve 1) | | |
-| Estonian Biobank | AAFB | Yes | Yes | Got batch controlled results |
+| Estonian Biobank | AAFB | Yes | Yes | |
 | Estonian Biobank | Asthma | Yes | | |
 | Estonian Biobank | Depression | Yes | Yes | |
-| Estonian Biobank | Eczema | Yes  | Yes | Got batch controlled results|
-| Estonian Biobank | Hayfever | No (rg out of bounds) | Yes | Got batch controlled results|
-| Estonian Biobank | Migraine | No (rg out of bounds) | Yes | Got batch controlled results|
+| Estonian Biobank | Eczema | Yes  | Yes | |
+| Estonian Biobank | Hayfever | No (rg out of bounds) | Yes | |
+| Estonian Biobank | Migraine | No (rg out of bounds) | Yes | |
+| Estonian Biobank | Nearsight | |  | |
 | UKB | SWB | Yes | Yes  | |
 | UKB | Glucose |  |  | Not analyzing  |
 | UKB | Non-HDL | Yes  | Yes  | |

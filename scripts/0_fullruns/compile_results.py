@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import subprocess
+import json
 
 def make_rg_matrix(directmat, populationmat):
     '''
@@ -22,7 +23,7 @@ def make_rg_matrix(directmat, populationmat):
 
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
-phenotypes = ['ea', 'bmi', 'height']
+phenotypes = ['ea', 'bmi', 'height', 'cog', 'depression']
 
 dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
                 'h2_se', 'rg_ref', 'rg_ref_se', 
@@ -55,13 +56,9 @@ for phenotype in phenotypes:
         neff= meta[f'{effect}_N'].median()
 
         # get n cohorts
-        cohortlevel = pd.read_csv(
-            '/var/genetics/proj/within_family/within_family_project/doc/cohortstats.txt',
-            delim_whitespace=True
-        )
-        cohortlevel['Phenotype'] = cohortlevel['Phenotype'].str.lower()
-        cohorts = cohortlevel.loc[cohortlevel['Phenotype'] == phenotype, :]
-        ncohorts = cohorts.shape[0]
+        with open(f'/var/genetics/proj/within_family/within_family_project/scripts/usingpackage/{phenotype}/inputfiles.json') as f:
+            inputfiles = json.load(f)
+        ncohorts = len(inputfiles.keys())
 
         with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
             h2lines = [l for l in f if l.startswith('Total Observed scale h2')]
@@ -129,12 +126,13 @@ for phenotype in phenotypes:
         incrr2_full = full.loc['proband', 'r2'] - covariates_only.loc['age', 'r2']
 
         coeffratio = pd.read_csv(
-            basepath + 'processed/fpgs/' + phenotype + f'/{effect}_coeffratio.bootests',
+            basepath + 'processed/fpgs/' + phenotype + f'/dirpop_ceoffratiodiff.bootests',
             delim_whitespace=True
         )
 
-        coeffratio_est = coeffratio.loc[0, 'est']
-        coeffratio_se = coeffratio.loc[0, 'se']
+        coeffratio = coeffratio.loc[f'{effect}_full/{effect}_proband', :]
+        coeffratio_est = coeffratio['est']
+        coeffratio_se = coeffratio['se']
 
         # parental PGI correlation
         parcorr = np.loadtxt(

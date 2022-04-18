@@ -36,12 +36,16 @@
 
     },
 
-    "dutch_twin" : {
+    "dutchtwin" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/bmi/CLEANED.out.gz"
     },
 
     "hunt" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/bmi/CLEANED.out.gz"
+    },
+
+    "mt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/bmi/CLEANED.out.gz"
     }
 
 

@@ -33,19 +33,19 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --N 807553 --signed-sumstat LogOR,0 \
 # --chunksize 50000
 
-${ldscpath}/munge_sumstats.py  \
---sumstats /var/genetics/data/published/liu_2019_smoking/raw/sumstats/smokinginit.txt \
---merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/reference_samples/smoking_ref/Smokinginit \
---chunksize 50000 \
---a1 REF --a2 ALT
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/liu_2019_smoking/raw/sumstats/smokinginit.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/smoking_ref/Smokinginit \
+# --chunksize 50000 \
+# --a1 REF --a2 ALT
 
-${ldscpath}/munge_sumstats.py  \
---sumstats /var/genetics/data/published/liu_2019_smoking/raw/sumstats/CigarettesPerDay.txt.gz \
---merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/reference_samples/smoking_ref/cpd \
---chunksize 50000 \
---a1 REF --a2 ALT
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/data/published/liu_2019_smoking/raw/sumstats/CigarettesPerDay.txt.gz \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/smoking_ref/cpd \
+# --chunksize 50000 \
+# --a1 REF --a2 ALT
 
 
 # ${ldscpath}/munge_sumstats.py  \
@@ -250,3 +250,10 @@ ${ldscpath}/munge_sumstats.py  \
 # --merge-alleles ${merge_alleles} \
 # --out ${within_family_path}/processed/reference_samples/morningpersion_ref/morningperson_ref \
 # --N 697828
+
+${ldscpath}/munge_sumstats.py  \
+--sumstats /var/genetics/data/published/jiang_2021_nearsight/raw/GCST90044218_buildGRCh37.tsv.gz \
+--merge-alleles ${merge_alleles} \
+--snp variant_id --a1 effect_allele --a2 other_allele --N-col N --frq effect_allele_frequency \
+--out ${within_family_path}/processed/reference_samples/nearsight/nearsight_ref \
+--N 697828

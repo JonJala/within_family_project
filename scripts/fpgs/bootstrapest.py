@@ -17,11 +17,9 @@ def parse_name(name):
 
     return nameout
 
-def runpgi_reg(pgs, phenofile, outpath, pgsreg_r2):
+def runpgi_reg(dfpgs, pheno):
 
 
-    dfpgs = pd.read_csv(pgs, delim_whitespace=True)
-    pheno = pd.read_csv(phenofile, delim_whitespace=True, names=['FID', 'IID', 'pheno'])
     datols = pd.merge(dfpgs, pheno, on = ['IID'], how='inner')
     datols['const'] = 1.0
     reg = sm.OLS(
@@ -56,13 +54,18 @@ def bootstrap_inner(args):
     
     with tempfile.TemporaryDirectory() as tmpdir:
 
-        pheno1 = pd.read_csv(args.phenofile, delim_whitespace=True, names=['FID', 'IID', 'SCORE'])
+        pheno1 = pd.read_csv(args.phenofile, delim_whitespace=True, names=['FID', 'IID', 'pheno'])
         pgigroup1 = args.pgsgroup1.split(',')
         pgigroup2 = args.pgsgroup2.split(',')
         pnameg1f1 = parse_name(pgigroup1[0])
         pnameg1f2 = parse_name(pgigroup1[1])
         pnameg2f1 = parse_name(pgigroup2[0])
         pnameg2f2 = parse_name(pgigroup2[1])
+        names = [
+            f'{pnameg1f1}/{pnameg1f2}-{pnameg2f1}/{pnameg2f2}',
+            f'{pnameg1f1}/{pnameg1f2}',
+            f'{pnameg2f1}/{pnameg2f2}'
+        ]
 
         pgigroup1f1 = pd.read_csv(pgigroup1[0], delim_whitespace=True)
         pgigroup1f2 = pd.read_csv(pgigroup1[1], delim_whitespace=True)
@@ -98,16 +101,11 @@ def bootstrap_inner(args):
             pgig2f2_res['FID'] = pgig2f2_res['IID']
             pheno1_res['FID'] = pheno1_res['IID']
 
-            pgig1f1_res.to_csv(tmpdir + '.pgsg1f1', index=False, sep = ' ')
-            pgig1f2_res.to_csv(tmpdir + '.pgsg1f2', index=False, sep = ' ')
-            pgig2f1_res.to_csv(tmpdir + '.pgsg2f1', index=False, sep = ' ')
-            pgig2f2_res.to_csv(tmpdir + '.pgsg2f2', index=False, sep = ' ')
-            pheno1_res.to_csv(tmpdir + '.pheno', index=False, header=False, sep = ' ')
             
-            resultg1f1 = runpgi_reg(tmpdir + '.pgsg1f1', tmpdir + '.pheno', tmpdir, args.pgsreg_r2).iloc[:, 1]
-            resultg1f2 = runpgi_reg(tmpdir + '.pgsg1f2', tmpdir + '.pheno', tmpdir, args.pgsreg_r2).iloc[:, 1]
-            resultg2f1 = runpgi_reg(tmpdir + '.pgsg2f1', tmpdir + '.pheno', tmpdir, args.pgsreg_r2).iloc[:, 1]
-            resultg2f2 = runpgi_reg(tmpdir + '.pgsg2f2', tmpdir + '.pheno', tmpdir, args.pgsreg_r2).iloc[:, 1]
+            resultg1f1 = runpgi_reg(pgig1f1_res, pheno1_res).iloc[:, 1]
+            resultg1f2 = runpgi_reg(pgig1f2_res, pheno1_res).iloc[:, 1]
+            resultg2f1 = runpgi_reg(pgig2f1_res, pheno1_res).iloc[:, 1]
+            resultg2f2 = runpgi_reg(pgig2f2_res, pheno1_res).iloc[:, 1]
             
             resultg1f1 = pd.to_numeric(resultg1f1, errors='coerce')
             resultg1f2 = pd.to_numeric(resultg1f2, errors='coerce')
@@ -117,24 +115,36 @@ def bootstrap_inner(args):
             xout[0, i] = ((resultg1f1/resultg1f2) - (resultg2f1/resultg2f2)).loc['proband']
             xout[1, i] = ((resultg1f1/resultg1f2)).loc['proband']
             xout[2, i] = ((resultg2f1/resultg2f2)).loc['proband']
+    
 
+    xout = pd.DataFrame(xout, index=names)
     return xout
 
 def bootstrap_est(args):
     
     with tempfile.TemporaryDirectory() as tmpdir:
-
         pgigroup1 = args.pgsgroup1.split(',')
         pgigroup2 = args.pgsgroup2.split(',')
         pnameg1f1 = parse_name(pgigroup1[0])
         pnameg1f2 = parse_name(pgigroup1[1])
         pnameg2f1 = parse_name(pgigroup2[0])
         pnameg2f2 = parse_name(pgigroup2[1])
+        names = [
+            f'{pnameg1f1}/{pnameg1f2}-{pnameg2f1}/{pnameg2f2}',
+            f'{pnameg1f1}/{pnameg1f2}',
+            f'{pnameg2f1}/{pnameg2f2}'
+        ]
 
-        datg1f1 = runpgi_reg(pgigroup1[0], args.phenofile, tmpdir, args.pgsreg_r2).iloc[:, 1]
-        datg1f2 = runpgi_reg(pgigroup1[1], args.phenofile, tmpdir, args.pgsreg_r2).iloc[:, 1]
-        datg2f1 = runpgi_reg(pgigroup2[0], args.phenofile, tmpdir, args.pgsreg_r2).iloc[:, 1]
-        datg2f2 = runpgi_reg(pgigroup2[1], args.phenofile, tmpdir, args.pgsreg_r2).iloc[:, 1]
+        datg1f1 = pd.read_csv(pgigroup1[0], delim_whitespace=True)
+        datg1f2 = pd.read_csv(pgigroup1[1], delim_whitespace=True)
+        datg2f1 = pd.read_csv(pgigroup2[0], delim_whitespace=True)
+        datg2f2 = pd.read_csv(pgigroup2[1], delim_whitespace=True)
+        pheno = pd.read_csv(args.phenofile, delim_whitespace=True, names=['FID', 'IID', 'pheno'])
+
+        datg1f1 = runpgi_reg(datg1f1, pheno).iloc[:, 1]
+        datg1f2 = runpgi_reg(datg1f2, pheno).iloc[:, 1]
+        datg2f1 = runpgi_reg(datg2f1, pheno).iloc[:, 1]
+        datg2f2 = runpgi_reg(datg2f2, pheno).iloc[:, 1]
 
         datg1f1 = pd.to_numeric(datg1f1, errors='coerce')
         datg1f2 = pd.to_numeric(datg1f2, errors='coerce')
@@ -148,7 +158,7 @@ def bootstrap_est(args):
 
     xout = bootstrap_inner(args) 
     ses = np.std(xout, axis=1)
-    datout = pd.DataFrame({'est' : ests, 'se' : ses})
+    datout = pd.DataFrame({'est' : ests, 'se' : ses}, index=names)
 
     return datout
 
@@ -178,4 +188,4 @@ if __name__ == '__main__':
     datout = bootstrap_est(args)
     datout['ci_lo'] = datout['est'] - 1.96 * datout['se']
     datout['ci_hi'] = datout['est'] + 1.96 * datout['se']
-    datout.to_csv(args.outpath + '.bootests', index=False, sep=' ')
+    datout.to_csv(args.outpath + '.bootests',  sep=' ')

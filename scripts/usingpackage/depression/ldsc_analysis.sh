@@ -11,37 +11,37 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 echo "Munging!!"
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/depression/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/depression/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/depression/directmunged \
---N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
+--N-col direct_N --p direct_pval --signed-sumstats direct_Z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/depression/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/depression/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/depression/populationmunged \
---N-col population_N --p population_pval --signed-sumstats population_z,0 \
+--N-col population_N --p population_pval --signed-sumstats population_Z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/depression/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/depression/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/depression/paternalmunged \
---N-col direct_N --p paternal_pval --signed-sumstats paternal_z,0 \
+--N-col direct_N --p paternal_pval --signed-sumstats paternal_Z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/depression/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/depression/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/depression/maternalmunged \
---N-col direct_N --p maternal_pval --signed-sumstats maternal_z,0 \
+--N-col direct_N --p maternal_pval --signed-sumstats maternal_Z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/depression/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/depression/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/depression/ntcmunged \
---N-col direct_N --p avg_parental_pval --signed-sumstats avg_parental_z,0 \
+--N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_Z,0 \
 --merge-alleles ${hm3snps}
 
 echo "Calcualting RG of population effect with reference dpression sample"
@@ -62,7 +62,7 @@ ${ldscpath}/ldsc.py \
 
 echo "Calculating rg between population and direct effects"
 Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/meta.sumstats" \
+--file "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/meta.sumstats.gz" \
 --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/" \
 --merge_alleles ${hm3snps}
 
@@ -83,9 +83,9 @@ ${ldscpath}/ldsc.py \
 
 
 Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/meta.sumstats" \
---outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/" \
---dir_pop_rg_name "paternal_maternal_rg" --dirbeta "paternal_Beta" --popbeta "maternal_Beta" \
+--file "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/meta.sumstats.gz" \
+--outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/pat_mat" \
+--dir_pop_rg_name "r_paternal_maternal" --dirbeta "paternal_Beta" --popbeta "maternal_Beta" \
 --dirse "paternal_SE" --popse "maternal_SE" \
 --merge_alleles ${hm3snps}
 # 0.204 (0.0164) # r=1.9783 S.E.=0.2345

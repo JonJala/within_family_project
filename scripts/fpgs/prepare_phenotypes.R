@@ -304,7 +304,7 @@ phenotypes[, bmi := standardize(bmi), by=sex]
 phenotypes[, height := standardize(height), by=sex]
 
 # make cognition same as ea
-phenotypes[, cog := ea]
+phenotypes[, cognition := ea]
 
 # save
 fwrite(phenotypes, file="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt", sep=" ", na="NA")

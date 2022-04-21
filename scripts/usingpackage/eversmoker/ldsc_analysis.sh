@@ -11,35 +11,35 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 echo "Munging!!"
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/eversmoker/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/eversmoker/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/eversmoker/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/eversmoker/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/eversmoker/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/eversmoker/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/eversmoker/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/eversmoker/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/eversmoker/paternalmunged \
 --N-col direct_N --p paternal_pval --signed-sumstats paternal_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/eversmoker/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/eversmoker/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/eversmoker/maternalmunged \
 --N-col direct_N --p maternal_pval --signed-sumstats maternal_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
-${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/eversmoker/meta.sumstats \
+${ldscpath}/munge_sumstats.py /
+--sumstats ${within_family_path}/processed/package_output/eversmoker/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/eversmoker/ntcmunged \
 --N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
 --merge-alleles ${hm3snps}

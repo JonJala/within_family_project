@@ -23,7 +23,7 @@ def make_rg_matrix(directmat, populationmat):
 
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
-phenotypes = ['ea', 'bmi', 'height', 'cog', 'depression']
+phenotypes = ['ea', 'bmi', 'height', 'cognition']
 
 dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
                 'h2_se', 'rg_ref', 'rg_ref_se', 
@@ -49,7 +49,7 @@ for phenotype in phenotypes:
 
         # get median effective n
         meta = pd.read_csv(
-            packageoutput + phenotype + '/meta.hm3.sumstats',
+            packageoutput + phenotype + '/meta.hm3.sumstats.gz',
             delim_whitespace=True
         )
 

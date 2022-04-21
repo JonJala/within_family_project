@@ -25,6 +25,6 @@ function main(){
 
 # time main ea &
 # time main bmi &
-time main height &
-# time main cognition &
+# time main height &
+time main cognition &
 # time main depression &

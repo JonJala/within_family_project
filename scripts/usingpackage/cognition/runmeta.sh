@@ -4,7 +4,7 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 
 
 python $scriptpath/run_metaanalysis.py \
-"/var/genetics/proj/within_family/within_family_project/scripts/usingpackage/cog/inputfiles.json" \
+"/var/genetics/proj/within_family/within_family_project/scripts/usingpackage/cognition/inputfiles.json" \
 --outestimates "avgparental_to_population" \
---outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/cog/meta"
+--outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/cognition/meta" | tee /var/genetics/proj/within_family/within_family_project/processed/package_output/cognition/meta.log
 

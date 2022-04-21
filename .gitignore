@@ -15,3 +15,6 @@ scratch/*
 
 # Eliminate .pyc files
 *.pyc
+
+*.lastlogin
+**/easyqc_libraries/*

@@ -4,6 +4,7 @@ import argparse
 import subprocess
 import tempfile
 import statsmodels.api as sm
+import tqdm
 
 def resample(df, iidcol, iids):
 
@@ -76,12 +77,11 @@ def bootstrap_inner(args):
         n = iids.shape[0]
         xout = np.zeros((3, args.bootstrap_niter))
 
-        for i in range(args.bootstrap_niter):
+        for i in tqdm(range(args.bootstrap_niter)):
 
             iids_sample = iids.sample(n, replace=True)
             newiids = np.arange(1, iids_sample.shape[0] + 1)
 
-            print(i)
             pgig1f1_res = pgigroup1f1.iloc[resample(pgigroup1f1, 'IID', iids_sample)].sort_values(by='IID')
             pgig1f2_res = pgigroup1f2.iloc[resample(pgigroup1f2, 'IID', iids_sample)].sort_values(by='IID')
             pgig2f1_res = pgigroup2f1.iloc[resample(pgigroup2f1, 'IID', iids_sample)].sort_values(by='IID')

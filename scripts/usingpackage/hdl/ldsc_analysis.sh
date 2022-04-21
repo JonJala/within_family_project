@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-ldscpath="/homes/nber/harij/ldsc"
+ldscpath="/disk/genetics/tools/ldsc/ldsc"
 ldscmodpath="/homes/nber/harij/ssgac/ldsc_mod"
 eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 within_family_path="/var/genetics/proj/within_family/within_family_project"
@@ -10,28 +10,28 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 echo "Munging!!"
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/hdl/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/hdl/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/hdl/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/hdl/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/hdl/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/hdl/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/hdl/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/hdl/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/hdl/maternalmunged \
 --N-col direct_N --p maternal_pval --signed-sumstats maternal_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/hdl/meta.sumstats \
+--sumstats ${within_family_path}/processed/package_output/hdl/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/hdl/paternalmunged \
 --N-col direct_N --p paternal_pval --signed-sumstats paternal_z,0 \
 --merge-alleles ${hm3snps} \
@@ -41,7 +41,7 @@ ${ldscpath}/munge_sumstats.py \
 
 echo "Calcualting RG of population effect with reference HDL sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/hdl/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/hdl_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/hdl/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/population_reference_sample
@@ -49,7 +49,7 @@ ${ldscpath}/ldsc.py \
 
 echo "Calcualting RG of direct effect with reference HDL sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/hdl/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/hdl_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/hdl/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/direct_reference_sample

@@ -16,6 +16,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     pgi = pd.read_csv(args.pgi, delim_whitespace=True)
+    pgi['IID'] = pgi['IID'].astype('str')
 
     pedigree = pd.read_csv(
         args.pedigree,
@@ -24,7 +25,10 @@ if __name__ == '__main__':
 
     pedigree = pedigree[['IID', 'MOTHER_ID', 'FATHER_ID']]
 
-    bothparents = pedigree.loc[(pedigree['MOTHER_ID'].str.startswith('BEN') & pedigree['FATHER_ID'].str.startswith('BEN')),['MOTHER_ID', 'FATHER_ID']]
+    bothparents = pedigree.loc[(~pedigree['MOTHER_ID'].str.endswith('__M') & ~pedigree['FATHER_ID'].str.endswith('__P')),['MOTHER_ID', 'FATHER_ID']]
+    bothparents['FATHER_ID'] = bothparents['FATHER_ID'].astype('str')
+    bothparents['MOTHER_ID'] = bothparents['MOTHER_ID'].astype('str')
+    
     dat = pd.merge(bothparents, pgi.rename(columns = {'SCORE' : 'FATHER_SCORE'}), left_on='FATHER_ID', right_on='IID', how='inner')
     dat = dat.drop(['IID', 'FID'], axis=1)
     dat = pd.merge(dat, pgi.rename(columns = {'SCORE' : 'MOTHER_SCORE'}), left_on='MOTHER_ID', right_on='IID', how='inner')

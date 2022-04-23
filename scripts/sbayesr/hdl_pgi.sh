@@ -9,5 +9,5 @@ source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sb
 
 # ============= Execution ============= #
 run_pgi "${within_family_path}/processed/package_output/bmi/meta.sumstats.gz" "direct" "hdl" "ukb"
-# run_pgi "${within_family_path}/processed/package_output/bmi/meta.sumstats.gz" "population" "hdl" "ukb"
+run_pgi "${within_family_path}/processed/package_output/bmi/meta.sumstats.gz" "population" "hdl" "ukb"
 

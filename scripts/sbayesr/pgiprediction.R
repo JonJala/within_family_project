@@ -17,7 +17,19 @@ opt = parse_args(opt_parser)
 
 
 pheno = fread(opt$pheno)
-if (is.null(opt$fid_pheno)){
+if (!(opt$pheno_name %in% colnames(pheno))) {
+
+    if (opt$pheno_name == "hdl") {
+        opt$pheno_name <- toupper(opt$pheno_name)
+    } else if (length(grep("hdl", colnames(pheno), ignore.case=T)) == 1) {
+        print(paste0("Trying ", grep(opt$pheno_name, colnames(pheno), ignore.case=T, value=T)))
+        opt$pheno_name <- grep(opt$pheno_name, colnames(pheno), ignore.case=T, value=T)
+    } else {
+        stop("There is no match for this pheno name.")
+    }
+
+}
+if (is.null(opt$fid_pheno)) {
     setnames(pheno, old = c(opt$iid_pheno, opt$pheno_name), new=c("IID", "phenotype"))
 
     pheno[,FID:=IID]

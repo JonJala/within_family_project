@@ -224,6 +224,7 @@ es <- read_and_rename("GCSMOK00", "ever_smoker")
 es[ever_smoker == 1, ever_smoker := 0]
 es[ever_smoker != 0 & ever_smoker != -1, ever_smoker := 1]
 es = es[ever_smoker %in% c(0, 1)]
+setnames(es, "ever_smoker", "eversmoker")
 
 #---------------------------------------------------------------------------------------------------------------------
 # extraversion

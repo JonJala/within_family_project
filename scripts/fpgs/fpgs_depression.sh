@@ -10,12 +10,11 @@ source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 # base
 withinfam_pred ${within_family_path}/processed/sbayesr/depression/direct/weights/meta_weights.snpRes \
     "direct" "depression" \
-    "$phenofile" \
-    "" "1"
+    "" "1" "mcs"
+
 withinfam_pred ${within_family_path}/processed/sbayesr/depression/population/weights/meta_weights.snpRes \
     "population" "depression" \
-    "$phenofile" \
-    "" "1"
+    "" "1" "mcs"
 
 echo "Running fpgi with only covariates"
 # python $snipar_path/fPGS.py $within_family_path/processed/fpgs/depression/covariates \

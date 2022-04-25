@@ -3,23 +3,20 @@ within_family_path="/var/genetics/proj/within_family/within_family_project"
 snipar_path="/homes/nber/harij/gitrepos/SNIPar"
 bedfilepath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr~.dose"
 impfilespath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/chr~"
-phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
 
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
 withinfam_pred ${within_family_path}/processed/sbayesr/eversmoker/direct/weights/meta_weights.snpRes \
     "direct" "eversmoker" \
-    "$phenofile" \
-    "" "1"
+    "" "1" "mcs"
 withinfam_pred ${within_family_path}/processed/sbayesr/eversmoker/population/weights/meta_weights.snpRes \
     "population" "eversmoker" \
-    "$phenofile" \
-    "" "1"
+    "" "1" "mcs"
 
-# echo "Running covariates only regression"
+echo "Running covariates only regression"
 python $snipar_path/fPGS.py $within_family_path/processed/fpgs/eversmoker/covariates \
-    --pgs /var/genetics/data/mcs/private/latest/raw/gen/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt \
+    --pgs /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt \
     --phenofile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/eversmoker/pheno.pheno \
     --pgsreg-r2
 

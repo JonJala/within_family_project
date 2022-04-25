@@ -23,7 +23,7 @@ def make_rg_matrix(directmat, populationmat):
 
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
-phenotypes = ['ea', 'bmi', 'height', 'cognition']
+phenotypes = ['ea', 'bmi', 'height', 'cognition', 'depression']
 
 dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
                 'h2_se', 'rg_ref', 'rg_ref_se', 
@@ -197,6 +197,15 @@ dat = dat.rename(
         'dir_ntc_rg_se_direct' : 'dir_ntc_rg_se'
         }
 )
+
+# reordering columns
+dat = dat[
+    ['n_cohorts', 'n_eff_median_direct', 'n_eff_median_population',
+    'h2_direct','h2_se_direct', 'h2_population','h2_se_population',
+    'rg_ref_direct','rg_ref_se_direct',  'rg_ref_population', 'rg_ref_se_population',
+    'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se'
+]
+]
 
 dat.to_csv(
     '/var/genetics/proj/within_family/within_family_project/processed/package_output/meta.results',

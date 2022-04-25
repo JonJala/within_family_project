@@ -10,12 +10,10 @@ source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 # base
 withinfam_pred ${within_family_path}/processed/sbayesr/bmi/direct/weights/meta_weights.snpRes \
     "direct" "bmi" \
-    "$phenofile" \
-    "" "0"
+    "" "0" "mcs"
 withinfam_pred ${within_family_path}/processed/sbayesr/bmi/population/weights/meta_weights.snpRes \
     "population" "bmi" \
-    "$phenofile" \
-    "" "0"
+    "" "0" "mcs"
 
 echo "Running fpgi with only covariates"
 python $snipar_path/fPGS.py $within_family_path/processed/fpgs/bmi/covariates \

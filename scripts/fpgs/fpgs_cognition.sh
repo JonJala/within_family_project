@@ -10,12 +10,11 @@ source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 # base
 withinfam_pred ${within_family_path}/processed/sbayesr/cog/direct/weights/meta_weights.snpRes \
     "direct" "cognition" \
-    "$phenofile" \
-    "" "0"
+    "" "0" "mcs"
+
 withinfam_pred ${within_family_path}/processed/sbayesr/cog/population/weights/meta_weights.snpRes \
     "population" "cognition" \
-    "$phenofile" \
-    "" "0"
+    "" "0" "mcs"
 
 echo "Running fpgi with only covariates"
 python $snipar_path/fPGS.py $within_family_path/processed/fpgs/cog/covariates \

@@ -4,7 +4,7 @@ import argparse
 import subprocess
 import tempfile
 import statsmodels.api as sm
-import tqdm
+from tqdm import tqdm
 
 def resample(df, iidcol, iids):
 

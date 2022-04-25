@@ -18,7 +18,7 @@ function run_pgi(){
         pheno="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
         covariates="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
         bfile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose"
-        out_path="/var/genetics/data/mcs/private/latest/processed/pgs/sbayesr"
+        outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/sbayesr"
         pedigree="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
 
     elif [[ $DATASET == "ukb" ]]; then
@@ -26,7 +26,7 @@ function run_pgi(){
         # covariates="/disk/genetics/ukb/alextisyoung/phenotypes/covariates.txt"
         covariates="/disk/genetics/ukb/alextisyoung/withinfamily/phen/covariates.txt"
         bfile="/disk/genetics/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen"
-        out_path="/var/genetics/data/ukb/private/v3/processed/proj/within_family/pgs/sbayesr"
+        outpath="/var/genetics/data/ukb/private/v3/processed/proj/within_family/pgs/sbayesr"
         pedigree="/disk/genetics4/ukb/jguan/ukb_analysis/output/parent_imputed/pedigree.txt"
     fi
 
@@ -61,8 +61,8 @@ function run_pgi(){
         --out ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted
 
     # create PGIs
-    mkdir -p $out_path/${PHENONAME}/
-    mkdir -p $out_path/${PHENONAME}/${EFFECT}
+    mkdir -p $outpath/${PHENONAME}/
+    mkdir -p $outpath/${PHENONAME}/${EFFECT}
  
     for chr in {1..22}
     do
@@ -72,22 +72,22 @@ function run_pgi(){
             plink200a2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
             --chr $chr \
             --score ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted 12 5 8 header center cols=+scoresums \
-            --out $out_path/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
+            --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
         elif [[ $DATASET == "ukb" ]]; then
             plink200a2 --bfile /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/bedfiles/chr_${chr} \
             --chr $chr \
             --score ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted 2 5 8 header center cols=+scoresums \
-            --out $out_path/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
+            --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
         fi
 
     done
 
     python /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sumscores.py \
-        "$out_path/${PHENONAME}/${EFFECT}/scores_${DATASET}_*.sscore" \
-        --outprefix "$out_path/${PHENONAME}/${EFFECT}/scoresout.sscore"
+        "$outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_*.sscore" \
+        --outprefix "$outpath/${PHENONAME}/${EFFECT}/scoresout.sscore"
 
     Rscript /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/pgiprediction.R \
-        --pgi "$out_path/${PHENONAME}/${EFFECT}/scoresout.sscore" \
+        --pgi "$outpath/${PHENONAME}/${EFFECT}/scoresout.sscore" \
         --pheno $pheno \
         --iid_pheno "IID" \
         --pheno_name "$PHENONAME" \
@@ -95,7 +95,7 @@ function run_pgi(){
         --outprefix "${PHENONAME}/${EFFECT}/pgipred"
 
     python ${within_family_path}/scripts/sbayesr/parental_pgi_corr.py \
-    "$out_path/${PHENONAME}/${EFFECT}/scoresout.sscore" \
+    "$outpath/${PHENONAME}/${EFFECT}/scoresout.sscore" \
     --pedigree ${pedigree} \
     --outprefix "${PHENONAME}/${EFFECT}/"
 }

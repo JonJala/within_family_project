@@ -26,7 +26,7 @@ function run_pgi(){
         # covariates="/disk/genetics/ukb/alextisyoung/phenotypes/covariates.txt"
         covariates="/disk/genetics/ukb/alextisyoung/withinfamily/phen/covariates.txt"
         bfile="/disk/genetics/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen"
-        out_path="/var/genetics/data/ukb/private/v3/processed/proj/within_family/processed/pgs/sbayesr"
+        out_path="/var/genetics/data/ukb/private/v3/processed/proj/within_family/pgs/sbayesr"
         pedigree="/disk/genetics4/ukb/jguan/ukb_analysis/output/parent_imputed/pedigree.txt"
     fi
 

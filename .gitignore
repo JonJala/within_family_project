@@ -18,3 +18,9 @@ scratch/*
 
 *.lastlogin
 **/easyqc_libraries/*
+bin/*
+lib/
+snipar/
+share/
+pyvenv.cfg
+lib64

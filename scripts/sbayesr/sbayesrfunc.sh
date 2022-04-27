@@ -17,51 +17,49 @@ function run_pgi(){
     if [[ $DATASET == "mcs" ]]; then
         pheno="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
         covariates="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
-        # bfile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose"
         outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/sbayesr"
         pedigree="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
 
     elif [[ $DATASET == "ukb" ]]; then
         pheno="/disk/genetics/ukb/alextisyoung/phenotypes/processed_traits_noadj.txt"
         covariates="/disk/genetics/ukb/alextisyoung/phenotypes/covariates.txt"
-        # bfile="/disk/genetics/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen"
         outpath="/var/genetics/data/ukb/private/v3/processed/proj/within_family/pgs/sbayesr"
         pedigree="/disk/genetics4/ukb/jguan/ukb_analysis/output/parent_imputed/pedigree.txt"
     fi
 
     mkdir -p ${PHENONAME}/${EFFECT}
 
-    # echo "Formatting summary statistics..."
-    # python ${within_family_path}/scripts/sbayesr/format_gwas.py \
-    #     "$METAFILE" \
-    #     --effecttype "${EFFECT}" \
-    #     --outpath "${PHENONAME}/${EFFECT}/meta.sumstats"
+    echo "Formatting summary statistics..."
+    python ${within_family_path}/scripts/sbayesr/format_gwas.py \
+        "$METAFILE" \
+        --effecttype "${EFFECT}" \
+        --outpath "${PHENONAME}/${EFFECT}/meta.sumstats"
 
-    # mkdir -p ${PHENONAME}/${EFFECT}/weights/
-    # mkdir -p logs/${EFFECT}
+    mkdir -p ${PHENONAME}/${EFFECT}/weights/
+    mkdir -p logs/${EFFECT}
 
-    # # getting weights
-    # $gctb --sbayes R \
-    # --mldm ${refldpanel} \
-    # --exclude-mhc \
-    # --seed 123 \
-    # --pi 0.95,0.02,0.02,0.01 \
-    # --gamma 0.0,0.01,0.1,1 \
-    # --gwas-summary ${PHENONAME}/${EFFECT}/meta.sumstats \
-    # --chain-length 10000 \
-    # --burn-in 2000 \
-    # --out-freq 100 \
-    # --out ${PHENONAME}/${EFFECT}/weights/meta_weights | tee "logs/${EFFECT}/${PHENONAME}_meta_weights_sbayesr"
+    # getting weights
+    $gctb --sbayes R \
+    --mldm ${refldpanel} \
+    --exclude-mhc \
+    --seed 123 \
+    --pi 0.95,0.02,0.02,0.01 \
+    --gamma 0.0,0.01,0.1,1 \
+    --gwas-summary ${PHENONAME}/${EFFECT}/meta.sumstats \
+    --chain-length 10000 \
+    --burn-in 2000 \
+    --out-freq 100 \
+    --out ${PHENONAME}/${EFFECT}/weights/meta_weights | tee "logs/${EFFECT}/${PHENONAME}_meta_weights_sbayesr"
 
 
-    # echo "Formatting sbayesr weights to create scores"
-    # python ${within_family_path}/scripts/sbayesr/get_variantid.py \
-    #     ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes \
-    #     --out ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted
+    echo "Formatting sbayesr weights to create scores"
+    python ${within_family_path}/scripts/sbayesr/get_variantid.py \
+        ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes \
+        --out ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted
 
-    # # create PGIs
-    # mkdir -p $outpath/${PHENONAME}/
-    # mkdir -p $outpath/${PHENONAME}/${EFFECT}
+    # create PGIs
+    mkdir -p $outpath/${PHENONAME}/
+    mkdir -p $outpath/${PHENONAME}/${EFFECT}
  
     for chr in {1..22}
     do

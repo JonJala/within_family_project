@@ -198,8 +198,12 @@ def process_dat(dat, args):
 
 
     # normalize cols by phenotypic variance
-    theta_vec = theta_vec * 1/np.sqrt(phvar)
-    S_vec = S_vec * 1/(phvar)
+    if not args.binary:
+        theta_vec = theta_vec * 1/np.sqrt(phvar)
+        S_vec = S_vec * 1/(phvar)
+    else:
+        theta_vec = theta_vec * 1/phvar
+        S_vec = S_vec * 1/(phvar ** 2)
 
     effects = dat['estimated_effects'][0]
 
@@ -631,6 +635,8 @@ the reader will try and infer the chromosome number from the file name.''')
     parser.add_argument('--normfiles', default=True, action='store_false',
     help = '''Should all files from output directory specified be removed before running analysis.''')
     
+    parser.add_argument('--binary', action='store_true', default=False,
+    help = 'Is the phenotype a binary phenotype. If so the normalization is different.')
     
     args = parser.parse_args()
 

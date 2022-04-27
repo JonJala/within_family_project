@@ -52,12 +52,6 @@ ${ldscpath}/ldsc.py \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/cognition/direct_reference_sample
 
-echo "Calculating rg between population and direct effects"
-Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "/var/genetics/proj/within_family/within_family_project/processed/package_output/cognition/meta.sumstats.gz" \
---outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/cognition/" \
---merge_alleles ${hm3snps}
-
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/cognition/maternalmunged.sumstats.gz,${within_family_path}/processed/package_output/cognition/paternalmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -75,3 +69,9 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/cognition/population_h2
+
+# Changing env
+source /disk/genetics/pub/python_env/anaconda2/bin/activate /homes/nber/harij/.conda/envs/sniparenv
+correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/cognition/meta \
+/var/genetics/proj/within_family/within_family_project/processed/package_output/cognition/marginal \
+--ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/~

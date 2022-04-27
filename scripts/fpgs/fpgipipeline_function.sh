@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 within_family_path="/var/genetics/proj/within_family/within_family_project"
-snipar_path="/homes/nber/harij/gitrepos/SNIPar"
+snipar_path="/var/genetics/proj/within_family/within_family_project/snipar"
 
 function withinfam_pred(){
 
@@ -25,9 +25,9 @@ function withinfam_pred(){
     elif [[ $DATASET == "ukb" ]]; then
         PHENOFILE="/disk/genetics/ukb/alextisyoung/phenotypes/processed_traits_noadj.txt"
         COVAR="/disk/genetics/ukb/alextisyoung/phenotypes/covariates.txt"
-        OUTPATH="/disk/genetics/ukb/alextisyoung/withinfamily/"
-        RAWPATH="/disk/genetics/ukb/alextisyoung/withinfamily/"
-        bedfilepath="/disk/genetics/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_~_merged.bgen"
+        OUTPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family"
+        RAWPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family"
+        bedfilepath="/disk/genetics/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/bedfiles/chr_~"
         impfilespath="/disk/genetics/ukb/jguan/ukb_analysis/output/parent_imputed/chr_~"
 
         mkdir -p $RAWPATH/phen/${PHENONAME}
@@ -50,7 +50,6 @@ function withinfam_pred(){
         $PHENOFILE \
         --iid IID --fid FID --phenocol $PHENONAME \
         --outprefix $RAWPATH/phen/${PHENONAME}/pheno  \
-        --subsample $RAWPATH/filter_extract/eur_samples.txt \
         --binary $BINARY
 
 
@@ -63,13 +62,13 @@ function withinfam_pred(){
 
     python ${within_family_path}/scripts/fpgs/attach_covar.py \
         $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.pgs.txt \
-        --covariates $COVAR
+        --covariates $COVAR \
         --outprefix $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_full
 
     python ${within_family_path}/scripts/fpgs/attach_covar.py \
         $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.pgs.txt \
         --keepeffect "proband" \
-        --covariates $COVAR
+        --covariates $COVAR \
         --outprefix $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_proband
 
 

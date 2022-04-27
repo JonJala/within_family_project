@@ -7,6 +7,9 @@ phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/i
 
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
+main ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
+    "ea" "" "0" "mcs"
+
 # base
 # withinfam_pred ${within_family_path}/processed/sbayesr/ea/direct/weights/meta_weights.snpRes \
 #     "direct" "ea" \
@@ -22,16 +25,14 @@ source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 #     --phenofile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/ea/pheno.pheno \
 #     --pgsreg-r2
 
-main ${within_family_path}/processed/sbayesr/ea/population/weights/meta_weights.snpRes \
-    "ea" "" "0" "mcs"
 
 
-python ${within_family_path}/scripts/fpgs/bootstrapest.py \
-    ${within_family_path}/processed/fpgs/ea/dirpop_ceoffratiodiff \
-    --pgsgroup1 /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/population_full.pgs.txt,/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/population_proband.pgs.txt \
-    --pgsgroup2 /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/direct_full.pgs.txt,/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/direct_proband.pgs.txt \
-    --phenofile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/ea/pheno.pheno \
-    --pgsreg-r2 
+# python ${within_family_path}/scripts/fpgs/bootstrapest.py \
+#     ${within_family_path}/processed/fpgs/ea/dirpop_ceoffratiodiff \
+#     --pgsgroup1 /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/population_full.pgs.txt,/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/population_proband.pgs.txt \
+#     --pgsgroup2 /var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/direct_full.pgs.txt,/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/direct_proband.pgs.txt \
+#     --phenofile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/ea/pheno.pheno \
+#     --pgsreg-r2 
 
 
 # ea4

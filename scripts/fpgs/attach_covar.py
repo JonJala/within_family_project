@@ -7,7 +7,7 @@ parser.add_argument('pgifile',type=str,help='PGI (score) file')
 parser.add_argument('--covariates',type=str,help='Covariates File')
 parser.add_argument('--keepeffect',type=str, default=None, help='''Which col to keep. If none everything is kept. All covariates
 are always attached''')
-parser.add_argument('--outprefix',type=str,help='Outfile will be appneded with .pgs.txt')
+parser.add_argument('--outprefix',type=str,default = "", help='Outfile will be appneded with .pgs.txt')
 args=parser.parse_args()
 
 

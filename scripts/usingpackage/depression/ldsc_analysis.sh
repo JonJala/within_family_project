@@ -60,12 +60,6 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/depression/direct_reference_sample
 # 1.0353 (0.0159)
 
-echo "Calculating rg between population and direct effects"
-Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/meta.sumstats.gz" \
---outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/" \
---merge_alleles ${hm3snps}
-
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/depression/paternalmunged.sumstats.gz,${within_family_path}/processed/package_output/depression/maternalmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -81,15 +75,6 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/depression/h2_ntc
 # 0.0367 (0.0072)
 
-
-Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/meta.sumstats.gz" \
---outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/pat_mat" \
---dir_pop_rg_name "r_paternal_maternal" --dirbeta "paternal_Beta" --popbeta "maternal_Beta" \
---dirse "paternal_SE" --popse "maternal_SE" \
---merge_alleles ${hm3snps}
-# 0.204 (0.0164) # r=1.9783 S.E.=0.2345
-
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/depression/directmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -101,3 +86,9 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/depression/population_h2
+
+# Changing env
+source /disk/genetics/pub/python_env/anaconda2/bin/activate /homes/nber/harij/.conda/envs/sniparenv
+correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/depression/meta \
+/var/genetics/proj/within_family/within_family_project/processed/package_output/depression/marginal \
+--ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/~

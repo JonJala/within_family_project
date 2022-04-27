@@ -38,12 +38,6 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/height/direct_reference_sample
 # 0.901 (0.0059)
 
-echo "Calculating rg between population and direct effects"
-Rscript $scriptpath/estimate_marginal_correlations_meta.R \
---file "${within_family_path}/processed/package_output/height/meta.sumstats.gz" \
---outprefix "${within_family_path}/processed/package_output/height/" \
---merge_alleles ${hm3snps}
-
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/height/directmunged.sumstats.gz \
@@ -58,3 +52,10 @@ ${ldscpath}/ldsc.py \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/height/population_h2
 #  0.3274 (0.0175)
+
+
+# Changing env
+source /disk/genetics/pub/python_env/anaconda2/bin/activate /homes/nber/harij/.conda/envs/sniparenv
+correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/height/meta \
+/var/genetics/proj/within_family/within_family_project/processed/package_output/height/marginal \
+--ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/~

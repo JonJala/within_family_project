@@ -23,7 +23,7 @@ def make_rg_matrix(directmat, populationmat):
 
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
-phenotypes = ['ea', 'bmi', 'height', 'cognition', 'depression']
+phenotypes = ['ea', 'bmi', 'height', 'cognition', 'depression', 'eversmoker']
 
 dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
                 'h2_se', 'rg_ref', 'rg_ref_se', 
@@ -84,15 +84,15 @@ for phenotype in phenotypes:
         
         # dir-pop dir-ntc marginal correlations
         mrg = pd.read_csv(
-            packageoutput + phenotype + f'/marginal_correlations.txt',
+            packageoutput + phenotype + f'/marginal_corrs.txt',
             delim_whitespace=True
         )
 
-        dir_pop_mrg = mrg.loc['direct_population', 'correlation']
-        dir_pop_mrg_se = mrg.loc['direct_population', 'S.E']
+        dir_pop_mrg = mrg.loc['r_direct_population', 'correlation']
+        dir_pop_mrg_se = mrg.loc['r_direct_population', 'S.E']
 
-        dir_ntc_mrg = mrg.loc['direct_nontransmitted', 'correlation']
-        dir_ntc_mrg_se = mrg.loc['direct_nontransmitted', 'S.E']
+        dir_ntc_mrg = mrg.loc['r_direct_avg_NTC', 'correlation']
+        dir_ntc_mrg_se = mrg.loc['r_direct_avg_NTC', 'S.E']
 
         # fpgs results
         proband = pd.read_csv(

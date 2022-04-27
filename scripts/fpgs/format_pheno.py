@@ -18,6 +18,9 @@ args=parser.parse_args()
 
 dat = pd.read_csv(args.phenofile, delimiter = args.sep, compression = args.compression)
 
+if args.phenocol == "hdl":
+    args.phenocol = "HDL"
+
 if args.fid is not None:
     dat = dat[[args.fid, args.iid, args.phenocol]]
     dat = dat.rename(columns = {args.iid : 'IID', args.fid : 'FID'})

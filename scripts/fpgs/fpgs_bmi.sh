@@ -16,7 +16,7 @@ withinfam_pred ${within_family_path}/processed/sbayesr/bmi/population/weights/me
     "" "0" "mcs"
 
 echo "Running fpgi with only covariates"
-python $snipar_path/fPGS.py $within_family_path/processed/fpgs/bmi/covariates \
+python $snipar_path/snipar/pgs.py $within_family_path/processed/fpgs/bmi/covariates \
     --pgs /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt \
     --phenofile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/bmi/pheno.pheno \
     --pgsreg-r2

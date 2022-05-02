@@ -7,7 +7,6 @@ impfilespath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-main ${within_family_path}/processed/sbayesr/eversmoker/direct/weights/meta_weights.snpRes \
-    "eversmoker" "" "1" "mcs"
+main "eversmoker" "" "1" "mcs"
      
 

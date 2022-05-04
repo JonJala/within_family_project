@@ -21,6 +21,8 @@ scratch/*
 bin/*
 lib/
 snipar/
+sniparenv/
 share/
 pyvenv.cfg
 lib64
+**/__pycache__/*

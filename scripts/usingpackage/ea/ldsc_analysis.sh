@@ -10,12 +10,14 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 
 echo "Munging!!"
 
-# ${ldscpath}/munge_sumstats.py \
-# --sumstats ${within_family_path}/processed/package_output/ea/meta.sumstats \
-# --out ${within_family_path}/processed/package_output/ea/directmunged \
-# --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
-# --merge-alleles ${hm3snps} \
-# --n-min 1.0
+source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/python_env/anaconda2/envs/ldsc
+
+${ldscpath}/munge_sumstats.py \
+--sumstats ${within_family_path}/processed/package_output/ea/meta.sumstats \
+--out ${within_family_path}/processed/package_output/ea/directmunged \
+--N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
+--merge-alleles ${hm3snps} \
+--n-min 1.0
 
 # ${ldscpath}/munge_sumstats.py \
 # --sumstats ${within_family_path}/processed/package_output/ea/meta.sumstats \
@@ -90,7 +92,7 @@ echo "Munging!!"
 # --out ${within_family_path}/processed/package_output/ea/population_h2
 
 # Changing env
-source /disk/genetics/pub/python_env/anaconda2/bin/activate /homes/nber/harij/.conda/envs/sniparenv
-correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta \
+source /disk/genetics/pub/python_env/anaconda2/bin/activate /var/genetics/proj/within_family/within_family_project/sniparenv
+/var/genetics/proj/within_family/within_family_project/snipar/snipar/scripts/correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/ea/marginal \
---ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/~
+--ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/@

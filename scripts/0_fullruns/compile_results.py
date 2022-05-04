@@ -88,11 +88,11 @@ for phenotype in phenotypes:
             delim_whitespace=True
         )
 
-        dir_pop_mrg = mrg.loc['r_direct_population', 'correlation']
-        dir_pop_mrg_se = mrg.loc['r_direct_population', 'S.E']
+        dir_pop_mrg = mrg.loc[mrg['correlation'] == 'r_direct_population', 'est']
+        dir_pop_mrg_se = mrg.loc[mrg['correlation'] == 'r_direct_population', 'SE']
 
-        dir_ntc_mrg = mrg.loc['r_direct_avg_NTC', 'correlation']
-        dir_ntc_mrg_se = mrg.loc['r_direct_avg_NTC', 'S.E']
+        dir_ntc_mrg = mrg.loc[mrg['correlation'] == 'r_direct_avg_NTC', 'est']
+        dir_ntc_mrg_se = mrg.loc[mrg['correlation'] == 'r_direct_avg_NTC', 'SE']
 
         # fpgs results
         proband = pd.read_csv(
@@ -182,6 +182,7 @@ for phenotype in phenotypes:
         datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
 
 # reshape data
+import pdb; pdb.set_trace()
 dat = dat.pivot(index='phenotype', columns='effect', values=None)
 dat.columns = ['_'.join(column) for column in dat.columns.to_flat_index()]
 dat = dat.drop(

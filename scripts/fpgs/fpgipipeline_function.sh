@@ -26,7 +26,6 @@ function withinfam_pred(){
         
     elif [[ $DATASET == "ukb" ]]; then
         PHENOFILE="/disk/genetics/ukb/alextisyoung/phenotypes/processed_traits_noadj.txt"
-        # COVAR="/disk/genetics/ukb/alextisyoung/phenotypes/covariates.txt"
         COVAR="/disk/genetics/ukb/alextisyoung/withinfamily/phen/covariates.txt"
         OUTPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family"
         RAWPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family"
@@ -127,8 +126,8 @@ function main(){
     elif [[ $DATASET == "ukb" ]]; then
 
         covar_fid='/disk/genetics/ukb/alextisyoung/withinfamily/phen/covar_pedigfid.txt'
-        phenofile='/disk/genetics/ukb/alextisyoung/withinfamily/phen/'
-        processed_dir='/disk/genetics/ukb/alextisyoung/withinfamily/'
+        phenofile="/var/genetics/data/ukb/private/latest/processed/proj/within_family/phen"
+        processed_dir='/var/genetics/data/ukb/private/latest/processed/proj/within_family'
 
     fi
 
@@ -159,7 +158,7 @@ function main(){
     python ${within_family_path}/scripts/fpgs/bootstrapest.py \
         ${within_family_path}/processed/fpgs/$PHENONAME/dirpop_ceoffratiodiff \
         --pgsgroup1 ${processed_dir}/pgs/fpgs/$PHENONAME/population_full.pgs.txt,${processed_dir}/pgs/fpgs/$PHENONAME/population_proband.pgs.txt \
-        --pgsgroup2 ${processed_dir}pgs/fpgs/$PHENONAME/direct_full.pgs.txt,${processed_dir}/pgs/fpgs/$PHENONAME/direct_proband.pgs.txt \
+        --pgsgroup2 ${processed_dir}/pgs/fpgs/$PHENONAME/direct_full.pgs.txt,${processed_dir}/pgs/fpgs/$PHENONAME/direct_proband.pgs.txt \
         --phenofile ${phenofile}/$PHENONAME/pheno.pheno \
         --pgsreg-r2 
 }

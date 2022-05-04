@@ -16,7 +16,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --toest "direct_paternal_maternal_averageparental_population" \
     --hwe "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/HWE/chr*.hwe" \
     --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT" \
-    --phvar 1.0
+    --binary
 
 
 # 1.1245 (0.1913)
@@ -27,7 +27,8 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/dep_ref/DS_Full.sumstats.gz" \
     --toest "direct_paternal_maternal_averageparental_population" \
     --hwe "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/HWE/chr*.hwe" \
-    --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT"
+    --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT" \
+    --binary
 
 #########
 # Geisinger
@@ -38,8 +39,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/depression" \
     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/dep_ref/DS_Full.sumstats.gz" \
     --toest "direct_paternal_maternal_averageparental_population" \
-    --phvar 1.0
-
+    --binary
 # 0.7575 (0.1053)
 
 #############
@@ -54,7 +54,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --cptid \
     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz" \
-    --phvar 1.0
+    --binary
 
 #########
 # Hunt
@@ -87,7 +87,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --toest "direct_population" \
     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt \
-    --phvar 1.0
+    --binary
 
 #####################
 # ====== UKB ====== #
@@ -99,4 +99,4 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --toest "direct_paternal_maternal_averageparental_population" \
     --bim_chromosome 99 \
     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/dep_ref/DS_Full.sumstats.gz" \
-    --phvar 1.0
+    --binary

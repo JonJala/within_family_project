@@ -12,5 +12,5 @@ source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sb
 # run_pgi "${within_family_path}/processed/package_output/cognition/meta.sumstats.gz" "direct" "cognition" "mcs"
 # run_pgi "${within_family_path}/processed/package_output/cognition/meta.sumstats.gz" "population" "cognition" "mcs"
 
-run_pgi "${within_family_path}/processed/package_output/cognition/meta.sumstats.gz" "direct" "cognition" "ukb"
-run_pgi "${within_family_path}/processed/package_output/cognition/meta.sumstats.gz" "population" "cognition" "ukb"
+run_pgi "${within_family_path}/processed/package_output/cognition/meta_noukb.sumstats.gz" "direct" "cognition" "ukb"
+run_pgi "${within_family_path}/processed/package_output/cognition/meta_noukb.sumstats.gz" "population" "cognition" "ukb"

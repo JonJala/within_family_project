@@ -15,7 +15,7 @@ if __name__ == '__main__':
                         help='''Path to meta analyzed output''')
     parser.add_argument('--effecttype', type = str, default = 'dir', help = '''
     Which effect type do you want to output. Can be dir, paternal, maternal, population, avgparental''')
-    parser.add_argument('--nmin', type=int, default=5000, help='''What is the N cutoff you want''')
+    parser.add_argument('--nmin', type=int, default=None, help='''What is the N cutoff you want''')
     parser.add_argument('--median-n', action='store_true', default=False, help='''Instead of the N cutoff use the median N as cutoff''')
     parser.add_argument('--median-n-frac',  default=0.8, help='''Fraction of median n to use for filtering''')
     parser.add_argument('--outpath', type = str, help = "Where to store data")
@@ -44,10 +44,11 @@ if __name__ == '__main__':
     print(f"Observations after filtering for HM3 SNPs: {NHM3}")
 
     if args.median_n:
+        median_n_frac = float(args.median_n_frac)
         print(f"Median N is {dat[f'{e}_N'].median()}")
-        print(f"Using {args.median_n_frac * dat[f'{e}_N'].median()} as the cutoff.")
-        dat = dat.loc[dat[f'{e}_N'] > (args.median_n_frac * dat[f'{e}_N'].median()),].reset_index(drop = True)
-    else:
+        print(f"Using {median_n_frac * dat[f'{e}_N'].median()} as the cutoff.")
+        dat = dat.loc[dat[f'{e}_N'] > (median_n_frac * dat[f'{e}_N'].median()),].reset_index(drop = True)
+    elif args.nmin is not None:
         dat = dat.loc[dat[f'{e}_N'] > args.nmin,].reset_index(drop = True)
 
     NEFFN = dat.shape[0]

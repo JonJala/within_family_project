@@ -88,11 +88,11 @@ for phenotype in phenotypes:
             delim_whitespace=True
         )
 
-        dir_pop_mrg = mrg.loc[mrg['correlation'] == 'r_direct_population', 'est']
-        dir_pop_mrg_se = mrg.loc[mrg['correlation'] == 'r_direct_population', 'SE']
+        dir_pop_mrg = mrg.loc[mrg['correlation'] == 'r_direct_population', 'est'].values[0]
+        dir_pop_mrg_se = mrg.loc[mrg['correlation'] == 'r_direct_population', 'SE'].values[0]
 
-        dir_ntc_mrg = mrg.loc[mrg['correlation'] == 'r_direct_avg_NTC', 'est']
-        dir_ntc_mrg_se = mrg.loc[mrg['correlation'] == 'r_direct_avg_NTC', 'SE']
+        dir_ntc_mrg = mrg.loc[mrg['correlation'] == 'r_direct_avg_NTC', 'est'].values[0]
+        dir_ntc_mrg_se = mrg.loc[mrg['correlation'] == 'r_direct_avg_NTC', 'SE'].values[0]
 
         # fpgs results
         proband = pd.read_csv(
@@ -182,7 +182,6 @@ for phenotype in phenotypes:
         datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
 
 # reshape data
-import pdb; pdb.set_trace()
 dat = dat.pivot(index='phenotype', columns='effect', values=None)
 dat.columns = ['_'.join(column) for column in dat.columns.to_flat_index()]
 dat = dat.drop(
@@ -223,9 +222,9 @@ datfpgs.to_csv(
     '/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs.results',
     sep = '\t'
 )
-
 # Make ldsc matrix
 ssgacrepopath = "/homes/nber/harij/ssgac"
+phenotypes.sort()
 populationresults = [basepath + 'processed/package_output/' + p + '/populationmunged.sumstats.gz' for p in phenotypes]
 directresults = [basepath + 'processed/package_output/' + p + '/directmunged.sumstats.gz' for p in phenotypes]
 populationresults = ','.join(populationresults)

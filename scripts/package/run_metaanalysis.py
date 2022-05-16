@@ -438,9 +438,13 @@ def main(args):
             df_out_hm3.to_csv(args.outprefix + '.hm3.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
 
         if args.median_n_filter:
-            df_out = df_out.loc[df_out['direct_N'] > args.median_n_thresh * df_out['direct_N'].median(), :]
+            df_out_nfilter = df_out.loc[df_out['direct_N'] > args.median_n_thresh * df_out['direct_N'].median(), :]
+            df_out_nfilter = df_out_nfilter.sort_values(by = ["chromosome", "pos"])
+            print(f"Writing output to {args.outprefix + '.nfilter.sumstats.gz'}")
+            df_out_nfilter.to_csv(args.outprefix + '.nfilter.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
+
         df_out = df_out.sort_values(by = ["chromosome", "pos"])
-        print(f"Writing output to {args.outprefix + '.sumstats'}")
+        print(f"Writing output to {args.outprefix + '.sumstats.gz'}")
         df_out.to_csv(args.outprefix + '.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
 
     print(f"Median direct-population effect correlation HM3: {np.median(df_out['r_direct_population'])}")

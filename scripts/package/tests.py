@@ -403,16 +403,12 @@ class test_functions(unittest.TestCase):
         inputopts = {
             "a" : {
 
-                "path2file" : "tmp_adat.gz",
-                "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.0 1.0;0.0 0.0 1.0",
-                        "direct_population" : "-999 -999;-999 -999"}
+                "path2file" : "tmp_adat.gz"
 
             },
 
             "b": {
-                "path2file" : "tmp_bdat.gz",
-                "Amat" : {"direct_paternal_maternal" : "1.0 0.0 0.0;0.0 0.5 0.5",
-                    "direct_population" : "1.0 0.0;0.0 1.0"}
+                "path2file" : "tmp_bdat.gz"
             }
         }
 
@@ -426,12 +422,12 @@ class test_functions(unittest.TestCase):
                    'tmp_inputopts.json',
                    '--outestimates', "direct_population",
                    '--outprefix', 'tmp_out',
-                   '--nohm3'
+                   '--nohm3', '--nomediannfilter'
                    ]
         subprocess.check_call(command)
 
         # read in outputted data
-        datout = pd.read_csv('tmp_out.sumstats', delim_whitespace=True)
+        datout = pd.read_csv('tmp_out.sumstats.gz', delim_whitespace=True)
         
         # reading hdf5
         with h5py.File('tmp_out.sumstats.hdf5', 'r') as hf:
@@ -440,31 +436,31 @@ class test_functions(unittest.TestCase):
 
         
         # clean up files
-        os.remove('tmp_out.sumstats')
+        os.remove('tmp_out.sumstats.gz')
         os.remove('tmp_out.sumstats.hdf5')
         os.remove('tmp_inputopts.json')
         os.remove('tmp_adat.gz')
         os.remove('tmp_bdat.gz')
         
-        thetaout = datout[['direct_Beta', 'paternal_Beta', 'maternal_Beta', 'avg_parental_Beta', 'population_Beta']].values
+        thetaout = datout[['direct_Beta', 'paternal_Beta', 'maternal_Beta', 'avg_NTC_Beta', 'population_Beta']].values
         
         
         sdir = datout['direct_SE'].values**2
         spat = datout['paternal_SE'].values**2
         smat = datout['maternal_SE'].values**2
-        sap = datout['avg_parental_SE'].values**2
+        sap = datout['avg_NTC_SE'].values**2
         spop = datout['population_SE'].values**2
 
-        rg_dirpat  = datout['direct_paternal_rg'].values
-        rg_dirmat  = datout['direct_maternal_rg'].values
-        rg_patmat  = datout['paternal_maternal_rg'].values
-        rg_dirap = datout['direct_avg_parental_rg'].values
-        rg_dirpop = datout['direct_population_rg'].values
-        rg_patap = datout['paternal_avg_parental_rg'].values
-        rg_matap = datout['maternal_avg_parental_rg'].values
-        rg_patpop = datout['paternal_population_rg'].values
-        rg_matpop = datout['maternal_population_rg'].values
-        rg_avgpar_pop = datout['avg_parental_population_rg'].values
+        rg_dirpat  = datout['r_direct_paternal'].values
+        rg_dirmat  = datout['r_direct_maternal'].values
+        rg_patmat  = datout['r_paternal_maternal'].values
+        rg_dirap = datout['r_direct_avg_NTC'].values
+        rg_dirpop = datout['r_direct_population'].values
+        rg_patap = datout['r_paternal_avg_NTC'].values
+        rg_matap = datout['r_maternal_avg_NTC'].values
+        rg_patpop = datout['r_paternal_population'].values
+        rg_matpop = datout['r_maternal_population'].values
+        rg_avgpar_pop = datout['r_avg_parental_population'].values
 
         cov_dirpat = rg_dirpat * np.sqrt(sdir) * np.sqrt(spat)
         cov_dirmat = rg_dirmat * np.sqrt(sdir) * np.sqrt(smat)

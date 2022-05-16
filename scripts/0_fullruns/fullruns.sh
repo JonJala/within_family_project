@@ -12,10 +12,10 @@ function main(){
     PHENO=$1
 
     source ${act} ${sniparenv}
-    bash scripts/qc/runqc_${PHENO}.sh
+    # bash scripts/qc/runqc_${PHENO}.sh
     bash scripts/usingpackage/${PHENO}/runmeta.sh
     bash scripts/sbayesr/${PHENO}_pgi.sh
-    bash scripts/fpgs/fpgs_${PHENO}.sh
+    # bash scripts/fpgs/fpgs_${PHENO}.sh
     
     # ldsc stuff
     source ${act} ${ldscenv}
@@ -23,9 +23,10 @@ function main(){
 
 }
 
-time main ea &
-time main bmi &
-time main height &
-time main cognition &
-time main depression &
-time main eversmoker &
+# time main ea &
+# time main bmi &
+# time main height &
+# time main cognition &
+# time main depression &
+# time main eversmoker &
+time main hdl &

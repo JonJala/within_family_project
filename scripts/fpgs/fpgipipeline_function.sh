@@ -132,7 +132,7 @@ function main(){
     fi
 
 
-    # main prediction
+    # # main prediction
     withinfam_pred ${within_family_path}/processed/sbayesr/${PHENONAME}/direct/weights/meta_weights.snpRes \
         "direct" "$PHENONAME" \
         "$OUTSUFFIX" "$BINARY" "$DATASET"

@@ -67,13 +67,16 @@ dat[, `:=`(
 # graphing
 dat %>%
     ggplot() +
-    geom_point(aes(direct_rg, pop_rg)) +
-    geom_linerange(aes(x=direct_rg, ymin = pop_rg_lo, ymax=pop_rg_hi)) +
-    geom_linerange(aes(y=pop_rg, xmin = direct_rg_lo, xmax=direct_rg_hi)) +
-    geom_abline(intercept=0, slope=1, linetype="dashed") +
-    ylim(-1, 1) +
-    xlim(-1, 1) +
-    labs(x = TeX("Direct $\\textit{r_g}$"), y = TeX("Population $\\textit{r_g}"))
+    geom_point(aes(pop_rg, direct_rg, color=phenotype), alpha=0.6) +
+    geom_linerange(aes(x=pop_rg, ymin = direct_rg_lo, ymax=direct_rg_hi, color = phenotype), alpha=0.6) +
+    geom_linerange(aes(y=direct_rg, xmin = pop_rg_lo, xmax=pop_rg_hi, color = phenotype), alpha=0.6) +
+    geom_abline(intercept=0, slope=1, linetype="solid", color="gray") +
+    geom_hline(yintercept=0, linetype="dotted") +
+    ylim(-0.6, 0.4) +
+    xlim(-0.6, 0.4) +
+    scale_color_viridis_d() +
+    labs(y = TeX("Direct $\\textit{r_g}$"), x = TeX("Population $\\textit{r_g}")) +
+    guides(color="none")
 
 ggsave("/var/genetics/proj/within_family/within_family_project/processed/package_output/direct_pop_rg.pdf",
 height = 7, width = 9)

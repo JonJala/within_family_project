@@ -8,6 +8,6 @@ within_family_path="/var/genetics/proj/within_family/within_family_project"
 source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sbayesrfunc.sh
 
 # ============= Execution ============= #
-run_pgi "${within_family_path}/processed/package_output/hdl/meta.sumstats.gz" "direct" "hdl" "ukb"
+# run_pgi "${within_family_path}/processed/package_output/hdl/meta.sumstats.gz" "direct" "hdl" "ukb"
 run_pgi "${within_family_path}/processed/package_output/hdl/meta.sumstats.gz" "population" "hdl" "ukb"
 

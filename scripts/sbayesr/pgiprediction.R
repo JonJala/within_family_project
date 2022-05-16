@@ -21,7 +21,9 @@ if (!(opt$pheno_name %in% colnames(pheno))) {
 
     if (opt$pheno_name == "hdl") {
         opt$pheno_name <- toupper(opt$pheno_name)
-    } else if (length(grep("hdl", colnames(pheno), ignore.case=T)) == 1) {
+    } else if (opt$pheno_name == "cognition") {
+        opt$pheno_name <- "Cognitive.ability"
+    } else if (length(grep(opt$pheno_name, colnames(pheno), ignore.case=T)) == 1) {
         print(paste0("Trying ", grep(opt$pheno_name, colnames(pheno), ignore.case=T, value=T)))
         opt$pheno_name <- grep(opt$pheno_name, colnames(pheno), ignore.case=T, value=T)
     } else {

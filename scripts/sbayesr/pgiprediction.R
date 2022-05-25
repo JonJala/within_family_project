@@ -23,9 +23,8 @@ if (!(opt$pheno_name %in% colnames(pheno))) {
         opt$pheno_name <- toupper(opt$pheno_name)
     } else if (opt$pheno_name == "cognition") {
         opt$pheno_name <- "Cognitive.ability"
-    } else if (length(grep(opt$pheno_name, colnames(pheno), ignore.case=T)) == 1) {
-        print(paste0("Trying ", grep(opt$pheno_name, colnames(pheno), ignore.case=T, value=T)))
-        opt$pheno_name <- grep(opt$pheno_name, colnames(pheno), ignore.case=T, value=T)
+    } else if (opt$pheno_name == "ea4_meta") {
+        opt$pheno_name <- ifelse(is.na(grep("ea", colnames(pheno), ignore.case=T, value=T)[2]), grep("ea", colnames(pheno), ignore.case=T, value=T)[1], grep("ea", colnames(pheno), ignore.case=T, value=T)[2]) # this will select "ea" in MCS and "resid_EAfixed" in UKB
     } else {
         stop("There is no match for this pheno name.")
     }

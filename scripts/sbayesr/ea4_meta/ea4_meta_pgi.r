@@ -16,12 +16,13 @@ ea4_ss %<>% filter(P < 5*10^-8)
 
 # ea metaanalysis sumstats (all cohorts)
 ea_meta <- fread("/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta.sumstats.gz")
-# nrow(ea_meta)
+nrow(ea_meta)
 
 # ea metaanalysis sumstats without ukb
 ea_meta_noukb <- fread("/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta_noukb.sumstats.gz")
-# nrow(ea_meta_noukb)
+nrow(ea_meta_noukb)
 
+# define function
 process_sumstats <- function(ss, no_ukb = TRUE) {
     
     print(paste0("There are ", sum(ea4_ss$rsID %in% ss$SNP), " SNPs in the overlap between the sumstats files."))
@@ -43,6 +44,19 @@ process_sumstats <- function(ss, no_ukb = TRUE) {
         fwrite(ea_final, "/var/genetics/proj/within_family/within_family_project/processed/sbayesr/ea4_meta/direct/weights/meta_noukb_weights.snpRes.formatted", quote = F, sep = "\t")
     }
 
+    # plot distribution of no. cohorts
+    title <- ifelse(no_ukb == FALSE, "Number of Cohorts Contributing to Meta-Analysis", "Number of Cohorts Contributing to Meta-Analysis (Without UKB)")
+    p <- ggplot(ss[ss$SNP %in% ea4_ss$rsID],
+                aes(x = n_cohorts)) +
+                geom_histogram(stat = "count", fill = "lightskyblue3") +
+                labs(x="Number of Cohorts", y="Count") +
+                scale_x_continuous(breaks = seq(1,11)) + 
+                ggtitle(title) +
+                theme_classic()
+    print(p)
+    path <- ifelse(no_ukb == FALSE, "/var/genetics/proj/within_family/within_family_project/processed/sbayesr/ea4_meta/direct/weights/n_cohorts.png", "/var/genetics/proj/within_family/within_family_project/processed/sbayesr/ea4_meta/direct/weights/n_cohorts_noukb.png")
+    ggsave(filename = path)
+
 }
 
 process_sumstats(ea_meta, no_ukb = FALSE)
@@ -50,20 +64,30 @@ process_sumstats(ea_meta_noukb, no_ukb = TRUE)
 
 
 
-hist(ea_meta$n_cohorts[ea4_ss$rsID %in% ea_meta$SNP])
-max(ea_meta$n_cohorts[ea4_ss$rsID %in% ea_meta$SNP])
+# hist(ea_meta$n_cohorts[ea4_ss$rsID %in% ea_meta$SNP])
+# max(ea_meta$n_cohorts[ea4_ss$rsID %in% ea_meta$SNP])
 
-p <- ggplot(ea_meta[ea_meta$SNP %in% ea4_ss$rsID],
-                aes(x = n_cohorts)) +
-                geom_histogram(stat = "count", fill = "lightskyblue3") +
-                labs(x="Number of Cohorts", y="Count") +
-                scale_x_continuous(breaks = seq(1,11)) + 
-                ggtitle("Number of Cohorts Contributing to Meta-Analysis") +
-                theme_classic()
-p
+# p <- ggplot(ea_meta[ea_meta$SNP %in% ea4_ss$rsID],
+#                 aes(x = n_cohorts)) +
+#                 geom_histogram(stat = "count", fill = "lightskyblue3") +
+#                 labs(x="Number of Cohorts", y="Count") +
+#                 scale_x_continuous(breaks = seq(1,11)) + 
+#                 ggtitle("Number of Cohorts Contributing to Meta-Analysis") +
+#                 theme_classic()
+# p
+
+# p_noukb <- ggplot(ea_meta_noukb[ea_meta_noukb$SNP %in% ea4_ss$rsID],
+#                 aes(x = n_cohorts)) +
+#                 geom_histogram(stat = "count", fill = "lightskyblue3") +
+#                 labs(x="Number of Cohorts", y="Count") +
+#                 scale_x_continuous(breaks = seq(1,11)) + 
+#                 ggtitle("Number of Cohorts Contributing to Meta-Analysis") +
+#                 theme_classic()
+# p_noukb
 
 
-# sum(ea4_ss$rsID %in% ea_meta_noukb$SNP) # 2939
+# sum(ea4_ss$rsID %in% ea_meta_noukb$SNP)
+# sum(ea4_ss$rsID %in% ea_meta$SNP)
 
 # # get direct effects for these SNPs
 # ea_final <- ea_meta %>% 

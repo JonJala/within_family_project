@@ -24,6 +24,9 @@ if args.phenocol == "hdl":
 if args.phenocol == "cognition":
     args.phenocol = "Cognitive.ability"
 
+if args.phenocol == "ea4_meta":
+    args.phenocol = "ea"
+
 if args.fid is not None:
     dat = dat[[args.fid, args.iid, args.phenocol]]
     dat = dat.rename(columns = {args.iid : 'IID', args.fid : 'FID'})

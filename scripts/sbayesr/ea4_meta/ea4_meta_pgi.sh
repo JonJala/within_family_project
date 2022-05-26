@@ -9,5 +9,4 @@ source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sb
 
 # ============= Execution ============= #
 run_pgi "${within_family_path}/processed/sbayesr/ea4_meta/direct/weights/meta_weights.snpRes.formatted" "direct" "ea4_meta" "mcs"
-
 run_pgi "${within_family_path}/processed/sbayesr/ea4_meta/direct/weights/meta_noukb_weights.snpRes.formatted" "direct" "ea4_meta" "ukb"

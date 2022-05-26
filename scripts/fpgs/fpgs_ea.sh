@@ -7,9 +7,12 @@ phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/i
 
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
-main "ea" "" "0" "mcs"
+# main "ea" "" "0" "mcs"
 
 
+# ea4 meta
+main "ea4_meta" "" "0" "mcs"
+main "ea4_meta" "" "0" "ukb"
 
 # ea4
 # withinfam_pred ${within_family_path}/processed/sbayesr/ea/ea4/weights/meta_weights.snpRes \

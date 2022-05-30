@@ -55,21 +55,18 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/direct_reference_sample
-# 0.9389 (0.0107)
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/hdl/directmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/direct_h2
-# 0.204 (0.0164)
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/hdl/populationmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/population_h2
-# 0.204 (0.0164)
 
 # Changing env
 source /disk/genetics/pub/python_env/anaconda2/bin/activate /var/genetics/proj/within_family/within_family_project/sniparenv

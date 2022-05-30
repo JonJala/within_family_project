@@ -50,11 +50,14 @@ function withinfam_pred(){
     if [[ $DATASET == "mcs" ]]; then
 
         if [[ $PHENONAME == "ea4_meta" ]]; then
+
+            mkdir -p ${within_family_path}/processed/sbayesr/${PHENONAME}/${DATASET}
+
             python ${within_family_path}/scripts/fpgs/format_weights.py \
             $WTFILE \
             --chr Chr --pos BP --rsid SNP --a1 A1 --a2 A2 --beta direct_Beta \
             --sep "delim_whitespace" \
-            --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted \
+            --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted \
             --sid-as-chrpos  
         else
             python ${within_family_path}/scripts/fpgs/format_weights.py \
@@ -67,32 +70,60 @@ function withinfam_pred(){
 
     elif [[ $DATASET == "ukb" ]]; then
 
-        python ${within_family_path}/scripts/fpgs/format_weights.py \
-            $WTFILE \
-            --chr Chrom --pos Position --rsid Name --a1 A1 --a2 A2 --beta A1Effect \
-            --sep "delim_whitespace" \
-            --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted
+        if [[ $PHENONAME == "ea4_meta" ]]; then
+
+            mkdir -p ${within_family_path}/processed/sbayesr/${PHENONAME}/${DATASET}
+
+            python ${within_family_path}/scripts/fpgs/format_weights.py \
+                $WTFILE \
+                --chr Chr --pos BP --rsid SNP --a1 A1 --a2 A2 --beta direct_Beta \
+                --sep "delim_whitespace" \
+                --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${DATASET}/{PHENONAME}_${EFFECT}_fpgs_formatted
+        else
+            python ${within_family_path}/scripts/fpgs/format_weights.py \
+                $WTFILE \
+                --chr Chrom --pos Position --rsid Name --a1 A1 --a2 A2 --beta A1Effect \
+                --sep "delim_whitespace" \
+                --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted
+        fi
     fi
-        
-    # generate pheno file
     
+    echo "done formatting weights"
+    # generate pheno file
+
     python $within_family_path/scripts/fpgs/format_pheno.py \
         $PHENOFILE \
         --iid IID --fid FID --phenocol $PHENONAME \
         --outprefix $RAWPATH/phen/${PHENONAME}/pheno  \
+        --sep "delim_whitespace" \
         --binary $BINARY
 
-    pgs.py \
-        $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
-        --bed $bedfilepath \
-        --imp $impfilespath \
-        --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
-        --scale_pgs | tee $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.log 
+    echo "done formatting pheno"
+
+    if [[ $PHENONAME == "ea4_meta" ]]; then
+        pgs.py \
+            $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
+            --bed $bedfilepath \
+            --imp $impfilespath \
+            --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+            --scale_pgs | tee $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.log     
+    else
+        pgs.py \
+            $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
+            --bed $bedfilepath \
+            --imp $impfilespath \
+            --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+            --scale_pgs | tee $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.log 
+    fi 
+
+    echo "done pgs.py"
 
     python ${within_family_path}/scripts/fpgs/attach_covar.py \
         $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.pgs.txt \
         --covariates $COVAR \
         --outprefix $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_full
+
+    echo "done attach_covar"
 
     python ${within_family_path}/scripts/fpgs/attach_covar.py \
         $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.pgs.txt \
@@ -100,6 +131,8 @@ function withinfam_pred(){
         --covariates $COVAR \
         --outprefix $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_proband
     
+    echo "done attach covar 2"
+
     if [[ $DATASET == "mcs" ]]; then
         ols="1"
         kin="0"
@@ -108,15 +141,21 @@ function withinfam_pred(){
         kin="1"
     fi
 
+    if [[ $PHENONAME == "ea4_meta" ]]; then
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${DATASET}"
+    else
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}"
+    fi
+
     echo "Reading phenotype: $within_family_path/processed/fpgs/${PHENONAME}/phenotype.pheno"
-    python ${within_family_path}/scripts/fpgs/fpgs_reg.py $within_family_path/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_full \
+    python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_full \
         --pgs $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
         --logistic $BINARY \
         --ols $ols \
         --kin $kin | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_full.reg.log"
 
-    python ${within_family_path}/scripts/fpgs/fpgs_reg.py $within_family_path/processed/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_proband \
+    python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_proband \
         --pgs $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}_proband.pgs.txt \
         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
         --logistic $BINARY \
@@ -152,7 +191,6 @@ function main(){
         processed_dir='/var/genetics/data/ukb/private/latest/processed/proj/within_family'
 
         if [[ $PHENONAME == "ea4_meta" ]]; then
-            phenofile="/var/genetics/proj/within_family/within_family_project/processed/ea4_meta/UKB_EAfixed_resid.pheno"
             direct_weights="/var/genetics/proj/within_family/within_family_project/processed/sbayesr/ea4_meta/direct/weights/meta_noukb_weights.snpRes.formatted"
         fi
         
@@ -178,8 +216,14 @@ function main(){
         kin="1"
     fi
     
+    if [[ $PHENONAME == "ea4_meta" ]]; then
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${DATASET}"
+    else
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}"
+    fi
+
     echo "Running covariates only regression"
-    python ${within_family_path}/scripts/fpgs/fpgs_reg.py  $within_family_path/processed/fpgs/$PHENONAME/covariates \
+    python ${within_family_path}/scripts/fpgs/fpgs_reg.py  ${fpgs_out}/covariates \
         --pgs ${covar_fid} \
         --phenofile $phenofile \
         --logistic $BINARY --ols $ols --kin $kin
@@ -188,14 +232,14 @@ function main(){
 
     if [[ $PHENONAME == "ea4_meta" ]]; then
         python ${within_family_path}/scripts/fpgs/bootstrapest.py \
-                ${within_family_path}/processed/fpgs/$PHENONAME/dirpop_ceoffratiodiff \
+                ${fpgs_out}/dirpop_ceoffratiodiff \
                 --pgsgroup1 ${processed_dir}/pgs/fpgs/$PHENONAME/direct_full.pgs.txt,${processed_dir}/pgs/fpgs/${PHENONAME}/direct_proband.pgs.txt \
                 --pgsgroup2 ${processed_dir}/pgs/fpgs/$PHENONAME/direct_full.pgs.txt,${processed_dir}/pgs/fpgs/${PHENONAME}/direct_proband.pgs.txt \
                 --phenofile $phenofile \
                 --pgsreg-r2 
     else
         python ${within_family_path}/scripts/fpgs/bootstrapest.py \
-            ${within_family_path}/processed/fpgs/$PHENONAME/dirpop_ceoffratiodiff \
+            ${fpgs_out}/dirpop_ceoffratiodiff \
             --pgsgroup1 ${processed_dir}/pgs/fpgs/${PHENONAME}/population_full.pgs.txt,${processed_dir}/pgs/fpgs/${PHENONAME}/population_proband.pgs.txt \
             --pgsgroup2 ${processed_dir}/pgs/fpgs/${PHENONAME}/direct_full.pgs.txt,${processed_dir}/pgs/fpgs/${PHENONAME}/direct_proband.pgs.txt \
             --phenofile $phenofile \

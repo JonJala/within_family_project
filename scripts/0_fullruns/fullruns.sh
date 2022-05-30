@@ -13,9 +13,9 @@ function main(){
 
     source ${act} ${sniparenv}
     # bash scripts/qc/runqc_${PHENO}.sh
-    bash scripts/usingpackage/${PHENO}/runmeta.sh
-    bash scripts/sbayesr/${PHENO}_pgi.sh
-    # bash scripts/fpgs/fpgs_${PHENO}.sh
+    # bash scripts/usingpackage/${PHENO}/runmeta.sh
+    # bash scripts/sbayesr/${PHENO}_pgi.sh
+    bash scripts/fpgs/fpgs_${PHENO}.sh
     
     # ldsc stuff
     source ${act} ${ldscenv}

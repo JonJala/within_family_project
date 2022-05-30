@@ -56,6 +56,19 @@ refsample="/var/genetics/proj/within_family/within_family_project/processed/refe
 #     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
 #     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 
+#########
+# Estonian Biobank
+#########
+
+
+# estonian bio bnak with controls
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/height/height_chr*_results.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/height/" \
+    --ldsc-ref "$refsample" \
+    --toest "direct_paternal_maternal_averageparental_population"  \
+    --hwe "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/HWE/chr*.hwe" \
+    --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT"
 
 ##########
 # STR

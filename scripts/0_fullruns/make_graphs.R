@@ -72,8 +72,9 @@ dat %>%
     geom_linerange(aes(y=direct_rg, xmin = pop_rg_lo, xmax=pop_rg_hi, color = phenotype), alpha=0.6) +
     geom_abline(intercept=0, slope=1, linetype="solid", color="gray") +
     geom_hline(yintercept=0, linetype="dotted") +
-    ylim(-0.6, 0.4) +
-    xlim(-0.6, 0.4) +
+    geom_vline(xintercept=0, linetype="dotted") +
+    ylim(-0.6, 0.6) +
+    xlim(-0.6, 0.6) +
     scale_color_viridis_d() +
     labs(y = TeX("Direct $\\textit{r_g}$"), x = TeX("Population $\\textit{r_g}")) +
     guides(color="none")

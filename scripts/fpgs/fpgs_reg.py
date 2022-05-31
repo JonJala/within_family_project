@@ -140,20 +140,20 @@ def run_subset_regs(args):
     phenofile['fid_iid'] = phenofile['FID'].astype(str) + '_' + phenofile['IID'].astype(str)
 
     # getting coeff
-    phenofile_coeff = phenofile.loc[~(phenofile.fid_iid.isin(relatedids.fid_iid))]
+    phenofile_r2 = phenofile.loc[~(phenofile.fid_iid.isin(relatedids.fid_iid))]
 
     with tempfile.TemporaryDirectory() as dirout:
         if args.logistic == '1':
-            fpgsresult = logistic_reg_dat(pgs, phenofile_coeff)
+            fpgsresult = logistic_reg_dat(pgs, phenofile)
         else:
-            fpgs_reg_dat(pgs, phenofile_coeff, dirout + '/fpgsout')
+            fpgs_reg_dat(pgs,phenofile, dirout + '/fpgsout')
             fpgsresult = pd.read_csv(dirout + '/fpgsout.effects.txt', delim_whitespace=True, names = ['var', 'ests', 'ses'])
     
     # getting R2
     if args.logistic == '1':
-        datout = logistic_reg_dat(pgs, phenofile)
+        datout = logistic_reg_dat(pgs, phenofile_r2)
     else:
-        datout = ols_reg_dat(pgs, phenofile)
+        datout = ols_reg_dat(pgs, phenofile_r2)
 
 
     r2 = datout.r2[0]

@@ -100,21 +100,21 @@ function withinfam_pred(){
 
     echo "done formatting pheno"
 
-    if [[ $PHENONAME == "ea4_meta" ]]; then
-        pgs.py \
-            $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
-            --bed $bedfilepath \
-            --imp $impfilespath \
-            --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
-            --scale_pgs | tee $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.log     
-    else
-        pgs.py \
-            $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
-            --bed $bedfilepath \
-            --imp $impfilespath \
-            --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
-            --scale_pgs | tee $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.log 
-    fi 
+    # if [[ $PHENONAME == "ea4_meta" ]]; then
+    #     pgs.py \
+    #         $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
+    #         --bed $bedfilepath \
+    #         --imp $impfilespath \
+    #         --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+    #         --scale_pgs | tee $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.log     
+    # else
+    #     pgs.py \
+    #         $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX} \
+    #         --bed $bedfilepath \
+    #         --imp $impfilespath \
+    #         --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+    #         --scale_pgs | tee $OUTPATH/pgs/fpgs/${PHENONAME}/${EFFECT}${OUTSUFFIX}.log 
+    # fi 
 
     echo "done pgs.py"
 
@@ -179,6 +179,7 @@ function main(){
         covar_fid='/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt'
         phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/${PHENONAME}/pheno.pheno"
         processed_dir='/var/genetics/data/mcs/private/latest/processed/'
+        RAWPATH="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed"
 
         if [[ $PHENONAME == "ea4_meta" ]]; then
             direct_weights="/var/genetics/proj/within_family/within_family_project/processed/sbayesr/ea4_meta/direct/weights/meta_weights.snpRes.formatted"
@@ -189,7 +190,7 @@ function main(){
         covar_fid='/disk/genetics/ukb/alextisyoung/withinfamily/phen/covar_pedigfid.txt'
         phenofile="/var/genetics/data/ukb/private/latest/processed/proj/within_family/phen/${PHENONAME}/pheno.pheno"
         processed_dir='/var/genetics/data/ukb/private/latest/processed/proj/within_family'
-
+        RAWPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family"
         if [[ $PHENONAME == "ea4_meta" ]]; then
             direct_weights="/var/genetics/proj/within_family/within_family_project/processed/sbayesr/ea4_meta/direct/weights/meta_noukb_weights.snpRes.formatted"
         fi
@@ -201,7 +202,7 @@ function main(){
         "direct" "$PHENONAME" \
         "$OUTSUFFIX" "$BINARY" "$DATASET"
     
-    # only need direct effects for ea4_meta
+    only need direct effects for ea4_meta
     if [[ $PHENONAME != "ea4_meta" ]]; then
         withinfam_pred "${within_family_path}/processed/sbayesr/${PHENONAME}/population/weights/meta_weights.snpRes" \
         "population" "$PHENONAME" \
@@ -225,7 +226,7 @@ function main(){
     echo "Running covariates only regression"
     python ${within_family_path}/scripts/fpgs/fpgs_reg.py  ${fpgs_out}/covariates \
         --pgs ${covar_fid} \
-        --phenofile $phenofile \
+        --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
         --logistic $BINARY --ols $ols --kin $kin
     
     echo "Estimating direct/pop ratio"

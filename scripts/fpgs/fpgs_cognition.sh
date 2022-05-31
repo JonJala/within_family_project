@@ -7,7 +7,5 @@ source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
 
-# main "cognition" "" "0" "mcs"
-
 main "cognition" "" "0" "ukb"
 

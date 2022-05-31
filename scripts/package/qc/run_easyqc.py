@@ -624,6 +624,9 @@ the reader will try and infer the chromosome number from the file name.''')
     parser.add_argument('--tau', default = "tau", type = str, help = "Name of tau column")
 
     parser.add_argument('--ldsc-ref', default = None, type = str, help = "Name of reference GWAS sample to run ldsc on. Must be munged")
+    parser.add_argument('--altphenotypicvar', default = False, 
+    action='store_true', help = "IF passed phenotypic variance is calculated by adding sigma_0, sigma_1 and sigma_2")
+
 
     parser.add_argument('--ldsc-outprefix', default = "./", type = str, 
     help = "Name of where to save ldsc log output")

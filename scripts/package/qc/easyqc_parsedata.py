@@ -112,9 +112,12 @@ def read_hdf5(args, printinfo = True):
     f = hf.get(args.freqs)[()]
 
     # normalizing S
-    sigma2 = hf.get(args.sigma2)[()]
-    tau = hf.get(args.tau)[()]
-    phvar = sigma2+sigma2/tau
+    if not args.altphenotypicvar:
+        sigma2 = hf.get(args.sigma2)[()]
+        tau = hf.get(args.tau)[()]
+        phvar = sigma2+sigma2/tau
+    else:
+        phvar = hf['sigma_1'][()] + hf['sigma_1'][()] + hf['sigma_2'][()]
     
     hf.close()
 

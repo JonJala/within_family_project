@@ -78,7 +78,7 @@ function withinfam_pred(){
                 $WTFILE \
                 --chr Chr --pos BP --rsid SNP --a1 A1 --a2 A2 --beta direct_Beta \
                 --sep "delim_whitespace" \
-                --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${DATASET}/{PHENONAME}_${EFFECT}_fpgs_formatted
+                --outfileprefix ${within_family_path}/processed/sbayesr/${PHENONAME}/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted
         else
             python ${within_family_path}/scripts/fpgs/format_weights.py \
                 $WTFILE \

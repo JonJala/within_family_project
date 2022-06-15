@@ -4,27 +4,47 @@ library(data.table)
 library(dplyr)
 library(magrittr)
 library(ggplot2)
+library(stringr)
 
-# -----------------------------------------------------------------------------------------
-# process meta-analysed EA sumstats to create PGIs using EA4 genome-wide significant SNPs
-# -----------------------------------------------------------------------------------------
-
+# ---------------------------------------------------------------------------------------------
 # define function
-process_sumstats <- function(ss, no_ukb) {
+# ---------------------------------------------------------------------------------------------
 
-    # ea4 sumstats
-    ea4_ss <- fread("/var/genetics/proj/within_family/within_family_project/processed/ea4_meta/EA4_additive_p1e-5_clumped.txt")
+process_sumstats <- function(ss, no_ukb, lead_snps_only = FALSE) {
 
-    # filter p-val < 5*10^-8
-    ea4_ss %<>% filter(P < 5*10^-8)
+    if (lead_snps_only == TRUE) {
 
-    print(paste0("There are ", length(unique(ea4_ss$rsID)), " genome-wide significant SNPs in the EA4 sumstats."))
-    print(paste0("There are ", sum(unique(ea4_ss$rsID) %in% unique(ss$SNP)), " SNPs in the overlap between the sumstats files."))
+        # ea4 sumstats with lead SNPs from each clump only
+        ea4_snps <- fread("/var/genetics/proj/within_family/within_family_project/processed/ea4_meta/EA4_additive_p1e-5_clumped.txt")
+
+        # filter p-val < 5*10^-8
+        ea4_snps %<>% filter(P < 5*10^-8)
+        
+    } else {
+        
+        full_ea4 <- fread("/disk/genetics4/projects/EA4/derived_data/Meta_analysis/1_Main/2020_08_20/output/EA4_2020_08_20.meta") # full ea4 metaanalysed ss
+        
+        # get list of all gws snps
+        snplist <- c()
+        for (chr in 1:22) {
+            clump <- fread(paste0("/disk/genetics/ukb/aokbay/EA4_clumped/EA4_2020_08_20.meta.chr", chr, ".clumped"))
+            snps <- unlist(strsplit(clump$SP2, "\\(1\\),"))
+            snplist <- append(snplist, snps)
+        }
+        snplist <- str_remove_all(snplist, "\\(1\\)") # remove any remaining instances of (1)
+
+        # select these snps from ea4 sumstats
+        ea4_snps <- full_ea4 %>% 
+                        filter(rsID %in% snplist)
+    }
+    
+    print(paste0("There are ", length(unique(ea4_snps$rsID)), " genome-wide significant SNPs in the EA4 sumstats."))
+    print(paste0("There are ", sum(unique(ea4_snps$rsID) %in% unique(ss$SNP)), " SNPs in the overlap between the sumstats files."))
 
     # get direct effects for these SNPs
     ea_final <- ss %>% 
-                    filter(SNP %in% ea4_ss$rsID) %>%
-                    merge(ea4_ss[,c("rsID", "Chr", "BP")], by.x = "SNP", by.y = "rsID")
+                    filter(SNP %in% ea4_snps$rsID) %>%
+                    merge(ea4_snps[,c("rsID", "Chr", "BP")], by.x = "SNP", by.y = "rsID")
 
     # format in plink format
     ea_final %<>% 
@@ -40,7 +60,7 @@ process_sumstats <- function(ss, no_ukb) {
 
     # plot distribution of no. cohorts
     title <- ifelse(no_ukb == FALSE, "Number of Cohorts Contributing to Meta-Analysis", "Number of Cohorts Contributing to Meta-Analysis (Without UKB)")
-    p <- ggplot(ss[ss$SNP %in% ea4_ss$rsID],
+    p <- ggplot(ss[ss$SNP %in% ea4_snps$rsID],
                 aes(x = n_cohorts)) +
                 geom_histogram(stat = "count", fill = "lightskyblue3") +
                 labs(x="Number of Cohorts", y="Count") +
@@ -55,12 +75,22 @@ process_sumstats <- function(ss, no_ukb) {
 
 }
 
+# ---------------------------------------------------------------------------------------------
+# run analysis
+# ---------------------------------------------------------------------------------------------
+
+## read in WF metaanalysed sumstats for EA
+
 # ea metaanalysis sumstats (all cohorts)
 ea_meta <- fread("/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta.sumstats.gz")
 
 # ea metaanalysis sumstats without ukb
 ea_meta_noukb <- fread("/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta_noukb.sumstats.gz")
 
+# ## process meta-analysed EA sumstats to create PGIs using EA4 genome-wide significant lead SNPs only
+# process_sumstats(ea_meta, no_ukb = FALSE, lead_snps_only = TRUE) # mcs
+# process_sumstats(ea_meta_noukb, no_ukb = TRUE, lead_snps_only = TRUE) # ukb
 
+# process meta-analysed EA sumstats to create PGIs using all EA4 genome-wide significant SNPs
 process_sumstats(ea_meta, no_ukb = FALSE) # mcs
 process_sumstats(ea_meta_noukb, no_ukb = TRUE) # ukb

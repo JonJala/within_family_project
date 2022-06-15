@@ -12,3 +12,5 @@ for chr in {1..22}; do
     --out /var/genetics/proj/within_family/within_family_project/processed/ea4_meta/EA4_2020_08_20.meta.chr$chr &
 done
 wait
+
+## note: something seems to be wrong with the version of plink here. also the output is actually saved in /disk/genetics/ukb/aokbay/EA4_clumped since aysu wasn't able to save to the above folder

@@ -518,10 +518,12 @@ def run_rscript(ecfpath, tmpdir):
 # Import EasyQC package (from online source if necessary)
 tryCatch(library("EasyQC"),
   error = function(e) {
+    dir.create("easyqc_libraries", showWarnings=FALSE)
+    .libPaths("easyqc_libraries")
     install.packages(pkgs="http://homepages.uni-regensburg.de/~wit59712/easyqc/EasyQC_9.2.tar.gz",
-                     repo=NULL, type="source")
+                     lib="easyqc_libraries/", repo=NULL, type="source")
     library("EasyQC")
-})
+  })
 library(EasyQC)\n''' + f"EasyQC('{ecfpath}')"
 
     with open(f"{tmpdir}/runecf.R", "w") as f:

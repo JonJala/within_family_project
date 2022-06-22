@@ -3,16 +3,19 @@ library(ggplot2)
 library(data.table)
 
 
-dat = fread("rsid_segments.txt.gz")
+dat = fread("/var/genetics/proj/within_family/within_family_project/processed/genetic_mapping/rsid_segments.txt.gz")
+sumstats = fread('/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta.sumstats.gz')
+sumstats = sumstats[sumstats$SNP %in% dat$SNP]
 
-dat = dat[, .(direct_N = max(direct_N, na.rm=TRUE),
-        population_N = max(population_N, na.rm=TRUE)),
-    by=segmentid]
-
-dat %>%
+sumstats %>%
     ggplot() +
     geom_density(aes(direct_N, color = "Direct")) + 
     geom_density(aes(population_N, color = "Population")) + 
-    scale_color_brewer(palette = "Dark2")
+    scale_color_brewer(palette = "Dark2") +
+    labs(color = "") +
+    theme_minimal() +
+    theme(
+        axis.line = element_line(color="black")
+    )
 
-ggsave("effectiven_segments.pdf", width=9, height=6)
+ggsave("/var/genetics/proj/within_family/within_family_project/processed/genetic_mapping/effectiven_segments.pdf", width=9, height=6)

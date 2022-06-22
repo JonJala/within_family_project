@@ -44,7 +44,7 @@ function run_pgi(){
             "$METAFILE" \
             --effecttype "${EFFECT}" \
             --median-n \
-            --median-n-frac 1.0 \
+            --median-n-frac 1 \
             --outpath "${PHENONAME}/${EFFECT}/meta.sumstats"
 
         mkdir -p ${PHENONAME}/${EFFECT}/weights/

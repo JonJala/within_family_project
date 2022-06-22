@@ -39,7 +39,7 @@ def get_genome_length(dat: pd.DataFrame) -> float:
     length of entire genome
     '''
 
-    genomelength = dat.groupby('chr')['cm'].agg('max').sum()
+    genomelength = dat['bitlength'].sum()
     return genomelength
 
 def make_segments(dat: pd.DataFrame, segmentsize: float) -> pd.DataFrame:
@@ -56,7 +56,7 @@ def make_segments(dat: pd.DataFrame, segmentsize: float) -> pd.DataFrame:
 
 
     datsegments = dat.copy()
-    cm = datsegments['cm'].values
+    cm = datsegments['bitlength'].values
     datsegments['segmentid'] = make_segments_core(cm, segmentsize)
         
     return datsegments
@@ -72,13 +72,12 @@ def make_segments_core(cm: np.array, segmentsize: float) -> np.array:
     segmentsizetillnow = 0
     datsegments = np.zeros(cm.shape, dtype=np.int64)
     for i in range(datsegments.shape[0]):
-        if segmentsizetillnow < segmentsize:
-            segmentsizetillnow += cm[i]
-        else:
+        segmentsizetillnow += cm[i]
+        if segmentsizetillnow >= segmentsize:
             datsegments[snpstart:i] = segmentid
             segmentid += 1
             snpstart = i
-            segmentsizetillnow = 0
+            segmentsizetillnow = cm[i]
     
     return datsegments
 
@@ -160,8 +159,11 @@ if __name__ == '__main__':
     if args.sumstat is not None:
         sumstats = pd.read_csv(args.sumstat, delim_whitespace=True)
         datout = merge_sumstat(datout, sumstats)
+        idx = datout.groupby('segmentid')['direct_N'].idxmax()
+        datout = datout.loc[idx, ['segmentid', 'SNP', 'chr', 'pos', 'direct_N', 'A1', 'A2']] 
         
     datout.to_csv(args.outprefix + '.gz', sep = ' ', na_rep = 'nan', index=False)
+    datout[['SNP', 'A1', 'A2']].to_csv(args.outprefix + '.ldscsnplist', sep = ' ', na_rep = 'nan', index=False)
 
 
 

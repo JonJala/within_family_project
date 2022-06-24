@@ -1,8 +1,8 @@
 #!/usr/bin/bash
 
-# Rscript /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/ea4_meta/process_ea_sumstats.r
+Rscript /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/ea4_meta/process_ea_sumstats.r
 
-# bash /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/ea4_meta/ea4_meta_pgi.sh
+bash /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/ea4_meta/ea4_meta_pgi.sh
 
 source /var/genetics/proj/within_family/within_family_project/snipar/bin/activate
 

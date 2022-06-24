@@ -21,6 +21,8 @@ process_sumstats <- function(ss, no_ukb, lead_snps_only = FALSE) {
         ea4_snps %<>% filter(P < 5*10^-8)
         
     } else {
+
+        ## all GWS SNPs from EA4
         
         full_ea4 <- fread("/disk/genetics4/projects/EA4/derived_data/Meta_analysis/1_Main/2020_08_20/output/EA4_2020_08_20.meta") # full ea4 metaanalysed ss
         
@@ -28,8 +30,10 @@ process_sumstats <- function(ss, no_ukb, lead_snps_only = FALSE) {
         snplist <- c()
         for (chr in 1:22) {
             clump <- fread(paste0("/disk/genetics/ukb/aokbay/EA4_clumped/EA4_2020_08_20.meta.chr", chr, ".clumped"))
-            snps <- unlist(strsplit(clump$SP2, "\\(1\\),"))
-            snplist <- append(snplist, snps)
+            lead_snps <- clump$SNP
+            other_snps <- unlist(strsplit(clump$SP2, "\\(1\\),"))
+            snplist <- append(snplist, lead_snps)
+            snplist <- append(snplist, other_snps)
         }
         snplist <- str_remove_all(snplist, "\\(1\\)") # remove any remaining instances of (1)
 

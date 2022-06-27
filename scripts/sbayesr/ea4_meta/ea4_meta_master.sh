@@ -7,4 +7,3 @@ bash /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/ea4_
 source /var/genetics/proj/within_family/within_family_project/snipar/bin/activate
 
 bash /var/genetics/proj/within_family/within_family_project/scripts/fpgs/fpgs_ea.sh
-

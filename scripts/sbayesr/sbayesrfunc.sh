@@ -80,10 +80,12 @@ function run_pgi(){
         echo $chr
         
         if [[ $DATASET == "mcs" ]]; then
+            
             plink200a2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
             --chr $chr \
             --score ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted 12 5 8 header center cols=+scoresums \
             --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
+
         elif [[ $DATASET == "ukb" ]]; then
 
             if [[ $PHENONAME == "ea4_meta" ]]; then

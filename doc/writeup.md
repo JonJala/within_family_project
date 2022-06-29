@@ -1,230 +1,123 @@
----
-title: Meta Analyzing Family Based GWAS
-subtitle: Everything Done So Far
----
+This document will go through all the steps of the within family pipeline. This won't go over the theoretical aspects of the project since that can be found in the supplementary note file on the dropbox folder. Instead this goes through the pipeline practically.
 
-# Cohorts And Phenotypes
+Assume the home directory we are on is the git repository for the within family project.
 
-| Cohohort | Phenotype | LDSC Test | Diag Plots and Tables | Notes |
-| -------- |  | ------------------- | ----- | ------------ |
-| STR | BMI | No (Couldn't compute) | Yes| |
-| STR | EA | No  |  Yes  |  |
-| STR | Height | Yes | Yes  |  |
-| STR | CESD |  |  |  |
-| STR | CPD | No (-ve)  |  Yes |  |
-| STR | DPW | No  |  Yes  |  |
-| STR | Extraversion | No (Too low power)  | Yes   |  |
-| STR | HH Income |  No  (might be too low power)|  Yes  |  |
-| STR | Income |  No (might be too low power) |  Yes  |  |
-| STR | N Children |   No (too lower power) | Yes  |  |
-| STR | SRH | No (Low power) | Yes   |  | 
-| STR | IQ | Yes  |  Yes  |  |
-| STR | SWB | Yes  | Yes   |  |
-| Hunt | EA | Yes| Yes | |
-| Hunt | BMI | Yes | Yes |  |
-| Hunt | Height | Yes | Yes |  |
-| Hunt | AAFB | Yes | Yes | |
-| Hunt | Asthma | Yes | Yes | |
-| Hunt | N Children |Yes | Yes | |
-| Hunt | CPD | No (-ve) | Yes | |
-| Hunt | Drinks Per Week | No (-ve) |Yes | |
-| Hunt | Neuroticism | Yes  |Yes | |
-| Hunt | Age Menarche | Yes |Yes | |
-| Hunt | BPD | Yes | Yes | |
-| Hunt | FEV1 | No (-ve)|Yes | |
-| Hunt | Non-HDL |Yes | Yes | |
-| Hunt | HDL |Yes | Yes | |
-| Hunt | Health |Yes | Yes | |
-| Hunt | BPS | Yes | Yes ||
-| Hunt | Smoke ever | No (-ve) | Yes ||
-| Hunt | SWB | Yes | Yes ||
-| Hunt | Deprcat | Yes | Yes ||
-| Hunt | Deprcont | Yes | Yes ||
-| Hunt | Eczema | Yes  | Yes ||
-| Hunt | Rhinitis | No (cant compute)  |  Yes ||
-| Generation Scotland | Glucose |  |  | Not analyzing  |
-| Generation Scotland | Non-HDL| Yes  | Yes  |  |
-| Generation Scotland | HDL |  Yes | Yes  |  |
-| Generation Scotland | FEV1 | Yes  | Yes  |  |
-| Generation Scotland | Height | Yes | Yes |  |
-| Generation Scotland | BMI | Yes | Yes |  |
-| Generation Scotland | CPD |  No (Not enough power) | Yes  |  |
-| Generation Scotland | Cognitive ability | Yes  | Yes  |  |
-| Generation Scotland | Vocabulary |  |  | Not analyzed |
-| Generation Scotland | EA | Yes | Yes |  |
-| Generation Scotland | BPS | Yes  | Yes  |  |
-| Generation Scotland | BPD |  Yes | Yes  |  |
-| Generation Scotland | Neuroticism | No (Couldn't compute)  | Yes  |  |
-| Generation Scotland | EA Years | Yes | Yes  |  |
-| Finnish Twins | EA| No (Negative h2 estimate) | Yes | |
-| Finnish Twins | BMI | Yes  | Yes  | |
-| Finnish Twins | Height | Yes  |  Yes | |
-| Finnish Twins | AAFB | No (High se)  | Yes  | |
-| Finnish Twins | ADHD | No (High se)  |  Yes | |
-| Finnish Twins | CPD |  No (-ve) |  Yes | |
-| Finnish Twins | Depression | Yes  | Yes  | |
-| Finnish Twins | Eversmoke |  No (Couldnt compute) |  Yes | |
-| Finnish Twins | HDL | No (Couldnt compute)  | Yes  | |
-| Finnish Twins | Income | No (Couldn't Compute) | Yes  | |
-| Finnish Twins | IQ | No (High se) |  Yes | |
-| Finnish Twins | LDL | No (Couldn't compute) | Yes  | |
-| Finnish Twins | N Children | No (high se) |  Yes | |
-| Finnish Twins | Neuroticism | No (Couldn't compute) | Yes  | |
-| Finnish Twins | BPS | Yes  | No | Direct SEF plot looks odd |
-| Finnish Twins | TG | No (High se) | Yes  | I assume this is TGL |
-| Finnish Twins | wellbeing |  No (Couldn't compute) | Yes | |
-| Estonian Biobank | EA | Yes | Yes | |
-| Estonian Biobank | BMI | Yes | Yes | |
-| Estonian Biobank | MDD | Yes | |  | 
-| Estonian Biobank | Ever Smoker | No (-ve 1) | | |
-| Estonian Biobank | AAFB | Yes | Yes | |
-| Estonian Biobank | Asthma | Yes | | |
-| Estonian Biobank | Depression | Yes | Yes | |
-| Estonian Biobank | Eczema | Yes  | Yes | |
-| Estonian Biobank | Hayfever | No (rg out of bounds) | Yes | |
-| Estonian Biobank | Migraine | No (rg out of bounds) | Yes | |
-| Estonian Biobank | Nearsight | |  | |
-| UKB | SWB | Yes | Yes  | |
-| UKB | Glucose |  |  | Not analyzing  |
-| UKB | Non-HDL | Yes  | Yes  | |
-| UKB | HDL | Yes  | Yes  | |
-| UKB | BPS | Yes | Yes  | |
-| UKB | BPD |  Yes | Yes  | |
-| UKB | SRH | No (-ve) | Yes  | |
-| UKB | FEV1 | Yes  | Yes  | |
-| UKB | Ever-smoked | No (-ve) | Yes  | |
-| UKB | CPD | No (-ve)  | Yes  | |
-| UKB | DPW | No (-ve) | Yes   | |
-| UKB | Height | Yes | Yes | |
-| UKB | BMI | Yes | Yes | |
-| UKB | Cognitive ability  |  Yes | Yes  | |
-| UKB | Neuroticism  |  Yes | Yes  | |
-| UKB | AAFB  | Yes | Yes  | |
-| UKB | N Children Male  |  |  | Not analyzed |
-| UKB | N Children Female  |  |  |  Not analyzed|
-| UKB | Household Income  |  Yes | Yes  | |
-| UKB | Depression  | Yes  | Yes  | |
-| UKB | EA | Yes | Yes | |
-| UKB | Log hourly income  |  |  |  No data|
-| UKB | N Children  | Yes  | Yes  | |
-| MOBA | BMI | Yes | Yes | |
-| MOBA | Height | Yes | Yes | |
-| MOBA | Depressive symptoms | No  (h2 is negative) | Yes | |
-| MOBA | Income | No (h2 is negative) |  Yes | |
-| MOBA | Fertility | Yes | Yes | |
-| MOBA | EA | Yes| Yes| |
-| Geisinger | BMI | Yes | Yes | |
-| Geisinger | Height | Yes | Yes | |
-| Geisinger | Depression | Yes | Yes | |
-| Geisinger | EA | Yes | Yes | |
-| Geisinger | Smoke-Ever | No ( -ve 1) | Yes | |
-| Geisinger | Asthma | No (Couldnt compute) | Yes | |
-| Geisinger | ADHD | Yes | Yes | |
-| Geisinger | Eczema | No  | Yes | |
-| Geisinger | BPD | Yes |  Yes | |
-| Geisinger | BPS | Yes | Yes  | |
-| Geisinger | Hayfever | Yes  | Yes | |
-| Geisinger | HDL | Yes  | Yes | |
-| Geisinger | Migraine | No (Couldnt compute)  | Yes | |
-| Geisinger | Non-HDL | Yes  | Yes | |
-| Geisinger | FEV1 | Yes  | Yes | |
-| Lifeline | BMI/BMI18 | Yes  | Yes  | |
-| Lifeline | Height/Height18 | Yes | Yes | |
-| Lifeline | EA | Yes | Yes  | |
-| Lifeline | HDL | Yes| Yes | |
-| LIfeline | LDL | Yes  |  Yes | |
-| Lifeline | TGL | Yes  | Yes  | |
-| Lifeline | Cholestrol | Yes | Yes  | | 
-| Lifeline | Smoking | No (-ve) | Yes | |
-| Lifeline | Cognition (unique) | Yes | Yes | |
-| Minnesotta twins | EA | Yes | Yes | |
-| Minnesotta twins | BMI | Yes | Yes | |
-| Minnesotta twins | Height | Yes | Yes | | 
-| Minnesotta twins | BPS | No (not enough power) | Yes | rg is weird. Very few valid alleles |
-| Minnesotta twins | CPD | No (high se) | | |
-| Minnesotta twins | DPW | No | | |
-| Minnesotta twins | ES | No | | |
-| Minnesotta twins | Income | No | | |
-| Minnesotta twins | IQ | No | | |
-| Minnesotta twins | Stress | Yes | | Equivalent to neuroticism. |
-| Minnesotta twins | SWB | Yes | | |
-| Dutch Twins | Asthma | Yes | Yes | |
-| Dutch Twins | BMI | Yes | Yes | |
-| Dutch Twins | Cannabis |  No (Couldn't compute) | Yes  | |
-| Dutch Twins | CPD | No (-ve h2)  | Yes | |
-| Dutch Twins | BPD | No (not enough power) | Yes  | |
-| Dutch Twins | Depression | Yes | Yes  | |
-| Dutch Twins | EA |Yes |Yes  | |
-| Dutch Twins | DPW | No (-ve) | Yes  | |
-| Dutch Twins | EverSmoke | No (couldn't compute) | Yes | |
-| Dutch Twins | Extraversion | Yes | Yes  | |
-| Dutch Twins | HDL | Yes |  Yes | |
-| Dutch Twins | Height |Yes  | Yes  | |
-| Dutch Twins | Menarche | Yes | Yes  | |
-| Dutch Twins | Migraine | No (Couldn't compute) | Yes  | |
-| Dutch Twins | Morning Person | No (Couldn't compute) | Yes  | |
-| Dutch Twins | Neuroticism | Yes | Yes  | |
-| Dutch Twins | N children | No (Couldn't compute) | Yes  | |
-| Dutch Twins | NonHDL | Yes |  Yes | |
-| Dutch Twins | Satisfaction With life | No (Couldn't Compute) | Yes | Ref file is SWB |
-| Dutch Twins | BPS  | No (Couldn't compute) | Yes  | |
-| Dutch Twins | Self Rated Health  | No (-ve) | Yes  | |
-| QIMR | EA  | Yes (borderline) | Yes  |  |
-| QIMR | BMI  | Yes  | Yes  |  |
-| QIMR | Height  | Yes  | No (QQ plot direct effect is off)  |  |
+# Quality Control
+
+The core quality control script can be found in `scripts/package/qc/run_easyqc.py`. This is a command line tool so should be called with options. The bash scripts which call this are located in `within_family_project/scripts/qc` with titles `runqc_<PHENOTYPENAME>.sh` Here are the common options:
+
+1. filepath - This is the first positional argument which takes in a "globbed" file path of the family GWAS summary statistics. This could be in the hdf5 file format or the text delimited (and optionally compressed) format following the outputs of SNIPAR
+2. --outprefix - Pass in the prefix to all the cleaned output you want
+3. --effects - The set of effects estimated in the filepath file. Defualt is "direct_paternal_maternal"
+4. --toest - The set of the effects we want the cleaned output to have.
+5. --info - A text delimited file (can be compressed) which contains the columns SNP, Rsq and AvgCall corresponding to the rsids, INFO R-sqaured and Average call rate respectively. Its optional to pass this in
+6. ---hwe - A text delimited file (can be compressed) which contains the columns SNP and P corresponding to the rsids and Hardy-Weinberg P values respectively.
+
+The QC scripts in `scripts/qc` are divided by phenotype but the outputs are divided by cohort and can be found here: `processed/qc`.
+
+The output directory will contain EasyQC outputs. The relevant datafile will be named "CLEANED.out.gz". Other files are diagnostic plots, and LDSC genetic correlation estimates. And important file is the `clean.rep` file which details how many SNPs are dropped at each stage of the QC.
+
+# Meta Analysis
+
+The core meta analysis script is located here: `scripts/package/run_metaanalysis.py`. It is a command line tool. The bash scripts calling this script are located here: `scripts/usingpackage` and are ordered by phenotype. Within each phenotype directory the file `runmeta.sh` is the script which calls the meta analysis script. 
+
+To run the script one first needs a json file with the list of input data. The input data will be the `CLEANED.out.gz` output from the QC step. An example of this json file is here: `scripts/usingpackage/bmi/inputfiles.json`. You need to pass in each cohort name and alongside it the path to the QCed summary statistics of that cohort. *VERY IMPORTANT* that the cohort names here do not contain an underscore! So do not write "estonian_biobank". The cohort names aren't particularly important here but are useful for debugging.
+
+Once you have the json file you need to pass it into the meta analysis command line tool.
+
+The arguments the tool accepts are:
+
+1. inputfilepath - This is a required positional argument. It is the path of the json files which lists all the input files
+2. --outprefix - The prefix to the output.
+
+The script outputs can be located here: `processed/package_output`. Output is sorted by phenotype, although each phenotype directory contains more than just the outputs of the meta analysis script (it also has outputs from the other sciprts in `scripts/usingpackage/<PHENOTYPE>/` directory).
+
+# LDSC (and other secondary analyses)
+
+After the meta analysis we run some LDSC scripts on the output. The scripts can be found in `scripts/usingpackage/<PHENOTYPE>/ldsc_analysis.sh`. This has to be copy pasted and modified for each new phenotype analysis added in. All output is stored in `processed/package_output`.
+
+There are other scripts sometimes in the `scripts/usingpackage/<PHENOTYPE>/` directory. All output from those are stored in the `processed/package_output` directory as well.
+
+# SBayesR
+
+We estimate the PGI weights using SBayesR. 
+
+The core bash script can be found here: `scripts/sbayesr/sbayesrfunc.sh`. This has the bash function which is called for each phenotype. For example here: `scripts/sbayesr/ea_pgi.sh`. The function is called `run_pgi` and takes in the summary statistics location, effect type (direct or population usually), phenotype name, and target cohort (can only be either MCS or UKB for now).
+
+The function first formats the summary statistics in a way sbayesr can read. This is done using the scripts/sbayesr/format_gwas.py script.  And then sbayesr is run. The output is stored in `processed/sbayesr/<PHENOTYPE>/<EFFECT>/` by phenotype name and effect (direct or population usually). Log files are stored in `processed/sbayesr/logs`.
+
+Output files include weights in the `processed/sbayesr/<PHENOTYPE>/<EFFECT>/weights` directory. The file of interest here is `meta_weights.snpRes`. These contain the SNP weights estimated by SbayesR.
+
+The `processed/sbayesr/<PHENOTYPE>/<EFFECT>/` directory contains other useful files. `pgipred.regresults` contains the results of regressing the phenotype from the validation sample on the scores. We should expect the coefficient to be positive and the incremental $R^2$ to be moderately high (depending on the phenotype). You can also look at `.parentalcorr` to look at the estimated correlation of PGIs for observed parents. We dont expect this to be a particular way but they give an idea of assortative mating.
 
 
-Notes:
+Finally you can see the final individual level scores constructed using the sbayesr weights and the genotype files in the relevant data folders. That would be `/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/sbayesr` and `/var/genetics/data/ukb/private/v3/processed/proj/within_family/pgs/sbayesr`.
 
-1. LDL is taken as the reference for non-HDL cholestrol
-2. QIMR's info-R2 cutoff should be 0.95 instead of 0.99
-3. Ignore minnesotta twins for now - messes up results
+# Within Family PGI Regressions
 
-# Methodology
+Once we have the PGI weights from SbayesR we need to:
 
-## Quality control
+1. Compute family wise PGIs
+2. Run within family regressions
 
-Each cohort goes through some quality control checks. 
+Both these steps are taken care of by the `main` function in `scripts/fpgs/fpgipipeline_function.sh`. An example of a script calling the `main` function is `scripts/fpgs/fpgs_ea.sh`.
 
-- First we look at the genetic correlation of the population effects with a reference sample where possible (in cases where the summary statistics aren't well powered LDSC might fail to give an estimate). We expect this genetic correlation to be around 1.
-- We look at the QQ-plots of every effect from each cohort
-- We plot standard errors of each effect from the summary statistics against $\sqrt{(f)(1-f)}$. We expect this to show a downward sloping curve.
+The `main` function is a bit involved.
 
-The cohort level data also goes through a couple of filters:
+First it calls another function created in the `fpgipipeline_function.sh` script called `withinfam_pred`. This function is called twice usually - once for using the direct effect summary statistics and once for the population effect summary statistics. The `withinfam_pref` function does a couple of things:
 
-- We apply an MAF filter of 0.01
-- We exclude SNPs with Hardy-Weinberg equilibrium exact test $P$ values lower than $10^{-6}$
-- We exclude SNPs which have an imputation $R^2$ less than 0.99 and an average call rate less than 0.99. 
-- We compute the sampling correlations between all combinations of effects (direct-paternal, direct-maternal, paternal-maternal, etc.) and drop SNPs which have values outside of 6 standard deviations from the mean. This metric is useful since it captures SNPs which have imputation issues either with the proband or parental genotypes.
-- We use Haplotype Reference Consortium reference panel to check for strand misalignment, position mismatch, allele concordance, and allele frequency discrepancies.
+1. Formats the weights so that SNIPAR can read it
+2.  Formats the phenotype file so that SNIPAR can read it
+3.  Runs `pgs.py` (a script in your path if you install SNIPAR) to create the PGIs for each family (parental genotypes may or may not be imputed)
+4.  Runs `attach_covar.py` to attach the coviariates to the family PGIs. Two sets are created - one with the proband PGI and the covariates and one with the full set of family PGIs and the covariates. This is because down the line, the proband set gives us the population coefficient and the family set gives us the direct coefficient.
+5. Then we use the `fpgs_reg.py` script to run the within family regressions. This is run for the proband set and the full family set. The `fpgs_reg.py` script is slightly involved as well but the core idea is:
+    - If the phenotype is binary then run a logit regression in python to get the coefficients out. Otherwise use `pgs.py` to get the coefficients out.
+    - If the validation phenotype is UKB then run OLS for the unrelated individuals to get the $R^2$ but then run either logit or `pgs.py` to get the coefficients
+    - The above two steps are chosen depending on the `ols`, `logistic` and `kin` arguments in `fpgs_reg.py`.
 
-## Meta analysis
+Once the `withinfam_pred` function is finished for each effect (direct and population) there are a couple of auxillary things the `main` function does.
 
-We want to estimate the parameters of the model:
+1. Runs a covariates only regression using `fpgs_reg.py`. This is because the relevant $R^2$ measure we need finally is the incremental $R^2$ for which this regression has to be computed
+2. Runs `bootstrapest.py`. This is to calculate the direct/population coefficient ratio and its standard error via bootstrap. It also computes the difference between the direct/population ratio from the direct effects summary statistics and the population effect summary statistics and the SE of that estimate using bootstrap, but this isn't reported or used (yet!). 
 
-$$
-Y_i = \delta g_i + \eta_p g_{p(i)} + \eta_m g_{m(i)} + \epsilon_i
-$$
+# Compiling Results
 
-Where $\epsilon$ is uncorrelated with $g_i, g_{p(i)}, g_{m(i)}$. We want to estimate $\theta := \begin{bmatrix} \delta & \eta_p & \eta_m \end{bmatrix}^T$ using different samples and different observations of sibling and parental alleles. Let sample 1 be a sample where only proband genotypes are available and to which standard GWAS analysis has been applied. Let sample 2 be a sample of sibling pairs with observed genotype and phenotype, to which the sib-difference method has been applied. Let sample 3 be a sample where only proband and paternal genotype has been observed, and the estimate comes from regression of proband phenotype jointly onto proband and paternal genotype. Let sample 4 be a sample where only proband and maternal genotype has been observed, and the estimate comes from regression of proband phenotype jointly onto proband and maternal genotype. And let sample 5 be a sample where proband and both parents genotypes have been observed, and the estimate comes from regression of proband phenotype jointly onto proband, maternal, and paternal genotypes. Then we can combine the estimates from these regressions using the following matrices that give the linear transformation between $\theta$ and the expected estimates from the regressions in each subsample:
+Results are compiled using `scripts/0_fullruns/compile_results.py`. It is a slightly lengthy and tedious script because it compiles results from the previous steps and formats them so that it can be easily copy-pasted into the supplementary tables. It creates three outputs - `meta.results`, `fpgs.results` and `direct_population_rg_matrix`. These are stored in `processed/package_output`.
 
-| Sample | Observed Genotype | Regression | $\mathbb{E}(z_i)$ | $A_i$ |
-| ------ | ---------------- | ----------- | ---------------- | -------- |
-| 1 | Proband | $Y_{ij} \sim g_i$ | $\delta + \frac{\eta_m + \eta_p}{2}$| $\begin{bmatrix} 1 & 0.5 & 0.5 \end{bmatrix}$| 
-| 2 | Sibling Pair | $(Y_{i1} - Y_{i2}) \sim (g_{i1} - g_{i2})$ | $\delta$| $\begin{bmatrix} 1 & 0 & 0 \end{bmatrix}$| 
-| 3 | Proband and Paternal | $Y_{i} \sim g_i + g_{p(i)}$ | $\begin{bmatrix} \delta + \frac{2}{3} \eta_m \\ \eta_p - \frac{1}{3} \eta_m \end{bmatrix}$| $\begin{bmatrix} 1 & 0 & \frac{2}{3} \\ 0 & 1 & -\frac{1}{3} \end{bmatrix}$| 
-| 4 | Proband and Maternal | $Y_{i} \sim g_i + g_{m(i)}$ | $\begin{bmatrix} \delta + \frac{2}{3} \eta_p \\ \eta_m - \frac{1}{3} \eta_p \end{bmatrix}$| $\begin{bmatrix} 1 &  \frac{2}{3} & 0 \\ 0 & -\frac{1}{3} & 1 \end{bmatrix}$| 
-| 5 | Proband, Maternal, Paternal | $Y_i \sim g_i + g_{p(i)} + g_{m(i)}$ | $\begin{bmatrix} \delta \\ \eta_p \\ \eta_m \end{bmatrix}$| $I_3$| 
+Note that there is also a script `/scripts/0_fullruns/fullruns.sh`. This runs all the analyses detailed until now for each phenotype. 
 
-We want to estimate the parameter vector $\theta$ and we observe $z_i \sim \mathbb{N}(A_i \theta, \Sigma_i)$ for $i \in {1, ..., k}$ where $i$ indexes the cohort. $A_i$ is a matrix which when applied to $\alpha$ linearly transforms it into the resulting parameters for which we have the sample analogs. The MLE for $\theta$ is:
+# Things to potentially change or tweak
 
-$$
-\hat{\theta} = \left(\sum_{i=1}^k A_i^T \Sigma^{-1} A_i \right) \left( \sum_{i=1}^{k} A_i^T \Sigma^{-1} z_i \right)
-$$
+## SbayesR
 
-and
+- We filter the summary statistics on median effective N of each summary statistic before passing it into SbayesR. This results in half the SNPs being dropped. This ensures SbayesR converges but because we lose too many SNPs there might be another way to do this more effectively. EA4 uses $0.8 \cdot \text{Effective N}$. But this threshold is too low for some of the phenotypes we have like HDL. You can vary this threshold by looking into the `scripts/sbayesr/sbayesrfunc.sh` script, going into the `run_pgi` function and looking at where we call `format_gwas.py`. 
 
-$$
-\text{Var}(\hat{\theta}) = \left(\sum_{i=1}^k A_i^T \Sigma_i^{-1} A_i \right)^{-1}
-$$
+## Within Family Regressions
+
+- The way we compute $R^2$ should be changed to something like nagelkerke's $R^2$ so that results for logistic and OLS are comparable. Look into the `fpgs_reg.py` script in the `scripts/fpgs` directory to change this.
+
+## Compiling Results
+
+- Probably need to modify things here as new analyses and tweaks are made
+
+# Other Analyses
+
+These are analyses which aren't yet part of the main pipeline but might be useful.
+
+## Lead SNPs 
+
+The idea here is to get a set of SNPs which are the SNPs with the highest effective N within each segment we create. 
+
+Segments are created using this script: `scripts/genetic_mapping/rungeneticmapping.sh` which calls on the script `scripts/genetic_mapping/makegeneticmap.py`. We use the genetic map found here: `snipar/snipar/util_data/decode_map/chr_~.gz` We aim to create 1 million segments using these steps:
+
+1. First get the length of each segment needed. This will simply be the sum of all the lengths of segments divided by the target number of segments (1 million in this case)
+2. Make a variable called `segmentlengthtillnow`. Set `snpstartidx` to 0. Then loop through SNPs:
+    - Add the segment length to `segmentlengthtillnow`.
+    - If `segmentlengthtillnow` < target segment length then continue to next snp. Else, keep all snps from `snpstartidx` to current SNP index into current segment. Set `segmentlengthtillnow` to 0 again, and set `snpstartidx` to current SNP index
+
+
+
+As it stands we only get ~300k SNPs/segments eventhough we were expecting to get 1 million. This is likely because there are a lot of SNPs (~180k) with segment sizes magnitudes larger than our target segment size. This would reduce the number of segments by a third or a fourth.
+
+
 

@@ -211,7 +211,7 @@ def read_txt(args):
         effect_list = [c[0:-5] for c in beta_effects]
     else:
         effect_list = args.effects.split("_")
-        effect_list = ["avg_parental" if (x == "averageparental" or x == "avgparental") else x for x in effect_list]
+        effect_list = ["avg_NTC" if (x == "averageparental" or x == "avgparental") else x for x in effect_list]
     
 
     theta = np.zeros((N, len(effect_list)))

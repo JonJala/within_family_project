@@ -13,6 +13,7 @@ function run_pgi(){
     EFFECT=$2
     PHENONAME=$3
     DATASET=$4
+    CLUMP=$5
 
     if [[ $DATASET == "mcs" ]]; then
 
@@ -37,7 +38,7 @@ function run_pgi(){
 
     mkdir -p ${PHENONAME}/${EFFECT}
 
-    if [[ $PHENONAME != "ea4_meta" ]]; then
+    if [[ -z $CLUMP ]]; then
 
         echo "Formatting summary statistics..."
         python ${within_family_path}/scripts/sbayesr/format_gwas.py \
@@ -69,6 +70,10 @@ function run_pgi(){
             ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes \
             --out ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted
 
+    fi
+
+    if [[ ! -z $CLUMP ]]; then
+        outpath+="/clumping_analysis"
     fi
 
     # create PGIs
@@ -110,9 +115,9 @@ function run_pgi(){
 
 
     outprefix="${PHENONAME}/${EFFECT}"
-    if [[ $PHENONAME == "ea4_meta" ]]; then
-        mkdir -p ${PHENONAME}/${EFFECT}/${DATASET}
-        outprefix="${PHENONAME}/${EFFECT}/${DATASET}"
+    if [[ ! -z $CLUMP ]]; then
+        mkdir -p ${PHENONAME}/clumping_analysis/${EFFECT}/${DATASET}
+        outprefix="${PHENONAME}/clumping_analysis/${EFFECT}/${DATASET}"
     fi
 
     Rscript /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/pgiprediction.R \

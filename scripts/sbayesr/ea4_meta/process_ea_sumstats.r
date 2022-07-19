@@ -14,7 +14,7 @@ plot_n_cohorts <- function(ea_final, effect, no_ukb = no_ukb, save = TRUE) {
 
     # plot distribution of no. cohorts
     title <- ifelse(no_ukb == FALSE, "Number of Cohorts Contributing to Meta-Analysis", "Number of Cohorts Contributing to Meta-Analysis (Without UKB)")
-    p <- ggplot(ss[SNP %in% ea_final$SNP],
+    p <- ggplot(ea_final,
                 aes(x = n_cohorts)) +
                 geom_histogram(stat = "count", fill = "lightskyblue3") +
                 labs(x="Number of Cohorts", y="Count") +
@@ -56,8 +56,9 @@ get_snps <- function(effect, ss, ea4_snps, no_ukb, save = TRUE, plot = TRUE) {
 
     # format in plink format
     ea_final %<>% 
-        mutate(ID = seq(1,nrow(ea_final)), varid = cptid, Pos = pos) %>%
-        select("ID", "SNP", paste0(effect, "_N"), paste0(effect, "_SE"), "A1", "A2", "freq", paste0(effect, "_Beta"), paste0(effect, "_pval"), "Chr", "Pos", "varid")
+        mutate(ID = seq(1,nrow(ea_final))) %>%
+        select("ID", "SNP", paste0(effect, "_N"), paste0(effect, "_SE"), "A1", "A2", "freq", paste0(effect, "_Beta"), paste0(effect, "_pval"), "Chr", "pos", "cptid") %>%
+        setNames(c("ID", "Name", paste0(effect, "_N"), paste0(effect, "_SE"), "A1", "A2", "freq", "A1Effect", paste0(effect, "_pval"), "Chrom", "Position", "varid"))
 
     if (save == TRUE) {
         # save
@@ -70,7 +71,7 @@ get_snps <- function(effect, ss, ea4_snps, no_ukb, save = TRUE, plot = TRUE) {
 
 }
 
-process_sumstats <- function(ss, no_ukb, save = TRUE, plot = FALSE) {
+process_sumstats <- function(ss, no_ukb, save = TRUE, plot = TRUE) {
 
     # get list of all gws snps from each ea4 clump
     ea4_snps <- data.table()

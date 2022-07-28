@@ -28,3 +28,4 @@ lib64
 **/__pycache__/**
 Rplots.pdf
 plink1.9/*
+.pversion

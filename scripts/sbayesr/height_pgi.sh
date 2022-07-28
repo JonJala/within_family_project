@@ -15,5 +15,5 @@ source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sb
 # clumping analysis
 #####################
 
-run_pgi "${within_family_path}/processed/clumping_analysis/height/direct/weights/mcs/meta.sumstats.gz" "direct" "height" "mcs" "clump"
-run_pgi "${within_family_path}/processed/clumping_analysis/height/population/weights/mcs/meta.sumstats.gz" "population" "height" "mcs" "clump"
+run_pgi "${within_family_path}/processed/clumping_analysis/height/direct/weights/mcs/meta_weights.snpRes.formatted" "direct" "height" "mcs" "clump"
+run_pgi "${within_family_path}/processed/clumping_analysis/height/population/weights/mcs/meta_weights.snpRes.formatted" "population" "height" "mcs" "clump"

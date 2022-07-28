@@ -12,5 +12,12 @@ source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sb
 # run_pgi "${within_family_path}/processed/package_output/cognition/meta.sumstats.gz" "direct" "cognition" "mcs"
 # run_pgi "${within_family_path}/processed/package_output/cognition/meta.sumstats.gz" "population" "cognition" "mcs"
 
-run_pgi "${within_family_path}/processed/package_output/cognition/meta_noukb.sumstats.gz" "direct" "cognition" "ukb"
-run_pgi "${within_family_path}/processed/package_output/cognition/meta_noukb.sumstats.gz" "population" "cognition" "ukb"
+# run_pgi "${within_family_path}/processed/package_output/cognition/meta_noukb.sumstats.gz" "direct" "cognition" "ukb"
+# run_pgi "${within_family_path}/processed/package_output/cognition/meta_noukb.sumstats.gz" "population" "cognition" "ukb"
+
+######################
+# clumping analysis
+#####################
+
+run_pgi "${within_family_path}/processed/clumping_analysis/cognition/direct/weights/ukb/meta_weights.snpRes.formatted" "direct" "cognition" "ukb" "clump"
+run_pgi "${within_family_path}/processed/clumping_analysis/cognition/population/weights/ukb/meta_weights.snpRes.formatted" "population" "cognition" "ukb" "clump"

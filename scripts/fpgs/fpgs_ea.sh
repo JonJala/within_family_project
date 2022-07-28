@@ -10,9 +10,10 @@ source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 # main "ea" "" "0" "mcs"
 
 
-# ea4 meta
-main "ea4_meta" "" "0" "ukb"
-main "ea4_meta" "" "0" "mcs"
+# clumping analysis
+main "ea" "" "0" "mcs" "clump"
+main "ea" "" "0" "ukb" "clump"
+
 
 # ea4
 # withinfam_pred ${within_family_path}/processed/sbayesr/ea/ea4/weights/meta_weights.snpRes \

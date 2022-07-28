@@ -8,11 +8,23 @@ within_family_path="/var/genetics/proj/within_family/within_family_project"
 source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sbayesrfunc.sh
 
 # ============= Execution ============= #
-run_pgi "${within_family_path}/processed/package_output/ea/meta.sumstats.gz" "direct" "ea" "mcs"
-run_pgi "${within_family_path}/processed/package_output/ea/meta.sumstats.gz" "population" "ea" "mcs"
+# run_pgi "${within_family_path}/processed/package_output/ea/meta.sumstats.gz" "direct" "ea" "mcs"
+# run_pgi "${within_family_path}/processed/package_output/ea/meta.sumstats.gz" "population" "ea" "mcs"
 
 # run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "direct" "ea_ea4"
 # run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "population" "ea_ea4"
+
+######################
+# clumping analysis
+#####################
+
+# direct effect PGIs for MCS and UKB
+run_pgi "${within_family_path}/processed/clumping_analysis/ea/direct/weights/mcs/meta_weights.snpRes.formatted" "direct" "ea" "mcs" "clump"
+run_pgi "${within_family_path}/processed/clumping_analysis/ea/direct/weights/ukb/meta_weights.snpRes.formatted" "direct" "ea" "ukb" "clump"
+
+# population effect PGIs for MCS and UKB
+run_pgi "${within_family_path}/processed/clumping_analysis/ea/direct/weights/mcs/meta_weights.snpRes.formatted" "population" "ea" "mcs" "clump"
+run_pgi "${within_family_path}/processed/clumping_analysis/ea/direct/weights/ukb/meta_weights.snpRes.formatted" "population" "ea" "ukb" "clump"
 
 ######################
 # EA4

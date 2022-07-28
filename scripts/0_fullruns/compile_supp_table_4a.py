@@ -4,12 +4,13 @@ import subprocess
 import json
 
 '''
-Compile Supplementary Table 4 
+Compile Supplementary Table 4a
 '''
 
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
-phenotypes = ['ea', 'ea4_meta', 'bmi', 'height', 'cognition', 'depression', 'eversmoker', 'hdl']
+phenotypes = ['bmi', 'height']
+dataset = "mcs"
 
 datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'direct', 'direct_se',
                 'pop', 'pop_se', 'paternal', 'paternal_se',
@@ -102,19 +103,19 @@ for phenotype in phenotypes:
         else:
 
             proband = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + f'/{effect}_proband.pgs_effects.txt',
+                basepath + 'processed/fpgs/' + phenotype + f'/clumping_analysis/{dataset}/{effect}_proband.pgs_effects.txt',
                 delim_whitespace=True,
                 names = ['coeff', 'se', 'r2']
             )
 
             full = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + f'/{effect}_full.pgs_effects.txt',
+                basepath + 'processed/fpgs/' + phenotype + f'/clumping_analysis/{dataset}/{effect}_full.pgs_effects.txt',
                 delim_whitespace=True,
                 names = ['coeff', 'se', 'r2']
             )
 
             covariates_only = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + '/covariates.pgs_effects.txt',
+                basepath + 'processed/fpgs/' + phenotype + '/clumping_analysis/' + dataset + '/covariates.pgs_effects.txt',
                 delim_whitespace=True,
                 names = ['coeff', 'se', 'r2']
             )
@@ -132,7 +133,7 @@ for phenotype in phenotypes:
             incrr2_full = full.loc['proband', 'r2'] - covariates_only.loc['age', 'r2']
 
             coeffratio = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + f'/dirpop_ceoffratiodiff.bootests',
+                basepath + 'processed/fpgs/' + phenotype + f'/clumping_analysis/{dataset}/dirpop_ceoffratiodiff.bootests',
                 delim_whitespace=True
             )
 
@@ -142,7 +143,7 @@ for phenotype in phenotypes:
 
             # parental PGI correlation
             parcorr = np.loadtxt(
-                basepath + 'processed/sbayesr/' + phenotype + '/' + effect + '/.parentalcorr'
+                basepath + 'processed/sbayesr/' + phenotype + '/clumping_analysis/' + effect + '/' + dataset + '/.parentalcorr'
             )
 
             parcorr_est = parcorr[0]
@@ -177,5 +178,5 @@ datfpgs = datfpgs.reorder_levels(['effect', None], axis=1)
 datfpgs = datfpgs.sort_index(axis=1, level=0, sort_remaining=False)
 datfpgs.columns = ['_'.join(column) for column in datfpgs.columns.to_flat_index()]
 datfpgs.to_excel(
-    '/var/genetics/proj/within_family/within_family_project/processed/package_output/supp.table.4.xlsx'
+    '/var/genetics/proj/within_family/within_family_project/processed/package_output/supp.table.4a.xlsx'
 )

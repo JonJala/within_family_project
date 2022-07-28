@@ -29,8 +29,8 @@ function withinfam_pred(){
         
     elif [[ $DATASET == "ukb" ]]; then
 
-        if [[ $PHENONAME == "ea4_meta" ]]; then
-            PHENOFILE="/var/genetics/proj/within_family/within_family_project/processed/ea4_meta/UKB_EAfixed_resid.pheno"
+        if [[ $PHENONAME == "ea" ]] && [[ ! -z $CLUMP ]]; then
+            PHENOFILE="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/ea/UKB_EAfixed_resid.pheno"
         else
             PHENOFILE="/disk/genetics/ukb/alextisyoung/phenotypes/processed_traits_noadj.txt"
         fi
@@ -91,6 +91,7 @@ function withinfam_pred(){
             $OUTPATH/${EFFECT}${OUTSUFFIX} \
             --bed $bedfilepath \
             --imp $impfilespath \
+            --chr_range "1,2,3,5,6,7,9,10,11,12,13,14,15,16,18,20" \
             --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/clumping_analysis/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
             --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log
     else

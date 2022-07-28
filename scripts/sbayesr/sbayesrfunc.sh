@@ -24,8 +24,8 @@ function run_pgi(){
 
     elif [[ $DATASET == "ukb" ]]; then
         
-        if [[ $PHENONAME == "ea4_meta" ]]; then
-            pheno="/var/genetics/proj/within_family/within_family_project/processed/ea4_meta/UKB_EAfixed_resid.pheno"
+        if [[ $PHENONAME == "ea" ]] && [[ ! -z $CLUMP ]]; then
+            pheno="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/ea/UKB_EAfixed_resid.pheno"
         else
             pheno="/disk/genetics/ukb/alextisyoung/phenotypes/processed_traits_noadj.txt"
         fi
@@ -72,8 +72,11 @@ function run_pgi(){
 
     fi
 
+    scorefile="${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted"
+
     if [[ ! -z $CLUMP ]]; then
         outpath+="/clumping_analysis"
+        scorefile="${PHENONAME}/${EFFECT}/weights/${DATASET}/meta_weights.snpRes.formatted"
     fi
 
     # create PGIs
@@ -88,16 +91,10 @@ function run_pgi(){
             
             plink200a2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
             --chr $chr \
-            --score ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted 12 5 8 header center cols=+scoresums \
+            --score $scorefile 12 5 8 header center cols=+scoresums \
             --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
 
         elif [[ $DATASET == "ukb" ]]; then
-
-            if [[ $PHENONAME == "ea4_meta" ]]; then
-                scorefile="${PHENONAME}/${EFFECT}/weights/meta_noukb_weights.snpRes.formatted"
-            else
-                scorefile="${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted"
-            fi
 
             plink200a2 --bgen /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen ref-last \
                 --oxford-single-chr $chr \

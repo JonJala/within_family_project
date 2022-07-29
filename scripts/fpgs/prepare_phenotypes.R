@@ -3,7 +3,7 @@ library(dplyr)
 library(purrr)
 
 #---------------------------------------------------------------------------------------------------------------------
-# prepare MCS validation phenotypes
+# prepare MCS phenotypes
 #---------------------------------------------------------------------------------------------------------------------
 
 # PROCESSING STEPS:
@@ -74,18 +74,18 @@ setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
 # cognition
 #---------------------------------------------------------------------------------------------------------------------
 
-cog = fread("/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv")
+cog = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/GENDAC-2022-05-26_sweep6wordscore/csv/GENDAC_BENJAMIN_mcs_cm_structure_26-05-2022.csv")
 
 # formatting cognition
-cog = cog[, c(grep("(GCNAAS0|Benjamin*)", names(cog))), with=FALSE]
-cog$cog = rowSums(cog[, grep("GCNAAS0", names(cog)), with=FALSE])
+cog = cog[, c(grep("(FCWRDSC|Benjamin*)", names(cog))), with=FALSE]
+cog$cog = rowSums(cog[, grep("FCWRDSC", names(cog)), with=FALSE])
 cog[, cog := standardize(cog)]
 
 cog[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
 cog[,FID := IID]
 cog[, Benjamin_ID := NULL]
 cog[, Benjamin_FID := NULL]
-cog[, grep("GCNAAS0", names(cog)) := NULL]
+cog[, grep("FCWRDSC", names(cog)) := NULL]
 
 #---------------------------------------------------------------------------------------------------------------------
 # depression
@@ -123,7 +123,7 @@ menarche[, menarche := standardize(menarche)]
 #---------------------------------------------------------------------------------------------------------------------
 
 eczema <- read_and_rename("GCCLSM0P", "eczema")
-summary(eczema) # coded as 0 1 binary variable
+# summary(eczema) # coded as 0 1 binary variable
 
 #---------------------------------------------------------------------------------------------------------------------
 # ever cannabis
@@ -254,7 +254,7 @@ hayfever[, eczema := NULL]
 #---------------------------------------------------------------------------------------------------------------------
 
 neuro <- read_and_rename("GDCNEUROT", "neuroticism")
-table(neuro$neuroticism)
+# table(neuro$neuroticism)
 
 # remove 0 and negative values
 neuro = neuro[neuroticism > 0]
@@ -308,4 +308,4 @@ phenotypes[, height := standardize(height), by=sex]
 phenotypes[, cognition := ea]
 
 # save
-fwrite(phenotypes, file="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt", sep=" ", na="NA")
+fwrite(phenotypes, file="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt", sep=" ", na="NA", quote = FALSE)

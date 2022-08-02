@@ -91,7 +91,6 @@ function withinfam_pred(){
             $OUTPATH/${EFFECT}${OUTSUFFIX} \
             --bed $bedfilepath \
             --imp $impfilespath \
-            --chr_range "1,2,3,5,6,7,9,10,11,12,13,14,15,16,18,20" \
             --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/clumping_analysis/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
             --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log
     else

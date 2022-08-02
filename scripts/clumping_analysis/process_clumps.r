@@ -45,8 +45,7 @@ process_clumps <- function(opt, effect = opt$effect) {
         }
 
     }
-    clump_chr <- paste(as.character(seq(1,22)[!(seq(1,22) %in% chr_no_clumps)]), collapse = ",")
-    write.table(clump_chr, paste0("/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/", opt$pheno, "/clumps/chr_clumps_", opt$effect, ".txt"))
+    write.table(chr_no_clumps, paste0("/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/", opt$pheno, "/clumps/chr_no_clumps.txt"))
 
     # SNP from each clump with the highest effective N in our sumstats
     final <- ss %>%

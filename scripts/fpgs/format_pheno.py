@@ -24,9 +24,9 @@ else:
 if args.phenocol == "hdl":
     args.phenocol = "HDL"
 elif args.phenocol == "cognition":
-    args.phenocol = "Cognitive.ability"
-elif args.phenocol == "ea4_meta":
-    args.phenocol = "ea"
+    args.phenocol = "cog"
+elif args.phenocol == "ea":
+    args.phenocol = "cog" # read from cog column (mcs verbal activity score)
 
 if args.fid is not None:
     dat = dat[[args.fid, args.iid, args.phenocol]]

@@ -76,7 +76,7 @@ function run_pgi(){
 
     if [[ ! -z $CLUMP ]]; then
         outpath+="/clumping_analysis"
-        scorefile="${PHENONAME}/${EFFECT}/weights/${DATASET}/meta_weights.snpRes.formatted"
+        scorefile="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/${PHENONAME}/${EFFECT}/weights/${DATASET}/meta_weights.snpRes.formatted"
     fi
 
     # create PGIs

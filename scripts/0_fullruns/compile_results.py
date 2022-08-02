@@ -23,7 +23,7 @@ def make_rg_matrix(directmat, populationmat):
 
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
-phenotypes = ['ea', 'bmi', 'height', 'cognition', 'depression', 'eversmoker', 'hdl']
+phenotypes = ['bmi', 'height', 'cognition', 'depression', 'eversmoker', 'hdl']
 
 dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
                 'h2_se', 'rg_ref', 'rg_ref_se', 
@@ -223,7 +223,7 @@ datfpgs.to_csv(
     sep = '\t'
 )
 # Make ldsc matrix
-ssgacrepopath = "/homes/nber/harij/ssgac"
+ssgacrepopath = "/var/genetics/proj/within_family/within_family_project/ssgac"
 phenotypes.sort()
 populationresults = [basepath + 'processed/package_output/' + p + '/populationmunged.sumstats.gz' for p in phenotypes]
 directresults = [basepath + 'processed/package_output/' + p + '/directmunged.sumstats.gz' for p in phenotypes]

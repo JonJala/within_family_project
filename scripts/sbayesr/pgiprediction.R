@@ -22,9 +22,9 @@ if (!(opt$pheno_name %in% colnames(pheno))) {
     if (opt$pheno_name == "hdl") {
         opt$pheno_name <- toupper(opt$pheno_name)
     } else if (opt$pheno_name == "cognition") {
-        opt$pheno_name <- "Cognitive.ability"
-    } else if (opt$pheno_name == "ea4_meta") {
-        opt$pheno_name <- "ea"
+        opt$pheno_name <- "cog"
+    } else if (opt$pheno_name == "ea") {
+        opt$pheno_name <- "cog" # read from cog col
     } else {
         stop("There is no match for this pheno name.")
     }

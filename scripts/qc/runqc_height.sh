@@ -8,7 +8,7 @@ refsample="/var/genetics/proj/within_family/within_family_project/processed/refe
 #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/12/chr_*.sumstats.hdf5" \
+#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/sumstats/fgwas/Imp_height.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/height" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --bim_chromosome 99 \

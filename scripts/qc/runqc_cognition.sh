@@ -29,7 +29,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/14/chr_*.sumstats.hdf5" \
+#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/sumstats/fgwas/Imp_Cognitive.ability.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/cognition" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --bim_chromosome 99 \

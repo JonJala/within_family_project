@@ -30,8 +30,8 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/TG.chr*.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/tg" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ldl_ref/ldl_ref.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/tgl" \
+    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/tg_ref/tg_ref.sumstats.gz" \
     --toest "direct_population" \
     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt

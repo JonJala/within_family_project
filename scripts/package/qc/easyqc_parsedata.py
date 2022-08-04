@@ -224,7 +224,7 @@ def read_txt(args):
         S[:, i, i] = np.array((dfin[effect + "_SE"]**2).tolist())
     
     if len(effect_list) > 1:
-        
+
         if f'r_direct_{effect_list[1]}' in dfin:
             cov = dfin[effect_list[0] + "_SE"] * dfin[f'{effect_list[1]}_SE'] * dfin[f'r_direct_{effect_list[1]}']
         elif f'{effect_list[1]}_Cov' in dfin:

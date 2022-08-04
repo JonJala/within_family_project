@@ -188,7 +188,7 @@ def process_dat(dat, args):
 
     This unpacks it and adds it back into the dataframe
     '''
-    
+
     datout = dat.copy()
     datout = datout.drop(columns = ['theta', 'S', 'se'])
 

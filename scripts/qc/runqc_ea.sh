@@ -34,15 +34,15 @@
 # LIfelines
 ##########
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_edu.sumstats.gz" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/ea" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
-    --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
-    --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
-# 0.8028 (0.1378)
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics/data/lifelines/public/latest/raw/sumstats/fgwas/fgwas_ll_edu.sumstats.gz" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/ea" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+#     --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+# # 0.8028 (0.1378)
 
 
 # ##########
@@ -162,9 +162,20 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # # QIMR
 # ############
 
-# # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-# #     "/var/genetics/data/qimr/public/latest/raw/sumstats/fgwas/QIMR_FamilyGWAS/EA_Age30/Education_Chr*.sumstats.hdf5" \
-# #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/ea" \
-# #     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
-# #     --toest "direct_paternal_maternal_averageparental_population" \
-# #     --cptid
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/qimr/public/latest/raw/sumstats/fgwas/QIMR_FamilyGWAS/EA_Age30/Education_Chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/ea" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid
+
+#############
+# botnia
+############
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/botnia_fam/private/latest/processed/sumstats/fgwas/1/chr_*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/ea" \
+    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz" \
+    --toest "direct_population" \
+    --cptid

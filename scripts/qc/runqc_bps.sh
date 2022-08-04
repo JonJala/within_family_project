@@ -77,11 +77,22 @@
 # generation scotland
 #######################
 
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/11/chr_*.sumstatschr_clean.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/bps" \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
+#     --rsid_readfrombim "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/SNPs/chr_*_rsids.txt,0,3,1, " \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
+#     --info "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz"
+
+#############
+# botnia
+###########
+
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/11/chr_*.sumstatschr_clean.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/bps" \
+    "/var/genetics/data/botnia_fam/private/latest/processed/sumstats/fgwas/8/chr_*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bps" \
     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
-    --rsid_readfrombim "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/SNPs/chr_*_rsids.txt,0,3,1, " \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
-    --info "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz"
+    --toest "direct_population" \
+    --cptid

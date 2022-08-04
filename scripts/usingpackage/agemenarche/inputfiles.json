@@ -1,0 +1,10 @@
+{
+    "hunt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/agemenarche/CLEANED.out.gz"
+    },
+
+    "dutch_twin" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/menarche/CLEANED.out.gz"
+    }
+
+}

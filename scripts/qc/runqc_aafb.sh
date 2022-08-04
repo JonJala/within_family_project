@@ -20,33 +20,37 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # Hunt
 ##############
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/AgeFirstBirth/AgeFirstBirth_chr*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/aafb" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_paternal_maternal_averageparental_population" \
-#     --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, "
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/AgeFirstBirth/AgeFirstBirth_chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/aafb" \
+    --ldsc-ref "$reffile" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, " \
+    --info '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/info.formatted.gz' \
+    --hwe '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/hwe.formatted.gz'
 
 # #####
 # # Finnish twins
 # #####
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/afb.chr*.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/aafb" \
-#     --ldsc-ref $reffile \
-#     --toest "direct_population" \
-#     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
-#     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/afb.chr*.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/aafb" \
+    --ldsc-ref $reffile \
+    --toest "direct_population" \
+    --hwe "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe" \
+    --info "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt"
 
 
 #####################
 # ====== UKB ====== #
 #####################
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/16/chr_*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/aafb" \
-#     --toest "direct_paternal_maternal_averageparental_population" \
-#     --bim_chromosome 99 \
-#     --ldsc-ref "$reffile"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/16/chr_*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/aafb" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --bim_chromosome 99 \
+    --ldsc-ref "$reffile" \
+    --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
+    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'

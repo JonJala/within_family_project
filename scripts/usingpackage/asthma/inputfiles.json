@@ -1,0 +1,19 @@
+{
+    "hunt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/asthma/CLEANED.out.gz"
+    },
+
+    "eb" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/asthma/CLEANED.out.gz"
+    },
+
+    "geisinger" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/asthma/CLEANED.out.gz"
+
+    },
+
+    "dutch_twin" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/asthma/CLEANED.out.gz"
+    }
+
+}

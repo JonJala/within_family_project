@@ -6,6 +6,7 @@ eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 hm3snps="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/package"
+refsample="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/neuroticism_ref/neuroticism_ref.sumstats.gz"
 
 source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/python_env/anaconda2/envs/ldsc
 
@@ -26,7 +27,7 @@ ${ldscpath}/munge_sumstats.py \
 
 echo "Calcualting RG of population effect with reference sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/neuroticism/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/neuroticism/populationmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/neuroticism/population_reference_sample
@@ -34,7 +35,7 @@ ${ldscpath}/ldsc.py \
 
 echo "Calcualting RG of direct effect with reference sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/neuroticism/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/neuroticism/directmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/neuroticism/direct_reference_sample

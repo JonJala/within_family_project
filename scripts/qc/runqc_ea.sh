@@ -119,7 +119,7 @@
 #     --hwe '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/hwe.formatted.gz'
 
 # ################
-# # Minnesotta twins
+# # Minnesota twins
 # ################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \

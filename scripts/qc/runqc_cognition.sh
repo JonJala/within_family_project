@@ -51,7 +51,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --info "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz"
 
 # # # #################
-# # # # Minnesotta twins
+# # # # Minnesota twins
 # # # #################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \

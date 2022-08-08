@@ -123,7 +123,7 @@ refsample="/var/genetics/proj/within_family/within_family_project/processed/refe
 
 
 # #################
-# # Minnesotta twins
+# # Minnesota twins
 # #################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \

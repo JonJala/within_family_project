@@ -6,7 +6,7 @@
 reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/smoking_ref/Smokinginit.sumstats.gz"
 
 #################
-# Minnesotta twins
+# Minnesota twins
 #################
 
 

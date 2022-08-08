@@ -4,7 +4,7 @@
 reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/swb_ref/swb_ref.sumstats.gz"
 
 #################
-# Minnesotta twins
+# Minnesota twins
 #################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \

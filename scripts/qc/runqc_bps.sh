@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 #################
-# Minnesotta twins
+# Minnesota twins
 #################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
@@ -38,9 +38,9 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --hwe '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/hwe.formatted.txt'
 
 
-# #####
-# # Finnish twins
-# #####
+#####
+# Finnish twins
+#####
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/SBP.chr*.hdf5" \

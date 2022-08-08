@@ -19,7 +19,7 @@
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bps/CLEANED.out.gz"
     },
 
-    "minn_twins" : {
+    "mt" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/bps/CLEANED.out.gz"
     }
 

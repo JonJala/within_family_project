@@ -4,7 +4,7 @@
     },
 
     "geisinger" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/nonhdl/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/hdl_non/CLEANED.out.gz"
     },
 
     "gs" : {
@@ -12,7 +12,7 @@
     },
 
     "hunt" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/nonhdl/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/hdl_non/CLEANED.out.gz"
     },
 
     "botnia" : {

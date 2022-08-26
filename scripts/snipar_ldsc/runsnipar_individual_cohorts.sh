@@ -6,7 +6,7 @@
 
 sniparpath="/homes/nber/harij/gitrepos/SNIPar"
 within_family_path="/homes/nber/harij/within_family"
-ldscpath="/homes/nber/harij/ldsc"
+ldscpath="/var/genetics/pub/software/ldsc"
 eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 cohorts=(str hunt gen_scotland finn_twin estonian_biobank)

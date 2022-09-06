@@ -71,6 +71,8 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # ====== UKB ====== #
 # ####################
 
+## awaiting updated ss
+
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
 #     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/23/chr_*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/nchildren" \

@@ -66,17 +66,6 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
 
-#####################
-# ====== UKB ====== #
-#####################
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/10/chr_*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/cpd" \
-#     --toest "direct_paternal_maternal_averageparental_population" \
-#     --bim_chromosome 99 \
-#     --ldsc-ref "$reffile"
-
 #######################
 # generation scotland
 #######################
@@ -89,3 +78,16 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --toest "direct_paternal_maternal_averageparental_population" \
     --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
     --info "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz"
+
+#####################
+# ====== UKB ====== #
+#####################
+
+## awaiting updated ss
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/10/chr_*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/cpd" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "$reffile"

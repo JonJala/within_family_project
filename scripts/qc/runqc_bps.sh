@@ -63,18 +63,6 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
 
-#####################
-# ====== UKB ====== #
-#####################
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/5/chr_*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bps" \
-#     --toest "direct_paternal_maternal_averageparental_population" \
-#     --bim_chromosome 99 \
-#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz"
-
-
 #######################
 # generation scotland
 #######################
@@ -92,9 +80,23 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # botnia
 ###########
 
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/botnia_fam/private/latest/processed/sumstats/fgwas/8/chr_*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bps" \
+    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
+    --toest "direct_population" \
+    --cptid
+
+
+#####################
+# ====== UKB ====== #
+#####################
+
+# awaiting updated ss
+
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/botnia_fam/private/latest/processed/sumstats/fgwas/8/chr_*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bps" \
-#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
-#     --toest "direct_population" \
-#     --cptid
+#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/5/chr_*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bps" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz"

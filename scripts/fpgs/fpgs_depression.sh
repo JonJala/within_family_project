@@ -10,7 +10,7 @@ phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/i
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-# main "depression" "" "1" "mcs"
+main "depression" "" "1" "mcs"
 
 # clumping analysis
-main "depression" "" "1" "mcs" "clump"
+# main "depression" "" "1" "mcs" "clump"

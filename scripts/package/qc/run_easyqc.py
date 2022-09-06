@@ -537,26 +537,38 @@ def filter_SNPs(args):
     '''
     Filters out the abnormal looking SNPs in the f vs. Neff plots from QC
     '''
-    ## filter SNPs
-    ss = pd.read_csv(f"{args.outprefix}/CLEANED.out.gz", delim_whitespace=True)
-    ss.to_csv(f"{args.outprefix}/CLEANED.unfilt.out.gz", sep = " ") # save copy
-    ss["f_rounded"] = ss["f"].round(2) # round f to 2 d.p.
-    dat_rounded = ss.loc[:, ["n_direct", "f_rounded"]].groupby("f_rounded").mean().rename(columns={"n_direct": "n_mean"}) # calculate mean n_direct for each bin
-    dat_rounded["sd"] = ss.loc[:, ["n_direct", "f_rounded"]].groupby("f_rounded").std() # calcualte sd for each bin
-    ss_final = ss.merge(dat_rounded, on = "f_rounded", how = "left") # merge
-    ss_final["lower"] = ss_final["n_mean"] - 5 * ss_final["sd"] # calculate lower bound
-    ss_final["upper"] = ss_final["n_mean"] + 5 * ss_final["sd"] # calculate upper bound
-    ss_final = ss_final[(ss_final["n_direct"] > ss_final["lower"]) & (ss_final["n_direct"] < ss_final["upper"])] # filter SNPs not within bounds
-    snps_dropped = len(ss.index) - len(ss_final.index)
-    print(f'{snps_dropped} SNPs did not fall within mean n_direct +- 5 sd.')
-    ss_final.to_csv(f"{args.outprefix}/CLEANED.out.gz", sep = " ")
-
-    # plotting
     if args.toest is not None:
         effects = args.toest
     else:
         effects = dat['estimated_effects'][0]
     effects = effects.split("_")
+
+    ## filter SNPs
+    ss = pd.read_csv(f"{args.outprefix}/CLEANED.out.gz", delim_whitespace=True)
+    ss.to_csv(f"{args.outprefix}/CLEANED.unfilt.out.gz", sep = " ") # save copy
+    
+    def drop_SNPs(effect, ss):
+        ss["f_rounded"] = ss["f"].round(2) # round f to 2 d.p.
+        dat_rounded = ss.loc[:, [f'n_{effect}', "f_rounded"]].groupby("f_rounded").mean().rename(columns={f'n_{effect}': "n_mean"}) # calculate mean n_{effect} for each bin
+        dat_rounded["sd"] = ss.loc[:, [f'n_{effect}', "f_rounded"]].groupby("f_rounded").std() # calculate sd for each bin
+        ss_final = ss.merge(dat_rounded, on = "f_rounded", how = "left") # merge
+        ss_final["lower"] = ss_final["n_mean"] - 5 * ss_final["sd"] # calculate lower bound
+        ss_final["upper"] = ss_final["n_mean"] + 5 * ss_final["sd"] # calculate upper bound
+        ss_final = ss_final[(ss_final[f'n_{effect}'] > ss_final["lower"]) & (ss_final[f'n_{effect}'] < ss_final["upper"])] # filter SNPs not within bounds
+        snps_dropped = len(ss.index) - len(ss_final.index)
+        print(f'{snps_dropped} SNPs did not fall within mean n_{effect} +- 5 sd.')
+        ss_final.drop(["n_mean", "lower", "upper", "sd", "f_rounded"], axis = 1, inplace = True)
+        return(ss_final)
+        
+    # drop SNPs based on direct N
+    ss_final = drop_SNPs("direct", ss)
+    # repeat for averageparental N if applicable
+    if "averageparental" in effects:
+        ss_final = drop_SNPs("averageparental", ss_final)
+    # save
+    ss_final.to_csv(f"{args.outprefix}/CLEANED.out.gz", sep = " ")
+
+    ## plotting
     for effect in effects:
         plt.plot(ss_final["f"], ss_final[f"n_{effect}"], 'o')
         plt.xlabel("f")

@@ -7,4 +7,4 @@ snipar_path="/var/genetics/proj/within_family/within_family_project/snipar"
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-main "adhd" "" "0" "mcs" 
+main "adhd" "" "1" "mcs" 

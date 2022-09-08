@@ -23,12 +23,15 @@ def make_rg_matrix(directmat, populationmat):
 
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
-phenotypes = ['bmi', 'height', 'cognition', 'depression', 'eversmoker', 'hdl']
+phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cognition', 'cpd', 'depression',
+                 'dpw', 'ea', 'eczema', 'eversmoker', 'fev', 'hayfever', 'hdl', 'health', 'height', 'income', 
+                 'migraine', 'nchildren', 'neuroticism', 'nonhdl', 'rhinitis', 'swb']
 
 dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
                 'h2_se', 'rg_ref', 'rg_ref_se', 
                 'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 
-                'n_cohorts'])
+                'n_cohorts', 'reg_population_direct', 'reg_population_direct_se',
+                'v_population_uncorr_direct', 'v_population_uncorr_direct_se'])
 
 datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'direct', 'direct_se',
                 'pop', 'pop_se', 'paternal', 'paternal_se',
@@ -94,53 +97,59 @@ for phenotype in phenotypes:
         dir_ntc_mrg = mrg.loc[mrg['correlation'] == 'r_direct_avg_NTC', 'est'].values[0]
         dir_ntc_mrg_se = mrg.loc[mrg['correlation'] == 'r_direct_avg_NTC', 'SE'].values[0]
 
-        # fpgs results
-        proband = pd.read_csv(
-            basepath + 'processed/fpgs/' + phenotype + f'/{effect}_proband.pgs_effects.txt',
-            delim_whitespace=True,
-            names = ['coeff', 'se', 'r2']
-        )
+        reg_population_direct_mrg = mrg.loc[mrg['correlation'] == 'reg_population_direct', 'est'].values[0]
+        reg_population_direct_mrg_se = mrg.loc[mrg['correlation'] == 'reg_population_direct', 'SE'].values[0]
 
-        full = pd.read_csv(
-            basepath + 'processed/fpgs/' + phenotype + f'/{effect}_full.pgs_effects.txt',
-            delim_whitespace=True,
-            names = ['coeff', 'se', 'r2']
-        )
+        v_population_uncorr_direct_mrg = mrg.loc[mrg['correlation'] == 'v_population_uncorr_direct', 'est'].values[0]
+        v_population_uncorr_direct_mrg_se = mrg.loc[mrg['correlation'] == 'v_population_uncorr_direct', 'SE'].values[0]
 
-        covariates_only = pd.read_csv(
-            basepath + 'processed/fpgs/' + phenotype + '/covariates.pgs_effects.txt',
-            delim_whitespace=True,
-            names = ['coeff', 'se', 'r2']
-        )
+        # # fpgs results
+        # proband = pd.read_csv(
+        #     basepath + 'processed/fpgs/' + phenotype + f'/{effect}_proband.pgs_effects.txt',
+        #     delim_whitespace=True,
+        #     names = ['coeff', 'se', 'r2']
+        # )
 
-        direst = full.loc['proband', 'coeff']
-        dirse = full.loc['proband', 'se']
-        patest = full.loc['paternal', 'coeff']
-        patse = full.loc['paternal', 'se']
-        matest = full.loc['maternal', 'coeff']
-        matse = full.loc['maternal', 'se']
-        popest = proband.loc['proband', 'coeff']
-        popse = proband.loc['proband', 'se']
+        # full = pd.read_csv(
+        #     basepath + 'processed/fpgs/' + phenotype + f'/{effect}_full.pgs_effects.txt',
+        #     delim_whitespace=True,
+        #     names = ['coeff', 'se', 'r2']
+        # )
 
-        incrr2_proband = proband.loc['proband', 'r2'] - covariates_only.loc['age', 'r2']
-        incrr2_full = full.loc['proband', 'r2'] - covariates_only.loc['age', 'r2']
+        # covariates_only = pd.read_csv(
+        #     basepath + 'processed/fpgs/' + phenotype + '/covariates.pgs_effects.txt',
+        #     delim_whitespace=True,
+        #     names = ['coeff', 'se', 'r2']
+        # )
 
-        coeffratio = pd.read_csv(
-            basepath + 'processed/fpgs/' + phenotype + f'/dirpop_ceoffratiodiff.bootests',
-            delim_whitespace=True
-        )
+        # direst = full.loc['proband', 'coeff']
+        # dirse = full.loc['proband', 'se']
+        # patest = full.loc['paternal', 'coeff']
+        # patse = full.loc['paternal', 'se']
+        # matest = full.loc['maternal', 'coeff']
+        # matse = full.loc['maternal', 'se']
+        # popest = proband.loc['proband', 'coeff']
+        # popse = proband.loc['proband', 'se']
 
-        coeffratio = coeffratio.loc[f'{effect}_full/{effect}_proband', :]
-        coeffratio_est = coeffratio['est']
-        coeffratio_se = coeffratio['se']
+        # incrr2_proband = proband.loc['proband', 'r2'] - covariates_only.loc['age', 'r2']
+        # incrr2_full = full.loc['proband', 'r2'] - covariates_only.loc['age', 'r2']
 
-        # parental PGI correlation
-        parcorr = np.loadtxt(
-            basepath + 'processed/sbayesr/' + phenotype + '/' + effect + '/.parentalcorr'
-        )
+        # coeffratio = pd.read_csv(
+        #     basepath + 'processed/fpgs/' + phenotype + f'/dirpop_ceoffratiodiff.bootests',
+        #     delim_whitespace=True
+        # )
 
-        parcorr_est = parcorr[0]
-        parcorr_se = parcorr[1]
+        # coeffratio = coeffratio.loc[f'{effect}_full/{effect}_proband', :]
+        # coeffratio_est = coeffratio['est']
+        # coeffratio_se = coeffratio['se']
+
+        # # parental PGI correlation
+        # parcorr = np.loadtxt(
+        #     basepath + 'processed/sbayesr/' + phenotype + '/' + effect + '/.parentalcorr'
+        # )
+
+        # parcorr_est = parcorr[0]
+        # parcorr_se = parcorr[1]
 
         dattmp = pd.DataFrame(
             {
@@ -156,36 +165,41 @@ for phenotype in phenotypes:
                 'dir_ntc_rg' : [dir_ntc_mrg],
                 'dir_ntc_rg_se' : [dir_ntc_mrg_se],
                 'n_cohorts' : [ncohorts],
+                'reg_population_direct': [reg_population_direct_mrg],
+                'reg_population_direct_se': [reg_population_direct_mrg_se],
+                'v_population_uncorr_direct': [v_population_uncorr_direct_mrg],
+                'v_population_uncorr_direct_se': [v_population_uncorr_direct_mrg_se]
             }
         )
 
-        datfpgs_tmp = pd.DataFrame({
-                'phenotype' : [phenotype],
-                'effect' : [effect],
-                'direct' : [direst],
-                'direct_se' : [dirse],
-                'pop' : [popest],
-                'pop_se' : [popse],
-                'paternal' : [patest],
-                'paternal_se' : [patse],
-                'maternal' : [matest],
-                'maternal_se' : [matse],
-                'dir_pop_ratio' : [coeffratio_est],
-                'dir_pop_ratio_se' : [coeffratio_se], 
-                'incr_r2_proband' : [incrr2_proband],
-                'incr_r2_full' : [incrr2_full],
-                'parental_pgi_corr' : [parcorr_est],
-                'parental_pgi_corr_se' : [parcorr_se]
-        })
+        # datfpgs_tmp = pd.DataFrame({
+        #         'phenotype' : [phenotype],
+        #         'effect' : [effect],
+        #         'direct' : [direst],
+        #         'direct_se' : [dirse],
+        #         'pop' : [popest],
+        #         'pop_se' : [popse],
+        #         'paternal' : [patest],
+        #         'paternal_se' : [patse],
+        #         'maternal' : [matest],
+        #         'maternal_se' : [matse],
+        #         'dir_pop_ratio' : [coeffratio_est],
+        #         'dir_pop_ratio_se' : [coeffratio_se], 
+        #         'incr_r2_proband' : [incrr2_proband],
+        #         'incr_r2_full' : [incrr2_full],
+        #         'parental_pgi_corr' : [parcorr_est],
+        #         'parental_pgi_corr_se' : [parcorr_se]
+        # })
 
         dat = dat.append(dattmp, ignore_index=True)
-        datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
+        # datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
 
 # reshape data
 dat = dat.pivot(index='phenotype', columns='effect', values=None)
 dat.columns = ['_'.join(column) for column in dat.columns.to_flat_index()]
 dat = dat.drop(
-    ['n_cohorts_population', 'dir_pop_rg_population', 'dir_pop_rg_se_population', 'dir_ntc_rg_population', 'dir_ntc_rg_se_population'], 
+    ['n_cohorts_population', 'dir_pop_rg_population', 'dir_pop_rg_se_population', 'dir_ntc_rg_population', 'dir_ntc_rg_se_population',
+    'reg_population_direct_population', 'reg_population_direct_se_population', 'v_population_uncorr_direct_population', 'v_population_uncorr_direct_se_population'], 
     axis = 1
 )
 dat = dat.rename(
@@ -194,7 +208,11 @@ dat = dat.rename(
         'dir_pop_rg_direct' : 'dir_pop_rg',
         'dir_pop_rg_se_direct' : 'dir_pop_rg_se',
         'dir_ntc_rg_direct' : 'dir_ntc_rg',
-        'dir_ntc_rg_se_direct' : 'dir_ntc_rg_se'
+        'dir_ntc_rg_se_direct' : 'dir_ntc_rg_se',
+        'v_population_uncorr_direct_direct': 'v_population_uncorr_direct',
+        'v_population_uncorr_direct_se_direct': 'v_population_uncorr_direct_se',
+        'reg_population_direct_direct': 'reg_population_direct',
+        'reg_population_direct_se_direct': 'reg_population_direct_se'
         }
 )
 
@@ -203,25 +221,24 @@ dat = dat[
     ['n_cohorts', 'n_eff_median_direct', 'n_eff_median_population',
     'h2_direct','h2_se_direct', 'h2_population','h2_se_population',
     'rg_ref_direct','rg_ref_se_direct',  'rg_ref_population', 'rg_ref_se_population',
-    'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se'
+    'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 'reg_population_direct',
+    'reg_population_direct_se', 'v_population_uncorr_direct', 'v_population_uncorr_direct_se'
 ]
 ]
 
-dat.to_csv(
-    '/var/genetics/proj/within_family/within_family_project/processed/package_output/meta.results',
-    sep = '\t'
+dat.to_excel(
+    '/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx'
 )
 
-floatcols = [c for c in datfpgs.columns if (c not in ['phenotype', 'effect'])]
-datfpgs[floatcols] = datfpgs[floatcols].apply(pd.to_numeric)
-datfpgs = datfpgs.pivot(index='phenotype', columns='effect', values=None)
-datfpgs = datfpgs.reorder_levels(['effect', None], axis=1)
-datfpgs = datfpgs.sort_index(axis=1, level=0, sort_remaining=False)
-datfpgs.columns = ['_'.join(column) for column in datfpgs.columns.to_flat_index()]
-datfpgs.to_csv(
-    '/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs.results',
-    sep = '\t'
-)
+# floatcols = [c for c in datfpgs.columns if (c not in ['phenotype', 'effect'])]
+# datfpgs[floatcols] = datfpgs[floatcols].apply(pd.to_numeric)
+# datfpgs = datfpgs.pivot(index='phenotype', columns='effect', values=None)
+# datfpgs = datfpgs.reorder_levels(['effect', None], axis=1)
+# datfpgs = datfpgs.sort_index(axis=1, level=0, sort_remaining=False)
+# datfpgs.columns = ['_'.join(column) for column in datfpgs.columns.to_flat_index()]
+# datfpgs.to_excel(
+#     '/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_results.xlsx'
+# )
 # Make ldsc matrix
 ssgacrepopath = "/var/genetics/proj/within_family/within_family_project/ssgac"
 phenotypes.sort()

@@ -27,6 +27,12 @@ elif args.phenocol == "cognition":
     args.phenocol = "cog"
 elif args.phenocol == "ea":
     args.phenocol = "cog" # read from cog column (mcs verbal activity score)
+elif args.phenocol == "agemenarche":
+    args.phenocol = "menarche"
+elif args.phenocol == "dpw":
+    args.phenocol = "drinks_4_weeks"
+elif args.phenocol == "health":
+    args.phenocol = "self_rated_health"
 
 if args.fid is not None:
     dat = dat[[args.fid, args.iid, args.phenocol]]

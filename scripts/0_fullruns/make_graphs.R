@@ -57,6 +57,9 @@ setDT(dat)
 setnames(dat, names(dat)[1], 'phenotype')
 dat = reformat_matrix(dat)
 
+# filter out pairs where direct_rg_se > 0.25
+dat = dat %>% filter(!is.na(direct_rg_se) & direct_rg_se < 0.25)
+
 dat[, `:=`(
     direct_rg_lo = direct_rg - 1.96 * direct_rg_se,
     direct_rg_hi = direct_rg + 1.96 * direct_rg_se,
@@ -68,11 +71,12 @@ dat[, `:=`(
 dat %>%
     ggplot() +
     geom_point(aes(pop_rg, direct_rg, color=phenotype), alpha=0.6) +
-    geom_linerange(aes(x=pop_rg, ymin = direct_rg_lo, ymax=direct_rg_hi, color = phenotype), alpha=0.6) +
-    geom_linerange(aes(y=direct_rg, xmin = pop_rg_lo, xmax=pop_rg_hi, color = phenotype), alpha=0.6) +
+    # geom_linerange(aes(x=pop_rg, ymin = direct_rg_lo, ymax=direct_rg_hi, color = phenotype), alpha=0.6) +
+    # geom_linerange(aes(y=direct_rg, xmin = pop_rg_lo, xmax=pop_rg_hi, color = phenotype), alpha=0.6) +
     geom_abline(intercept=0, slope=1, linetype="solid", color="gray") +
     geom_hline(yintercept=0, linetype="dotted") +
     geom_vline(xintercept=0, linetype="dotted") +
+    # geom_text(aes(label = phenotype, x = pop_rg, y = direct_rg), hjust = 0, vjust = 0) +
     ylim(-0.6, 0.6) +
     xlim(-0.6, 0.6) +
     scale_color_viridis_d() +

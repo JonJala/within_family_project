@@ -9,7 +9,7 @@ Compile Supplementary Table 4a
 
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
-phenotypes = ['bmi', 'height']
+phenotypes = ['bmi', 'height', 'cognition', 'depression', 'eversmoker']
 dataset = "mcs"
 
 datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'direct', 'direct_se',

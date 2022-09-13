@@ -675,7 +675,7 @@ def transform_estimates(fromest,
         fromest = "full"
     if toest == "direct_maternal_paternal" or toest == "direct_paternal_maternal":
         toest = "full"
-    if fromest == "direct_avgparental":
+    if fromest == "direct_avgparental" or fromest == "direct_avgNTC":
         fromest = "direct_averageparental"
 
     if fromest == toest:

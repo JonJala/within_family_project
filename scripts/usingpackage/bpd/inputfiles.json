@@ -1,0 +1,22 @@
+{
+    "dutchtwin": {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/bpd/CLEANED.out.gz"
+    },
+
+    "geisinger" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/bpd/CLEANED.out.gz"
+    },
+
+    "gs" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/bpd/CLEANED.out.gz"
+    },
+
+    "hunt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/bpd/CLEANED.out.gz"
+    },
+
+    "botnia" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bpd/CLEANED.out.gz"
+    }
+
+}

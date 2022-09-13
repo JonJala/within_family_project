@@ -1,0 +1,14 @@
+{
+    "geisinger" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/migraine/CLEANED.out.gz"
+    },
+
+    "eb" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/migraine/CLEANED.out.gz"
+    },
+
+    "dt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/migraine/CLEANED.out.gz"
+    }
+
+}

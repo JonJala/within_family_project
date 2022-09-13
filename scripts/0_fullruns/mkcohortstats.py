@@ -2,6 +2,10 @@ import pandas as pd
 import glob
 from os.path import exists
 
+#------------------------------------------------------------------------------------------------------
+# Compile Supplementary Table 2
+#------------------------------------------------------------------------------------------------------
+
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 qcfolders = glob.glob(basepath + 'processed/qc/*')
 datout = pd.DataFrame(columns = ['Cohort', 'Phenotype', 'direct_n_median_hm3', 'population_n_median_hm3', 'N_SNP_preqc', 'N_SNP_postqc', 'Genetic Correlation', 'Genetic Correlation SE'])
@@ -68,7 +72,7 @@ datout = datout.loc[datout['Cohort'] != 'Ea4', :]
 datout = datout.loc[datout['Cohort'] != 'Otherqc']
 
 datout.to_csv(
-    basepath + 'doc/cohortstats.txt',
+    basepath + 'processed/package_output/cohortstats.txt',
     index = False,
     sep = '\t'
 )

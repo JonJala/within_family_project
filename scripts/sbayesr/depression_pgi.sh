@@ -1,5 +1,4 @@
-
-#!usr/bin/bash
+#!/usr/bin/bash
 
 # Reference sbayesr code borrowed from Aysu
 # Original code /disk/genetics4/projects/EA4/code/PGS/7_PGS_SBayesR.sh
@@ -12,3 +11,10 @@ source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sb
 # ============= Execution ============= #
 run_pgi "${within_family_path}/processed/package_output/depression/meta.sumstats.gz" "direct" "depression" "mcs"
 run_pgi "${within_family_path}/processed/package_output/depression/meta.sumstats.gz" "population" "depression" "mcs"
+
+######################
+# clumping analysis
+#####################
+
+# run_pgi "${within_family_path}/processed/clumping_analysis/depression/direct/weights/mcs/meta_weights.snpRes.formatted" "direct" "depression" "mcs" "clump"
+# run_pgi "${within_family_path}/processed/clumping_analysis/depression/population/weights/mcs/meta_weights.snpRes.formatted" "population" "depression" "mcs" "clump"

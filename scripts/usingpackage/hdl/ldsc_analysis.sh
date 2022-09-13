@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 ldscpath="/disk/genetics/tools/ldsc/ldsc"
-ldscmodpath="/homes/nber/harij/ssgac/ldsc_mod"
+ldscmodpath="/var/genetics/proj/within_family/within_family_project/ssgac/ldsc_mod"
 eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 hm3snps="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
@@ -55,24 +55,21 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/direct_reference_sample
-# 0.9389 (0.0107)
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/hdl/directmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/direct_h2
-# 0.204 (0.0164)
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/hdl/populationmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/population_h2
-# 0.204 (0.0164)
 
 # Changing env
-source /disk/genetics/pub/python_env/anaconda2/bin/activate /var/genetics/proj/within_family/within_family_project/sniparenv
+source /var/genetics/proj/within_family/within_family_project/snipar/bin/activate
 /var/genetics/proj/within_family/within_family_project/snipar/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/hdl/meta.nfilter \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/hdl/marginal \
 --ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/@

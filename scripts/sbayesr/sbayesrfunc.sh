@@ -13,6 +13,7 @@ function run_pgi(){
     EFFECT=$2
     PHENONAME=$3
     DATASET=$4
+    CLUMP=$5
 
     if [[ $DATASET == "mcs" ]]; then
 
@@ -23,8 +24,8 @@ function run_pgi(){
 
     elif [[ $DATASET == "ukb" ]]; then
         
-        if [[ $PHENONAME == "ea4_meta" ]]; then
-            pheno="/var/genetics/proj/within_family/within_family_project/processed/ea4_meta/UKB_EAfixed_resid.pheno"
+        if [[ $PHENONAME == "ea" ]] && [[ ! -z $CLUMP ]]; then
+            pheno="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/ea/UKB_EAfixed_resid.pheno"
         else
             pheno="/disk/genetics/ukb/alextisyoung/phenotypes/processed_traits_noadj.txt"
         fi
@@ -37,14 +38,14 @@ function run_pgi(){
 
     mkdir -p ${PHENONAME}/${EFFECT}
 
-    if [[ $PHENONAME != "ea4_meta" ]]; then
+    if [[ -z $CLUMP ]]; then
 
         echo "Formatting summary statistics..."
         python ${within_family_path}/scripts/sbayesr/format_gwas.py \
             "$METAFILE" \
             --effecttype "${EFFECT}" \
             --median-n \
-            --median-n-frac 1.0 \
+            --median-n-frac 1 \
             --outpath "${PHENONAME}/${EFFECT}/meta.sumstats"
 
         mkdir -p ${PHENONAME}/${EFFECT}/weights/
@@ -71,6 +72,13 @@ function run_pgi(){
 
     fi
 
+    scorefile="${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted"
+
+    if [[ ! -z $CLUMP ]]; then
+        outpath+="/clumping_analysis"
+        scorefile="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/${PHENONAME}/${EFFECT}/weights/${DATASET}/meta_weights.snpRes.formatted"
+    fi
+
     # create PGIs
     mkdir -p $outpath/${PHENONAME}/
     mkdir -p $outpath/${PHENONAME}/${EFFECT}
@@ -80,17 +88,13 @@ function run_pgi(){
         echo $chr
         
         if [[ $DATASET == "mcs" ]]; then
+            
             plink200a2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
             --chr $chr \
-            --score ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted 12 5 8 header center cols=+scoresums \
+            --score $scorefile 12 5 8 header center cols=+scoresums \
             --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
-        elif [[ $DATASET == "ukb" ]]; then
 
-            if [[ $PHENONAME == "ea4_meta" ]]; then
-                scorefile="${PHENONAME}/${EFFECT}/weights/meta_noukb_weights.snpRes.formatted"
-            else
-                scorefile="${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted"
-            fi
+        elif [[ $DATASET == "ukb" ]]; then
 
             plink200a2 --bgen /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen ref-last \
                 --oxford-single-chr $chr \
@@ -108,9 +112,9 @@ function run_pgi(){
 
 
     outprefix="${PHENONAME}/${EFFECT}"
-    if [[ $PHENONAME == "ea4_meta" ]]; then
-        mkdir -p ${PHENONAME}/${EFFECT}/${DATASET}
-        outprefix="${PHENONAME}/${EFFECT}/${DATASET}"
+    if [[ ! -z $CLUMP ]]; then
+        mkdir -p ${PHENONAME}/clumping_analysis/${EFFECT}/${DATASET}
+        outprefix="${PHENONAME}/clumping_analysis/${EFFECT}/${DATASET}"
     fi
 
     Rscript /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/pgiprediction.R \

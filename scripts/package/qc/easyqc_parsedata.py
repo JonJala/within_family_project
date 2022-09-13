@@ -112,9 +112,12 @@ def read_hdf5(args, printinfo = True):
     f = hf.get(args.freqs)[()]
 
     # normalizing S
-    sigma2 = hf.get(args.sigma2)[()]
-    tau = hf.get(args.tau)[()]
-    phvar = sigma2+sigma2/tau
+    if not args.altphenotypicvar:
+        sigma2 = hf.get(args.sigma2)[()]
+        tau = hf.get(args.tau)[()]
+        phvar = sigma2+sigma2/tau
+    else:
+        phvar = hf['sigma_1'][()] + hf['sigma_1'][()] + hf['sigma_2'][()]
     
     hf.close()
 
@@ -208,7 +211,7 @@ def read_txt(args):
         effect_list = [c[0:-5] for c in beta_effects]
     else:
         effect_list = args.effects.split("_")
-        effect_list = ["avg_parental" if (x == "averageparental" or x == "avgparental") else x for x in effect_list]
+        effect_list = ["avg_NTC" if (x == "averageparental" or x == "avgparental") else x for x in effect_list]
     
 
     theta = np.zeros((N, len(effect_list)))
@@ -221,7 +224,7 @@ def read_txt(args):
         S[:, i, i] = np.array((dfin[effect + "_SE"]**2).tolist())
     
     if len(effect_list) > 1:
-        
+
         if f'r_direct_{effect_list[1]}' in dfin:
             cov = dfin[effect_list[0] + "_SE"] * dfin[f'{effect_list[1]}_SE'] * dfin[f'r_direct_{effect_list[1]}']
         elif f'{effect_list[1]}_Cov' in dfin:

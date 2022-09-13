@@ -25,4 +25,8 @@ sniparenv/
 share/
 pyvenv.cfg
 lib64
-**/__pycache__/*
+**/__pycache__/**
+Rplots.pdf
+plink1.9/*
+.pversion
+ssgac/*

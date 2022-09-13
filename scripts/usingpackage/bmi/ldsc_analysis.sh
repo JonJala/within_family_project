@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
-ldscpath="/homes/nber/harij/ldsc"
-ldscmodpath="/homes/nber/harij/ssgac/ldsc_mod"
+ldscpath="/var/genetics/pub/software/ldsc"
+ldscmodpath="/var/genetics/proj/within_family/within_family_project/ssgac/ldsc_mod"
 eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 hm3snps="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
@@ -73,7 +73,7 @@ ${ldscpath}/ldsc.py \
 # 0.204 (0.0164)
 
 # Changing env
-source /disk/genetics/pub/python_env/anaconda2/bin/activate /var/genetics/proj/within_family/within_family_project/sniparenv
+source /var/genetics/proj/within_family/within_family_project/snipar/bin/activate
 /var/genetics/proj/within_family/within_family_project/snipar/snipar/scripts/correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/bmi/meta.nfilter \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/bmi/marginal \
 --ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/@

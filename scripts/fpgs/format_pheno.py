@@ -4,7 +4,7 @@ import argparse
 
 parser=argparse.ArgumentParser()
 parser.add_argument('phenofile',type=str,help='Phenotype file location')
-parser.add_argument('--sep',type=str,help='Seperator for phenotype file', default = " ")
+parser.add_argument('--sep',type=str,help='Separator for phenotype file', default = " ")
 parser.add_argument('--compression',type=str,help='Compression for phenotype file', default = "infer")
 parser.add_argument('--iid',type=str,help='Name of IID column', default = "IID")
 parser.add_argument('--fid',type=str,help='Name of FID column', default = None)
@@ -15,17 +15,24 @@ parser.add_argument('--subsample', type=str, help='''List of individuals you wan
 parser.add_argument('--binary', type=str, default='0', help='''Is pheno a binary phenotype''')
 args=parser.parse_args()
 
+if args.sep == 'delim_whitespace':
+    dat = pd.read_csv(args.phenofile, delim_whitespace=True, compression = args.compression)
+else:
+    dat = pd.read_csv(args.phenofile, delimiter = args.sep, compression = args.compression)
 
-dat = pd.read_csv(args.phenofile, delimiter = args.sep, compression = args.compression)
 
 if args.phenocol == "hdl":
     args.phenocol = "HDL"
-
-if args.phenocol == "cognition":
-    args.phenocol = "Cognitive.ability"
-
-if args.phenocol == "ea4_meta":
-    args.phenocol = "ea"
+elif args.phenocol == "cognition":
+    args.phenocol = "cog"
+elif args.phenocol == "ea":
+    args.phenocol = "cog" # read from cog column (mcs verbal activity score)
+elif args.phenocol == "agemenarche":
+    args.phenocol = "menarche"
+elif args.phenocol == "dpw":
+    args.phenocol = "drinks_4_weeks"
+elif args.phenocol == "health":
+    args.phenocol = "self_rated_health"
 
 if args.fid is not None:
     dat = dat[[args.fid, args.iid, args.phenocol]]

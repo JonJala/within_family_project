@@ -12,8 +12,8 @@
     "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/es/CLEANED.out.gz"
 },
 
-"lifeline" : {
-    "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/es/CLEANED.out.gz"
+"lifelines" : {
+    "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/es18/CLEANED.out.gz"
 },
 
 "hunt" : {

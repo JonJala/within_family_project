@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import datetime as dt
 import json
 import argparse
@@ -518,10 +519,12 @@ def run_rscript(ecfpath, tmpdir):
 # Import EasyQC package (from online source if necessary)
 tryCatch(library("EasyQC"),
   error = function(e) {
+    dir.create("easyqc_libraries", showWarnings=FALSE)
+    .libPaths("easyqc_libraries")
     install.packages(pkgs="http://homepages.uni-regensburg.de/~wit59712/easyqc/EasyQC_9.2.tar.gz",
-                     repo=NULL, type="source")
+                     lib="easyqc_libraries/", repo=NULL, type="source")
     library("EasyQC")
-})
+  })
 library(EasyQC)\n''' + f"EasyQC('{ecfpath}')"
 
     with open(f"{tmpdir}/runecf.R", "w") as f:
@@ -529,6 +532,49 @@ library(EasyQC)\n''' + f"EasyQC('{ecfpath}')"
 
     
     os.system(f'Rscript --vanilla {tmpdir}/runecf.R')
+
+def filter_SNPs(args):
+    '''
+    Filters out the abnormal looking SNPs in the f vs. Neff plots from QC
+    '''
+    if args.toest is not None:
+        effects = args.toest
+    else:
+        effects = dat['estimated_effects'][0]
+    effects = effects.split("_")
+
+    ## filter SNPs
+    ss = pd.read_csv(f"{args.outprefix}/CLEANED.out.gz", delim_whitespace=True)
+    ss.to_csv(f"{args.outprefix}/CLEANED.unfilt.out.gz", sep = " ") # save copy
+    
+    def drop_SNPs(effect, ss):
+        ss["f_rounded"] = ss["f"].round(2) # round f to 2 d.p.
+        dat_rounded = ss.loc[:, [f'n_{effect}', "f_rounded"]].groupby("f_rounded").mean().rename(columns={f'n_{effect}': "n_mean"}) # calculate mean n_{effect} for each bin
+        dat_rounded["sd"] = ss.loc[:, [f'n_{effect}', "f_rounded"]].groupby("f_rounded").std() # calculate sd for each bin
+        ss_final = ss.merge(dat_rounded, on = "f_rounded", how = "left") # merge
+        ss_final["lower"] = ss_final["n_mean"] - 5 * ss_final["sd"] # calculate lower bound
+        ss_final["upper"] = ss_final["n_mean"] + 5 * ss_final["sd"] # calculate upper bound
+        ss_final = ss_final[(ss_final[f'n_{effect}'] > ss_final["lower"]) & (ss_final[f'n_{effect}'] < ss_final["upper"])] # filter SNPs not within bounds
+        snps_dropped = len(ss.index) - len(ss_final.index)
+        print(f'{snps_dropped} SNPs did not fall within mean n_{effect} +- 5 sd.')
+        ss_final.drop(["n_mean", "lower", "upper", "sd", "f_rounded"], axis = 1, inplace = True)
+        return(ss_final)
+        
+    # drop SNPs based on direct N
+    ss_final = drop_SNPs("direct", ss)
+    # repeat for averageparental N if applicable
+    if "averageparental" in effects:
+        ss_final = drop_SNPs("averageparental", ss_final)
+    # save
+    ss_final.to_csv(f"{args.outprefix}/CLEANED.out.gz", sep = " ")
+
+    ## plotting
+    for effect in effects:
+        plt.plot(ss_final["f"], ss_final[f"n_{effect}"], 'o')
+        plt.xlabel("f")
+        plt.ylabel(f"n_{effect}")
+        plt.savefig(f"{args.outprefix}/out.sp.{effect}.clean.png")
+        plt.clf()
 
 def run_ldsc_rg(args):
 
@@ -624,6 +670,9 @@ the reader will try and infer the chromosome number from the file name.''')
     parser.add_argument('--tau', default = "tau", type = str, help = "Name of tau column")
 
     parser.add_argument('--ldsc-ref', default = None, type = str, help = "Name of reference GWAS sample to run ldsc on. Must be munged")
+    parser.add_argument('--altphenotypicvar', default = False, 
+    action='store_true', help = "IF passed phenotypic variance is calculated by adding sigma_0, sigma_1 and sigma_2")
+
 
     parser.add_argument('--ldsc-outprefix', default = "./", type = str, 
     help = "Name of where to save ldsc log output")
@@ -666,6 +715,8 @@ the reader will try and infer the chromosome number from the file name.''')
 
         run_rscript(f"{args.outprefix}/clean.ecf", csvout)
 
+    # filter SNPs that have abnormal effective Ns for their given AFs
+    filter_SNPs(args)
 
     if args.ldsc_ref is not None:
         run_ldsc_rg(args)

@@ -3,23 +3,23 @@
 
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/bmi/CLEANED.out.gz"
 
-},
+    },
 
     "str": {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/bmi/CLEANED.out.gz"
-},
+    },
 
     "ukb": {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bmi/CLEANED.out.gz"
-},
+    },
 
     "ft" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/bmi/CLEANED.out.gz"
-},
+    },
 
     "gs" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/bmi/CLEANED.out.gz"
-},
+    },
 
     "eb" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/bmi/CLEANED.out.gz"
@@ -27,7 +27,7 @@
 
     "ll" :{
 
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/bmi/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/bmi18/CLEANED.out.gz"
     },
 
 
@@ -46,6 +46,10 @@
 
     "mt" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/bmi/CLEANED.out.gz"
+    },
+
+    "botnia" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bmi/CLEANED.out.gz"
     }
 
 

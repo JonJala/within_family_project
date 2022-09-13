@@ -2,14 +2,14 @@
     
     "ft" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/hdl/CLEANED.out.gz"
-},
+    },
 
     "gs" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/hdl/CLEANED.out.gz"
-},
+    },
     "ll" :{
 
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/hdl/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/hdl18/CLEANED.out.gz"
     },
 
 
@@ -24,6 +24,10 @@
 
     "hunt" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/hdl/CLEANED.out.gz"
+    },
+
+    "botnia" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/hdl/CLEANED.out.gz"
     }
 
 }

@@ -1,0 +1,16 @@
+{
+    
+    "geisinger" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/fev/CLEANED.out.gz"
+    },
+
+    "gs" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/fev/CLEANED.out.gz"
+    },
+
+    "hunt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/fev/CLEANED.out.gz"
+    }
+
+
+}

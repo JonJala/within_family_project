@@ -13,10 +13,7 @@
 
     "ft" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/income/CLEANED.out.gz"
-    },
-
-    "ukb" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/income/CLEANED.out.gz"
     }
+
 
 }

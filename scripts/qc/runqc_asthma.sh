@@ -58,7 +58,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 ############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/stats/sumstats_asthma_export.txt" \
+    "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_asthma_export.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/asthma" \
     --toest "direct_population" \
     --ldsc-ref "$reffile"

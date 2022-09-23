@@ -1,4 +1,4 @@
-#!/usr/bin.bash
+#!/usr/bin/bash
 
 reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/extraversion_ref/extraversion_ref.sumstats.gz"
 

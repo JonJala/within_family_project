@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bpd_ref/bpd_ref.sumstats.gz"
+
 #############
 # Dutch Twins
 #############
@@ -11,7 +13,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --cptid \
     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bpd_ref/bpd_ref.sumstats.gz"
+    --ldsc-ref "$reffile"
 
 #########
 # Hunt
@@ -22,7 +24,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/bpd" \
     --toest "direct_paternal_maternal_averageparental_population" \
     --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, " \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bpd_ref/bpd_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --info '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/info.formatted.gz' \
     --hwe '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/hwe.formatted.gz'
 
@@ -34,7 +36,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.DBP.all.chr*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/bpd" \
     --toest "direct_paternal_maternal_averageparental_population" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bpd_ref/bpd_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --info '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/info.formatted.txt' \
     --hwe '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/hwe.formatted.txt'
 # 0.941 (0.031)
@@ -46,7 +48,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/12/chr_*.sumstatschr_clean.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/bpd" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bpd_ref/bpd_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --rsid_readfrombim "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/SNPs/chr_*_rsids.txt,0,3,1, " \
     --toest "direct_paternal_maternal_averageparental_population" \
     --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
@@ -59,7 +61,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/botnia_fam/private/latest/processed/sumstats/fgwas/7/chr_*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bpd" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bpd_ref/bpd_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --toest "direct_population" \
     --cptid
 
@@ -74,4 +76,4 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bpd" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --bim_chromosome 99 \
-#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bpd_ref/bpd_ref.sumstats.gz"
+#     --ldsc-ref "$reffile"

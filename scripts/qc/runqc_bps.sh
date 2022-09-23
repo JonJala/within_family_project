@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz"
+
 #################
 # Minnesota twins
 #################
@@ -7,7 +9,7 @@
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/minn_twins/public/latest/raw/sumstats/fgwas/sumstats/BPS_chr*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/bps" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --cptid \
     --toest "direct_population" \
     --hwe '/disk/genetics3/data_dirs/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
@@ -19,7 +21,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/sbp/sbp_chr*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/bps" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --toest "direct_paternal_maternal_averageparental_population" \
     --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, " \
     --info '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/info.formatted.gz' \
@@ -32,7 +34,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.SBP.all.chr*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/bps" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --toest "direct_paternal_maternal_averageparental_population" \
     --info '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/info.formatted.txt' \
     --hwe '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/hwe.formatted.txt'
@@ -45,7 +47,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/SBP.chr*.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/bps" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --toest "direct_population" \
     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
@@ -57,7 +59,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/SBP/NTR_SBP_CHR*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/bps" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --toest "direct_paternal_maternal_averageparental_population" \
     --cptid \
     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
@@ -70,7 +72,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/11/chr_*.sumstatschr_clean.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/bps" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --rsid_readfrombim "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/SNPs/chr_*_rsids.txt,0,3,1, " \
     --toest "direct_paternal_maternal_averageparental_population" \
     --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
@@ -83,7 +85,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/botnia_fam/private/latest/processed/sumstats/fgwas/8/chr_*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bps" \
-    --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz" \
+    --ldsc-ref "$reffile" \
     --toest "direct_population" \
     --cptid
 
@@ -99,4 +101,4 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bps" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --bim_chromosome 99 \
-#     --ldsc-ref "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz"
+#     --ldsc-ref "$reffile"

@@ -239,7 +239,11 @@ def read_txt(args):
         phvar = args.phvar
     else:
         phvar = 2 * dfin['direct_N'] * dfin['freq'] * (1 - dfin['freq']) * S[:, 0, 0]
-        phvar = phvar[0]
+        if np.isnan(phvar[0]):
+            phvar = phvar[~np.isnan(phvar)].mean()
+        else:
+            phvar = phvar[0]
+
 
     zdata = pd.DataFrame({'CHR' : dfin['chromosome'].astype(int),
                     'SNP' : dfin['SNP'].astype(str),

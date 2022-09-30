@@ -14,9 +14,9 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --toest "direct_population" \
     --hwe '/disk/genetics3/data_dirs/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
-#########
-# Hunt
-######
+# #########
+# # Hunt
+# ######
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/sbp/sbp_chr*.sumstats.hdf5" \
@@ -90,15 +90,15 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --cptid
 
 
-#####################
-# ====== UKB ====== #
-#####################
+####################
+====== UKB ====== #
+####################
 
-# awaiting updated ss
+awaiting updated ss
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/5/chr_*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bps" \
-#     --toest "direct_paternal_maternal_averageparental_population" \
-#     --bim_chromosome 99 \
-#     --ldsc-ref "$reffile"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/5/chr_*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bps" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --bim_chromosome 99 \
+    --ldsc-ref "$reffile"

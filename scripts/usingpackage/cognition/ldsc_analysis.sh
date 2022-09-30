@@ -7,7 +7,7 @@ within_family_path="/var/genetics/proj/within_family/within_family_project"
 hm3snps="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/package"
 
-# echo "Munging!!"
+echo "Munging!!"
 
 source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/python_env/anaconda2/envs/ldsc
 

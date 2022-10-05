@@ -33,6 +33,14 @@ elif args.phenocol == "dpw":
     args.phenocol = "drinks_4_weeks"
 elif args.phenocol == "health":
     args.phenocol = "self_rated_health"
+elif args.phenocol == "cpd":
+    args.phenocol = "cigarettes.per.day"
+elif args.phenocol == "aafb":
+    args.phenocol = "AAFB"
+elif args.phenocol == "fev":
+    args.phenocol = "FEV1"
+elif args.phenocol == "hhincome":
+    args.phenocol = "household.income"
 
 if args.fid is not None:
     dat = dat[[args.fid, args.iid, args.phenocol]]

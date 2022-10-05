@@ -31,10 +31,17 @@ if (!(opt$pheno_name %in% colnames(pheno))) {
         opt$pheno_name <- "drinks_4_weeks"
     } else if (opt$pheno_name == "health") {
         opt$pheno_name <- "self_rated_health"
+    } else if (opt$pheno_name == "aafb") {
+        opt$pheno_name <- "AAFB"
+    } else if (opt$pheno_name == "fev") {
+        opt$pheno_name <- "FEV1"
+    } else if (opt$pheno_name == "hhincome") {
+        opt$pheno_name <- "household.income"
+    } else if (opt$pheno_name == "cpd") {
+        opt$pheno_name <- "cigarettes.per.day"
     } else {
         stop("There is no match for this pheno name.")
     }
-
 }
 if (is.null(opt$fid_pheno)) {
     setnames(pheno, old = c(opt$iid_pheno, opt$pheno_name), new=c("IID", "phenotype"))

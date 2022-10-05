@@ -8,5 +8,5 @@ within_family_path="/var/genetics/proj/within_family/within_family_project"
 source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sbayesrfunc.sh
 
 # ============= Execution ============= #
-run_pgi "${within_family_path}/processed/package_output/bps/meta.hm3.sumstats.gz" "direct" "bps" "mcs"
-run_pgi "${within_family_path}/processed/package_output/bps/meta.hm3.sumstats.gz" "population" "bps" "mcs"
+run_pgi "${within_family_path}/processed/package_output/bps/meta_noukb.hm3.sumstats.gz" "direct" "bps" "ukb"
+run_pgi "${within_family_path}/processed/package_output/bps/meta_noukb.hm3.sumstats.gz" "population" "bps" "ukb"

@@ -7,15 +7,15 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # STR
 ##########
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/hhInc/hhInc_chr*.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/str/hhincome" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_population" \
-#     --bim_bp 3 --bim_a1 4 --bim_a2 5 \
-#     --info "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/info.txt.gz" \
-#     --hwe "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/hardy.txt.gz" \
-#     --rsid_readfrombim "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPs/chr_*.bim,0,3,1, "
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/hhInc/hhInc_chr*.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/str/hhincome" \
+    --ldsc-ref "$reffile" \
+    --toest "direct_population" \
+    --bim_bp 3 --bim_a1 4 --bim_a2 5 \
+    --info "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/info.txt.gz" \
+    --hwe "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/hardy.txt.gz" \
+    --rsid_readfrombim "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPs/chr_*.bim,0,3,1, "
 
 #####################
 # ====== UKB ====== #
@@ -35,8 +35,8 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # iPSYCH
 ############
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_inc_export.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/hhincome" \
-    --toest "direct_population" \
-    --ldsc-ref "$reffile"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_inc_export.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/hhincome" \
+#     --toest "direct_population" \
+#     --ldsc-ref "$reffile"

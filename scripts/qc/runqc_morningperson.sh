@@ -2,7 +2,7 @@
 reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/morningpersion_ref/morningperson_ref.sumstats.gz"
 
 #############
-# Dutch Twins
+# Dutch Twin
 #############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \

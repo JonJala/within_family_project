@@ -39,10 +39,15 @@ if (!(opt$pheno_name %in% colnames(pheno))) {
         opt$pheno_name <- "household.income"
     } else if (opt$pheno_name == "cpd") {
         opt$pheno_name <- "cigarettes.per.day"
+    } else if (opt$pheno_name == "nchildren") {
+        opt$pheno_name <- "NC"
+    } else if (opt$pheno_name == "morningperson") {
+        opt$pheno_name <- "morning.person"
     } else {
         stop("There is no match for this pheno name.")
     }
 }
+
 if (is.null(opt$fid_pheno)) {
     setnames(pheno, old = c(opt$iid_pheno, opt$pheno_name), new=c("IID", "phenotype"))
 

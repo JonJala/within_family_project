@@ -41,6 +41,10 @@ elif args.phenocol == "fev":
     args.phenocol = "FEV1"
 elif args.phenocol == "hhincome":
     args.phenocol = "household.income"
+elif args.phenocol == "nchildren":
+    args.phenocol = "NC"
+elif args.phenocol == "morningperson":
+    args.phenocol = "morning.person"
 
 if args.fid is not None:
     dat = dat[[args.fid, args.iid, args.phenocol]]

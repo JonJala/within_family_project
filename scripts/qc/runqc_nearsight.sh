@@ -16,28 +16,30 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --hwe "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/HWE/chr*.hwe" \
     --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT" 
 
-####################
-====== UKB ====== #
-####################
+# ####################
+# ====== UKB ====== #
+# ####################
 
 # TBU with sumstats from Aysu
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/myopia/myopia.sumstats.gz" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/nearsight" \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
-    --bim_chromosome 99 \
-    --ldsc-ref "$reffile" \
-    --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
-    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/myopia/myopia.sumstats.gz" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/nearsight" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "$reffile" \
+#     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
+#     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
 
 ################
 # iPSYCH
 ############
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_nearsightedness_export.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/nearsight" \
-    --toest "direct_population" \
-    --ldsc-ref "$reffile"
+# do not use
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_nearsightedness_export.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/nearsight" \
+#     --toest "direct_population" \
+#     --ldsc-ref "$reffile"

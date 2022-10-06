@@ -58,26 +58,6 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz" \
     --binary
 
-#########
-# Hunt
-#########
-# deprcat - depression coded as 8 categories
-# deprcont - depression on continuous scale
-
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/deprCat/deprCat_chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/deprcat" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, " \
-    --ldsc-ref "$reffile" 
-
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/deprCont/deprCont_chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/deprcont" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, " \
-    --ldsc-ref "$reffile" 
-
 #####
 # Finnish twins
 #####
@@ -91,9 +71,9 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt \
     --binary
 
-####################
-====== UKB ====== #
-####################
+# ####################
+# ====== UKB ====== #
+# ####################
 
 # awaiting updated ss
 

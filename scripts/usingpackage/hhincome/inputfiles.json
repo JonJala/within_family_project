@@ -6,10 +6,6 @@
 
     "ukb" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/hhincome/CLEANED.out.gz"
-    },
-
-    "ipsych" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/hhincome/CLEANED.out.gz"
     }
 
 }

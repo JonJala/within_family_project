@@ -31,7 +31,7 @@ function withinfam_pred(){
 
         if [[ $PHENONAME == "ea" ]] && [[ ! -z $CLUMP ]]; then
             PHENOFILE="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/ea/UKB_EAfixed_resid.pheno"
-        elif [[ $PHENONAME == "asthma" || $PHENONAME == "hdl" ||  $PHENONAME == "nonhdl" || $PHENONAME == "bps" || $PHENONAME == "bpd" || $PHENONAME == "migraine" || $PHENONAME == "nearsight" || "income" ]]; then
+        elif [[ $PHENONAME == "asthma" || $PHENONAME == "hdl" ||  $PHENONAME == "nonhdl" || $PHENONAME == "bps" || $PHENONAME == "bpd" || $PHENONAME == "migraine" || $PHENONAME == "nearsight" || $PHENONAME == "income" || $PHENONAME == "hayfever" ]]; then
             PHENOFILE="/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/phen/UKB_health_income_std_WF.pheno"
         else
             PHENOFILE="/disk/genetics/ukb/alextisyoung/phenotypes/processed_traits_noadj.txt"

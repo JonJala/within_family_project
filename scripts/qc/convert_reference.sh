@@ -249,7 +249,7 @@ ${ldscpath}/munge_sumstats.py  \
 --sumstats /var/genetics/data/published/jones_2019_morningperson/raw/sumstats/chronotype_raw_BOLT.output_HRC.only_plus.metrics_maf0.001_hwep1em12_info0.3.txt.gz \
 --merge-alleles ${merge_alleles} \
 --out ${within_family_path}/processed/reference_samples/morningpersion_ref/morningperson_ref \
---N 697828
+--N 697828 --p P_BOLT_LMM --a1 ALLELE1 --a2 ALLELE0
 
 ${ldscpath}/munge_sumstats.py  \
 --sumstats /var/genetics/data/published/jiang_2021_nearsight/raw/GCST90044218_buildGRCh37.tsv.gz \

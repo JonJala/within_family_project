@@ -11,7 +11,7 @@ if(length(new.packages)) install.packages(new.packages, repos = "http://cran.rst
 lapply(list.of.packages, library, character.only = TRUE)
 
 # ---------------------------------------------------------------------
-# create plots
+# format data
 # ---------------------------------------------------------------------
 
 data <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_results.xlsx")
@@ -32,6 +32,10 @@ df <- merge(values, se) %>%
                         phenotype == "nonhdl" ~ "Non-HDL"),
         validation = case_when(phenotype %in% c("agemenarche", "bmi", "cognition", "depsymp", "dpw", "ea", "extraversion", "health", "neuroticism", "swb") ~ "mcs",
                         !(phenotype %in% c("agemenarche", "bmi", "cognition", "depsymp", "dpw", "ea", "extraversion", "health", "neuroticism", "swb")) ~ "ukb"))
+
+# ---------------------------------------------------------------------
+# create plots
+# ---------------------------------------------------------------------
 
 fpgs_plot <- function(data, dirpop, valid, ncols = 5) {
         lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_maternal"), paste0(dirpop, "_paternal"), paste0(dirpop, "_pop"))

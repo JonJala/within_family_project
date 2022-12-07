@@ -17,5 +17,3 @@ python $scriptpath/run_metaanalysis.py \
 # python $scriptpath/run_metaanalysis.py \
 # "/var/genetics/proj/within_family/within_family_project/scripts/usingpackage/ea/inputfiles_noukb.json" \
 # --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta_noukb"
-
-

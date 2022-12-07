@@ -43,6 +43,8 @@ if (!(opt$pheno_name %in% colnames(pheno))) {
         opt$pheno_name <- "NC"
     } else if (opt$pheno_name == "morningperson") {
         opt$pheno_name <- "morning.person"
+    } else if (opt$pheno_name == "depsymp") {
+        opt$pheno_name <- "depressive_symptoms"
     } else {
         stop("There is no match for this pheno name.")
     }

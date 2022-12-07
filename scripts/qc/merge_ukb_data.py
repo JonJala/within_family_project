@@ -12,9 +12,12 @@ import os
 
 # we want to choose SNPs from the phased data where available. if no phased data available, use unphased 
 
-phenos =  ["Non_HDL", "cigarettes.per.day", "Glucose", "HDL", "SBP", "DBP", "self.rated.health", "BMI", 
-"Cognitive.ability", "Neuroticism", "AAFB", "NC_M", "NC_F", "household.income", "subjective.well.being", "drinks.per.week", 
-"menarche", "ever.smoked", "ever.cannabis", "myopia", "EA", "FEV1", "height", "depressive.symptoms"]
+# phenos =  ["cigarettes.per.day", "Glucose", "self.rated.health", "BMI", "Cognitive.ability", "Neuroticism", 
+# "AAFB", "household.income", "subjective.well.being", "drinks.per.week", "menarche", "ever.smoked", "ever.cannabis", 
+# "EA", "FEV1", "height", "depressive.symptoms"]
+
+# phenos = ["asthma", "BPsys", "BPdia", "ECZEMA", "BL_HDL", "income", "MIGRAINE", "morning.person", "NC", 
+# "BL_NONHDL", "NEARSIGHTED", "mdd"]
 
 for pheno in phenos:
 

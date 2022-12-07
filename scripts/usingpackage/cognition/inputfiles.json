@@ -27,6 +27,10 @@
 
     "mt" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/iq/CLEANED.out.gz"
+    },
+
+    "qimr" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/cognition/CLEANED.out.gz"
     }
 
 }

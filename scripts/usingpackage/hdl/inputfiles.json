@@ -12,7 +12,6 @@
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/hdl18/CLEANED.out.gz"
     },
 
-
     "geisinger" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/hdl/CLEANED.out.gz"
 
@@ -29,9 +28,13 @@
     "botnia" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/hdl/CLEANED.out.gz"
     },
-
+    
     "ukb" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/hdl/CLEANED.out.gz"
+    },
+
+    "qimr" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/hdl/CLEANED.out.gz"
     }
 
 }

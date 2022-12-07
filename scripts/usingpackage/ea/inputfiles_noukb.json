@@ -43,9 +43,10 @@
     "mt" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/ea/CLEANED.out.gz"
 
+    },
+
+    "qimr" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/ea/CLEANED.out.gz"
     }
-
-
-
 
 }

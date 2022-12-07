@@ -9,6 +9,10 @@
     
     "hunt" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/eczema/CLEANED.out.gz"
+    },
+    
+    "ukb" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/eczema/CLEANED.out.gz"
     }
 
 }

@@ -43,5 +43,9 @@
     
     "botnia" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/height/CLEANED.out.gz"
+    },
+
+    "qimr" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/height/CLEANED.out.gz"
     }
 }

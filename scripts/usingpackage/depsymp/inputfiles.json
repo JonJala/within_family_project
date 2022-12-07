@@ -9,6 +9,10 @@
 
     "ukb" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/depsymp/CLEANED.out.gz"
+    },
+
+    "qimr" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/depsymp/CLEANED.out.gz"
     }
 
 }

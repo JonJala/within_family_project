@@ -50,7 +50,10 @@
 
     "botnia" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bmi/CLEANED.out.gz"
-    }
+    },
 
+    "qimr" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/bmi/CLEANED.out.gz"
+    }
 
 }

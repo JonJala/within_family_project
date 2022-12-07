@@ -93,47 +93,65 @@ cog[, Benjamin_ID := NULL]
 cog[, Benjamin_FID := NULL]
 cog[, grep("FCWRDSC", names(cog)) := NULL]
 
-# ## MCS cognitive assessment score
+## MCS cognitive assessment score
 
-# cog_out = read_sav("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_mcs_HHGRID7_CORRECTION_COGASS/MDAC-2020-0031-05A-BENJAMIN_mcs_hhgrid7_correction_20221004.sav")
-# cog_phen = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv")
-# cog_phen = cog_phen[, c(grep("GCNAAS0|Benjamin", names(cog_phen))), with=FALSE]
+cog_out = read_sav("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_mcs_HHGRID7_CORRECTION_COGASS/MDAC-2020-0031-05A-BENJAMIN_mcs_hhgrid7_correction_20221004.sav")
+cog_phen = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv")
+cog_phen = cog_phen[, c(grep("GCNAAS0|Benjamin", names(cog_phen))), with=FALSE]
 
-# # prepare "answer key" by assuming correct answer = mode
-# modefunc <- function(x) {
-#     tabresult <- tabulate(x)
-#     themode <- which(tabresult == max(tabresult))
-#     if(sum(tabresult == max(tabresult))>1) themode <- NA
-#     return(themode)
-# }
-# ans_key <- apply(cog_phen[,3:ncol(cog_phen)], 2, modefunc)
-# answers <- matrix(ans_key, nrow = nrow(cog_phen), ncol = length(ans_key), byrow = TRUE)
-# questions <- as.matrix(cog_phen[,3:ncol(cog_phen)])
-# cog_phen_final <- data.frame(matrix(as.numeric(answers == questions), nrow = nrow(cog_phen), ncol = length(ans_key)))
-# colnames(cog_phen_final) <- c("GCNAAS0A", "GCNAAS0B", "GCNAAS0C", "GCNAAS0D", "GCNAAS0E", "GCNAAS0F", "GCNAAS0G", "GCNAAS0H", "GCNAAS0I", "GCNAAS0K")
-# cog_phen_final <- cbind(cog_phen[,1:2], cog_phen_final)
+# map to correct answers from data dictionary archive 
+cog_phen_final <- cog_phen %>%
+        mutate(GCNAAS0A = ifelse(GCNAAS0A == 5, 1, 0),
+                GCNAAS0B = ifelse(GCNAAS0B == 1, 1, 0),
+                GCNAAS0C = ifelse(GCNAAS0C == 3, 1, 0),
+                GCNAAS0D = ifelse(GCNAAS0D == 4, 1, 0),
+                GCNAAS0E = ifelse(GCNAAS0E == 1, 1, 0),
+                GCNAAS0F = ifelse(GCNAAS0F == 5, 1, 0),
+                GCNAAS0G = ifelse(GCNAAS0G == 4, 1, 0),
+                GCNAAS0H = ifelse(GCNAAS0H == 4, 1, 0),
+                GCNAAS0I = ifelse(GCNAAS0I == 2, 1, 0),
+                GCNAAS0J = ifelse(GCNAAS0J == 5, 1, 0))
 
-# cogass <- cog_out %>% 
-#             select(benjamin_id, benjamin_fid, G_OUT_COGASS) %>%
-#             merge(cog_phen_final, by.x = "benjamin_id", by.y = "Benjamin_ID") %>%
-#             filter(G_OUT_COGASS == 1) %>%
-#             na.omit()
-# cogass %<>%
-#     mutate(cog = rowSums(across(c(grep("GCNAAS0", names(cogass)))), na.rm = TRUE),
-#     IID = paste(benjamin_id, benjamin_id, sep="_"),
-#     FID = IID) %>%
-#     select(IID, FID, cog) %>%
-#     mutate(cog = standardize(cog))
+# includes partially complete individuals
+cog_ass_partial <- cog_out %>% 
+            select(benjamin_id, benjamin_fid, G_OUT_COGASS) %>%
+            merge(cog_phen_final, by.x = "benjamin_id", by.y = "Benjamin_ID") %>%
+            filter(G_OUT_COGASS == 1)
 
+cog_ass_partial %<>%
+    mutate(cog = rowSums(across(c(grep("GCNAAS0", names(cog_ass_partial)))), na.rm = TRUE),
+    IID = paste(benjamin_id, benjamin_id, sep="_"),
+    FID = IID) %>%
+    select(IID, FID, cog) %>%
+    mutate(cog = standardize(cog)) %>%
+    distinct(FID, .keep_all = TRUE)
 
-# test <- merge(cog, cogass, by = "IID")
+# remove partially complete individuals
+cog_ass <- cog_out %>% 
+            select(benjamin_id, benjamin_fid, G_OUT_COGASS) %>%
+            merge(cog_phen_final, by.x = "benjamin_id", by.y = "Benjamin_ID") %>%
+            filter(G_OUT_COGASS == 1) %>%
+            na.omit()
+
+cog_ass %<>%
+    mutate(cog = rowSums(across(c(grep("GCNAAS0", names(cog_ass))))),
+    IID = paste(benjamin_id, benjamin_id, sep="_"),
+    FID = IID) %>%
+    select(IID, FID, cog) %>%
+    mutate(cog = standardize(cog)) %>%
+    distinct(FID, .keep_all = TRUE)
+
+# test <- merge(cog, cog_ass, by = "IID")
 # cor(test$cog.x, test$cog.y, use = "complete.obs")
 
-# test_ea <- merge(cogass, ea)
+# test_ea <- merge(cog_ass, ea)
 # cor(test_ea$cog, test_ea$ea)
 
-# test2 <- merge(ea, cog, by = "IID")
-# cor(test2$cog, test2$ea, use = "complete.obs")
+# test <- merge(cog, cog_ass_partial, by = "IID")
+# cor(test$cog.x, test$cog.y, use = "complete.obs")
+
+# test_ea <- merge(cog_ass_partial, ea)
+# cor(test_ea$cog, test_ea$ea)
 
 #---------------------------------------------------------------------------------------------------------------------
 # depression

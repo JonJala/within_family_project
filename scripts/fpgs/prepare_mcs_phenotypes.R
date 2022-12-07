@@ -1,6 +1,10 @@
 library(data.table)
 library(dplyr)
 library(purrr)
+library(haven)
+library(tibble)
+library(magrittr)
+library(foreign)
 
 #---------------------------------------------------------------------------------------------------------------------
 # prepare MCS phenotypes
@@ -74,6 +78,8 @@ setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
 # cognition
 #---------------------------------------------------------------------------------------------------------------------
 
+## MCS verbal similarity score
+
 cog = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/GENDAC-2022-05-26_sweep6wordscore/csv/GENDAC_BENJAMIN_mcs_cm_structure_26-05-2022.csv")
 
 # formatting cognition
@@ -86,6 +92,48 @@ cog[,FID := IID]
 cog[, Benjamin_ID := NULL]
 cog[, Benjamin_FID := NULL]
 cog[, grep("FCWRDSC", names(cog)) := NULL]
+
+# ## MCS cognitive assessment score
+
+# cog_out = read_sav("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_mcs_HHGRID7_CORRECTION_COGASS/MDAC-2020-0031-05A-BENJAMIN_mcs_hhgrid7_correction_20221004.sav")
+# cog_phen = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv")
+# cog_phen = cog_phen[, c(grep("GCNAAS0|Benjamin", names(cog_phen))), with=FALSE]
+
+# # prepare "answer key" by assuming correct answer = mode
+# modefunc <- function(x) {
+#     tabresult <- tabulate(x)
+#     themode <- which(tabresult == max(tabresult))
+#     if(sum(tabresult == max(tabresult))>1) themode <- NA
+#     return(themode)
+# }
+# ans_key <- apply(cog_phen[,3:ncol(cog_phen)], 2, modefunc)
+# answers <- matrix(ans_key, nrow = nrow(cog_phen), ncol = length(ans_key), byrow = TRUE)
+# questions <- as.matrix(cog_phen[,3:ncol(cog_phen)])
+# cog_phen_final <- data.frame(matrix(as.numeric(answers == questions), nrow = nrow(cog_phen), ncol = length(ans_key)))
+# colnames(cog_phen_final) <- c("GCNAAS0A", "GCNAAS0B", "GCNAAS0C", "GCNAAS0D", "GCNAAS0E", "GCNAAS0F", "GCNAAS0G", "GCNAAS0H", "GCNAAS0I", "GCNAAS0K")
+# cog_phen_final <- cbind(cog_phen[,1:2], cog_phen_final)
+
+# cogass <- cog_out %>% 
+#             select(benjamin_id, benjamin_fid, G_OUT_COGASS) %>%
+#             merge(cog_phen_final, by.x = "benjamin_id", by.y = "Benjamin_ID") %>%
+#             filter(G_OUT_COGASS == 1) %>%
+#             na.omit()
+# cogass %<>%
+#     mutate(cog = rowSums(across(c(grep("GCNAAS0", names(cogass)))), na.rm = TRUE),
+#     IID = paste(benjamin_id, benjamin_id, sep="_"),
+#     FID = IID) %>%
+#     select(IID, FID, cog) %>%
+#     mutate(cog = standardize(cog))
+
+
+# test <- merge(cog, cogass, by = "IID")
+# cor(test$cog.x, test$cog.y, use = "complete.obs")
+
+# test_ea <- merge(cogass, ea)
+# cor(test_ea$cog, test_ea$ea)
+
+# test2 <- merge(ea, cog, by = "IID")
+# cor(test2$cog, test2$ea, use = "complete.obs")
 
 #---------------------------------------------------------------------------------------------------------------------
 # depression
@@ -306,6 +354,9 @@ phenotypes[, height := standardize(height), by=sex]
 
 # make cognition same as ea
 # phenotypes[, cognition := ea]
+
+# remove duplicated rows
+phenotypes = distinct(phenotypes, .keep_all = TRUE)
 
 # save
 fwrite(phenotypes, file="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt", sep=" ", na="NA", quote = FALSE)

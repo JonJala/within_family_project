@@ -20,7 +20,7 @@ scratch/*
 **/easyqc_libraries/*
 bin/*
 lib/
-snipar/
+snipar/*
 sniparenv/
 share/
 pyvenv.cfg
@@ -30,4 +30,3 @@ Rplots.pdf
 plink1.9/*
 .pversion
 ssgac/*
-snipar_recovered_20220801/

@@ -5,6 +5,7 @@ library(haven)
 library(tibble)
 library(magrittr)
 library(foreign)
+library(filling)
 
 #---------------------------------------------------------------------------------------------------------------------
 # prepare MCS phenotypes
@@ -99,7 +100,7 @@ cog_out = read_sav("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-
 cog_phen = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv")
 cog_phen = cog_phen[, c(grep("GCNAAS0|Benjamin", names(cog_phen))), with=FALSE]
 
-# map to correct answers from data dictionary archive 
+# map to correct answers from mcs data dictionary archive (https://beta.ukdataservice.ac.uk/datacatalogue/studies/study?id=8682#!/documentation)
 cog_phen_final <- cog_phen %>%
         mutate(GCNAAS0A = ifelse(GCNAAS0A == 5, 1, 0),
                 GCNAAS0B = ifelse(GCNAAS0B == 1, 1, 0),
@@ -112,40 +113,39 @@ cog_phen_final <- cog_phen %>%
                 GCNAAS0I = ifelse(GCNAAS0I == 2, 1, 0),
                 GCNAAS0J = ifelse(GCNAAS0J == 5, 1, 0))
 
-# includes partially complete individuals
+# filter out incomplete individuals and individuals with 6 or more missing answers
 cog_ass_partial <- cog_out %>% 
             select(benjamin_id, benjamin_fid, G_OUT_COGASS) %>%
             merge(cog_phen_final, by.x = "benjamin_id", by.y = "Benjamin_ID") %>%
-            filter(G_OUT_COGASS == 1)
+            filter(G_OUT_COGASS == 1) # only keep partially and fully productive individuals 
+cog_ass_partial %<>% 
+    mutate(n_nas = rowSums(is.na(cog_ass_partial[c(grep("GCNAAS0", names(cog_ass_partial)))]))) %>%
+    filter(n_nas < 6) %>%
+    select(-n_nas, -G_OUT_COGASS, -Benjamin_FID)
 
-cog_ass_partial %<>%
-    mutate(cog = rowSums(across(c(grep("GCNAAS0", names(cog_ass_partial)))), na.rm = TRUE),
+# create dataframe with imputed values
+cog_ass_filled <- cbind(cog_ass_partial[1:2],
+    fill.USVT(as.matrix(cog_ass_partial[c(grep("GCNAAS0", names(cog_ass_partial)))])))
+names(cog_ass_filled) <- c("benjamin_id", "benjamin_fid", "GCNAAS0A", "GCNAAS0B", "GCNAAS0C", "GCNAAS0D", "GCNAAS0E", "GCNAAS0F", "GCNAAS0G", "GCNAAS0H", "GCNAAS0I", "GCNAAS0J")
+
+# sum over responses to create cognition variable, standardize and drop duplicates
+cog_ass_filled %<>%
+    mutate(cog = rowSums(across(c(grep("GCNAAS0", names(cog_ass_filled)))), na.rm = TRUE),
     IID = paste(benjamin_id, benjamin_id, sep="_"),
     FID = IID) %>%
     select(IID, FID, cog) %>%
     mutate(cog = standardize(cog)) %>%
     distinct(FID, .keep_all = TRUE)
 
-# remove partially complete individuals
-cog_ass <- cog_out %>% 
-            select(benjamin_id, benjamin_fid, G_OUT_COGASS) %>%
-            merge(cog_phen_final, by.x = "benjamin_id", by.y = "Benjamin_ID") %>%
-            filter(G_OUT_COGASS == 1) %>%
-            na.omit()
 
-cog_ass %<>%
-    mutate(cog = rowSums(across(c(grep("GCNAAS0", names(cog_ass))))),
-    IID = paste(benjamin_id, benjamin_id, sep="_"),
-    FID = IID) %>%
-    select(IID, FID, cog) %>%
-    mutate(cog = standardize(cog)) %>%
-    distinct(FID, .keep_all = TRUE)
 
-# test <- merge(cog, cog_ass, by = "IID")
-# cor(test$cog.x, test$cog.y, use = "complete.obs")
+nrow(cog_ass_filled)
 
-# test_ea <- merge(cog_ass, ea)
-# cor(test_ea$cog, test_ea$ea)
+test <- merge(cog, cog_ass_filled, by = "IID")
+cor(test$cog.x, test$cog.y, use = "complete.obs")
+
+test_ea <- merge(cog_ass_filled, ea)
+cor(test_ea$cog, test_ea$ea)
 
 # test <- merge(cog, cog_ass_partial, by = "IID")
 # cor(test$cog.x, test$cog.y, use = "complete.obs")

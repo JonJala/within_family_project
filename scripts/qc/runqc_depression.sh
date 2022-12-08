@@ -2,9 +2,8 @@
 ### Run the easyqc pipeline
 
 within_family_path="/var/genetics/proj/within_family/within_family_project"
-# 
-# ${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz alternate ref
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/dep_ref/DS_Full.sumstats.gz"
+
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz"
 
 ##########
 # EB - Estonian Biobank
@@ -19,9 +18,9 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT" \
     --binary
 
-# median with binary is 5114
-# median without binary is 29379
-# 1.1245 (0.1913)
+# # median with binary is 5114
+# # median without binary is 29379
+# # 1.1245 (0.1913)
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/MDD_ext/MDD_chr*_results.sumstats.hdf5" \
@@ -71,27 +70,30 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt \
     --binary
 
-# ####################
+####################
 # ====== UKB ====== #
-# ####################
-
-# awaiting updated ss
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/20/chr_*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/depression" \
-#     --toest "direct_paternal_maternal_averageparental_population" \
-#     --bim_chromosome 99 \
-#     --ldsc-ref "$reffile" \
-#     --binary
-
-
-################
-# iPSYCH
-############
+####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_depression_export.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/depression" \
+    "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/mdd/mdd.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/depression" \
+    --effects "direct_averageparental" \
     --toest "direct_population" \
-    --ldsc-ref "$reffile"
+    --bim_chromosome 99 \
+    --ldsc-ref "$reffile" \
+    --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
+    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
+    --binary
+
+# ################
+# # iPSYCH
+# ############
+
+# do not use
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_depression_export.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/depression" \
+#     --toest "direct_population" \
+#     --ldsc-ref "$reffile" \
+#     --binary

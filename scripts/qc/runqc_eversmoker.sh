@@ -57,7 +57,8 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
 #     --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
-#     --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+#     --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+#     --binary
 
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
@@ -116,13 +117,25 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ====== UKB ====== #
 #####################
 
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/ever.smoked/ever.smoked.sumstats.gz" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/es" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "$reffile" \
+#     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
+#     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
+#     --binary
+
+#############
+# QIMR
+############
+
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/ever.smoked/ever.smoked.sumstats.gz" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/es" \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
-    --bim_chromosome 99 \
+    "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/EverSmoker/EverSmoker_Chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/eversmoker" \
     --ldsc-ref "$reffile" \
-    --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
-    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --cptid \
     --binary

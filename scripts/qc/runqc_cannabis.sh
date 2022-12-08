@@ -13,7 +13,8 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --toest "direct_paternal_maternal_averageparental_population" \
     --cptid \
     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
-    --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
+    --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz" \
+    --binary
 
 #####################
 # ====== UKB ====== #
@@ -27,4 +28,5 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --bim_chromosome 99 \
     --ldsc-ref $reffile \
     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
-    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
+    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
+    --binary

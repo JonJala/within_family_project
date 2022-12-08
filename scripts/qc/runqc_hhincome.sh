@@ -31,12 +31,12 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
 
-################
-# iPSYCH
-############
+###############
+## iPSYCH
+###########
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_inc_export.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/hhincome" \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_inc_export.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/hhincome" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile"

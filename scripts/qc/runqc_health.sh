@@ -1,3 +1,5 @@
+#!/usr/bin/bash
+
 reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/health_ref/health_ref.sumstats.gz"
 
 # ###############
@@ -42,16 +44,27 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
 
 
+# #####################
+# # ====== UKB ====== #
+# #####################
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/self.rated.health/self.rated.health.sumstats.gz" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/srh" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref $reffile \
+#     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
+#     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
+
 #####################
-# ====== UKB ====== #
+# ====== FHS ====== #
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/self.rated.health/self.rated.health.sumstats.gz" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/srh" \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
-    --bim_chromosome 99 \
+    "/disk/genetics3/data_dirs/fhs/public/v1/processed/sumstats/gwas/srh/chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/health" \
+    --toest "direct_paternal_maternal_averageparental_population" \
     --ldsc-ref $reffile \
-    --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
-    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
+    --cptid

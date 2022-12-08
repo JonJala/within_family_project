@@ -2,9 +2,9 @@
 
 reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/migarine_ref/migraine_ref.sumstats.gz"
 
-################
-# Geisinger
-############
+# ###############
+# ## Geisinger
+# ###########
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
 #     "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.MIGRAINE.chr*.sumstats.hdf5" \
@@ -12,10 +12,11 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --ldsc-ref $reffile \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --info '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/info.formatted.txt' \
-#     --hwe '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/hwe.formatted.txt'
+#     --hwe '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/hwe.formatted.txt' \
+#     --binary
 
 # ##############
-# # Estonian Biobank
+# ## Estonian Biobank
 # ##############
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
@@ -25,9 +26,10 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --hwe "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/HWE/chr*.hwe" \
 #     --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT"
+#     --binary
 
 # #############
-# # Dutch Twins
+# ## Dutch Twins
 # #############
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
@@ -37,14 +39,31 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --cptid \
 #     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
-#     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
+#     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz" \
+#     --binary
 
-################
-# iPSYCH
-############
+# ################
+# ## iPSYCH
+# ############
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_migraine_export.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/migraine" \
+#     --toest "direct_population" \
+#     --ldsc-ref "$reffile" \
+#     --binary
+
+#####################
+# ====== UKB ====== #
+#####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_migraine_export.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/migraine" \
+    "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/MIGRAINE/MIGRAINE.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/migraine" \
+    --effects "direct_averageparental" \
     --toest "direct_population" \
-    --ldsc-ref "$reffile"
+    --bim_chromosome 99 \
+    --ldsc-ref "$reffile" \
+    --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
+    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
+    --binary

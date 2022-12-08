@@ -23,23 +23,23 @@ def make_rg_matrix(directmat, populationmat):
 
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
-# phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cognition', 'cpd', 'depression',
-#                  'dpw', 'ea', 'eczema', 'eversmoker', 'fev', 'hayfever', 'hdl', 'health', 'height', 'income', 
-#                  'migraine', 'nchildren', 'neuroticism', 'nonhdl', 'rhinitis', 'swb']
 
-# phenotypes = ['aafb', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cognition', 'cpd', 'depression',
-                #  'dpw', 'ea', 'eczema', 'eversmoker', 'fev', 'hayfever', 'hdl', 'health', 'height', 
-                #  'migraine', 'neuroticism', 'nonhdl', 'swb']
+## meta phenos
+# phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cognition', 'cpd', 'depression',
+                #  'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'income', 
+                #  'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
 
-# phenotypes = ['cannabis', 'depsymp', 'hhincome', 'extraversion']
-phenotypes = ['hayfever']
+## fpgs phenos
+phenotypes = ['aafb', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cognition', 'cpd', 'depsymp',
+                 'dpw', 'ea', 'extraversion', 'hayfever', 'hdl', 'health', 'income',
+                 'migraine', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
 
-meta = False
+metaanalysis = False
 fpgs = True
 ldsc = False
 
 
-if meta == True:
+if metaanalysis == True:
     dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
                     'h2_se', 'rg_ref', 'rg_ref_se', 
                     'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 
@@ -62,7 +62,7 @@ for phenotype in phenotypes:
         print(f'Compiling results for {phenotype} {effect}...')
         packageoutput = basepath + 'processed/package_output/'
 
-        if meta == True:
+        if metaanalysis == True:
             # get median effective n
             meta = pd.read_csv(
                 packageoutput + phenotype + '/meta.hm3.sumstats.gz',
@@ -165,7 +165,7 @@ for phenotype in phenotypes:
             parcorr_est = parcorr[0]
             parcorr_se = parcorr[1]
 
-        if meta == True:
+        if metaanalysis == True:
             dattmp = pd.DataFrame(
                 {
                     'phenotype' : [phenotype], 
@@ -207,12 +207,12 @@ for phenotype in phenotypes:
                     'parental_pgi_corr_se' : [parcorr_se]
             })
 
-        if meta == True:
+        if metaanalysis == True:
             dat = dat.append(dattmp, ignore_index=True)
         if fpgs == True:
             datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
 
-if meta == True:
+if metaanalysis == True:
     # reshape data
     dat = dat.pivot(index='phenotype', columns='effect', values=None)
     dat.columns = ['_'.join(column) for column in dat.columns.to_flat_index()]

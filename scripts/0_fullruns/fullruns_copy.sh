@@ -19,25 +19,25 @@ function main(){
     source ${sniparenv}
     bash scripts/fpgs/fpgs_${PHENO}.sh
     
-    # ldsc stuff
+    # # ldsc stuff
     # bash scripts/usingpackage/${PHENO}/ldsc_analysis.sh
 
 }
 
 # time main aafb
 # time main adhd
-time main agemenarche
+# time main agemenarche
 # time main asthma
-time main bmi
+# time main bmi
 # time main bpd
 # time main bps
 # time main cannabis
-time main cognition
+# time main cognition
 # time main cpd
 # time main depression
-time main depsymp
-# time main dpw
-# time main ea
+# time main depsymp
+time main dpw
+time main ea
 # time main eczema
 # time main eversmoker
 # time main extraversion
@@ -52,9 +52,8 @@ time main depsymp
 # time main morningperson
 # time main nchildren
 # time main nearsight
-# time main neuroticism
+time main neuroticism
 # time main nonhdl
-# time main swb
+time main swb
 
 echo "done with all!"
-

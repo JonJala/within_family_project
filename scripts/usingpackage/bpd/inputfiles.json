@@ -21,6 +21,10 @@
 
     "ukb" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bpd/CLEANED.out.gz"
+    },
+
+    "fhs" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/bpd/CLEANED.out.gz"
     }
 
 }

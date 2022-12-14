@@ -5,7 +5,7 @@ library(haven)
 library(tibble)
 library(magrittr)
 library(foreign)
-library(filling)
+library(metamisc)
 
 #---------------------------------------------------------------------------------------------------------------------
 # prepare MCS phenotypes
@@ -117,16 +117,26 @@ cog_phen_final <- cog_phen %>%
 cog_ass_partial <- cog_out %>% 
             select(benjamin_id, benjamin_fid, G_OUT_COGASS) %>%
             merge(cog_phen_final, by.x = "benjamin_id", by.y = "Benjamin_ID") %>%
-            filter(G_OUT_COGASS == 1) # only keep partially and fully productive individuals 
+            filter(G_OUT_COGASS == 1) %>% # only keep partially and fully productive individuals 
+            distinct(benjamin_id, .keep_all = TRUE)
 cog_ass_partial %<>% 
     mutate(n_nas = rowSums(is.na(cog_ass_partial[c(grep("GCNAAS0", names(cog_ass_partial)))]))) %>%
     filter(n_nas < 6) %>%
     select(-n_nas, -G_OUT_COGASS, -Benjamin_FID)
 
 # create dataframe with imputed values
-cog_ass_filled <- cbind(cog_ass_partial[1:2],
-    fill.USVT(as.matrix(cog_ass_partial[c(grep("GCNAAS0", names(cog_ass_partial)))])))
+mat <- as.matrix(cog_ass_partial[c(grep("GCNAAS0", names(cog_ass_partial)))])
+rownames(mat) <- cog_ass_partial$benjamin_id
+cov <- as.matrix(cov(mat, use = "complete.obs"))
+mu <- as.vector(colMeans(mat, na.rm = TRUE))
+filled <- t(apply(mat, 1, function(x) impute_conditional_mean(x, mu, cov)))
+filled[filled > 1] <- 1 # threshold values so that they're between 0 and 1
+filled[filled < 0] <- 0
+cog_ass_filled <- cbind(cog_ass_partial[1:2], filled)
 names(cog_ass_filled) <- c("benjamin_id", "benjamin_fid", "GCNAAS0A", "GCNAAS0B", "GCNAAS0C", "GCNAAS0D", "GCNAAS0E", "GCNAAS0F", "GCNAAS0G", "GCNAAS0H", "GCNAAS0I", "GCNAAS0J")
+
+
+range(cog_ass_filled[is.na(cog_ass_partial)])
 
 # sum over responses to create cognition variable, standardize and drop duplicates
 cog_ass_filled %<>%
@@ -136,6 +146,7 @@ cog_ass_filled %<>%
     select(IID, FID, cog) %>%
     mutate(cog = standardize(cog)) %>%
     distinct(FID, .keep_all = TRUE)
+
 
 
 

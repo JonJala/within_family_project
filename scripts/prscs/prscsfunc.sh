@@ -45,40 +45,11 @@ function run_pgi(){
         python ${within_family_path}/scripts/prscs/format_gwas.py \
             "$METAFILE" \
             --effecttype "${EFFECT}" \
-            --median-n \
-            --median-n-frac 1 \
-            --outpath "${PHENONAME}/${EFFECT}/meta.sumstats"
+            --outpath "${PHENONAME}/${EFFECT}/meta.sumstats" \
+            --bimout "${PHENONAME}/validation.bim"
 
         mkdir -p ${PHENONAME}/${EFFECT}/weights/
         mkdir -p logs/${EFFECT}
-
-        # create validation.bim file
-        # .bim format:
-        # A text file with no header line, and one line per variant with the following six fields:
-        # Chromosome code (either an integer, or 'X'/'Y'/'XY'/'MT'; '0' indicates unknown) or name
-        # Variant identifier
-        # Position in morgans or centimorgans (safe to use dummy value of '0')
-        # Base-pair coordinate (1-based; limited to 231-2)
-        # Allele 1 (corresponding to clear bits in .bed; usually minor)
-        # Allele 2 (corresponding to set bits in .bed; usually major)
-
-        awk '{print $1 " " $3 " " "0" " " $2 " " $4 " " $5}' /var/genetics/proj/alz_pgi/alz_pgi_project/processed/proxy/2_qc/QC_.ukb_alz_gwas_sumstats.txt \
-            | sed '1d' > /var/genetics/proj/alz_pgi/alz_pgi_project/processed/proxy/3_prscs/validation.bim
-
-        bim_path="/var/genetics/proj/alz_pgi/alz_pgi_project/processed/proxy/3_prscs/validation"
-
-        # getting weights
-        # $gctb --sbayes R \
-        # --mldm ${refldpanel} \
-        # --exclude-mhc \
-        # --seed 123 \
-        # --pi 0.95,0.02,0.02,0.01 \
-        # --gamma 0.0,0.01,0.1,1 \
-        # --gwas-summary ${PHENONAME}/${EFFECT}/meta.sumstats \
-        # --chain-length 10000 \
-        # --burn-in 2000 \
-        # --out-freq 100 \
-        # --out ${PHENONAME}/${EFFECT}/weights/meta_weights | tee "logs/${EFFECT}/${PHENONAME}_meta_weights_sbayesr"
 
         # getting weights using prscs
         N_THREADS=1
@@ -89,17 +60,20 @@ function run_pgi(){
         for chr in {1..22}; do
         prscs \
             --ref_dir=${refldpanel} \
-            --bim_prefix=${bim_path} \
-            --sst_file=/var/genetics/proj/alz_pgi/alz_pgi_project/processed/kunkle/4_prscs/kunkle_sumstats_prscs.txt \
-            --n_gwas=76299 \
+            --bim_prefix="${PHENONAME}/validation" \
+            --sst_file="${PHENONAME}/${EFFECT}/meta.sumstats" \
+            --n_gwas=58710 \
             --chrom=${chr} \
             --seed=1 \
             --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights
         done
         wait
 
-        echo "Formatting sbayesr weights to create scores"
-        python ${within_family_path}/scripts/sbayesr/get_variantid.py \
+        echo "Formatting PRSCS weights to create scores"
+
+        cat ${PHENONAME}/${EFFECT}/weights/meta_weights* > ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes
+
+        python ${within_family_path}/scripts/prscs/get_variantid.py \
             ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes \
             --out ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted
 
@@ -124,7 +98,7 @@ function run_pgi(){
             
             plink200a2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
             --chr $chr \
-            --score $scorefile 12 5 8 header center cols=+scoresums \
+            --score $scorefile 7 4 6 header center cols=+scoresums \
             --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
 
         elif [[ $DATASET == "ukb" ]]; then
@@ -132,7 +106,7 @@ function run_pgi(){
             plink200a2 --bgen /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen ref-last \
                 --oxford-single-chr $chr \
                 --sample /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.sample \
-                --score $scorefile 2 5 8 header center cols=+scoresums \
+                --score $scorefile 2 4 6 header center cols=+scoresums \
                 --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
 
         fi

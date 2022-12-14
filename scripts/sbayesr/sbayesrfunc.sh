@@ -112,8 +112,8 @@ function run_pgi(){
         "$outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_*.sscore" \
         --outprefix "$outpath/${PHENONAME}/${EFFECT}/scoresout.sscore"
 
-
     outprefix="${PHENONAME}/${EFFECT}"
+
     if [[ ! -z $CLUMP ]]; then
         mkdir -p ${PHENONAME}/clumping_analysis/${EFFECT}/${DATASET}
         outprefix="${PHENONAME}/clumping_analysis/${EFFECT}/${DATASET}"

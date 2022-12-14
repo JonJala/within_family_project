@@ -12,7 +12,8 @@ function withinfam_pred(){
     OUTSUFFIX=$4
     BINARY=$5
     DATASET=$6
-    CLUMP=$7
+    METHOD=$7
+    CLUMP=$8
 
     if [[ $DATASET == "mcs" ]]; then
 
@@ -50,34 +51,48 @@ function withinfam_pred(){
     mkdir -p $within_family_path/processed/fpgs/${PHENONAME}
 
     if [[ ! -z $CLUMP ]]; then
-        mkdir -p ${within_family_path}/processed/sbayesr/${PHENONAME}/clumping_analysis/${DATASET}
-        outfileprefix="${within_family_path}/processed/sbayesr/${PHENONAME}/clumping_analysis/${DATASET}"
+        mkdir -p ${within_family_path}/processed/${METHOD}/${PHENONAME}/clumping_analysis/${DATASET}
+        outfileprefix="${within_family_path}/processed/${METHOD}/${PHENONAME}/clumping_analysis/${DATASET}"
     else
-        outfileprefix="${within_family_path}/processed/sbayesr/${PHENONAME}"
+        outfileprefix="${within_family_path}/processed/${METHOD}/${PHENONAME}"
     fi
 
-    # format sbayesr weight files for fpgs
-    if [[ $DATASET == "mcs" ]]; then
-
-        python ${within_family_path}/scripts/fpgs/format_weights.py \
-        $WTFILE \
-        --chr Chrom --pos Position --rsid Name --a1 A1 --a2 A2 --beta A1Effect \
-        --sep "delim_whitespace" \
-        --outfileprefix ${outfileprefix}/${PHENONAME}_${EFFECT}_fpgs_formatted \
-        --sid-as-chrpos 
-
-    elif [[ $DATASET == "ukb" ]]; then
-
-        python ${within_family_path}/scripts/fpgs/format_weights.py \
-        $WTFILE \
-        --chr Chrom --pos Position --rsid Name --a1 A1 --a2 A2 --beta A1Effect \
-        --sep "delim_whitespace" \
-        --outfileprefix ${outfileprefix}/${PHENONAME}_${EFFECT}_fpgs_formatted
-
+    # format weight files for fpgs
+    if [[ $METHOD == "sbayesr" ]]; then
+        if [[ $DATASET == "mcs" ]]; then
+            python ${within_family_path}/scripts/fpgs/format_weights.py \
+            $WTFILE \
+            --chr Chrom --pos Position --rsid Name --a1 A1 --a2 A2 --beta A1Effect \
+            --sep "delim_whitespace" \
+            --outfileprefix ${outfileprefix}/${PHENONAME}_${EFFECT}_fpgs_formatted \
+            --sid-as-chrpos 
+        elif [[ $DATASET == "ukb" ]]; then
+            python ${within_family_path}/scripts/fpgs/format_weights.py \
+            $WTFILE \
+            --chr Chrom --pos Position --rsid Name --a1 A1 --a2 A2 --beta A1Effect \
+            --sep "delim_whitespace" \
+            --outfileprefix ${outfileprefix}/${PHENONAME}_${EFFECT}_fpgs_formatted
+        fi
+    elif [[ $METHOD == "prscs" ]]; then
+        if [[ $DATASET == "mcs" ]]; then
+            python ${within_family_path}/scripts/fpgs/format_weights.py \
+            $WTFILE \
+            --chr 0 --pos 2 --rsid 1 --a1 3 --a2 4 --beta 5 \
+            --sep "delim_whitespace" \
+            --outfileprefix ${outfileprefix}/${PHENONAME}_${EFFECT}_fpgs_formatted \
+            --sid-as-chrpos \
+            --prscs
+        elif [[ $DATASET == "ukb" ]]; then
+            python ${within_family_path}/scripts/fpgs/format_weights.py \
+            $WTFILE \
+            --chr 0 --pos 2 --rsid 1 --a1 3 --a2 4 --beta 5 \
+            --sep "delim_whitespace" \
+            --outfileprefix ${outfileprefix}/${PHENONAME}_${EFFECT}_fpgs_formatted \
+            --prscs
+        fi
     fi
     
     # generate pheno file
-
     python $within_family_path/scripts/fpgs/format_pheno.py \
         $PHENOFILE \
         --iid IID --fid FID --phenocol $PHENONAME \
@@ -85,22 +100,26 @@ function withinfam_pred(){
         --sep "delim_whitespace" \
         --binary $BINARY
 
-    if [[ ! -z $CLUMP ]]; then
+    if [[ $METHOD == "prscs" ]]; then
+        mkdir -p "${OUTPATH}/prscs"
+        OUTPATH+="prscs" 
+    fi
 
+    if [[ ! -z $CLUMP ]]; then
         mkdir -p "${OUTPATH}/clumping_analysis"
         OUTPATH+="clumping_analysis" 
         pgs.py \
             $OUTPATH/${EFFECT}${OUTSUFFIX} \
             --bed $bedfilepath \
             --imp $impfilespath \
-            --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/clumping_analysis/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+            --weights ${within_family_path}/processed/${METHOD}/${PHENONAME}/clumping_analysis/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
             --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log
     else
         pgs.py \
             $OUTPATH/${EFFECT}${OUTSUFFIX} \
             --bed $bedfilepath \
             --imp $impfilespath \
-            --weights ${within_family_path}/processed/sbayesr/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+            --weights ${within_family_path}/processed/${METHOD}/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
             --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log 
     fi 
 
@@ -127,6 +146,9 @@ function withinfam_pred(){
     if [[ ! -z $CLUMP ]]; then
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"
         mkdir -p $fpgs_out
+    elif [[ $METHOD == "prscs" ]]; then
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}"
+        mkdir -p $fpgs_out
     else
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}"
     fi
@@ -137,16 +159,15 @@ function withinfam_pred(){
         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
         --logistic $BINARY \
         --ols $ols \
-        --kin $kin | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${CLUMP}${EFFECT}${OUTSUFFIX}_full.reg.log"
+        --kin $kin | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${CLUMP}_${EFFECT}${OUTSUFFIX}_full.reg.log"
 
     python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_proband \
         --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_proband.pgs.txt \
         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
         --logistic $BINARY \
         --ols $ols \
-        --kin $kin | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_proband.reg.log"
-
-
+        --kin $kin | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${CLUMP}_${EFFECT}${OUTSUFFIX}_proband.reg.log"
+    
 }
 
 function main(){
@@ -155,7 +176,8 @@ function main(){
     OUTSUFFIX=$2
     BINARY=$3
     DATASET=$4
-    CLUMP=$5
+    METHOD=$5
+    CLUMP=$6
 
     if [[ $DATASET == "mcs" ]]; then
 
@@ -176,8 +198,8 @@ function main(){
     if [[ -z $CLUMP ]]; then
 
         # for the regular pipeline, this is where the weights outputted by sbayesr are saved
-        direct_weights="${within_family_path}/processed/sbayesr/${PHENONAME}/direct/weights/meta_weights.snpRes"
-        population_weights="${within_family_path}/processed/sbayesr/${PHENONAME}/population/weights/meta_weights.snpRes"
+        direct_weights="${within_family_path}/processed/${METHOD}/${PHENONAME}/direct/weights/meta_weights.snpRes"
+        population_weights="${within_family_path}/processed/${METHOD}/${PHENONAME}/population/weights/meta_weights.snpRes"
     
     elif [[ ! -z $CLUMP ]]; then
     
@@ -188,14 +210,18 @@ function main(){
     
     fi
 
+    if [[ $METHOD == "prscs" ]]; then
+        processed_dir+="prscs"
+    fi
+
     # main prediction
     withinfam_pred $direct_weights \
         "direct" "$PHENONAME" \
-        "$OUTSUFFIX" "$BINARY" "$DATASET" "$CLUMP"
+        "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP"
     
     withinfam_pred $population_weights \
     "population" "$PHENONAME" \
-    "$OUTSUFFIX" "$BINARY" "$DATASET" "$CLUMP"
+    "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP"
 
 
     if [[ $DATASET == "mcs" ]]; then
@@ -208,6 +234,8 @@ function main(){
     
     if [[ ! -z $CLUMP ]]; then
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"
+    elif [[ $METHOD == "prscs" ]]; then
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}"
     else
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}"
     fi

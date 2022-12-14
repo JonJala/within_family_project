@@ -16,14 +16,32 @@ parser.add_argument("--a1",  type=str, help="A1 column name for sumstats", defau
 parser.add_argument("--a2",  type=str, help="A2 column name for sumstats", default = "nt2")
 parser.add_argument("--beta",  type=str, help="A2 column name for sumstats", default = "ldpred_beta")
 parser.add_argument('--subsample', type=str, help='''List of individuals you want to subsample''')
+parser.add_argument('--prscs', action='store_true', default = False, help = '''Formats PRSCS weights for FPGS''')
 args=parser.parse_args()
 
-if args.sep == 'delim_whitespace':
-    wts = pd.read_csv(args.weightfile, delim_whitespace=True, compression = args.compression)
+if args.prscs:
+
+    if args.sep == 'delim_whitespace':
+        wts = pd.read_csv(args.weightfile, delim_whitespace=True, compression = args.compression, header = None)
+    else:
+        wts = pd.read_csv(args.weightfile, delimiter = args.sep, compression = args.compression, header = None)
+    
+    args.chr = int(args.chr)
+    args.pos = int(args.pos)
+    args.rsid = int(args.rsid)
+    args.a1 = int(args.a1)
+    args.a2 = int(args.a2)
+    args.beta = int(args.beta)
+    
 else:
-    wts = pd.read_csv(args.weightfile, delimiter = args.sep, compression = args.compression)
+    
+    if args.sep == 'delim_whitespace':
+        wts = pd.read_csv(args.weightfile, delim_whitespace=True, compression = args.compression)
+    else:
+        wts = pd.read_csv(args.weightfile, delimiter = args.sep, compression = args.compression)
 
 wts = wts[[args.chr, args.pos, args.rsid, args.a1, args.a2, args.beta]]
+
 wts = wts.rename(columns = {
     args.chr : 'chr',
     args.pos : 'pos',

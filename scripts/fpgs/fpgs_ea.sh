@@ -9,7 +9,7 @@ phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/i
 
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
-main "ea" "" "0" "mcs"
+main "ea" "" "0" "mcs" "sbayesr"
 
 
 # clumping analysis

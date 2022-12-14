@@ -54,6 +54,10 @@
 
     "qimr" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/bmi/CLEANED.out.gz"
+    },
+
+    "fhs" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/bmi/CLEANED.out.gz"
     }
 
 }

@@ -13,6 +13,10 @@
 
     "qimr" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/depsymp/CLEANED.out.gz"
+    },
+
+    "fhs" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/depsymp/CLEANED.out.gz"
     }
 
 }

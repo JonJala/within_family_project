@@ -81,18 +81,18 @@ setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
 
 ## MCS verbal similarity score
 
-cog = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/GENDAC-2022-05-26_sweep6wordscore/csv/GENDAC_BENJAMIN_mcs_cm_structure_26-05-2022.csv")
+cognition = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/GENDAC-2022-05-26_sweep6wordscore/csv/GENDAC_BENJAMIN_mcs_cm_structure_26-05-2022.csv")
 
 # formatting cognition
-cog = cog[, c(grep("(FCWRDSC|Benjamin*)", names(cog))), with=FALSE]
-cog$cog = rowSums(cog[, grep("FCWRDSC", names(cog)), with=FALSE])
-cog[, cog := standardize(cog)]
+cognition = cognition[, c(grep("(FCWRDSC|Benjamin*)", names(cognition))), with=FALSE]
+cognition$cognition = rowSums(cognition[, grep("FCWRDSC", names(cognition)), with=FALSE])
+cognition[, cognition := standardize(cognition)]
 
-cog[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
-cog[,FID := IID]
-cog[, Benjamin_ID := NULL]
-cog[, Benjamin_FID := NULL]
-cog[, grep("FCWRDSC", names(cog)) := NULL]
+cognition[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
+cognition[,FID := IID]
+cognition[, Benjamin_ID := NULL]
+cognition[, Benjamin_FID := NULL]
+cognition[, grep("FCWRDSC", names(cognition)) := NULL]
 
 ## MCS cognitive assessment score
 
@@ -135,34 +135,14 @@ filled[filled < 0] <- 0
 cog_ass_filled <- cbind(cog_ass_partial[1:2], filled)
 names(cog_ass_filled) <- c("benjamin_id", "benjamin_fid", "GCNAAS0A", "GCNAAS0B", "GCNAAS0C", "GCNAAS0D", "GCNAAS0E", "GCNAAS0F", "GCNAAS0G", "GCNAAS0H", "GCNAAS0I", "GCNAAS0J")
 
-
-range(cog_ass_filled[is.na(cog_ass_partial)])
-
 # sum over responses to create cognition variable, standardize and drop duplicates
-cog_ass_filled %<>%
-    mutate(cog = rowSums(across(c(grep("GCNAAS0", names(cog_ass_filled)))), na.rm = TRUE),
-    IID = paste(benjamin_id, benjamin_id, sep="_"),
-    FID = IID) %>%
-    select(IID, FID, cog) %>%
-    mutate(cog = standardize(cog)) %>%
-    distinct(FID, .keep_all = TRUE)
-
-
-
-
-nrow(cog_ass_filled)
-
-test <- merge(cog, cog_ass_filled, by = "IID")
-cor(test$cog.x, test$cog.y, use = "complete.obs")
-
-test_ea <- merge(cog_ass_filled, ea)
-cor(test_ea$cog, test_ea$ea)
-
-# test <- merge(cog, cog_ass_partial, by = "IID")
-# cor(test$cog.x, test$cog.y, use = "complete.obs")
-
-# test_ea <- merge(cog_ass_partial, ea)
-# cor(test_ea$cog, test_ea$ea)
+cog <- cog_ass_filled %>%
+            mutate(cog = rowSums(across(c(grep("GCNAAS0", names(cog_ass_filled)))), na.rm = TRUE),
+            IID = paste(benjamin_id, benjamin_id, sep="_"),
+            FID = IID) %>%
+            select(IID, FID, cog) %>%
+            mutate(cog = standardize(cog)) %>%
+            distinct(FID, .keep_all = TRUE)
 
 #---------------------------------------------------------------------------------------------------------------------
 # depression
@@ -374,7 +354,7 @@ swb[, swb := standardize(swb)]
 # merge phenos
 #---------------------------------------------------------------------------------------------------------------------
 
-phenotypes = reduce(list(ht_bmi, ea, cog, dep, adhd, menarche, eczema, cann, drinks_12, drinks_4, dep_symp, es, extra, hayfever, neuro, health, swb), merge, by = c("FID", "IID"), all=TRUE)
+phenotypes = reduce(list(ht_bmi, ea, cog, cognition, dep, adhd, menarche, eczema, cann, drinks_12, drinks_4, dep_symp, es, extra, hayfever, neuro, health, swb), merge, by = c("FID", "IID"), all=TRUE)
 phenotypes = merge(phenotypes, covariates, by = c("FID", "IID"), all=TRUE)
 
 # standardize bmi and height by sex

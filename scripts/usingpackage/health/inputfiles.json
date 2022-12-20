@@ -1,11 +1,11 @@
 {
 
     "str" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/SRH/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/health/CLEANED.out.gz"
     },
 
     "dt" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/srh/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/health/CLEANED.out.gz"
     },
 
     "hunt" : {
@@ -13,7 +13,7 @@
     },
 
     "ukb" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/srh/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/health/CLEANED.out.gz"
     },
 
     "fhs" : {

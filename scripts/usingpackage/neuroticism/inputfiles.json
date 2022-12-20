@@ -1,8 +1,6 @@
 {
     "ukb" : {
-
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/neuroticism/CLEANED.out.gz"
-
     },
 
     "gs" : {
@@ -16,14 +14,10 @@
 
     "hunt" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/neuroticism/CLEANED.out.gz"
-
-
     },
 
     "mt" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/stress/CLEANED.out.gz"
-
-
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/neuroticism/CLEANED.out.gz"
     },
 
     "dutchtwin" : {

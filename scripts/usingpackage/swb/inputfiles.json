@@ -8,7 +8,7 @@
     },
 
     "str" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/SWB/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/swb/CLEANED.out.gz"
     },
 
     "hunt" : {

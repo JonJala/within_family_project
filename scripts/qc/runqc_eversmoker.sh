@@ -128,14 +128,27 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
 #     --binary
 
-#############
-# QIMR
-############
+# #############
+# # QIMR
+# ############
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/EverSmoker/EverSmoker_Chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/eversmoker" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid \
+#     --binary
+
+#####################
+# ====== CKB ====== #
+#####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/EverSmoker/EverSmoker_Chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/eversmoker" \
+    "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/raw/ever_smoker.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/eversmoker" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
     --ldsc-ref "$reffile" \
-    --toest "direct_paternal_maternal_averageparental_population" \
     --cptid \
     --binary

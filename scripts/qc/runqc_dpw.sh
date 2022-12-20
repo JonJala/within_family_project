@@ -80,13 +80,25 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --cptid
 
+# #####################
+# # ====== FHS ====== #
+# #####################
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/fhs/public/v1/processed/sumstats/gwas/dpw/chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/dpw" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --ldsc-ref $reffile \
+#     --cptid
+
 #####################
-# ====== FHS ====== #
+# ====== CKB ====== #
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/fhs/public/v1/processed/sumstats/gwas/dpw/chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/dpw" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --ldsc-ref $reffile \
+    "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/raw/ln_drinks.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/dpw" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile" \
     --cptid

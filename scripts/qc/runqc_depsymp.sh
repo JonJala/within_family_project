@@ -61,13 +61,25 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --cptid
 
+# #####################
+# # ====== FHS ====== #
+# #####################
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/fhs/public/v1/processed/sumstats/gwas/dep/chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/depsymp" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --ldsc-ref $reffile \
+#     --cptid
+
 #####################
-# ====== FHS ====== #
+# ====== CKB ====== #
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/fhs/public/v1/processed/sumstats/gwas/dep/chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/depsymp" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --ldsc-ref $reffile \
+    "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/raw/bin_depressive_symptoms.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/depsymp" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile" \
     --cptid

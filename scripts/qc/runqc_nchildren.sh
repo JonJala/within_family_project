@@ -67,19 +67,19 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
 #     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
 
-####################
-# ====== UKB ====== #
-####################
+# ####################
+# # ====== UKB ====== #
+# ####################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/NC/NC.sumstats.gz" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/nchildren" \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
-    --bim_chromosome 99 \
-    --ldsc-ref "$reffile" \
-    --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
-    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/NC/NC.sumstats.gz" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/nchildren" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "$reffile" \
+#     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
+#     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
 
 # ############
 # # QIMR
@@ -91,3 +91,15 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --ldsc-ref "$reffile" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --cptid
+
+#####################
+# ====== CKB ====== #
+#####################
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/raw/num_children.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/nchildren" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile" \
+    --cptid

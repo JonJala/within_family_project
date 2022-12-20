@@ -161,16 +161,16 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/info.txt.gz" \
 #     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz"
 
-#############
-# QIMR
-############
+# #############
+# # QIMR
+# ############
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/Education/Edu_Chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/ea" \
-    --ldsc-ref "$reffile" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --cptid
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/Education/Edu_Chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/ea" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid
 
 # #############
 # # botnia
@@ -194,3 +194,15 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/ea" \
 #     --toest "direct_population" \
 #     --ldsc-ref "$reffile"
+
+#####################
+# ====== CKB ====== #
+#####################
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/raw/edu_years.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/ea" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile" \
+    --cptid

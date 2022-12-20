@@ -190,13 +190,25 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --toest "direct_population" \
 #     --cptid
 
+# #####################
+# # ====== FHS ====== #
+# #####################
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/fhs/public/v1/processed/sumstats/gwas/bmi/chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/bmi" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --ldsc-ref $reffile \
+#     --cptid
+
 #####################
-# ====== FHS ====== #
+# ====== CKB ====== #
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/fhs/public/v1/processed/sumstats/gwas/bmi/chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/bmi" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --ldsc-ref $reffile \
+    "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/raw/residue_bmi_calc.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/bmi" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile" \
     --cptid

@@ -84,13 +84,25 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
 #     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
 
-############
-# QIMR
-###########
+# ############
+# # QIMR
+# ###########
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/Wellbeing/Wellbeing_Chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/swb" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid
+
+#####################
+# ====== CKB ====== #
+#####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/Wellbeing/Wellbeing_Chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/swb" \
+    "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/raw/satisfaction_level.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/swb" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
     --ldsc-ref "$reffile" \
-    --toest "direct_paternal_maternal_averageparental_population" \
     --cptid

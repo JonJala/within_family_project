@@ -21,32 +21,10 @@ else:
     dat = pd.read_csv(args.phenofile, delimiter = args.sep, compression = args.compression)
 
 
-if args.phenocol == "hdl":
-    args.phenocol = "HDL"
-elif args.phenocol == "cognition":
+if args.phenocol == "cognition":
     args.phenocol = "cog"
 elif args.phenocol == "ea":
     args.phenocol = "cog" # read from cog column (mcs verbal activity score)
-elif args.phenocol == "agemenarche":
-    args.phenocol = "menarche"
-elif args.phenocol == "dpw":
-    args.phenocol = "drinks_4_weeks"
-elif args.phenocol == "health":
-    args.phenocol = "self_rated_health"
-elif args.phenocol == "cpd":
-    args.phenocol = "cigarettes.per.day"
-elif args.phenocol == "aafb":
-    args.phenocol = "AAFB"
-elif args.phenocol == "fev":
-    args.phenocol = "FEV1"
-elif args.phenocol == "hhincome":
-    args.phenocol = "household.income"
-elif args.phenocol == "nchildren":
-    args.phenocol = "NC"
-elif args.phenocol == "morningperson":
-    args.phenocol = "morning.person"
-elif args.phenocol == "depsymp":
-    args.phenocol = "depressive_symptoms"
 
 if args.fid is not None:
     dat = dat[[args.fid, args.iid, args.phenocol]]

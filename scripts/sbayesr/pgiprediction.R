@@ -19,32 +19,10 @@ opt = parse_args(opt_parser)
 pheno = fread(opt$pheno)
 if (!(opt$pheno_name %in% colnames(pheno))) {
 
-    if (opt$pheno_name == "hdl") {
-        opt$pheno_name <- toupper(opt$pheno_name)
-    } else if (opt$pheno_name == "cognition") {
+    if (opt$pheno_name == "cognition") {
         opt$pheno_name <- "cog"
     } else if (opt$pheno_name == "ea") {
         opt$pheno_name <- "cog" # read from cog col
-    } else if (opt$pheno_name == "agemenarche") {
-        opt$pheno_name <- "menarche"
-    } else if (opt$pheno_name == "dpw") {
-        opt$pheno_name <- "drinks_4_weeks"
-    } else if (opt$pheno_name == "health") {
-        opt$pheno_name <- "self_rated_health"
-    } else if (opt$pheno_name == "aafb") {
-        opt$pheno_name <- "AAFB"
-    } else if (opt$pheno_name == "fev") {
-        opt$pheno_name <- "FEV1"
-    } else if (opt$pheno_name == "hhincome") {
-        opt$pheno_name <- "household.income"
-    } else if (opt$pheno_name == "cpd") {
-        opt$pheno_name <- "cigarettes.per.day"
-    } else if (opt$pheno_name == "nchildren") {
-        opt$pheno_name <- "NC"
-    } else if (opt$pheno_name == "morningperson") {
-        opt$pheno_name <- "morning.person"
-    } else if (opt$pheno_name == "depsymp") {
-        opt$pheno_name <- "depressive_symptoms"
     } else {
         stop("There is no match for this pheno name.")
     }
@@ -58,7 +36,6 @@ if (is.null(opt$fid_pheno)) {
 } else {
     setnames(pheno, old = c(opt$iid_pheno, opt$fid_pheno, opt$pheno_name), new=c("IID", "FID", "phenotype"))
 }
-
 
 pgifile = fread(opt$pgi)
 dat = pgifile[pheno, on = c("FID", "IID")]

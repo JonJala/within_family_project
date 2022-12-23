@@ -56,6 +56,7 @@ covariates = fread("/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFT
 # ea
 #---------------------------------------------------------------------------------------------------------------------
 
+## average of english and math grades
 ea = fread("/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen")
 
 # formatting ea
@@ -81,18 +82,18 @@ setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
 
 ## MCS verbal similarity score
 
-cognition = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/GENDAC-2022-05-26_sweep6wordscore/csv/GENDAC_BENJAMIN_mcs_cm_structure_26-05-2022.csv")
+cogverb = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/GENDAC-2022-05-26_sweep6wordscore/csv/GENDAC_BENJAMIN_mcs_cm_structure_26-05-2022.csv")
 
 # formatting cognition
-cognition = cognition[, c(grep("(FCWRDSC|Benjamin*)", names(cognition))), with=FALSE]
-cognition$cognition = rowSums(cognition[, grep("FCWRDSC", names(cognition)), with=FALSE])
-cognition[, cognition := standardize(cognition)]
+cogverb = cogverb[, c(grep("(FCWRDSC|Benjamin*)", names(cogverb))), with=FALSE]
+cogverb$cogverb = rowSums(cogverb[, grep("FCWRDSC", names(cogverb)), with=FALSE])
+cogverb[, cogverb := standardize(cogverb)]
 
-cognition[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
-cognition[,FID := IID]
-cognition[, Benjamin_ID := NULL]
-cognition[, Benjamin_FID := NULL]
-cognition[, grep("FCWRDSC", names(cognition)) := NULL]
+cogverb[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
+cogverb[,FID := IID]
+cogverb[, Benjamin_ID := NULL]
+cogverb[, Benjamin_FID := NULL]
+cogverb[, grep("FCWRDSC", names(cogverb)) := NULL]
 
 ## MCS cognitive assessment score
 
@@ -136,13 +137,14 @@ cog_ass_filled <- cbind(cog_ass_partial[1:2], filled)
 names(cog_ass_filled) <- c("benjamin_id", "benjamin_fid", "GCNAAS0A", "GCNAAS0B", "GCNAAS0C", "GCNAAS0D", "GCNAAS0E", "GCNAAS0F", "GCNAAS0G", "GCNAAS0H", "GCNAAS0I", "GCNAAS0J")
 
 # sum over responses to create cognition variable, standardize and drop duplicates
-cog <- cog_ass_filled %>%
-            mutate(cog = rowSums(across(c(grep("GCNAAS0", names(cog_ass_filled)))), na.rm = TRUE),
+cogass <- cog_ass_filled %>%
+            mutate(cogass = rowSums(across(c(grep("GCNAAS0", names(cog_ass_filled)))), na.rm = TRUE),
             IID = paste(benjamin_id, benjamin_id, sep="_"),
             FID = IID) %>%
-            select(IID, FID, cog) %>%
-            mutate(cog = standardize(cog)) %>%
+            select(IID, FID, cogass) %>%
+            mutate(cogass = standardize(cogass)) %>%
             distinct(FID, .keep_all = TRUE)
+rownames(cogass) <- NULL
 
 #---------------------------------------------------------------------------------------------------------------------
 # depression
@@ -166,14 +168,14 @@ adhd[, adhd := standardize(adhd)]
 # age at first menarche
 #---------------------------------------------------------------------------------------------------------------------
 
-menarche <- read_and_rename("GCAGMN00", "menarche")
+menarche <- read_and_rename("GCAGMN00", "agemenarche")
 
 # remove outliers
-menarche[menarche<quantile(menarche,0.001,na.rm=T)] = NA
-menarche[menarche>quantile(menarche,0.999,na.rm=T)] = NA
+menarche[agemenarche<quantile(agemenarche,0.001,na.rm=T)] = NA
+menarche[agemenarche>quantile(agemenarche,0.999,na.rm=T)] = NA
 
 # standardize
-menarche[, menarche := standardize(menarche)]
+menarche[, agemenarche := standardize(agemenarche)]
 
 #---------------------------------------------------------------------------------------------------------------------
 # eczema
@@ -227,7 +229,7 @@ drinks_12[, drinks_12_months := standardize(drinks_12_months)]
 # drinks in last 4 weeks
 #---------------------------------------------------------------------------------------------------------------------
 
-drinks_4 <- read_and_rename("GCALNF00", "drinks_4_weeks")
+drinks_4 <- read_and_rename("GCALNF00", "dpw")
 
 # 1 Never
 # 2 1-2 times
@@ -238,36 +240,36 @@ drinks_4 <- read_and_rename("GCALNF00", "drinks_4_weeks")
 # 7 40 or more times
 
 # remove missings
-drinks_4 = drinks_4[drinks_4_weeks %in% seq(1, 7)]
+drinks_4 = drinks_4[dpw %in% seq(1, 7)]
 
 # take midpoint of each bin
 # 1 = 0; 2 = 1.5; 3 = 4; 4 = 7.5; 5 = 14.5; 6 = 29.5; 7 = 40
-drinks_4[drinks_4_weeks == 1, drinks_4_weeks := 0]
-drinks_4[drinks_4_weeks == 2, drinks_4_weeks := 1.5]
-drinks_4[drinks_4_weeks == 3, drinks_4_weeks := 4]
-drinks_4[drinks_4_weeks == 4, drinks_4_weeks := 7.5]
-drinks_4[drinks_4_weeks == 5, drinks_4_weeks := 14.5]
-drinks_4[drinks_4_weeks == 6, drinks_4_weeks := 29.5]
-drinks_4[drinks_4_weeks == 7, drinks_4_weeks := 40]
+drinks_4[dpw == 1, dpw := 0]
+drinks_4[dpw == 2, dpw := 1.5]
+drinks_4[dpw == 3, dpw := 4]
+drinks_4[dpw == 4, dpw := 7.5]
+drinks_4[dpw == 5, dpw := 14.5]
+drinks_4[dpw == 6, dpw := 29.5]
+drinks_4[dpw == 7, dpw := 40]
 
 # standardize
-drinks_4[, drinks_4_weeks := standardize(drinks_4_weeks)]
+drinks_4[, dpw := standardize(dpw)]
 
 #---------------------------------------------------------------------------------------------------------------------
 # depressive symptoms
 #---------------------------------------------------------------------------------------------------------------------
 
-dep_symp <- read_and_rename("GDCKESSL", "depressive_symptoms")
+dep_symp <- read_and_rename("GDCKESSL", "depsymp")
 # table(dep_symp$depressive_symptoms) # 0 to 24
 
 # standardize
-dep_symp[, depressive_symptoms := standardize(depressive_symptoms)]
+dep_symp[, depsymp := standardize(depsymp)]
 
 #---------------------------------------------------------------------------------------------------------------------
 # ever smoker
 #---------------------------------------------------------------------------------------------------------------------
 
-es <- read_and_rename("GCSMOK00", "ever_smoker")
+es <- read_and_rename("GCSMOK00", "eversmoker")
 # table(es$ever_smoker) # coded 1-6, -1 = missing?
 
 # 1 I have never smoked cigarettes
@@ -278,10 +280,9 @@ es <- read_and_rename("GCSMOK00", "ever_smoker")
 # 6 I usually smoke more than six cigarettes a week 
 
 # code as binary variable and remove missing values
-es[ever_smoker == 1, ever_smoker := 0]
-es[ever_smoker != 0 & ever_smoker != -1, ever_smoker := 1]
-es = es[ever_smoker %in% c(0, 1)]
-setnames(es, "ever_smoker", "eversmoker")
+es[eversmoker == 1, eversmoker := 0]
+es[eversmoker != 0 & eversmoker != -1, eversmoker := 1]
+es = es[eversmoker %in% c(0, 1)]
 
 #---------------------------------------------------------------------------------------------------------------------
 # extraversion
@@ -323,22 +324,22 @@ neuro[, neuroticism := standardize(neuroticism)]
 # self-rated health
 #---------------------------------------------------------------------------------------------------------------------
 
-health <- read_and_rename("GCCGHE00", "health")
+health <- read_and_rename("GCCGHE00", "self_rated_health")
 # table(health$health) # 1 to 5, -1 = missing? need to reverse order of scale so that higher values = higher level of wellbeing
 
 # reorder scale
-health[health == 1, self_rated_health := 5]
-health[health == 2, self_rated_health := 4]
-health[health == 3, self_rated_health := 3]
-health[health == 4, self_rated_health := 2]
-health[health == 5, self_rated_health := 1]
-health[, health := NULL]
+health[self_rated_health == 1, health := 5]
+health[self_rated_health == 2, health := 4]
+health[self_rated_health == 3, health := 3]
+health[self_rated_health == 4, health := 2]
+health[self_rated_health == 5, health := 1]
+health[, self_rated_health := NULL]
 
 # remove missing values
-health = health[self_rated_health > 0]
+health = health[health > 0]
 
 # standardize
-health[, self_rated_health := standardize(self_rated_health)]
+health[, health := standardize(health)]
 
 #---------------------------------------------------------------------------------------------------------------------
 # subjective well-being
@@ -354,15 +355,14 @@ swb[, swb := standardize(swb)]
 # merge phenos
 #---------------------------------------------------------------------------------------------------------------------
 
-phenotypes = reduce(list(ht_bmi, ea, cog, cognition, dep, adhd, menarche, eczema, cann, drinks_12, drinks_4, dep_symp, es, extra, hayfever, neuro, health, swb), merge, by = c("FID", "IID"), all=TRUE)
+# note: ea = average of english and math scores; cogverb = verbal similarity score; cog = cognitive assessment score
+
+phenotypes = reduce(list(ht_bmi, ea, cogass, cogverb, dep, adhd, menarche, eczema, cann, drinks_4, dep_symp, es, extra, hayfever, neuro, health, swb), merge, by = c("FID", "IID"), all=TRUE)
 phenotypes = merge(phenotypes, covariates, by = c("FID", "IID"), all=TRUE)
 
 # standardize bmi and height by sex
 phenotypes[, bmi := standardize(bmi), by=sex]
 phenotypes[, height := standardize(height), by=sex]
-
-# make cognition same as ea
-# phenotypes[, cognition := ea]
 
 # remove duplicated rows
 phenotypes = distinct(phenotypes, .keep_all = TRUE)

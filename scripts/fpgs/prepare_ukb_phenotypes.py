@@ -74,7 +74,7 @@ pheno_clean = pheno_clean.merge(ukb_phenos, on = "FID")
 # rename cols
 pheno_clean.rename(columns={"ASTHMA": "asthma", "BL_HDL": "hdl", "BPdia": "bpd", "BPsys": "bps", "ECZEMA": "eczema", "HAYFEVER": "hayfever", 
                             "MIGRAINE": "migraine", "NEARSIGHTED": "nearsight", "BL_NONHDL": "nonhdl", "resid_EAfixed": "ea", "cigarettes.per.day": "cpd",
-                            "self.rated.health": "health", "BMI": "bmi", "Cognitive.ability": "cog_ea4", "Neuroticism": "neuroticism", "AAFB": "aafb",
+                            "self.rated.health": "health", "BMI": "bmi", "Cognitive.ability": "cognition", "Neuroticism": "neuroticism", "AAFB": "aafb",
                             "household.income": "hhincome", "subjective.well.being": "swb", "drinks.per.week": "dpw", "menarche": "agemenarche",
                             "FEV1": "fev", "depressive.symptoms": "depsymp", "ever.smoked": "eversmoker", "ever.cannabis": "cannabis", "morning.person": "morningperson",
                             "NC": "nchildren"}, inplace = True)

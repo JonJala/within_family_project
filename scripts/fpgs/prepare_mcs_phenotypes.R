@@ -137,14 +137,14 @@ cog_ass_filled <- cbind(cog_ass_partial[1:2], filled)
 names(cog_ass_filled) <- c("benjamin_id", "benjamin_fid", "GCNAAS0A", "GCNAAS0B", "GCNAAS0C", "GCNAAS0D", "GCNAAS0E", "GCNAAS0F", "GCNAAS0G", "GCNAAS0H", "GCNAAS0I", "GCNAAS0J")
 
 # sum over responses to create cognition variable, standardize and drop duplicates
-cogass <- cog_ass_filled %>%
-            mutate(cogass = rowSums(across(c(grep("GCNAAS0", names(cog_ass_filled)))), na.rm = TRUE),
+cognition <- cog_ass_filled %>%
+            mutate(cognition = rowSums(across(c(grep("GCNAAS0", names(cog_ass_filled)))), na.rm = TRUE),
             IID = paste(benjamin_id, benjamin_id, sep="_"),
             FID = IID) %>%
-            select(IID, FID, cogass) %>%
-            mutate(cogass = standardize(cogass)) %>%
+            select(IID, FID, cognition) %>%
+            mutate(cognition = standardize(cognition)) %>%
             distinct(FID, .keep_all = TRUE)
-rownames(cogass) <- NULL
+rownames(cognition) <- NULL
 
 #---------------------------------------------------------------------------------------------------------------------
 # depression
@@ -308,6 +308,20 @@ hayfever[, hayfever := eczema]
 hayfever[, eczema := NULL]
 
 #---------------------------------------------------------------------------------------------------------------------
+# hhincome
+#---------------------------------------------------------------------------------------------------------------------
+
+fid_map = fread("/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv", select = c("Benjamin_ID", "Benjamin_FID"))
+nrow(fid_map)
+
+hhincome = as.data.table(read_sav("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_v7_mcs_family_structure_20221208.sav"))
+hhincome = merge(hhincome, fid_map, by.x = "benjamin_fid", by.y = "Benjamin_FID")
+hhincome[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
+hhincome %<>% 
+    mutate(FID = IID, hhincome = standardize(FOEDE000)) %>%
+    select(FID, IID, hhincome)
+
+#---------------------------------------------------------------------------------------------------------------------
 # neuroticism
 #---------------------------------------------------------------------------------------------------------------------
 
@@ -357,7 +371,7 @@ swb[, swb := standardize(swb)]
 
 # note: ea = average of english and math scores; cogverb = verbal similarity score; cog = cognitive assessment score
 
-phenotypes = reduce(list(ht_bmi, ea, cogass, cogverb, dep, adhd, menarche, eczema, cann, drinks_4, dep_symp, es, extra, hayfever, neuro, health, swb), merge, by = c("FID", "IID"), all=TRUE)
+phenotypes = reduce(list(ht_bmi, ea, cognition, cogverb, dep, adhd, menarche, eczema, cann, drinks_4, dep_symp, es, extra, hayfever, neuro, health, hhincome, swb), merge, by = c("FID", "IID"), all=TRUE)
 phenotypes = merge(phenotypes, covariates, by = c("FID", "IID"), all=TRUE)
 
 # standardize bmi and height by sex

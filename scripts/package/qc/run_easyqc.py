@@ -349,6 +349,12 @@ ADDCOL --rcdAddCol 2*pnorm(q=abs(z_{effect}), lower.tail=FALSE) --colOut PVAL_{e
 
 def write_ecf_filtering(f, args, dat):
 
+    if args.af_ref is not None:
+        print("Using reference AFs from {args.af_ref}")
+        af_ref = args.af_ref
+    else:
+        af_ref = "/var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.ALLELE_FREQUENCY.MAPFILE.HRC.chr1_22_X.LET.FLIPPED_ALLELE_1000G+UK10K.txt"
+
     f.write('''#### 2. Prepare files for filtering and apply minimum thresholds:
     ''')
 
@@ -421,7 +427,7 @@ CLEANDUPLICATES --colInMarker cptid --strMode samplesize --colN n_{effects[0]}
 #### 6. AF Checks
 ## Merge with file containing AFs for 1kG
 MERGE    --colInMarker cptid
-    --fileRef /var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.ALLELE_FREQUENCY.MAPFILE.HRC.chr1_22_X.LET.FLIPPED_ALLELE_1000G+UK10K.txt
+    --fileRef {af_ref}
     --acolIn ChrPosID;a1;a2;freq1
     --acolInClasses character;character;character;numeric
     --strRefSuffix .ref
@@ -670,6 +676,7 @@ the reader will try and infer the chromosome number from the file name.''')
     parser.add_argument('--tau', default = "tau", type = str, help = "Name of tau column")
 
     parser.add_argument('--ldsc-ref', default = None, type = str, help = "Name of reference GWAS sample to run ldsc on. Must be munged")
+    parser.add_argument('--af-ref', default = None, type = str, help = "File path to reference AFs")
     parser.add_argument('--altphenotypicvar', default = False, 
     action='store_true', help = "IF passed phenotypic variance is calculated by adding sigma_0, sigma_1 and sigma_2")
 

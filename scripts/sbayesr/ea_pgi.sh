@@ -8,8 +8,11 @@ within_family_path="/var/genetics/proj/within_family/within_family_project"
 source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sbayesrfunc.sh
 
 # ============= Execution ============= #
-run_pgi "${within_family_path}/processed/package_output/ea/meta.hm3.sumstats.gz" "direct" "ea" "mcs"
-run_pgi "${within_family_path}/processed/package_output/ea/meta.hm3.sumstats.gz" "population" "ea" "mcs"
+# run_pgi "${within_family_path}/processed/package_output/ea/meta.hm3.sumstats.gz" "direct" "ea" "mcs"
+# run_pgi "${within_family_path}/processed/package_output/ea/meta.hm3.sumstats.gz" "population" "ea" "mcs"
+
+run_pgi "${within_family_path}/processed/package_output/ea/meta_noukb.hm3.sumstats.gz" "direct" "ea" "ukb"
+run_pgi "${within_family_path}/processed/package_output/ea/meta_noukb.sumstats.gz" "population" "ea" "ukb"
 
 # run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "direct" "ea_ea4"
 # run_pgi "${within_family_path}/processed/package_output/ea/ea_meta_analysis_ea4.sumstats" "population" "ea_ea4"

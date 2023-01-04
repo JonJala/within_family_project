@@ -62,9 +62,10 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/raw/fev1_mean.sumstats.txt" \
+    "/disk/genetics3/data_dirs/ckb/private/v1/raw/sumstats/Dec_2022/fev1_mean.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/fev" \
     --effects "direct_averageparental" \
     --toest "direct_population" \
     --ldsc-ref "$reffile" \
+    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
     --cptid

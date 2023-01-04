@@ -13,7 +13,7 @@ python $scriptpath/run_metaanalysis.py \
 # --outestimates "direct_population" \
 # --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/ea_meta_analysis_ea4"
 
-# # without ukb
-# python $scriptpath/run_metaanalysis.py \
-# "/var/genetics/proj/within_family/within_family_project/scripts/usingpackage/ea/inputfiles_noukb.json" \
-# --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta_noukb"
+# without ukb
+python $scriptpath/run_metaanalysis.py \
+"/var/genetics/proj/within_family/within_family_project/scripts/usingpackage/ea/inputfiles_noukb.json" \
+--outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta_noukb"

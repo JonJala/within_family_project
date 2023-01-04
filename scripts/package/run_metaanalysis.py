@@ -436,6 +436,9 @@ def main(args):
             df_out_hm3 = df_out[df_out['SNP'].isin(hm3dat.SNP)]
             df_out_hm3 = df_out_hm3.sort_values(by = ['chromosome', 'pos'])
             df_out_hm3.to_csv(args.outprefix + '.hm3.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
+            print(f"Median direct-population effect correlation HM3: {np.median(df_out_hm3['r_direct_population'])}")
+            print(f"Median Direct N HM3: {np.median(df_out_hm3['direct_N'])}")
+            print(f"Median Population N HM3: {np.median(df_out_hm3['population_N'])}")
 
         if args.median_n_filter:
             df_out_nfilter = df_out.loc[df_out['direct_N'] > args.median_n_thresh * df_out['direct_N'].median(), :]
@@ -447,9 +450,9 @@ def main(args):
         print(f"Writing output to {args.outprefix + '.sumstats.gz'}")
         df_out.to_csv(args.outprefix + '.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
 
-    print(f"Median direct-population effect correlation HM3: {np.median(df_out['r_direct_population'])}")
-    print(f"Median Direct N HM3: {np.median(df_out['direct_N'])}")
-    print(f"Median Population N HM3: {np.median(df_out['population_N'])}")
+    print(f"Median direct-population effect correlation: {np.median(df_out['r_direct_population'])}")
+    print(f"Median Direct N: {np.median(df_out['direct_N'])}")
+    print(f"Median Population N: {np.median(df_out['population_N'])}")
     endTime = dt.datetime.now()
     print(f'End time: {endTime}')
     print(f'Script took {endTime - startTime} to complete.')

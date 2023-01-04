@@ -15,22 +15,18 @@ option_list = list(
 opt_parser = OptionParser(option_list = option_list)
 opt = parse_args(opt_parser)
 
-
 pheno = fread(opt$pheno)
-if (!(opt$pheno_name %in% colnames(pheno))) {
 
-    if (opt$pheno_name == "cognition") {
-        opt$pheno_name <- "cog"
-    } else if (opt$pheno_name == "ea") {
-        opt$pheno_name <- "cog" # read from cog col
-    } else {
-        stop("There is no match for this pheno name.")
-    }
+# if (opt$pheno_name == "cognition") {
+    # opt$pheno_name <- "ea"
+# }
+
+if (opt$pheno_name == "ea") {
+    opt$pheno_name <- "cognition" # read from cog col
 }
 
 if (is.null(opt$fid_pheno)) {
     setnames(pheno, old = c(opt$iid_pheno, opt$pheno_name), new=c("IID", "phenotype"))
-
     pheno[,FID:=IID]
 
 } else {

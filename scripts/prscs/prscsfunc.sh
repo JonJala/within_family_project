@@ -12,7 +12,8 @@ function run_pgi(){
     EFFECT=$2
     PHENONAME=$3
     DATASET=$4
-    CLUMP=$5
+    NEFF=$5
+    CLUMP=$6
 
     if [[ $DATASET == "mcs" ]]; then
 
@@ -62,7 +63,7 @@ function run_pgi(){
             --ref_dir=${refldpanel} \
             --bim_prefix="${PHENONAME}/validation" \
             --sst_file="${PHENONAME}/${EFFECT}/meta.sumstats" \
-            --n_gwas=58710 \
+            --n_gwas=${NEFF} \
             --chrom=${chr} \
             --seed=1 \
             --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights
@@ -71,6 +72,7 @@ function run_pgi(){
 
         echo "Formatting PRSCS weights to create scores"
 
+        rm -f ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes*
         cat ${PHENONAME}/${EFFECT}/weights/meta_weights* > ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes
 
         python ${within_family_path}/scripts/prscs/get_variantid.py \

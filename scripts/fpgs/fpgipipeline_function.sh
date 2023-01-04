@@ -23,10 +23,6 @@ function withinfam_pred(){
         RAWPATH="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed"
         bedfilepath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr@.dose"
         impfilespath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/chr@"
-    
-        mkdir -p $RAWPATH/phen/${PHENONAME}
-        mkdir -p $OUTPATH
-
         
     elif [[ $DATASET == "ukb" ]]; then
         
@@ -37,10 +33,10 @@ function withinfam_pred(){
         bedfilepath="/disk/genetics/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/bedfiles/chr_@"
         impfilespath="/disk/genetics/ukb/jguan/ukb_analysis/output/parent_imputed/chr_@"
 
-        mkdir -p $RAWPATH/phen/${PHENONAME}
-        mkdir -p $OUTPATH
     fi
 
+    mkdir -p $RAWPATH/phen/${PHENONAME}
+    mkdir -p $OUTPATH
     mkdir -p $within_family_path/processed/fpgs/${PHENONAME}
 
     if [[ ! -z $CLUMP ]]; then

@@ -21,10 +21,7 @@ args=parser.parse_args()
 
 if args.prscs:
 
-    if args.sep == 'delim_whitespace':
-        wts = pd.read_csv(args.weightfile, delim_whitespace=True, compression = args.compression, header = None)
-    else:
-        wts = pd.read_csv(args.weightfile, delimiter = args.sep, compression = args.compression, header = None)
+    wts = pd.read_csv(args.weightfile, sep = "\t", header = None)    
     
     args.chr = int(args.chr)
     args.pos = int(args.pos)

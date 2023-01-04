@@ -17,6 +17,7 @@ if __name__ == '__main__':
     Which effect type do you want to output. Can be dir, paternal, maternal, population, avgparental''')
     parser.add_argument('--nmin', type=int, default=None, help='''What is the N cutoff you want''')
     parser.add_argument('--median-n', action='store_true', default=False, help='''Instead of the N cutoff use the median N as cutoff''')
+    parser.add_argument('--hm3', action='store_true', default=False, help='''Filter down to only HM3 SNPs''')
     parser.add_argument('--median-n-frac',  default=0.8, help='''Fraction of median n to use for filtering''')
     parser.add_argument('--outpath', type = str, help = "Where to store data")
     parser.add_argument('--mincohorts', type=int, default=5, help='''What is the n_cohort cutoff you want. ''')
@@ -38,10 +39,11 @@ if __name__ == '__main__':
     dat = dat.drop_duplicates(subset = 'SNP').reset_index(drop = True)
     print(dat.head())
 
-    hm3 = pd.read_csv("/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist", delim_whitespace=True)
-    dat = dat[dat['SNP'].isin(hm3.SNP)].reset_index(drop = True)
-    NHM3 = dat.shape[0]
-    print(f"Observations after filtering for HM3 SNPs: {NHM3}")
+    if args.hm3:
+        hm3 = pd.read_csv("/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist", delim_whitespace=True)
+        dat = dat[dat['SNP'].isin(hm3.SNP)].reset_index(drop = True)
+        NHM3 = dat.shape[0]
+        print(f"Observations after filtering for HM3 SNPs: {NHM3}")
 
     if args.median_n:
         median_n_frac = float(args.median_n_frac)

@@ -9,7 +9,7 @@ impfilespath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-main "eversmoker" "" "1" "mcs"
+main "eversmoker" "" "1" "mcs" "sbayesr"
 
 # clumping analysis
 # main "eversmoker" "" "1" "mcs" "clump"

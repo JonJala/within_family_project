@@ -26,13 +26,13 @@ fpgspath = basepath + 'processed/fpgs/'
 
 ## meta phenos
 # phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cognition', 'cpd', 'depression',
-                #  'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'income', 
-                #  'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
+#                  'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'income', 
+#                  'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
 
 ## fpgs phenos
-phenotypes = ['aafb', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cognition', 'cpd', 'depsymp',
-                 'dpw', 'ea', 'extraversion', 'hayfever', 'hdl', 'health', 'income',
-                 'migraine', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
+# phenotypes = ['aafb', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cognition', 'cpd', 'depression', 'depsymp',
+#                  'dpw', 'ea', 'extraversion', 'hayfever', 'hdl', 'health', 'income',
+#                  'migraine', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
 
 metaanalysis = False
 fpgs = True

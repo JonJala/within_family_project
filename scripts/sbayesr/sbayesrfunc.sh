@@ -1,8 +1,7 @@
 gctb="/disk/genetics/ukb/aokbay/bin/gctb_2.03beta_Linux/gctb"
 dirout="/var/genetics/proj/within_family/within_family_project/processed/sbayesr"
 within_family_path="/var/genetics/proj/within_family/within_family_project"
-# refldpanel="/disk/genetics/tools/gctb/ld_reference/ukbEURu_hm3_shrunk_sparse/ukbEURu_mldmlist.txt"
-refldpanel="/disk/genetics/tools/gctb/ld_reference/UKB_LD_matrices_2.8M_variants/ukb_50k_bigset_2.8M/ukb50k_2.8M_shrunk_sparse.mldmlist"
+refldpanel="/disk/genetics/tools/gctb/ld_reference/ukbEURu_hm3_shrunk_sparse/ukbEURu_mldmlist.txt"
 
 cd $dirout
 mkdir -p tmp
@@ -42,6 +41,7 @@ function run_pgi(){
             --effecttype "${EFFECT}" \
             --median-n \
             --median-n-frac 1 \
+            --hm3 \
             --outpath "${PHENONAME}/${EFFECT}/meta.sumstats"
 
         mkdir -p ${PHENONAME}/${EFFECT}/weights/

@@ -1,7 +1,8 @@
 gctb="/disk/genetics/ukb/aokbay/bin/gctb_2.03beta_Linux/gctb"
 dirout="/var/genetics/proj/within_family/within_family_project/processed/sbayesr"
 within_family_path="/var/genetics/proj/within_family/within_family_project"
-refldpanel="/disk/genetics/tools/gctb/ld_reference/ukbEURu_hm3_shrunk_sparse/ukbEURu_mldmlist.txt"
+# refldpanel="/disk/genetics/tools/gctb/ld_reference/ukbEURu_hm3_shrunk_sparse/ukbEURu_mldmlist.txt"
+refldpanel="/disk/genetics/tools/gctb/ld_reference/UKB_LD_matrices_2.8M_variants/ukb_50k_bigset_2.8M/ukb50k_2.8M_shrunk_sparse.mldmlist"
 
 cd $dirout
 mkdir -p tmp
@@ -24,14 +25,7 @@ function run_pgi(){
 
     elif [[ $DATASET == "ukb" ]]; then
         
-        if [[ $PHENONAME == "ea" ]] && [[ ! -z $CLUMP ]]; then
-            pheno="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/ea/UKB_EAfixed_resid.pheno"
-        elif [[ $PHENONAME == "asthma" || $PHENONAME == "hdl" ||  $PHENONAME == "nonhdl" || $PHENONAME == "bps" || $PHENONAME == "bpd" || $PHENONAME == "migraine" || $PHENONAME == "nearsight" || $PHENONAME == "income" || $PHENONAME == "hayfever" ]]; then
-            pheno="/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/phen/UKB_health_income_std_WF.pheno"
-        else
-            pheno="/disk/genetics/ukb/alextisyoung/phenotypes/processed_traits_noadj.txt"
-        fi
-
+        pheno="/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/phen/ukb_phenos.txt"
         covariates="/disk/genetics/ukb/alextisyoung/phenotypes/covariates.txt"
         outpath="/var/genetics/data/ukb/private/v3/processed/proj/within_family/pgs/sbayesr"
         pedigree="/disk/genetics4/ukb/jguan/ukb_analysis/output/parent_imputed/pedigree.txt"

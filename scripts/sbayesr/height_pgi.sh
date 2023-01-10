@@ -11,6 +11,10 @@ source /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sb
 run_pgi "${within_family_path}/processed/package_output/height/meta.hm3.sumstats.gz" "direct" "height" "mcs"
 run_pgi "${within_family_path}/processed/package_output/height/meta.hm3.sumstats.gz" "population" "height" "mcs"
 
+# # all SNPs, not just HM3
+# run_pgi "${within_family_path}/processed/package_output/height/meta.sumstats.gz" "direct" "height" "mcs"
+# run_pgi "${within_family_path}/processed/package_output/height/meta.sumstats.gz" "population" "height" "mcs"
+
 ######################
 # clumping analysis
 #####################

@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-### add n column and munge bbj sumstats for bmi, height, and hdl
+### add n column and munge bbj sumstats
 
 ldsc_path="/var/genetics/tools/ldsc/ldsc"
 act="/disk/genetics/pub/python_env/anaconda2/bin/activate"
@@ -14,9 +14,9 @@ python /var/genetics/proj/within_family/within_family_project/scripts/qc/bbj_ref
 # Activating ldsc environment
 source ${act} ${pyenv}
 
-# munge bmi sumstats
+# munge bbj sumstats
 
-for pheno in "bmi" "height" "hdl"
+for pheno in "bmi" "height"
 do
 
     echo ${pheno}

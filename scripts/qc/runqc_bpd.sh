@@ -99,6 +99,5 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/bpd" \
     --effects "direct_averageparental" \
     --toest "direct_population" \
-    --ldsc-ref "$reffile" \
     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
     --cptid

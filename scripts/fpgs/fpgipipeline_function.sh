@@ -26,7 +26,7 @@ function withinfam_pred(){
         
     elif [[ $DATASET == "ukb" ]]; then
         
-        PHENOFILE="/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/phen/ukb_phenos.txt"
+        PHENOFILE="/var/genetics/data/ukb/private/v3/processed/proj/within_family/phen/ukb_phenos.txt"
         COVAR="/disk/genetics/ukb/alextisyoung/withinfamily/phen/covariates.txt"
         OUTPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/${PHENONAME}/"
         RAWPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family"

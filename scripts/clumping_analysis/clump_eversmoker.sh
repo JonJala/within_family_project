@@ -6,7 +6,7 @@ pheno="eversmoker"
 dataset="mcs"
 effect="direct_population"
 sumstats="/var/genetics/proj/within_family/within_family_project/processed/package_output/${pheno}/meta.hm3.sumstats.gz"
-reference_sumstats="/disk/genetics3/data_dirs/published/liu_2019_smoking/raw/sumstats/smokinginit.txt"
+reference_sumstats="/var/genetics/data/published/liu_2019_smoking/raw/sumstats/smokinginit.txt"
 clump_dir="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/${pheno}/clumps"
 clump_outfile="${clump_dir}/smokinginit"
 

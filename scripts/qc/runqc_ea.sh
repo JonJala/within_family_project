@@ -8,7 +8,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/EA/EA.sumstats.gz" \
+#     "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/EA/EA.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/ea" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
@@ -43,8 +43,8 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --ldsc-ref "$reffile" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
-#     --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
-#     --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+#     --info "/var/genetics/data/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+#     --hwe "/var/genetics/data/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
 # # 0.8028 (0.1378)
 
 
@@ -131,7 +131,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --ldsc-ref "$reffile" \
 #     --cptid \
 #     --toest "direct_population"  \
-#     --hwe '/disk/genetics3/data_dirs/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
+#     --hwe '/var/genetics/data/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
 # # 0.5782 (0.2655)
 
@@ -166,7 +166,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ############
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/Education/Edu_Chr*.sumstats.hdf5" \
+#     "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/Education/Edu_Chr*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/ea" \
 #     --ldsc-ref "$reffile" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
@@ -190,7 +190,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ############
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_ea_export.txt" \
+#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_ea_export.txt" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/ea" \
 #     --toest "direct_population" \
 #     --ldsc-ref "$reffile"
@@ -200,7 +200,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ckb/private/v1/raw/sumstats/Dec_2022/edu_years.sumstats.txt" \
+    "/var/genetics/data/ckb/private/v1/raw/sumstats/Dec_2022/edu_years.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/ea" \
     --effects "direct_averageparental" \
     --toest "direct_population" \

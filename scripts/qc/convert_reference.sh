@@ -27,7 +27,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 ${ldscpath}/munge_sumstats.py  \
---sumstats /disk/genetics3/data_dirs/published/howard_2019_mdd/raw/sumstats/PGC_UKB_depression_genome-wide.txt \
+--sumstats /var/genetics/data/published/howard_2019_mdd/raw/sumstats/PGC_UKB_depression_genome-wide.txt \
 --merge-alleles ${merge_alleles} \
 --out ${within_family_path}/processed/reference_samples/mdd_ref/PGC_UKB_depression_genome-wide \
 --N 807553 --signed-sumstat LogOR,0 \

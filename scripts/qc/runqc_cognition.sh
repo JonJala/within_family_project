@@ -12,8 +12,8 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --ldsc-ref "$reffile" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
-#     --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
-#     --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+#     --info "/var/genetics/data/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+#     --hwe "/var/genetics/data/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
 
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
@@ -22,15 +22,15 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --ldsc-ref "$reffile" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
-#     --info "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
-#     --hwe "/disk/genetics3/data_dirs/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
+#     --info "/var/genetics/data/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt" \
+#     --hwe "/var/genetics/data/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
 
 # #####################
 # # ====== UKB ====== #
 # #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/Cognitive.ability/Cognitive.ability.sumstats.gz" \
+#     "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/Cognitive.ability/Cognitive.ability.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/cognition" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
@@ -62,7 +62,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --ldsc-ref "$reffile" \
 #     --cptid \
 #     --toest "direct_population" \
-#     --hwe '/disk/genetics3/data_dirs/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
+#     --hwe '/var/genetics/data/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
 # ##########
 # # STR
@@ -96,13 +96,13 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ############
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_gpa_hs_export.txt" \
+#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_gpa_hs_export.txt" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpahs" \
 #     --toest "direct_population" \
 #     --ldsc-ref "$reffile" 
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_gpa9_export.txt" \
+#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_gpa9_export.txt" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpa9" \
 #     --toest "direct_population" \
 #     --ldsc-ref "$reffile" 
@@ -112,7 +112,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 ###########
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/IQ/IQ_Chr*.sumstats.hdf5" \
+    "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/IQ/IQ_Chr*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/cognition" \
     --ldsc-ref "$reffile" \
     --toest "direct_paternal_maternal_averageparental_population" \

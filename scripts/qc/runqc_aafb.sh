@@ -47,7 +47,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/AAFB/AAFB.sumstats.gz" \
+#     "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/AAFB/AAFB.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/aafb" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
@@ -61,7 +61,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ############
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_age_fb_export.txt" \
+#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_age_fb_export.txt" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/aafb" \
 #     --toest "direct_population" \
 #     --ldsc-ref "$reffile"
@@ -71,7 +71,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 ############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/AgeFirstBirth/AFB_Chr*.sumstats.hdf5" \
+    "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/AgeFirstBirth/AFB_Chr*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/aafb" \
     --ldsc-ref "$reffile" \
     --toest "direct_paternal_maternal_averageparental_population" \

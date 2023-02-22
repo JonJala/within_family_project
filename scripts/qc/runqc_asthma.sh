@@ -62,7 +62,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ############
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_asthma_export.txt" \
+#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_asthma_export.txt" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/asthma" \
 #     --toest "direct_population" \
 #     --ldsc-ref "$reffile" \
@@ -73,7 +73,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/asthma/asthma.sumstats.gz" \
+#     "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/asthma/asthma.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/asthma" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
@@ -88,7 +88,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ckb/private/v1/raw/sumstats/Dec_2022/asthma.sumstats.txt" \
+    "/var/genetics/data/ckb/private/v1/raw/sumstats/Dec_2022/asthma.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/asthma" \
     --effects "direct_averageparental" \
     --toest "direct_population" \

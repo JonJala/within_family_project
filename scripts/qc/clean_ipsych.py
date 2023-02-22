@@ -5,7 +5,7 @@ Rename iPSYCH sumstats columns so that they align with QC pipeline
 import pandas as pd
 import glob
 
-files = glob.glob("/disk/genetics3/data_dirs/ipsych/private/v1/raw/sumstats/sumstats_*")
+files = glob.glob("/var/genetics/data/ipsych/private/v1/raw/sumstats/sumstats_*")
 
 for file in files:
 

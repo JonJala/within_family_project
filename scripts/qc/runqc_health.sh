@@ -49,7 +49,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/self.rated.health/self.rated.health.sumstats.gz" \
+#     "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/self.rated.health/self.rated.health.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/srh" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
@@ -63,7 +63,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/fhs/public/v1/processed/sumstats/gwas/srh/chr*.sumstats.hdf5" \
+#     "/var/genetics/data/fhs/public/v1/processed/sumstats/gwas/srh/chr*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/health" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --ldsc-ref $reffile \
@@ -74,7 +74,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ckb/private/v1/raw/sumstats/Dec_2022/self_rated_health.sumstats.txt" \
+    "/var/genetics/data/ckb/private/v1/raw/sumstats/Dec_2022/self_rated_health.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/health" \
     --effects "direct_averageparental" \
     --toest "direct_population" \

@@ -12,7 +12,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --ldsc-ref "$reffile" \
 #     --cptid \
 #     --toest "direct_population" \
-#     --hwe '/disk/genetics3/data_dirs/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
+#     --hwe '/var/genetics/data/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
 # # #########
 # # # Hunt
@@ -94,7 +94,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/BPsys/BPsys.sumstats.gz" \
+#     "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/BPsys/BPsys.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bps" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
@@ -108,7 +108,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/fhs/public/v1/processed/sumstats/gwas/sbp/chr*.sumstats.hdf5" \
+#     "/var/genetics/data/fhs/public/v1/processed/sumstats/gwas/sbp/chr*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/bps" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --ldsc-ref $reffile \
@@ -119,7 +119,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ckb/private/v1/raw/sumstats/Dec_2022/residue_sbp_mean.sumstats.txt" \
+    "/var/genetics/data/ckb/private/v1/raw/sumstats/Dec_2022/residue_sbp_mean.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/bps" \
     --effects "direct_averageparental" \
     --toest "direct_population" \

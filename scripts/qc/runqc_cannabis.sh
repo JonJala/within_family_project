@@ -21,7 +21,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/ever.cannabis/ever.cannabis.sumstats.gz" \
+    "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/ever.cannabis/ever.cannabis.sumstats.gz" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/cannabis" \
     --effects "direct_averageparental" \
     --toest "direct_population" \

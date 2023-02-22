@@ -16,7 +16,7 @@ ukb_phenos = pd.read_csv("/disk/genetics/ukb/alextisyoung/phenotypes/processed_t
 ea_pheno = pd.read_csv("/disk/genetics4/ws_dirs/mbennett/UKB_EAfixed_resid.pheno", sep = "\t")
 
 # health phenotypes from ukb gp and hospital admissions data, from aysu
-health_phenos = pd.read_csv("/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/phen/UKB_health.pheno", sep = " ")
+health_phenos = pd.read_csv("/var/genetics/data/ukb/private/v3/processed/proj/within_family/phen/UKB_health.pheno", sep = " ")
 
 # log income pheno derived from occupation
 income_data = pd.read_csv("/disk/genetics4/projects/EA4/derived_data/WFvBF/UKB_SES.csv")
@@ -80,5 +80,5 @@ pheno_clean.rename(columns={"ASTHMA": "asthma", "BL_HDL": "hdl", "BPdia": "bpd",
                             "NC": "nchildren"}, inplace = True)
 
 # save
-pheno_clean.to_csv("/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/phen/ukb_phenos.txt", sep = " ", index = False, na_rep = "NA")
+pheno_clean.to_csv("/var/genetics/data/ukb/private/v3/processed/proj/within_family/phen/ukb_phenos.txt", sep = " ", index = False, na_rep = "NA")
 

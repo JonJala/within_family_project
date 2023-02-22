@@ -70,7 +70,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/BPdia/BPdia.sumstats.gz" \
+#     "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/BPdia/BPdia.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bpd" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
@@ -84,7 +84,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/fhs/public/v1/processed/sumstats/gwas/dbp/chr*.sumstats.hdf5" \
+#     "/var/genetics/data/fhs/public/v1/processed/sumstats/gwas/dbp/chr*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/bpd" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --ldsc-ref $reffile \
@@ -95,7 +95,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ckb/private/v1/raw/sumstats/Dec_2022/residue_dbp_mean.sumstats.txt" \
+    "/var/genetics/data/ckb/private/v1/raw/sumstats/Dec_2022/residue_dbp_mean.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/bpd" \
     --effects "direct_averageparental" \
     --toest "direct_population" \

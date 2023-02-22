@@ -6,7 +6,7 @@ pheno="cognition"
 dataset="mcs"
 effect="direct_population"
 sumstats="/var/genetics/proj/within_family/within_family_project/processed/package_output/cognition/meta.hm3.sumstats.gz"
-reference_sumstats="/disk/genetics3/data_dirs/published/sniekers_2017_intelligence/raw/sumstats/sumstats.txt.gz"
+reference_sumstats="/var/genetics/data/published/sniekers_2017_intelligence/raw/sumstats/sumstats.txt.gz"
 clump_dir="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/${pheno}/clumps"
 clump_outfile="${clump_dir}/cognition_ref"
 

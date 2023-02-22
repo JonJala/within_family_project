@@ -6,7 +6,7 @@ pheno="depression"
 dataset="mcs"
 effect="direct_population"
 sumstats="/var/genetics/proj/within_family/within_family_project/processed/package_output/${pheno}/meta.hm3.sumstats.gz"
-reference_sumstats="/disk/genetics3/data_dirs/published/howard_2019_mdd/raw/sumstats/PGC_UKB_depression_genome-wide.txt"
+reference_sumstats="/var/genetics/data/published/howard_2019_mdd/raw/sumstats/PGC_UKB_depression_genome-wide.txt"
 clump_dir="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/${pheno}/clumps"
 clump_outfile="${clump_dir}/PGC_UKB_depression_genome-wide"
 

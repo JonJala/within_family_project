@@ -24,7 +24,7 @@ function run_pgi(){
 
     elif [[ $DATASET == "ukb" ]]; then
         
-        pheno="/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/phen/ukb_phenos.txt"
+        pheno="/var/genetics/data/ukb/private/v3/processed/proj/within_family/phen/ukb_phenos.txt"
         covariates="/disk/genetics/ukb/alextisyoung/phenotypes/covariates.txt"
         outpath="/var/genetics/data/ukb/private/v3/processed/proj/within_family/pgs/sbayesr"
         pedigree="/disk/genetics4/ukb/jguan/ukb_analysis/output/parent_imputed/pedigree.txt"

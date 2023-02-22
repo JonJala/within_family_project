@@ -7,13 +7,13 @@ import os
 # from https://pheweb.jp/downloads
 
 # path to raw sumstats and n for each pheno
-bmi_ss = "/disk/genetics4/data_dirs/bbj/public/v1/raw/sumstats/downloaded/hum0197.v3.BBJ.BMI.v1/GWASsummary_BMI_Japanese_SakaueKanai2020.auto.txt.gz"
+bmi_ss = "/var/genetics/data/bbj/public/v1/raw/sumstats/downloaded/hum0197.v3.BBJ.BMI.v1/GWASsummary_BMI_Japanese_SakaueKanai2020.auto.txt.gz"
 bmi_n = 163835
-height_ss = "/disk/genetics4/data_dirs/bbj/public/v1/raw/sumstats/downloaded/hum0197.v3.BBJ.Hei.v1/GWASsummary_Height_Japanese_SakaueKanai2020.auto.txt.gz"
+height_ss = "/var/genetics/data/bbj/public/v1/raw/sumstats/downloaded/hum0197.v3.BBJ.Hei.v1/GWASsummary_Height_Japanese_SakaueKanai2020.auto.txt.gz"
 height_n = 165056
-bpd_ss = "/disk/genetics4/data_dirs/bbj/public/v1/raw/sumstats/downloaded/hum0197.v3.BBJ.DBP.v1/GWASsummary_DBP_Japanese_SakaueKanai2020.auto.txt.gz"
+bpd_ss = "/var/genetics/data/bbj/public/v1/raw/sumstats/downloaded/hum0197.v3.BBJ.DBP.v1/GWASsummary_DBP_Japanese_SakaueKanai2020.auto.txt.gz"
 bpd_n = 145515
-bps_ss = "/disk/genetics4/data_dirs/bbj/public/v1/raw/sumstats/downloaded/hum0197.v3.BBJ.SBP.v1/GWASsummary_SBP_Japanese_SakaueKanai2020.auto.txt.gz"
+bps_ss = "/var/genetics/data/bbj/public/v1/raw/sumstats/downloaded/hum0197.v3.BBJ.SBP.v1/GWASsummary_SBP_Japanese_SakaueKanai2020.auto.txt.gz"
 bps_n = 145505
 
 outpath = "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bbj_ref"

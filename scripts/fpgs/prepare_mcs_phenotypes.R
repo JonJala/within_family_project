@@ -82,7 +82,7 @@ setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
 
 ## MCS verbal similarity score
 
-cogverb = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/GENDAC-2022-05-26_sweep6wordscore/csv/GENDAC_BENJAMIN_mcs_cm_structure_26-05-2022.csv")
+cogverb = fread("/var/genetics/data/mcs/private/v1/raw/phen/GENDAC-2022-05-26_sweep6wordscore/csv/GENDAC_BENJAMIN_mcs_cm_structure_26-05-2022.csv")
 
 # formatting cognition
 cogverb = cogverb[, c(grep("(FCWRDSC|Benjamin*)", names(cogverb))), with=FALSE]
@@ -97,8 +97,8 @@ cogverb[, grep("FCWRDSC", names(cogverb)) := NULL]
 
 ## MCS cognitive assessment score
 
-cog_out = read_sav("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_mcs_HHGRID7_CORRECTION_COGASS/MDAC-2020-0031-05A-BENJAMIN_mcs_hhgrid7_correction_20221004.sav")
-cog_phen = fread("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv")
+cog_out = read_sav("/var/genetics/data/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_mcs_HHGRID7_CORRECTION_COGASS/MDAC-2020-0031-05A-BENJAMIN_mcs_hhgrid7_correction_20221004.sav")
+cog_phen = fread("/var/genetics/data/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv")
 cog_phen = cog_phen[, c(grep("GCNAAS0|Benjamin", names(cog_phen))), with=FALSE]
 
 # map to correct answers from mcs data dictionary archive (https://beta.ukdataservice.ac.uk/datacatalogue/studies/study?id=8682#!/documentation)
@@ -314,7 +314,7 @@ hayfever[, eczema := NULL]
 fid_map = fread("/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv", select = c("Benjamin_ID", "Benjamin_FID"))
 nrow(fid_map)
 
-hhincome = as.data.table(read_sav("/disk/genetics3/data_dirs/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_v7_mcs_family_structure_20221208.sav"))
+hhincome = as.data.table(read_sav("/var/genetics/data/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_v7_mcs_family_structure_20221208.sav"))
 hhincome = merge(hhincome, fid_map, by.x = "benjamin_fid", by.y = "Benjamin_FID")
 hhincome[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
 hhincome %<>% 

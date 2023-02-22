@@ -72,7 +72,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/NC/NC.sumstats.gz" \
+#     "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/NC/NC.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/nchildren" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
@@ -86,7 +86,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ###########
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/NumEverBorn/NumChildren_Chr*.sumstats.hdf5" \
+#     "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/NumEverBorn/NumChildren_Chr*.sumstats.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/nchildren" \
 #     --ldsc-ref "$reffile" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
@@ -97,7 +97,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ckb/private/v1/raw/sumstats/Dec_2022/num_children.sumstats.txt" \
+    "/var/genetics/data/ckb/private/v1/raw/sumstats/Dec_2022/num_children.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/nchildren" \
     --effects "direct_averageparental" \
     --toest "direct_population" \

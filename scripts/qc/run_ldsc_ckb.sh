@@ -3,7 +3,7 @@
 ldsc_path="/var/genetics/tools/ldsc/ldsc"
 act="/disk/genetics/pub/python_env/anaconda2/bin/activate"
 pyenv="/disk/genetics/pub/python_env/anaconda2/envs/ldsc"
-ckb_ld_chr="/disk/genetics3/data_dirs/ckb/private/v1/processed/ld_scores/snipar_generated/"
+ckb_ld_chr="/var/genetics/data/ckb/private/v1/processed/ld_scores/snipar_generated/"
 
 # Activating ldsc environment
 source ${act} ${pyenv}

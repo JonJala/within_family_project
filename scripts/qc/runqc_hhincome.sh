@@ -22,7 +22,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/household.income/household.income.sumstats.gz" \
+    "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/household.income/household.income.sumstats.gz" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/hhincome" \
     --effects "direct_averageparental" \
     --toest "direct_population" \
@@ -36,7 +36,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 ###########
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_inc_export.txt" \
+    "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_inc_export.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/hhincome" \
     --toest "direct_population" \
     --ldsc-ref "$reffile"

@@ -20,7 +20,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # #####################
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/NEARSIGHTED/NEARSIGHTED.sumstats.gz" \
+#     "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/NEARSIGHTED/NEARSIGHTED.sumstats.gz" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/nearsight" \
 #     --effects "direct_averageparental" \
 #     --toest "direct_population" \
@@ -37,7 +37,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # ## do not use
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_nearsightedness_export.txt" \
+#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_nearsightedness_export.txt" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/nearsight" \
 #     --toest "direct_population" \
 #     --ldsc-ref "$reffile" \

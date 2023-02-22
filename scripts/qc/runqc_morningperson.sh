@@ -20,7 +20,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/morning.person/morning.person.sumstats.gz" \
+    "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/morning.person/morning.person.sumstats.gz" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/morningperson" \
     --effects "direct_averageparental" \
     --toest "direct_population" \

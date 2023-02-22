@@ -6,7 +6,7 @@ pheno="hdl"
 dataset="ukb"
 effect="direct_population"
 sumstats="/var/genetics/proj/within_family/within_family_project/processed/package_output/${pheno}/meta.hm3.sumstats.gz" # check that this doesn't have ukb
-reference_sumstats="/disk/genetics3/data_dirs/published/teslovich_2010_bloodlipids/raw/sumstats/HDL_with_Effect.tbl"
+reference_sumstats="/var/genetics/data/published/teslovich_2010_bloodlipids/raw/sumstats/HDL_with_Effect.tbl"
 clump_dir="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/${pheno}/clumps"
 clump_outfile="${clump_dir}/HDL_with_Effect"
 

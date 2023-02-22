@@ -47,7 +47,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ############
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/disk/genetics3/data_dirs/ipsych/private/v1/processed/sumstats/sumstats_migraine_export.txt" \
+#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_migraine_export.txt" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/migraine" \
 #     --toest "direct_population" \
 #     --ldsc-ref "$reffile" \
@@ -58,7 +58,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/MIGRAINE/MIGRAINE.sumstats.gz" \
+    "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/MIGRAINE/MIGRAINE.sumstats.gz" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/migraine" \
     --effects "direct_averageparental" \
     --toest "direct_population" \

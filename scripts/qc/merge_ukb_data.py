@@ -37,7 +37,7 @@ for pheno in phenos:
         
         final = pd.concat([final, combined_ss])
 
-    save_path = f"/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/sumstats/{pheno}"
+    save_path = f"/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/{pheno}"
     os.makedirs(save_path, exist_ok = True)
     final.to_csv(f"{save_path}/{pheno}.sumstats.gz", index = False, sep = " ", compression = "gzip")
 

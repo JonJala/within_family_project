@@ -158,7 +158,7 @@ final %<>% filter(n_eid %in% sqc$FID)
 # save
 # ---------------------------------------------------------------------
 
-fwrite(final, "/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/phen/ukb_mdd_pheno.txt", sep = " ", na = "NA", quote = FALSE)
+fwrite(final, "/var/genetics/data/ukb/private/v3/processed/proj/within_family/phen/ukb_mdd_pheno.txt", sep = " ", na = "NA", quote = FALSE)
 
 sum(final$mdd == 1, na.rm = T) # 140048 cases
 sum(final$mdd == 0, na.rm = T) #  254005 controls

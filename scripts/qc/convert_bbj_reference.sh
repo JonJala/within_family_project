@@ -16,7 +16,7 @@ source ${act} ${pyenv}
 
 # munge bbj sumstats
 
-for pheno in "bmi" "height"
+for pheno in "bmi" "height" "bpd" "bps"
 do
 
     echo ${pheno}

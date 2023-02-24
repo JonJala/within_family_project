@@ -12,8 +12,7 @@ function run_pgi(){
     EFFECT=$2
     PHENONAME=$3
     DATASET=$4
-    NEFF=$5
-    CLUMP=$6
+    CLUMP=$5
 
     if [[ $DATASET == "mcs" ]]; then
 
@@ -27,7 +26,7 @@ function run_pgi(){
         if [[ $PHENONAME == "ea" ]] && [[ ! -z $CLUMP ]]; then
             pheno="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/ea/UKB_EAfixed_resid.pheno"
         elif [[ $PHENONAME == "asthma" || $PHENONAME == "hdl" ||  $PHENONAME == "nonhdl" || $PHENONAME == "bps" || $PHENONAME == "bpd" || $PHENONAME == "migraine" || $PHENONAME == "nearsight" || $PHENONAME == "income" || $PHENONAME == "hayfever" ]]; then
-            pheno="/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/phen/UKB_health_income_std_WF.pheno"
+            pheno="/var/genetics/data/ukb/private/v3/processed/proj/within_family/phen/UKB_health_income_std_WF.pheno"
         else
             pheno="/disk/genetics/ukb/alextisyoung/phenotypes/processed_traits_noadj.txt"
         fi
@@ -57,6 +56,15 @@ function run_pgi(){
         export MKL_NUM_THREADS=${N_THREADS}
         export OMP_NUM_THREADS=${N_THREADS}
         export NUMEXPR_NUM_THREADS=${N_THREADS}
+
+        # get median n from sumstats file
+        python /var/genetics/proj/within_family/within_family_project/scripts/prscs/get_median_n.py \
+            --sumstats ${METAFILE} \
+            --effect ${EFFECT} \
+            --pheno ${PHENONAME}
+        
+        NEFF=$(cat /var/genetics/proj/within_family/within_family_project/processed/prscs/${PHENONAME}/${EFFECT}/${EFFECT}_median_n.txt)
+        echo "Median N is ${NEFF}"
 
         for chr in {1..22}; do
         prscs \
@@ -98,14 +106,14 @@ function run_pgi(){
         
         if [[ $DATASET == "mcs" ]]; then
             
-            plink200a2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
+            plink2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
             --chr $chr \
             --score $scorefile 7 4 6 header center cols=+scoresums \
             --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
 
         elif [[ $DATASET == "ukb" ]]; then
 
-            plink200a2 --bgen /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen ref-last \
+            plink2 --bgen /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen ref-last \
                 --oxford-single-chr $chr \
                 --sample /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.sample \
                 --score $scorefile 2 4 6 header center cols=+scoresums \

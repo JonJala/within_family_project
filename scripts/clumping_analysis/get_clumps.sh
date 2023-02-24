@@ -10,7 +10,7 @@ for chr in {1..22}; do
 
     echo ${chr}
 
-    /var/genetics/proj/within_family/within_family_project/plink1.9/plink --bfile /disk/genetics2/HRC/aokbay/LDgf/Full/perChr_rsid/HRC_geno05_mind01_maf001_hwe1e-10_rel025_nooutliers_chr$chr \
+    /var/genetics/proj/within_family/plink1.9/plink --bfile /disk/genetics2/HRC/aokbay/LDgf/Full/perChr_rsid/HRC_geno05_mind01_maf001_hwe1e-10_rel025_nooutliers_chr$chr \
     --clump ${raw_sumstats} \
     --clump-snp-field ${snp_field} \
     --clump-p1 5e-8 \

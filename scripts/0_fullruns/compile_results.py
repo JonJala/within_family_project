@@ -262,7 +262,7 @@ if fpgs == True:
 
 if ldsc == True:
     # Make ldsc matrix
-    ssgacrepopath = "/var/genetics/proj/within_family/within_family_project/ssgac"
+    ssgacrepopath = "/var/genetics/proj/within_family/ssgac"
     phenotypes.sort()
     populationresults = [basepath + 'processed/package_output/' + p + '/populationmunged.sumstats.gz' for p in phenotypes]
     directresults = [basepath + 'processed/package_output/' + p + '/directmunged.sumstats.gz' for p in phenotypes]

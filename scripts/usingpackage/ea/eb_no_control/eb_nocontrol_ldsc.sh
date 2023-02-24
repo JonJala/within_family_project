@@ -2,7 +2,7 @@
 
 # ldscpath="/var/genetics/pub/software/ldsc"
 ldscpath="/var/genetics/pub/software/ldsc"
-ldscmodpath="/var/genetics/proj/within_family/within_family_project/ssgac/ldsc_mod"
+ldscmodpath="/var/genetics/proj/within_family/ssgac/ldsc_mod"
 eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 hm3snps="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"

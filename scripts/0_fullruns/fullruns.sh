@@ -2,7 +2,7 @@
 
 act="/disk/genetics/pub/python_env/anaconda2/bin/activate"
 ldscenv="/disk/genetics/pub/python_env/anaconda2/envs/ldsc"
-sniparenv="/var/genetics/proj/within_family/within_family_project/snipar/bin/activate"
+sniparenv="/var/genetics/proj/within_family/snipar/bin/activate"
 within_family_directory="/var/genetics/proj/within_family/within_family_project"
 cd ${within_family_directory}
 
@@ -16,7 +16,7 @@ function main(){
     # bash scripts/sbayesr/${PHENO}_pgi.sh
     # conda deactivate
 
-    source ${sniparenv}
+    # source ${sniparenv}
     bash scripts/fpgs/fpgs_${PHENO}.sh
     
     # ldsc stuff
@@ -26,18 +26,18 @@ function main(){
 
 # time main aafb
 # time main adhd
-time main agemenarche
+# time main agemenarche
 # time main asthma
-time main bmi
+# time main bmi
 # time main bpd
 # time main bps
 # time main cannabis
 time main cognition
 # time main cpd
 # time main depression
-time main depsymp
+# time main depsymp
 # time main dpw
-# time main ea
+time main ea
 # time main eczema
 # time main eversmoker
 # time main extraversion

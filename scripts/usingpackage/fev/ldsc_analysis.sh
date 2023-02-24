@@ -58,7 +58,7 @@ ${ldscpath}/ldsc.py \
 
 
 # Changing env
-source /var/genetics/proj/within_family/within_family_project/snipar/bin/activate
-/var/genetics/proj/within_family/within_family_project/snipar/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/fev/meta.nfilter \
+source /var/genetics/proj/within_family/snipar/bin/activate
+/var/genetics/proj/within_family/snipar/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/fev/meta.nfilter \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/fev/marginal \
 --ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/@

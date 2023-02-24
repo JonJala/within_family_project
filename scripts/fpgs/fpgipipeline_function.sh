@@ -2,7 +2,7 @@
 
 
 within_family_path="/var/genetics/proj/within_family/within_family_project"
-snipar_path="/var/genetics/proj/within_family/within_family_project/snipar"
+snipar_path="/var/genetics/proj/within_family/snipar"
 
 function withinfam_pred(){
 

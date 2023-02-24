@@ -73,7 +73,7 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/cognition/population_h2
 
 # Changing env
-source /var/genetics/proj/within_family/within_family_project/snipar/bin/activate
-/var/genetics/proj/within_family/within_family_project/snipar/snipar/scripts/correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/cognition/meta.nfilter \
+source /var/genetics/proj/within_family/snipar/bin/activate
+/var/genetics/proj/within_family/snipar/snipar/scripts/correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/cognition/meta.nfilter \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/cognition/marginal \
 --ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/@

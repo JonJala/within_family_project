@@ -80,7 +80,7 @@ ea_meta_avgparental.to_csv(
 )
 
 ea4_excl = pd.read_csv(
-    "/disk/genetics4/projects/EA4/derived_data/Meta_analysis/5_Excl_UKBrel_STR_GS/2020_08_21/output/EA4_excl_UKBrel_STR_GS_2020_08_21.meta",
+    "/var/genetics/proj/ea4/derived_data/Meta_analysis/5_Excl_UKBrel_STR_GS/2020_08_21/output/EA4_excl_UKBrel_STR_GS_2020_08_21.meta",
     delim_whitespace = True
 )
 
@@ -107,7 +107,7 @@ ea4_excl.to_csv(
 )
 
 ea4_full = pd.read_csv(
-    "/disk/genetics4/projects/EA4/derived_data/Meta_analysis/1_Main/2020_08_20/output/EA4_2020_08_20.meta",
+    "/var/genetics/proj/ea4/derived_data/Meta_analysis/1_Main/2020_08_20/output/EA4_2020_08_20.meta",
     delim_whitespace = True
 )
 

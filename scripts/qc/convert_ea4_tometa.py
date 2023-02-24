@@ -6,7 +6,7 @@ txt file.
 import pandas as pd
 
 ea4 = pd.read_csv(
-    "/disk/genetics4/projects/EA4/derived_data/Meta_analysis/5_Excl_UKBrel_STR_GS/2020_08_21/output/EA4_excl_UKBrel_STR_GS_2020_08_21.meta",
+    "/var/genetics/proj/ea4/derived_data/Meta_analysis/5_Excl_UKBrel_STR_GS/2020_08_21/output/EA4_excl_UKBrel_STR_GS_2020_08_21.meta",
     delim_whitespace = True
 )
 

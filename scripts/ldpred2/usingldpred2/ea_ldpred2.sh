@@ -45,7 +45,7 @@ Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
 # Baseline ea4 PGI
 # Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
 #     --bfile $gsbed \
-#     --sumstats "/disk/genetics4/projects/EA4/derived_data/Meta_analysis/5_Excl_UKBrel_STR_GS/2020_08_21/output/EA4_excl_UKBrel_STR_GS_2020_08_21.meta" \
+#     --sumstats "/var/genetics/proj/ea4/derived_data/Meta_analysis/5_Excl_UKBrel_STR_GS/2020_08_21/output/EA4_excl_UKBrel_STR_GS_2020_08_21.meta" \
 #     --outfile "${within_family_path}/processed/ldpred2/ea4_ref" \
 #     --chr "Chr" --pos "BP" --rsid "rsID" --a1 "EA" --a2 "OA" --N_col "N" \
 #     --beta "BETA" --beta_se "SE" \

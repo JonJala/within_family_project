@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 dat = pd.read_csv(
-    '/disk/genetics4/projects/EA4/derived_data/Meta_analysis/1_Main/2020_08_20/output/EA4_2020_08_20.meta',
+    '/var/genetics/proj/ea4/derived_data/Meta_analysis/1_Main/2020_08_20/output/EA4_2020_08_20.meta',
     delim_whitespace=True   
 )
 

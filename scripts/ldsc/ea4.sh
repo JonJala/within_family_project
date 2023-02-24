@@ -4,7 +4,7 @@ within_family_path="/var/genetics/proj/within_family/within_family_project"
 hm3snps="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # ${ldscpath}/munge_sumstats.py \
-# --sumstats /disk/genetics4/projects/EA4/derived_data/Meta_analysis/1_Main/2020_08_20/output/EA4_2020_08_20.meta \
+# --sumstats /var/genetics/proj/ea4/derived_data/Meta_analysis/1_Main/2020_08_20/output/EA4_2020_08_20.meta \
 # --out ${within_family_path}/processed/ea4/ea4_formetanalysis_munged \
 # --merge-alleles ${hm3snps} \
 # --a1 EA --a2 OA --signed-sumstats Z,0 \

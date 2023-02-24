@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 # Reference sbayesr code borrowed from Aysu
-# Original code /disk/genetics4/projects/EA4/code/PGS/7_PGS_SBayesR.sh
+# Original code /var/genetics/proj/ea4/code/PGS/7_PGS_SBayesR.sh
 
 
 within_family_path="/var/genetics/proj/within_family/within_family_project"

@@ -4,7 +4,7 @@ clumping_analysis_path="/var/genetics/proj/within_family/within_family_project/s
 
 pheno="ea"
 effect="direct_population"
-reference_sumstats="/disk/genetics4/projects/EA4/derived_data/Meta_analysis/1_Main/2020_08_20/output/EA4_2020_08_20.meta"
+reference_sumstats="/var/genetics/proj/ea4/derived_data/Meta_analysis/1_Main/2020_08_20/output/EA4_2020_08_20.meta"
 clump_dir="/var/genetics/proj/within_family/within_family_project/processed/clumping_analysis/${pheno}/clumps"
 clump_outfile="${clump_dir}/EA4_2020_08_20.meta"
 

@@ -19,7 +19,7 @@ ea_pheno = pd.read_csv("/disk/genetics4/ws_dirs/mbennett/UKB_EAfixed_resid.pheno
 health_phenos = pd.read_csv("/var/genetics/data/ukb/private/v3/processed/proj/within_family/phen/UKB_health.pheno", sep = " ")
 
 # log income pheno derived from occupation
-income_data = pd.read_csv("/disk/genetics4/projects/EA4/derived_data/WFvBF/UKB_SES.csv")
+income_data = pd.read_csv("/var/genetics/proj/ea4/derived_data/WFvBF/UKB_SES.csv")
 
 #---------------------------------------------------------------------------------------------------------------------
 # process health phenotypes

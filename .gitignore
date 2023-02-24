@@ -15,18 +15,11 @@ scratch/*
 
 # Eliminate .pyc files
 *.pyc
-
 *.lastlogin
 **/easyqc_libraries/*
 bin/*
 lib/
-snipar/*
-sniparenv/
-share/
 pyvenv.cfg
 lib64
 **/__pycache__/**
-Rplots.pdf
-plink1.9/*
 .pversion
-ssgac/*

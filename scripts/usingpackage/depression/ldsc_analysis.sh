@@ -59,7 +59,7 @@ ${ldscpath}/munge_sumstats.py \
 
 
 # # Changing env
-# source /var/genetics/proj/within_family/snipar/bin/activate
-# /var/genetics/proj/within_family/snipar/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/depression/meta.nfilter \
+# source /var/genetics/code/snipar/snipar_venv/bin/activate
+# /var/genetics/code/snipar/SNIPar/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/depression/meta.nfilter \
 # /var/genetics/proj/within_family/within_family_project/processed/package_output/depression/marginal \
 # --ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/@

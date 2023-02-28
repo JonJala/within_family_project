@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source /var/genetics/proj/within_family/snipar/bin/activate
+source /var/genetics/code/snipar/snipar_venv/bin/activate
 
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 snipar_path="/var/genetics/proj/within_family/snipar"

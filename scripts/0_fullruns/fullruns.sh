@@ -2,7 +2,7 @@
 
 act="/disk/genetics/pub/python_env/anaconda2/bin/activate"
 ldscenv="/disk/genetics/pub/python_env/anaconda2/envs/ldsc"
-sniparenv="/var/genetics/proj/within_family/snipar/bin/activate"
+sniparenv="/var/genetics/code/snipar/snipar_venv/bin/activate"
 within_family_directory="/var/genetics/proj/within_family/within_family_project"
 cd ${within_family_directory}
 

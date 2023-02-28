@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-
 within_family_path="/var/genetics/proj/within_family/within_family_project"
-snipar_path="/var/genetics/proj/within_family/snipar"
+snipar_path="/var/genetics/code/snipar/SNIPar"
 
 function withinfam_pred(){
 
@@ -97,14 +96,14 @@ function withinfam_pred(){
     if [[ ! -z $CLUMP ]]; then
         mkdir -p "${OUTPATH}/clumping_analysis"
         OUTPATH+="clumping_analysis" 
-        pgs.py \
+        python ${snipar_path}/snipar/scripts/pgs.py \
             $OUTPATH/${EFFECT}${OUTSUFFIX} \
             --bed $bedfilepath \
             --imp $impfilespath \
             --weights ${within_family_path}/processed/${METHOD}/${PHENONAME}/clumping_analysis/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
             --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log
     else
-        pgs.py \
+        python ${snipar_path}/snipar/scripts/pgs.py \
             $OUTPATH/${EFFECT}${OUTSUFFIX} \
             --bed $bedfilepath \
             --imp $impfilespath \

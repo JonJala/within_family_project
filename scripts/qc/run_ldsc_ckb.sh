@@ -8,8 +8,7 @@ ckb_ld_chr="/var/genetics/data/ckb/private/v1/processed/ld_scores/snipar_generat
 # Activating ldsc environment
 source ${act} ${pyenv}
 
-# for pheno in "bmi" "height" "bps" "bpd"
-for pheno in "bmi" "height"
+for pheno in "bmi" "height" "bps" "bpd" "agemenarche" "asthma" "cpd" "depsymp" "dpw" "ea" "eversmoker" "fev" "health" "nchildren" "swb"
 do
 
     filein="/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/${pheno}/CLEANED.out.gz" # qc'd ckb sumstats for munging

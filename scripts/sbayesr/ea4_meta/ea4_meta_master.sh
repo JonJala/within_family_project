@@ -4,6 +4,6 @@ Rscript /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/e
 
 bash /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/ea4_meta/ea4_meta_pgi.sh
 
-source /var/genetics/code/snipar/snipar_venv/bin/activate
+source /var/genetics/proj/within_family/snipar_venv/bin/activate
 
 bash /var/genetics/proj/within_family/within_family_project/scripts/fpgs/fpgs_ea.sh

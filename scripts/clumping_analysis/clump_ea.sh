@@ -36,7 +36,7 @@ Rscript ${clumping_analysis_path}/process_clumps.r \
 
 ## MAKE SURE OTHER CODE IS COMMENTED OUT IN THESE SCRIPTS BEFORE RUNNING
 bash /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/ea_pgi.sh
-source /var/genetics/code/snipar/snipar_venv/bin/activate
+source /var/genetics/proj/within_family/snipar_venv/bin/activate
 bash /var/genetics/proj/within_family/within_family_project/scripts/fpgs/fpgs_ea.sh
 
 

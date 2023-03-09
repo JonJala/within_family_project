@@ -73,7 +73,7 @@ ${ldscpath}/ldsc.py \
 # 0.204 (0.0164)
 
 # Changing env
-source /var/genetics/code/snipar/snipar_venv/bin/activate
+source /var/genetics/proj/within_family/snipar_venv/bin/activate
 /var/genetics/code/snipar/SNIPar/snipar/scripts/correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/bmi/meta.nfilter \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/bmi/marginal \
 --ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/@

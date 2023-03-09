@@ -96,14 +96,14 @@ function withinfam_pred(){
     if [[ ! -z $CLUMP ]]; then
         mkdir -p "${OUTPATH}/clumping_analysis"
         OUTPATH+="clumping_analysis" 
-        python ${snipar_path}/snipar/scripts/pgs.py \
+        PYTHONPATH=${snipar_path} ${snipar_path}/snipar/scripts/pgs.py \
             $OUTPATH/${EFFECT}${OUTSUFFIX} \
             --bed $bedfilepath \
             --imp $impfilespath \
             --weights ${within_family_path}/processed/${METHOD}/${PHENONAME}/clumping_analysis/${DATASET}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
             --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log
     else
-        python ${snipar_path}/snipar/scripts/pgs.py \
+        PYTHONPATH=${snipar_path} ${snipar_path}/snipar/scripts/pgs.py \
             $OUTPATH/${EFFECT}${OUTSUFFIX} \
             --bed $bedfilepath \
             --imp $impfilespath \

@@ -2,6 +2,7 @@
 ### Run the easyqc pipeline
 
 reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz"
+PYTHONPATH="/var/genetics/proj/within_family/within_family_project/"
 
 # ####################
 # # ====== UKB ====== #
@@ -206,9 +207,9 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ckb/private/v1/raw/sumstats/Dec_2022/residue_bmi_calc.sumstats.txt" \
+    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_bmi_calc_all_chr.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/bmi" \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
+    --effects "direct_averageparental_population" \
+    --toest "direct_averageparental_population" \
     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
     --cptid

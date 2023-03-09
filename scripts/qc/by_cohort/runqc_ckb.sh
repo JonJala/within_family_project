@@ -18,3 +18,6 @@
 /var/genetics/proj/within_family/within_family_project/scripts/qc/runqc_health.sh
 /var/genetics/proj/within_family/within_family_project/scripts/qc/runqc_swb.sh
 /var/genetics/proj/within_family/within_family_project/scripts/qc/runqc_cpd.sh
+
+# get heritabilities and rg with reference
+/var/genetics/proj/within_family/within_family_project/scripts/ckb/run_ldsc_ckb.sh

@@ -7,4 +7,4 @@ snipar_path="/var/genetics/proj/within_family/snipar_effect_reg"
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-main "hayfever" "" "1" "ukb"
+main "hayfever" "" "1" "ukb" "prscs"

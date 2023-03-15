@@ -7,8 +7,8 @@ snipar_path="/var/genetics/proj/within_family/snipar_effect_reg"
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-main "cognition" "" "0" "mcs" "sbayesr"
-# main "cognition" "" "0" "ukb" "sbayesr"
+main "cognition" "" "0" "mcs" "prscs"
+# main "cognition" "" "0" "ukb" "prscs"
 
 # clumping analysis
 # main "cognition" "" "0" "mcs" "clump"

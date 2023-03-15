@@ -9,7 +9,7 @@ phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/i
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-main "bmi" "" "0" "mcs"
+main "bmi" "" "0" "mcs" "prscs"
 
 # clumping analysis
 # main "bmi" "" "0" "mcs" "clump"

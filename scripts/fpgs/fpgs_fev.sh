@@ -7,4 +7,4 @@ snipar_path="/var/genetics/proj/within_family/snipar_effect_reg"
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-main "fev" "" "0" "ukb"
+main "fev" "" "0" "ukb" "prscs"

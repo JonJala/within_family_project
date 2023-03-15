@@ -6,4 +6,4 @@ snipar_path="/var/genetics/proj/within_family/snipar_effect_reg"
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-main "hhincome" "" "0" "mcs" "sbayesr"
+main "hhincome" "" "0" "mcs" "prscs" 

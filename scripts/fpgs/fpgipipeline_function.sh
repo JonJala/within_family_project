@@ -18,7 +18,7 @@ function withinfam_pred(){
 
         PHENOFILE="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
         COVAR="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
-        OUTPATH="/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/"
+        OUTPATH="/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${METHOD}"
         RAWPATH="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed"
         bedfilepath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr@.dose"
         impfilespath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/chr@"
@@ -27,7 +27,7 @@ function withinfam_pred(){
         
         PHENOFILE="/var/genetics/data/ukb/private/v3/processed/proj/within_family/phen/ukb_phenos.txt"
         COVAR="/disk/genetics/ukb/alextisyoung/withinfamily/phen/covariates.txt"
-        OUTPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/${PHENONAME}/"
+        OUTPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/${PHENONAME}/${METHOD}"
         RAWPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family"
         bedfilepath="/disk/genetics/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/bedfiles/chr_@"
         impfilespath="/disk/genetics/ukb/jguan/ukb_analysis/output/parent_imputed/chr_@"
@@ -88,11 +88,6 @@ function withinfam_pred(){
         --sep "delim_whitespace" \
         --binary $BINARY
 
-    if [[ $METHOD == "prscs" ]]; then
-        mkdir -p "${OUTPATH}/prscs"
-        OUTPATH+="prscs" 
-    fi
-
     if [[ ! -z $CLUMP ]]; then
         mkdir -p "${OUTPATH}/clumping_analysis"
         OUTPATH+="clumping_analysis" 
@@ -134,11 +129,9 @@ function withinfam_pred(){
     if [[ ! -z $CLUMP ]]; then
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"
         mkdir -p $fpgs_out
-    elif [[ $METHOD == "prscs" ]]; then
+    else
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}"
         mkdir -p $fpgs_out
-    else
-        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}"
     fi
 
     echo "Reading phenotype: $within_family_path/processed/fpgs/${PHENONAME}/phenotype.pheno"
@@ -171,14 +164,14 @@ function main(){
 
         covar_fid="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt"
         phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/${PHENONAME}/pheno.pheno"
-        processed_dir="/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/"
+        processed_dir="/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${METHOD}"
         RAWPATH="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed"
 
     elif [[ $DATASET == "ukb" ]]; then
 
         covar_fid="/disk/genetics/ukb/alextisyoung/withinfamily/phen/covar_pedigfid.txt"
         phenofile="/var/genetics/data/ukb/private/latest/processed/proj/within_family/phen/${PHENONAME}/pheno.pheno"
-        processed_dir="/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/${PHENONAME}/"
+        processed_dir="/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/${PHENONAME}/${METHOD}"
         RAWPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family"
         
     fi
@@ -196,10 +189,6 @@ function main(){
         population_weights="${within_family_path}/processed/clumping_analysis/${PHENONAME}/population/weights/${DATASET}/meta_weights.snpRes.formatted"
         processed_dir+="clumping_analysis"
     
-    fi
-
-    if [[ $METHOD == "prscs" ]]; then
-        processed_dir+="prscs"
     fi
 
     # main prediction
@@ -222,10 +211,8 @@ function main(){
     
     if [[ ! -z $CLUMP ]]; then
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"
-    elif [[ $METHOD == "prscs" ]]; then
-        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}"
     else
-        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}"
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}"
     fi
 
     echo "Running covariates only regression"

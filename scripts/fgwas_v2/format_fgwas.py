@@ -35,6 +35,7 @@ if __name__ == '__main__':
     dat = dat[['SNP', 'A1', 'A2', f'{e}_Beta', f'{e}_pval']]
     dat.rename(columns={f'{e}_Beta': 'BETA', f'{e}_pval': 'P'}, inplace = True)
     dat = dat.drop_duplicates(subset = 'SNP').reset_index(drop = True)
+    dat.dropna(subset = ["BETA", "P"], inplace = True)
     print(dat.head())
 
     dat.to_csv(

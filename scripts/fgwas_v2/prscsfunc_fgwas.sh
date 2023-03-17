@@ -1,8 +1,7 @@
-dirout="/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2"
+dirout="/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}"
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 refldpanel="/disk/genetics/tools/prscs/ld_reference/ldblk_ukbb_eur"
 
-cd $dirout
 mkdir -p tmp
 mkdir -p logs
 
@@ -11,13 +10,17 @@ function run_pgi(){
     FILEPATH=$1
     EFFECT=$2
     PHENONAME=$3
+    METHOD=$4
     
+    dirout="/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}"
     pheno="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
     covariates="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
-    outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2"
+    outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2/${METHOD}"
     pedigree="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
 
     mkdir -p ${PHENONAME}/${EFFECT}
+    mkdir -p ${dirout}
+    cd $dirout
 
     echo "Formatting summary statistics..."
     python ${within_family_path}/scripts/fgwas_v2/format_fgwas.py \
@@ -36,12 +39,13 @@ function run_pgi(){
     export NUMEXPR_NUM_THREADS=${N_THREADS}
 
     # get median n from sumstats file
-    python /var/genetics/proj/within_family/within_family_project/scripts/prscs/get_median_n.py \
+    python /var/genetics/proj/within_family/within_family_project/scripts/fgwas_v2/get_median_n_fgwas.py \
         --sumstats ${FILEPATH} \
         --effect ${EFFECT} \
-        --pheno ${PHENONAME}
+        --pheno ${PHENONAME} \
+        --outpath "/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}"
     
-    NEFF=$(cat /var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${PHENONAME}/${EFFECT}/${EFFECT}_median_n.txt)
+    NEFF=$(cat /var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}/${PHENONAME}/${EFFECT}/${EFFECT}_median_n.txt)
     echo "Median N is ${NEFF}"
 
     for chr in {1..22}; do
@@ -86,7 +90,6 @@ function run_pgi(){
     python /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sumscores.py \
         "$outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_*.sscore" \
         --outprefix "$outpath/${PHENONAME}/${EFFECT}/scoresout.sscore"
-
 
     outprefix="${PHENONAME}/${EFFECT}"
     

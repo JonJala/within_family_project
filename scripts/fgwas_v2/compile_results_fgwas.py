@@ -16,10 +16,10 @@ datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'direct', 'direct_se',
 fpgsfiles = [fpgspath + ph for ph in phenotypes]
 
 # make table of results
-for phenotype in phenotypes:
-    for effect in ['direct']:
-        for method in ['with_grm']:
-
+for method in ['unified', 'robust', 'sibdiff', 'young']:
+    for phenotype in phenotypes:
+        for effect in ['direct']:
+        
             print(f'Compiling results for {method} {phenotype} {effect}...')
             packageoutput = basepath + 'processed/package_output/'
 
@@ -63,6 +63,7 @@ for phenotype in phenotypes:
             parcorr_se = parcorr[1]
 
             datfpgs_tmp = pd.DataFrame({
+                    'method' : [method],
                     'phenotype' : [phenotype],
                     'effect' : [effect],
                     'direct' : [direst],
@@ -82,9 +83,9 @@ for phenotype in phenotypes:
             datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
 
 
-floatcols = [c for c in datfpgs.columns if (c not in ['phenotype', 'effect'])]
+floatcols = [c for c in datfpgs.columns if (c not in ['method', 'phenotype', 'effect'])]
 datfpgs[floatcols] = datfpgs[floatcols].apply(pd.to_numeric)
-datfpgs = datfpgs.pivot(index='phenotype', columns='effect', values=None)
+datfpgs = datfpgs.pivot(index=['method', 'phenotype'], columns='effect', values=None)
 datfpgs = datfpgs.reorder_levels(['effect', None], axis=1)
 datfpgs = datfpgs.sort_index(axis=1, level=0, sort_remaining=False)
 datfpgs.columns = ['_'.join(column) for column in datfpgs.columns.to_flat_index()]

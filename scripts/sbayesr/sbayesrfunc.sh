@@ -85,14 +85,14 @@ function run_pgi(){
         
         if [[ $DATASET == "mcs" ]]; then
             
-            plink200a2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
+            plink2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
             --chr $chr \
             --score $scorefile 12 5 8 header center cols=+scoresums \
             --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
 
         elif [[ $DATASET == "ukb" ]]; then
 
-            plink200a2 --bgen /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen ref-last \
+            plink2 --bgen /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen ref-last \
                 --oxford-single-chr $chr \
                 --sample /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.sample \
                 --score $scorefile 2 5 8 header center cols=+scoresums \

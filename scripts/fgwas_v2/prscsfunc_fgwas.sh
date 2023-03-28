@@ -18,16 +18,16 @@ function run_pgi(){
     outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2/${METHOD}"
     pedigree="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
 
-    mkdir -p ${PHENONAME}/${EFFECT}
     mkdir -p ${dirout}
     cd $dirout
-
+    mkdir -p ${PHENONAME}/${EFFECT}
+    
     echo "Formatting summary statistics..."
     python ${within_family_path}/scripts/fgwas_v2/format_fgwas.py \
         "$FILEPATH" \
         --effecttype "${EFFECT}" \
-        --outpath "${PHENONAME}/${EFFECT}/meta.sumstats" \
-        --bimout "${PHENONAME}/validation.bim"
+        --outpath "${dirout}/${PHENONAME}/${EFFECT}/meta.sumstats" \
+        --bimout "${dirout}/${PHENONAME}/validation.bim"
 
     mkdir -p ${PHENONAME}/${EFFECT}/weights/
     mkdir -p logs/${EFFECT}

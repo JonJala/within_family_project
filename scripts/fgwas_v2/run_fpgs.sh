@@ -9,9 +9,9 @@ phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/i
 source /var/genetics/proj/within_family/within_family_project/scripts/fgwas_v2/fpgipipeline_function_fgwas.sh
 
 ## unified
-# main "bmi" "" "0" "unified"
-# main "height" "" "0" "unified"
-# main "ea" "" "0" "unified"
+# main "bmi" "" "0" "unified" "dir_pop"
+# main "height" "" "0" "unified" "dir_pop"
+# main "ea" "" "0" "unified" "dir_pop"
 
 # ## robust
 # main "bmi" "" "0" "robust"

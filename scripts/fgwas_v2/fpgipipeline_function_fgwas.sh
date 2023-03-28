@@ -89,6 +89,7 @@ function main(){
     OUTSUFFIX=$2
     BINARY=$3
     METHOD=$4
+    POPULATION=$5
 
     covar_fid="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt"
     phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/${PHENONAME}/pheno.pheno"
@@ -96,10 +97,18 @@ function main(){
     RAWPATH="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed"
     direct_weights="${within_family_path}/processed/fgwas_v2/${METHOD}/${PHENONAME}/direct/weights/meta_weights.snpRes"
     
-    # main prediction
+    # main prediction -- direct effect pgi
     withinfam_pred $direct_weights \
         "direct" "$PHENONAME" \
         "$OUTSUFFIX" "$BINARY" "$METHOD"
+
+    if [ "$POPULATION" == "dir_pop" ]; then
+        # population effect pgi
+        population_weights="${within_family_path}/processed/fgwas_v2/${METHOD}/${PHENONAME}/population/weights/meta_weights.snpRes"
+        withinfam_pred $population_weights \
+            "population" "$PHENONAME" \
+            "$OUTSUFFIX" "$BINARY" "$METHOD"
+    fi
     
     ols="1"
     kin="0"

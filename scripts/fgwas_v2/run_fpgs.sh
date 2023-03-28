@@ -8,7 +8,22 @@ phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/i
 
 source /var/genetics/proj/within_family/within_family_project/scripts/fgwas_v2/fpgipipeline_function_fgwas.sh
 
-## with_grm
-# main "bmi" "" "0" "with_grm"
-main "height" "" "0" "with_grm"
-main "ea" "" "0" "with_grm"
+## unified
+# main "bmi" "" "0" "unified"
+# main "height" "" "0" "unified"
+# main "ea" "" "0" "unified"
+
+# ## robust
+# main "bmi" "" "0" "robust"
+# main "height" "" "0" "robust"
+# main "ea" "" "0" "robust"
+
+## sibdiff
+# main "bmi" "" "0" "sibdiff"
+main "height" "" "0" "sibdiff"
+# main "ea" "" "0" "sibdiff"
+
+## young
+main "bmi" "" "0" "young"
+main "height" "" "0" "young"
+main "ea" "" "0" "young"

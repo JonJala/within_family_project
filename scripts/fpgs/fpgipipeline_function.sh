@@ -41,6 +41,9 @@ function withinfam_pred(){
     if [[ ! -z $CLUMP ]]; then
         mkdir -p ${within_family_path}/processed/${METHOD}/${PHENONAME}/clumping_analysis/${DATASET}
         outfileprefix="${within_family_path}/processed/${METHOD}/${PHENONAME}/clumping_analysis/${DATASET}"
+    elif [[ $PHENONAME == "ea" || $PHENONAME == "cognition" ]]; then
+        mkdir -p ${within_family_path}/processed/${METHOD}/${PHENONAME}/${DATASET}
+        outfileprefix="${within_family_path}/processed/${METHOD}/${PHENONAME}/${DATASET}"
     else
         outfileprefix="${within_family_path}/processed/${METHOD}/${PHENONAME}"
     fi
@@ -129,6 +132,9 @@ function withinfam_pred(){
     if [[ ! -z $CLUMP ]]; then
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"
         mkdir -p $fpgs_out
+    elif [[ $PHENONAME == "ea" || $PHENONAME == "cognition" ]]; then
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${DATASET}"
+        mkdir -p $fpgs_out
     else
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}"
         mkdir -p $fpgs_out
@@ -179,9 +185,14 @@ function main(){
     if [[ -z $CLUMP ]]; then
 
         # for the regular pipeline, this is where the weights outputted by sbayesr are saved
-        direct_weights="${within_family_path}/processed/${METHOD}/${PHENONAME}/direct/weights/meta_weights.snpRes"
-        population_weights="${within_family_path}/processed/${METHOD}/${PHENONAME}/population/weights/meta_weights.snpRes"
-    
+        if [[ $PHENONAME == "ea" || $PHENONAME == "cognition" ]]; then
+            direct_weights="${within_family_path}/processed/${METHOD}/${PHENONAME}/${DATASET}/direct/weights/meta_weights.snpRes"
+            population_weights="${within_family_path}/processed/${METHOD}/${PHENONAME}/${DATASET}/population/weights/meta_weights.snpRes"
+        else
+            direct_weights="${within_family_path}/processed/${METHOD}/${PHENONAME}/${DATASET}/direct/weights/meta_weights.snpRes"
+            population_weights="${within_family_path}/processed/${METHOD}/${PHENONAME}/${DATASET}/population/weights/meta_weights.snpRes"
+        fi
+
     elif [[ ! -z $CLUMP ]]; then
     
         echo "Running clumping analysis"
@@ -211,6 +222,9 @@ function main(){
     
     if [[ ! -z $CLUMP ]]; then
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"
+    elif [[ $PHENONAME == "ea" || $PHENONAME == "cognition" ]]; then
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${DATASET}"
+        mkdir -p $fpgs_out
     else
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}"
     fi

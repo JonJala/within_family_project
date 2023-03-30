@@ -37,7 +37,13 @@ function run_pgi(){
 
     fi
 
-    mkdir -p ${PHENONAME}/${EFFECT}
+
+    if [[ $PHENONAME == "ea" || $PHENONAME == "cognition" ]]; then
+        out="${PHENONAME}/${DATASET}"
+    else
+        out="${PHENONAME}"
+    fi
+    mkdir -p $out
 
     if [[ -z $CLUMP ]]; then
 
@@ -45,8 +51,8 @@ function run_pgi(){
         python ${within_family_path}/scripts/prscs/format_gwas.py \
             "$METAFILE" \
             --effecttype "${EFFECT}" \
-            --outpath "${PHENONAME}/${EFFECT}/meta.sumstats" \
-            --bimout "${PHENONAME}/validation.bim"
+            --outpath "${out}/${EFFECT}/meta.sumstats" \
+            --bimout "${out}/validation.bim"
 
         mkdir -p ${PHENONAME}/${EFFECT}/weights/
         mkdir -p logs/${EFFECT}
@@ -61,35 +67,36 @@ function run_pgi(){
         python /var/genetics/proj/within_family/within_family_project/scripts/prscs/get_median_n.py \
             --sumstats ${METAFILE} \
             --effect ${EFFECT} \
-            --pheno ${PHENONAME}
+            --pheno ${PHENONAME} \
+            --outpath ${out}/${EFFECT}
         
-        NEFF=$(cat /var/genetics/proj/within_family/within_family_project/processed/prscs/${PHENONAME}/${EFFECT}/${EFFECT}_median_n.txt)
+        NEFF=$(cat ${out}/${EFFECT}/${EFFECT}_median_n.txt)
         echo "Median N is ${NEFF}"
 
         for chr in {1..22}; do
         prscs \
             --ref_dir=${refldpanel} \
-            --bim_prefix="${PHENONAME}/validation" \
-            --sst_file="${PHENONAME}/${EFFECT}/meta.sumstats" \
+            --bim_prefix="${out}/validation" \
+            --sst_file="${out}/${EFFECT}/meta.sumstats" \
             --n_gwas=${NEFF} \
             --chrom=${chr} \
             --seed=1 \
-            --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights
+            --out_dir=${out}/${EFFECT}/weights/meta_weights
         done
         wait
 
         echo "Formatting PRSCS weights to create scores"
 
-        rm -f ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes*
-        cat ${PHENONAME}/${EFFECT}/weights/meta_weights* > ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes
+        rm -f ${out}/${EFFECT}/weights/meta_weights.snpRes*
+        cat ${out}/${EFFECT}/weights/meta_weights* > ${out}/${EFFECT}/weights/meta_weights.snpRes
 
         python ${within_family_path}/scripts/prscs/get_variantid.py \
-            ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes \
-            --out ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted
+            ${out}/${EFFECT}/weights/meta_weights.snpRes \
+            --out ${out}/${EFFECT}/weights/meta_weights.snpRes.formatted
 
     fi
 
-    scorefile="${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted"
+    scorefile="${out}/${EFFECT}/weights/meta_weights.snpRes.formatted"
 
     if [[ ! -z $CLUMP ]]; then
         outpath+="/clumping_analysis"
@@ -128,7 +135,7 @@ function run_pgi(){
         --outprefix "$outpath/${PHENONAME}/${EFFECT}/scoresout.sscore"
 
 
-    outprefix="${PHENONAME}/${EFFECT}"
+    outprefix="${out}/${EFFECT}"
     if [[ ! -z $CLUMP ]]; then
         mkdir -p ${PHENONAME}/clumping_analysis/${EFFECT}/${DATASET}
         outprefix="${PHENONAME}/clumping_analysis/${EFFECT}/${DATASET}"

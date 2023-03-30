@@ -16,9 +16,11 @@ datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'direct', 'direct_se',
 fpgsfiles = [fpgspath + ph for ph in phenotypes]
 
 # make table of results
-for method in ['unified', 'robust', 'sibdiff', 'young']:
+# for method in ['unified', 'robust', 'sibdiff', 'young']:
+for method in ['unified']:
     for phenotype in phenotypes:
-        for effect in ['direct']:
+        # for effect in ['direct']:
+        for effect in ['population']:
         
             print(f'Compiling results for {method} {phenotype} {effect}...')
             packageoutput = basepath + 'processed/package_output/'

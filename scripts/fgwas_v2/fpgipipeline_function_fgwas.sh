@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 within_family_path="/var/genetics/proj/within_family/within_family_project"
-snipar_path="/var/genetics/proj/within_family/snipar_effect_reg"
+snipar_path="/var/genetics/proj/within_family/snipar_simulate"
 
 function withinfam_pred(){
 

@@ -10,6 +10,8 @@ parser.add_argument('--effect', type=str,
                     help='''Direct or population effect''')
 parser.add_argument('--pheno', type=str, 
                     help='''Phenotype name''')
+parser.add_argument('--outpath', type=str, 
+                    help='''Outpath''')
 args=parser.parse_args()
 
 # read in file
@@ -19,5 +21,5 @@ sumstats = pd.read_csv(args.sumstats, sep = " ")
 median_n = str(int(sumstats[f"{args.effect}_N"].median()))
 
 # save to txt file
-with open(f"/var/genetics/proj/within_family/within_family_project/processed/prscs/{args.pheno}/{args.effect}/{args.effect}_median_n.txt", "w") as text_file:
+with open(f"{args.outpath}/{args.effect}_median_n.txt", "w") as text_file:
     text_file.write(f"{median_n}")

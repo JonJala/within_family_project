@@ -72,14 +72,14 @@ function withinfam_pred(){
         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
         --logistic $BINARY \
         --ols $ols \
-        --kin $kin | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${CLUMP}_${EFFECT}${OUTSUFFIX}_full.reg.log"
+        --kin $kin | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_full.reg.log"
 
     python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_proband \
         --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_proband.pgs.txt \
         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
         --logistic $BINARY \
         --ols $ols \
-        --kin $kin | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${CLUMP}_${EFFECT}${OUTSUFFIX}_proband.reg.log"
+        --kin $kin | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_proband.reg.log"
     
 }
 

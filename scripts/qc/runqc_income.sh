@@ -15,17 +15,17 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --toest "direct_population" \
 #     --hwe '/var/genetics/data/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
-# #####################
-# # MOBA
-# ##################
+#####################
+# MOBA
+##################
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/sumstats/inc_chr*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/income" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_paternal_maternal_averageparental_population" \
-#     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
-#     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/inc_chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/income" \
+    --ldsc-ref "$reffile" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+    --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 
 ##########
 # STR

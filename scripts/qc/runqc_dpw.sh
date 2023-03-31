@@ -91,14 +91,26 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --ldsc-ref $reffile \
 #     --cptid
 
+# #####################
+# # ====== CKB ====== #
+# #####################
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/ln_drinks_all_chr.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/dpw" \
+#     --effects "direct_averageparental_population" \
+#     --toest "direct_averageparental_population" \
+#     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
+#     --cptid
+
 #####################
-# ====== CKB ====== #
+# ====== MOBA ====== #
 #####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/ln_drinks_all_chr.sumstats.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/dpw" \
-    --effects "direct_averageparental_population" \
-    --toest "direct_averageparental_population" \
-    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
-    --cptid
+    "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/alc_chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/dpw" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --ldsc-ref $reffile \
+    --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+    --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"

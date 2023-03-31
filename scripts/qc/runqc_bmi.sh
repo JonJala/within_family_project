@@ -70,17 +70,17 @@ PYTHONPATH="/var/genetics/proj/within_family/within_family_project/"
 #     --hwe "/var/genetics/data/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
 # # 0.8591 (0.0775)
 
-# ###########
-# # MOBA
-# ############
+###########
+# MOBA
+############
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/sumstats/bmi_chr*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/bmi" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_paternal_maternal_averageparental_population" \
-#     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
-#     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/bmi_chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/bmi" \
+    --ldsc-ref "$reffile" \
+    --toest "direct_paternal_maternal_averageparental_population" \
+    --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+    --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 
 
 #     # 0.9627 (0.2823)
@@ -202,14 +202,14 @@ PYTHONPATH="/var/genetics/proj/within_family/within_family_project/"
 #     --ldsc-ref $reffile \
 #     --cptid
 
-#####################
-# ====== CKB ====== #
-#####################
+# #####################
+# # ====== CKB ====== #
+# #####################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_bmi_calc_all_chr.sumstats.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/bmi" \
-    --effects "direct_averageparental_population" \
-    --toest "direct_averageparental_population" \
-    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
-    --cptid
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_bmi_calc_all_chr.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/bmi" \
+#     --effects "direct_averageparental_population" \
+#     --toest "direct_averageparental_population" \
+#     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
+#     --cptid

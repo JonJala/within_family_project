@@ -6,7 +6,7 @@ import statsmodels.formula.api as smf
 from tables import Description
 import tempfile
 
-def fpgs_reg_dat(pgs, phenofile, outpath):
+def fpgs_reg_dat(pgs, phenofile, outpath, sniparpath):
     '''
     Core fpgs function with dataframes as arguments
     '''
@@ -16,7 +16,7 @@ def fpgs_reg_dat(pgs, phenofile, outpath):
         phenofile.to_csv(dirout + '/pheno.txt', sep = ' ', index=False)
         pgs.to_csv(dirout + '/pgs.txt', sep = ' ', index=False)
 
-        runstr = f'''pgs.py {outpath} \
+        runstr = f'''PYTHONPATH={sniparpath} {sniparpath}/snipar/scripts/pgs.py {outpath} \
     --pgs {dirout + '/pgs.txt'} \
     --phenofile {dirout}/pheno.txt'''
 
@@ -33,7 +33,7 @@ def run_fpgs_reg(args):
 
     print('Running fpgs.py script...')
 
-    runstr = f'''pgs.py {args.outpath} \
+    runstr = f'''PYTHONPATH={args.sniparpath} {args.sniparpath}/snipar/scripts/pgs.py {args.outpath} \
 --pgs {args.pgs} \
 --phenofile {args.phenofile}'''
 
@@ -146,7 +146,7 @@ def run_subset_regs(args):
         if args.logistic == '1':
             fpgsresult = logistic_reg_dat(pgs, phenofile)
         else:
-            fpgs_reg_dat(pgs,phenofile, dirout + '/fpgsout')
+            fpgs_reg_dat(pgs,phenofile, dirout + '/fpgsout', args.sniparpath)
             fpgsresult = pd.read_csv(dirout + '/fpgsout.effects.txt', delim_whitespace=True, names = ['var', 'ests', 'ses'])
     
     # getting R2
@@ -183,6 +183,7 @@ if __name__ == '__main__':
     parser.add_argument('--ols', type=str,  help="Should regression be an OLS regression")
     parser.add_argument('--kin', type=str, default=None,  help='''Pass in path to kinship file. 
     If passed then coeff comes from full sample, and R2 comes from unrelated sample.''')
+    parser.add_argument('--sniparpath', type=str,  help="Path to snipar installation")
     
     args = parser.parse_args()
 

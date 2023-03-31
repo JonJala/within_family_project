@@ -11,11 +11,12 @@ function run_pgi(){
     EFFECT=$2
     PHENONAME=$3
     METHOD=$4
+    ANCESTRY=$5
     
-    dirout="/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}"
+    dirout="/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${ANCESTRY}/${METHOD}"
     pheno="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
     covariates="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
-    outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2/${METHOD}"
+    outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2/${ANCESTRY}/${METHOD}"
     pedigree="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
 
     mkdir -p ${dirout}
@@ -43,9 +44,9 @@ function run_pgi(){
         --sumstats ${FILEPATH} \
         --effect ${EFFECT} \
         --pheno ${PHENONAME} \
-        --outpath "/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}"
+        --outpath ${dirout}
     
-    NEFF=$(cat /var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}/${PHENONAME}/${EFFECT}/${EFFECT}_median_n.txt)
+    NEFF=$(cat ${dirout}/${PHENONAME}/${EFFECT}/${EFFECT}_median_n.txt)
     echo "Median N is ${NEFF}"
 
     for chr in {1..22}; do
@@ -56,7 +57,7 @@ function run_pgi(){
         --n_gwas=${NEFF} \
         --chrom=${chr} \
         --seed=1 \
-        --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights
+        --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights | tee "logs/${EFFECT}/${PHENONAME}_meta_weights_prscs"
     done
     wait
 
@@ -74,13 +75,19 @@ function run_pgi(){
     # create PGIs
     mkdir -p $outpath/${PHENONAME}/
     mkdir -p $outpath/${PHENONAME}/${EFFECT}
- 
+
+    if [[ $ANCESTRY == "eur" ]]; then
+        bfilepath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp"
+    elif [[ $ANCESTRY == "sas" ]]; then
+        bfilepath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/SAS/tmp"
+    fi
+
     for chr in {1..22}
     do
 
         echo $chr
             
-        plink2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
+        plink2 --bfile ${bfilepath}/chr${chr}.dose \
         --chr $chr \
         --score $scorefile 7 4 6 header center cols=+scoresums \
         --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}

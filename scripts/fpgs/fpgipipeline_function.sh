@@ -105,7 +105,11 @@ function withinfam_pred(){
             $OUTPATH/${EFFECT}${OUTSUFFIX} \
             --bed $bedfilepath \
             --imp $impfilespath \
-            --weights ${within_family_path}/processed/${METHOD}/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+            --beta_col "ldpred_beta" \
+            --SNP "sid" \
+            --A1 "nt1" \
+            --A2 "nt2" \
+            --weights ${outfileprefix}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
             --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log 
     fi 
 
@@ -144,6 +148,7 @@ function withinfam_pred(){
     python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_full \
         --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+        --sniparpath ${snipar_path} \
         --logistic $BINARY \
         --ols $ols \
         --kin $kin | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${CLUMP}_${EFFECT}${OUTSUFFIX}_full.reg.log"
@@ -151,6 +156,7 @@ function withinfam_pred(){
     python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_proband \
         --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_proband.pgs.txt \
         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+        --sniparpath ${snipar_path} \
         --logistic $BINARY \
         --ols $ols \
         --kin $kin | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${CLUMP}_${EFFECT}${OUTSUFFIX}_proband.reg.log"

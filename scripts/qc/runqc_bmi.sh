@@ -78,7 +78,8 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/bmi_chr*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/bmi" \
     --ldsc-ref "$reffile" \
-    --toest "direct_paternal_maternal_averageparental_population" \
+    --effects "direct_averageparental" \
+    --toest "direct_population"  \
     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 

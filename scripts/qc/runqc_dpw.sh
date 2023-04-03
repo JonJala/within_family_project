@@ -110,7 +110,8 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/alc_chr*.sumstats.hdf5" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/dpw" \
-    --toest "direct_paternal_maternal_averageparental_population" \
+    --effects "direct_averageparental" \
+    --toest "direct_population"  \
     --ldsc-ref $reffile \
     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"

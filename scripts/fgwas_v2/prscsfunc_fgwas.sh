@@ -1,9 +1,5 @@
-dirout="/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}"
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 refldpanel="/disk/genetics/tools/prscs/ld_reference/ldblk_ukbb_eur"
-
-mkdir -p tmp
-mkdir -p logs
 
 function run_pgi(){
 
@@ -11,15 +7,15 @@ function run_pgi(){
     EFFECT=$2
     PHENONAME=$3
     METHOD=$4
-    ANCESTRY=$5
     
-    dirout="/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${ANCESTRY}/${METHOD}"
+    dirout="/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}"
     pheno="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
     covariates="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
-    outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2/${ANCESTRY}/${METHOD}"
+    outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2/${METHOD}"
     pedigree="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
 
     mkdir -p ${dirout}
+    mkdir -p ${outpath}
     cd $dirout
     mkdir -p ${PHENONAME}/${EFFECT}
     
@@ -31,7 +27,7 @@ function run_pgi(){
         --bimout "${dirout}/${PHENONAME}/validation.bim"
 
     mkdir -p ${PHENONAME}/${EFFECT}/weights/
-    mkdir -p logs/${EFFECT}
+    mkdir -p logs/${EFFECT}/${PHENONAME}
 
     # getting weights using prscs
     N_THREADS=1
@@ -57,7 +53,7 @@ function run_pgi(){
         --n_gwas=${NEFF} \
         --chrom=${chr} \
         --seed=1 \
-        --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights | tee "logs/${EFFECT}/${PHENONAME}_meta_weights_prscs"
+        --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights 2>&1 | tee "${dirout}/logs/${EFFECT}/${PHENONAME}/chr${chr}_meta_weights_prscs"
     done
     wait
 
@@ -76,18 +72,12 @@ function run_pgi(){
     mkdir -p $outpath/${PHENONAME}/
     mkdir -p $outpath/${PHENONAME}/${EFFECT}
 
-    if [[ $ANCESTRY == "eur" ]]; then
-        bfilepath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp"
-    elif [[ $ANCESTRY == "sas" ]]; then
-        bfilepath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/SAS/tmp"
-    fi
-
     for chr in {1..22}
     do
 
         echo $chr
             
-        plink2 --bfile ${bfilepath}/chr${chr}.dose \
+        plink2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
         --chr $chr \
         --score $scorefile 7 4 6 header center cols=+scoresums \
         --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
@@ -112,4 +102,5 @@ function run_pgi(){
     "$outpath/${PHENONAME}/${EFFECT}/scoresout.sscore" \
     --pedigree ${pedigree} \
     --outprefix "${outprefix}/"
+    
 }

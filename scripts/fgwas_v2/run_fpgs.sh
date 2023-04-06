@@ -18,22 +18,25 @@ phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/i
 
 source /var/genetics/proj/within_family/within_family_project/scripts/fgwas_v2/fpgipipeline_function_fgwas.sh
 
-# unified
-main "bmi" "" "0" "unified" "dir_pop"
-main "height" "" "0" "unified" "dir_pop"
-main "ea" "" "0" "unified" "dir_pop"
+# ancestry="eur"
+ancestry="sas"
 
-# ## robust
-# main "bmi" "" "0" "robust"
-# main "height" "" "0" "robust"
-# main "ea" "" "0" "robust"
+# unified
+main "bmi" "" "0" "unified" ${ancestry} "dir_pop" 
+main "height" "" "0" "unified" ${ancestry} "dir_pop" 
+main "ea" "" "0" "unified" ${ancestry} "dir_pop" 
+
+## robust
+main "bmi" "" "0" "robust" ${ancestry}
+main "height" "" "0" "robust" ${ancestry}
+main "ea" "" "0" "robust" ${ancestry}
 
 ## sibdiff
-# main "bmi" "" "0" "sibdiff"
-# main "height" "" "0" "sibdiff"
-# main "ea" "" "0" "sibdiff"
+main "bmi" "" "0" "sibdiff" ${ancestry}
+main "height" "" "0" "sibdiff" ${ancestry}
+main "ea" "" "0" "sibdiff" ${ancestry}
 
-# ## young
-# main "bmi" "" "0" "young"
-# main "height" "" "0" "young"
-# main "ea" "" "0" "young"
+## young
+main "bmi" "" "0" "young" ${ancestry}
+main "height" "" "0" "young" ${ancestry}
+main "ea" "" "0" "young" ${ancestry}

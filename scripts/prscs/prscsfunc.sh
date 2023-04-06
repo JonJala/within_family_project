@@ -3,8 +3,6 @@ within_family_path="/var/genetics/proj/within_family/within_family_project"
 refldpanel="/disk/genetics/tools/prscs/ld_reference/ldblk_ukbb_eur"
 
 cd $dirout
-mkdir -p tmp
-mkdir -p logs
 
 function run_pgi(){
 
@@ -32,11 +30,11 @@ function run_pgi(){
 
 
     if [[ $PHENONAME == "ea" || $PHENONAME == "cognition" ]]; then
-        out="${PHENONAME}/${DATASET}"
+        out="${dirout}/${PHENONAME}/${DATASET}"
     else
-        out="${PHENONAME}"
+        out="${dirout}/${PHENONAME}"
     fi
-    mkdir -p $out
+    mkdir -p ${out}/${EFFECT}/weights
 
     if [[ -z $CLUMP ]]; then
 
@@ -46,9 +44,6 @@ function run_pgi(){
             --effecttype "${EFFECT}" \
             --outpath "${out}/${EFFECT}/meta.sumstats" \
             --bimout "${out}/validation.bim"
-
-        mkdir -p ${PHENONAME}/${EFFECT}/weights/
-        mkdir -p logs/${EFFECT}
 
         # getting weights using prscs
         N_THREADS=1
@@ -66,6 +61,8 @@ function run_pgi(){
         NEFF=$(cat ${out}/${EFFECT}/${EFFECT}_median_n.txt)
         echo "Median N is ${NEFF}"
 
+        mkdir -p ${dirout}/logs/${PHENONAME}/${EFFECT}
+
         for chr in {1..22}; do
         prscs \
             --ref_dir=${refldpanel} \
@@ -74,7 +71,7 @@ function run_pgi(){
             --n_gwas=${NEFF} \
             --chrom=${chr} \
             --seed=1 \
-            --out_dir=${out}/${EFFECT}/weights/meta_weights | tee "logs/${EFFECT}/${PHENONAME}_meta_weights_prscs"
+            --out_dir=${out}/${EFFECT}/weights/meta_weights 2>&1 | tee "${dirout}/logs/${PHENONAME}/${EFFECT}/chr${chr}_meta_weights_prscs"
         done
         wait
 

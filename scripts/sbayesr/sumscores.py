@@ -16,6 +16,8 @@ if __name__ == '__main__':
                         help='''Path to meta analyzed output. Globbed''')
     parser.add_argument('--outprefix', type=str, 
                         help='''Where to store final file''')
+    parser.add_argument('--standardize', action='store_true', default=False,
+                         help='''Standardize PGIs to have mean 0 and sd 1''')
     args = parser.parse_args()
 
     files = glob(args.datapath)
@@ -34,6 +36,9 @@ if __name__ == '__main__':
     dat['SCORE'] = dat[score_cols].sum(axis=1)
     dat = dat[['#FID', 'IID', 'SCORE']]
     dat = dat.rename(columns = {'#FID' : 'FID'})
+
+    if args.standardize:
+        dat['SCORE'] = (dat['SCORE'] - dat['SCORE'].mean()) / dat['SCORE'].std()
 
     print(dat.head())
 

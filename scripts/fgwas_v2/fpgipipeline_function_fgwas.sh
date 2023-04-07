@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 within_family_path="/var/genetics/proj/within_family/within_family_project"
-snipar_path="/var/genetics/proj/within_family/snipar_simulate"
+# snipar_path="/var/genetics/proj/within_family/snipar_simulate"
+snipar_path="/var/genetics/code/snipar/SNIPar" # use main branch of snipar 
 
 function withinfam_pred(){
 
@@ -13,14 +14,15 @@ function withinfam_pred(){
     METHOD=$6
     ANCESTRY=$7
 
-    PHENOFILE="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
     OUTPATH="/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${METHOD}/${ANCESTRY}"
     RAWPATH="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed"
 
     if [ $ANCESTRY == "eur" ]; then
         COVAR="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
+        PHENOFILE="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
     elif [ $ANCESTRY == "sas" ]; then
         COVAR="/var/genetics/data/mcs/private/v1/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar_sas.txt"
+        PHENOFILE="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes_sas.txt"
     fi
 
     mkdir -p $RAWPATH/phen/${PHENONAME}
@@ -38,11 +40,19 @@ function withinfam_pred(){
     --sid-as-chrpos \
     --prscs
     
+    # outpath for phenotype file
+    if [ $ANCESTRY == "eur" ]; then
+        pheno_out="$RAWPATH/phen/${PHENONAME}"
+    elif [ $ANCESTRY == "sas" ]; then
+        pheno_out="$RAWPATH/phen/${PHENONAME}/${ANCESTRY}"
+        mkdir -p ${pheno_out}
+    fi
+
     # generate pheno file
     python $within_family_path/scripts/fpgs/format_pheno.py \
         $PHENOFILE \
         --iid IID --fid FID --phenocol $PHENONAME \
-        --outprefix $RAWPATH/phen/${PHENONAME}/pheno  \
+        --outprefix ${pheno_out}/pheno  \
         --sep "delim_whitespace" \
         --binary $BINARY
 
@@ -84,7 +94,8 @@ function withinfam_pred(){
 
         python /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sumscores.py \
             "$outdir/scores_*.sscore" \
-            --outprefix "$outdir/scoresout.sscore"
+            --outprefix "$outdir/scoresout.sscore" \
+            --standardize
 
         header="FID IID proband"
         sed -i "1s/.*/$header/" ${outdir}/scoresout.sscore
@@ -105,11 +116,11 @@ function withinfam_pred(){
     fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${ANCESTRY}"
     mkdir -p $fpgs_out
 
-    echo "Reading phenotype: $within_family_path/processed/fpgs/${PHENONAME}/phenotype.pheno"
+    echo "Reading phenotype: ${pheno_out}/pheno.pheno"
     if [ $ANCESTRY == "eur" ]; then
         python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_full \
             --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
-            --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+            --phenofile ${pheno_out}/pheno.pheno \
             --logistic $BINARY \
             --ols $ols \
             --kin $kin | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_${ANCESTRY}_full.reg.log"
@@ -117,7 +128,7 @@ function withinfam_pred(){
     
     python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_proband \
         --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_proband.pgs.txt \
-        --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+        --phenofile ${pheno_out}/pheno.pheno \
         --logistic $BINARY \
         --ols $ols \
         --kin $kin | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_${ANCESTRY}_proband.reg.log"
@@ -133,15 +144,16 @@ function main(){
     ANCESTRY=$5
     POPULATION=$6
 
-    phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/${PHENONAME}/pheno.pheno"
     processed_dir="/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${METHOD}/${ANCESTRY}"
     RAWPATH="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed"
     direct_weights="${within_family_path}/processed/fgwas_v2/${METHOD}/${PHENONAME}/direct/weights/meta_weights.snpRes"
 
     if [ $ANCESTRY = "eur" ]; then
         covar_fid="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt"
+        pheno_out="$RAWPATH/phen/${PHENONAME}"
     elif [ $ANCESTRY = "sas" ]; then
         covar_fid="/var/genetics/data/mcs/private/v1/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar_sas.txt"
+        pheno_out="$RAWPATH/phen/${PHENONAME}/${ANCESTRY}"
     fi
 
     # main prediction -- direct effect pgi
@@ -159,13 +171,13 @@ function main(){
     
     ols="1"
     kin="0"
-    
+
     fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${ANCESTRY}"
     
     echo "Running covariates only regression"
     python ${within_family_path}/scripts/fpgs/fpgs_reg.py  ${fpgs_out}/covariates \
         --pgs ${covar_fid} \
-        --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+        --phenofile ${pheno_out}/pheno.pheno \
         --logistic $BINARY --ols $ols --kin $kin
  
 }

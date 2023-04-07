@@ -84,7 +84,7 @@ phenotypes = reduce(list(ht_bmi, ea), merge, by = c("FID", "IID"), all=TRUE)
 phenotypes = merge(phenotypes, covariates, by = c("FID", "IID"), all=TRUE)
 
 ## filter to just get SAS sample
-sample = fread("/disk/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/sas_samples.txt", col.names = c("FID", "IID"))
+sample = fread("/disk/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/sas_samples_mz_removed.txt", col.names = c("FID", "IID"))
 phenotypes %<>% filter(IID %in% sample$IID)
 
 ## standardize

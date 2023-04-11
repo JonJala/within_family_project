@@ -1,1 +1,11 @@
 Computing / analyzing PGIs with MCS validation for Junming's FGWAS paper.
+
+Pipeline:
+
+1. prepare_phenotypes_fgwas.R: Prepare MCS validation phenotypes. Three phenotypes are being used: BMI, EA, and height. Read in the raw phenotype files from the server, merge on IIDs, then filter to get the relevant sample only. Two samples: EUR and SAS. EUR sample is MCS individuals of EUR ancestry, with MZ twins removed (/disk/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples_mz_removed.txt). SAS sample is MCS individuals of SAS ancestry, with MZ twins removed (/disk/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/sas_samples_mz_removed.txt). Sample files were prepared by Junming. After filtering to get the relevant sample, standardize the phenotype within each sample so that it has mean 0 and variance 1. BMI and height are standardized by sex.
+
+2. run_pgi.sh: Run PRSCS on sumstats prepared by Junming to get PGI weights. Get direct effect PGI weights for all 4 methods (unified, robust, sibdiff, Young), and population effect PGI weights for unified only. Uses UKB EUR LD reference panel from PRSCS.
+
+3. run_fpgs.sh: Takes PGI weights from PRSCS and creates PGIs for each MCS validation sample using plink. Combined chromosome-by-chromosome PGIs from plink to get one PGI for each individual, then standardizes PGIs to have mean 0 and variance 1. Append covariates to the standardized PGIs. Run two regressions: phenotype ~ proband PGI + covariates, and phenotype ~ covariates only. 
+
+4. compile_results_fgwas.py: Compiles betas (coefficient on proband PGI) and associated SE from the above regression. Also calculates incremental R2 between regression with proband PGI and regression with covariates only.

@@ -65,42 +65,5 @@ function run_pgi(){
     python ${within_family_path}/scripts/prscs/get_variantid.py \
         ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes \
         --out ${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted
-
-    scorefile="${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted"
-
-    # create PGIs
-    mkdir -p $outpath/${PHENONAME}/
-    mkdir -p $outpath/${PHENONAME}/${EFFECT}
-
-    for chr in {1..22}
-    do
-
-        echo $chr
-            
-        plink2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
-        --chr $chr \
-        --score $scorefile 7 4 6 header center cols=+scoresums \
-        --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
-
-    done
-
-    python /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sumscores.py \
-        "$outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_*.sscore" \
-        --outprefix "$outpath/${PHENONAME}/${EFFECT}/scoresout.sscore"
-
-    outprefix="${PHENONAME}/${EFFECT}"
-    
-    Rscript /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/pgiprediction.R \
-        --pgi "$outpath/${PHENONAME}/${EFFECT}/scoresout.sscore" \
-        --pheno $pheno \
-        --iid_pheno "IID" \
-        --pheno_name "$PHENONAME" \
-        --covariates $covariates \
-        --outprefix "${outprefix}/pgipred"
-
-    python ${within_family_path}/scripts/sbayesr/parental_pgi_corr.py \
-    "$outpath/${PHENONAME}/${EFFECT}/scoresout.sscore" \
-    --pedigree ${pedigree} \
-    --outprefix "${outprefix}/"
     
 }

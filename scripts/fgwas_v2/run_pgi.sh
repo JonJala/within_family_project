@@ -4,6 +4,8 @@ source /var/genetics/proj/within_family/within_family_project/scripts/fgwas_v2/p
 
 # ============= Execution ============= #
 
+### get pgi weights using prscs. run direct and population for unified; direct only for everything else.
+
 ## unified
 
 # direct

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 within_family_path="/var/genetics/proj/within_family/within_family_project"
-snipar_path="/var/genetics/code/snipar/SNIPar" # use main branch of snipar 
+# snipar_path="/var/genetics/code/snipar/SNIPar" # use main branch of snipar 
+snipar_path="/var/genetics/proj/within_family/snipar_simulate"
 
 function withinfam_pred(){
 
@@ -38,23 +39,33 @@ function withinfam_pred(){
         --sep "delim_whitespace" \
         --binary $BINARY
 
-    ## use plink to get proband pgis only
-    scorefile="${within_family_path}/processed/fgwas_v2/${METHOD}/${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted"
-    outdir="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2/${ANCESTRY}/${METHOD}/${PHENONAME}/${EFFECT}"
-    mkdir -p ${outdir}
-
     if [ $ANCESTRY == "eur" ]; then
 
-        for chr in {1..22}
-        do
-            echo $chr      
-            plink2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
-            --chr $chr \
-            --score $scorefile 7 4 6 header center cols=+scoresums \
-            --out ${outdir}/scores_${chr}
-        done
+        bedfilepath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr@.dose"
+        impfilespath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/chr@"
+
+        ## get proband and parental pgis using snipar        
+        PYTHONPATH=${snipar_path} ${snipar_path}/snipar/scripts/pgs.py \
+            $OUTPATH/${EFFECT}${OUTSUFFIX} \
+            --bed $bedfilepath \
+            --imp $impfilespath \
+            --weights ${within_family_path}/processed/fgwas_v2/${METHOD}/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
+            --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log 
+
+        # attach covariates to full pgs file
+        python ${within_family_path}/scripts/fpgs/attach_covar.py \
+            $OUTPATH/${EFFECT}${OUTSUFFIX}.pgs.txt \
+            --covariates $COVAR \
+            --outprefix $OUTPATH/${EFFECT}${OUTSUFFIX}_full
+
+        scoresout="$OUTPATH/${EFFECT}${OUTSUFFIX}.pgs.txt"
 
     elif [ $ANCESTRY == "sas" ]; then
+
+        ## use plink to get proband pgis only
+        scorefile="${within_family_path}/processed/fgwas_v2/${METHOD}/${PHENONAME}/${EFFECT}/weights/meta_weights.snpRes.formatted"
+        outdir="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2/${ANCESTRY}/${METHOD}/${PHENONAME}/${EFFECT}"
+        mkdir -p ${outdir}
 
         for chr in {1..22}
         do
@@ -65,19 +76,19 @@ function withinfam_pred(){
             --out ${outdir}/scores_${chr}
         done
 
+        # combine scores and standardize
+        python /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sumscores.py \
+        "$outdir/scores_*.sscore" \
+        --outprefix "$outdir/scoresout.sscore" \
+        --standardize
+
+        header="FID IID proband"
+        sed -i "1s/.*/$header/" ${outdir}/scoresout.sscore
+        scoresout="${outdir}/scoresout.sscore"
+
     fi
 
-    # combine scores and standardize
-    python /var/genetics/proj/within_family/within_family_project/scripts/sbayesr/sumscores.py \
-    "$outdir/scores_*.sscore" \
-    --outprefix "$outdir/scoresout.sscore" \
-    --standardize
-
-    header="FID IID proband"
-    sed -i "1s/.*/$header/" ${outdir}/scoresout.sscore
-    scoresout="${outdir}/scoresout.sscore"
-
-    # attach covariates
+    # attach covariates to proband pgis
     python ${within_family_path}/scripts/fpgs/attach_covar.py \
         ${scoresout} \
         --keepeffect "proband" \
@@ -90,8 +101,18 @@ function withinfam_pred(){
     fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${ANCESTRY}"
     mkdir -p $fpgs_out
 
-    # run regression
-    echo "Reading phenotype: ${pheno_out}/pheno.pheno"
+    ## run full fPGI regression if EUR
+    echo "Run full fPGI regression..."
+    if [ $ANCESTRY == "eur" ]; then
+        python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_full \
+            --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
+            --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+            --logistic $BINARY \
+            --ols $ols \
+            --kin $kin | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_${ANCESTRY}_full.reg.log"
+    fi
+
+    ## run proband PGI regression
     python ${within_family_path}/scripts/fgwas_v2/fpgs_reg_fgwas.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_proband \
         --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_proband.pgs.txt \
         --phenofile ${pheno_out}/pheno.pheno \
@@ -138,10 +159,11 @@ function main(){
     kin="0"
 
     echo "Running covariates only regression"
-    fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${ANCESTRY}"
-    python ${within_family_path}/scripts/fgwas_v2/fpgs_reg_fgwas.py  ${fpgs_out}/covariates \
+    python ${within_family_path}/scripts/fpgs/fpgs_reg.py  ${fpgs_out}/covariates \
         --pgs ${covar_fid} \
-        --phenofile ${pheno_out}/pheno.pheno \
-        --logistic $BINARY --ols $ols --kin $kin
+        --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+        --sniparpath ${snipar_path} \
+        --logistic $BINARY --ols $ols --kin $kin \
+        --covariates_only
 
 }

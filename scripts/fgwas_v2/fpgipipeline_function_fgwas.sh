@@ -49,6 +49,10 @@ function withinfam_pred(){
             $OUTPATH/${EFFECT}${OUTSUFFIX} \
             --bed $bedfilepath \
             --imp $impfilespath \
+            --beta_col "ldpred_beta" \
+            --SNP "sid" \
+            --A1 "nt1" \
+            --A2 "nt2" \
             --weights ${within_family_path}/processed/fgwas_v2/${METHOD}/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
             --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log 
 
@@ -101,25 +105,23 @@ function withinfam_pred(){
     fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${ANCESTRY}"
     mkdir -p $fpgs_out
 
-    ## run full fPGI regression if EUR
-    echo "Run full fPGI regression..."
     if [ $ANCESTRY == "eur" ]; then
-        python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_full \
-            --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
-            --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+        ## run full fPGI regression if EUR
+        echo "Run full fPGI regression..."
+        PYTHONPATH=${snipar_path} ${snipar_path}/snipar/scripts/pgs.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_full \
+            --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}.pgs.txt \
+            --phenofile ${pheno_out}/pheno.pheno \
+            --scale_phen | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_${ANCESTRY}_full.reg.log"
+    elif [ $ANCESTRY == "sas" ]; then
+        ## run proband PGI regression only otherwise
+        python ${within_family_path}/scripts/fgwas_v2/fpgs_reg_fgwas.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_proband \
+            --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_proband.pgs.txt \
+            --phenofile ${pheno_out}/pheno.pheno \
             --logistic $BINARY \
             --ols $ols \
-            --kin $kin | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_${ANCESTRY}_full.reg.log"
-    fi
+            --kin $kin | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_${ANCESTRY}_proband.reg.log"
+    fi    
 
-    ## run proband PGI regression
-    python ${within_family_path}/scripts/fgwas_v2/fpgs_reg_fgwas.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_proband \
-        --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_proband.pgs.txt \
-        --phenofile ${pheno_out}/pheno.pheno \
-        --logistic $BINARY \
-        --ols $ols \
-        --kin $kin | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_${ANCESTRY}_proband.reg.log"
-    
 }
 
 function main(){

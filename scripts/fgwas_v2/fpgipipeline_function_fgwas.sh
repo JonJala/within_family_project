@@ -15,7 +15,6 @@ function withinfam_pred(){
 
     OUTPATH="/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${METHOD}/${ANCESTRY}"
     RAWPATH="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed"
-
     COVAR="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
     PHENOFILE="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes_eur.txt"
     
@@ -48,31 +47,14 @@ function withinfam_pred(){
         --weights ${within_family_path}/processed/fgwas_v2/${METHOD}/${PHENONAME}/${PHENONAME}_${EFFECT}_fpgs_formatted.txt \
         --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log 
 
-    # attach covariates to full pgs file
-    python ${within_family_path}/scripts/fpgs/attach_covar.py \
-        $OUTPATH/${EFFECT}${OUTSUFFIX}.pgs.txt \
-        --covariates $COVAR \
-        --outprefix $OUTPATH/${EFFECT}${OUTSUFFIX}_full
-
     scoresout="$OUTPATH/${EFFECT}${OUTSUFFIX}.pgs.txt"
-
-    # attach covariates to proband pgis
-    python ${within_family_path}/scripts/fpgs/attach_covar.py \
-        ${scoresout} \
-        --keepeffect "proband" \
-        --covariates $COVAR \
-        --outprefix $OUTPATH/${EFFECT}${OUTSUFFIX}_proband
-
-    ols="1"
-    kin="0"
-
     fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${ANCESTRY}"
     mkdir -p $fpgs_out
 
-    ## run full fPGI regression if EUR
-    echo "Run full fPGI regression..."
-    PYTHONPATH=${snipar_path} ${snipar_path}/snipar/scripts/pgs.py ${fpgs_out}/${EFFECT}${OUTSUFFIX}_full \
-        --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}.pgs.txt \
+    ## run fPGI regression
+    echo "Run fPGI regression..."
+    PYTHONPATH=${snipar_path} ${snipar_path}/snipar/scripts/pgs.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
+        --pgs ${scoresout} \
         --phenofile ${pheno_out}/pheno.pheno \
         --scale_phen | tee "${within_family_path}/processed/fgwas_v2/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_${ANCESTRY}_full.reg.log"
 
@@ -106,15 +88,4 @@ function main(){
             "$OUTSUFFIX" "$BINARY" "$METHOD" "$ANCESTRY"
     fi
     
-    ols="1"
-    kin="0"
-
-    echo "Running covariates only regression"
-    python ${within_family_path}/scripts/fpgs/fpgs_reg.py  ${fpgs_out}/covariates \
-        --pgs ${covar_fid} \
-        --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
-        --sniparpath ${snipar_path} \
-        --logistic $BINARY --ols $ols --kin $kin \
-        --covariates_only
-
 }

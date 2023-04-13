@@ -19,10 +19,33 @@ library(foreign)
 # 6. merge all the phenos by FID and IID
 # 7. save
 
-## function to set mean to 0 and var to 1
+## set mean to 0 and variance 1
 standardize <- function(x) {
     out = (x - mean(x, na.rm=TRUE))/sd(x, na.rm=TRUE)
     return(out)
+}
+
+## function to remove outliers and negative values
+remove_outliers <- function(y, remove_upper, remove_lower, remove_neg) {
+  
+  y = as.numeric(y)
+  
+  # Remove negatives
+  if (remove_neg) {
+    y[y < 0] <- NA
+  }
+  
+  # Remove outliers (top / bottom 0.5%)
+  if (remove_lower) {
+    y[y < quantile(y, 0.005, na.rm = T)] <- NA
+  }
+  if (remove_upper) {
+    y[ y > quantile(y, 0.995, na.rm = T)] <- NA
+  }
+
+  # Return
+  return(y)
+
 }
 
 #---------------------------------------------------------------------------------------------------------------------
@@ -56,6 +79,7 @@ setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
 ## merge phenos
 phenotypes = reduce(list(ht_bmi, ea), merge, by = c("FID", "IID"), all=TRUE)
 
+## function to filter to relevant sample and process using remove_outliers
 filter_and_std <- function(data, sample_path, covariates_path) {
 
     ## filter to just get relevant sample
@@ -63,15 +87,24 @@ filter_and_std <- function(data, sample_path, covariates_path) {
     data %<>% filter(IID %in% sample$IID)
 
     ## merge with covariates
-    covariates = fread(covariates_path, sep = "\t")
-    data = left_join(data, covariates, by = c("FID", "IID"))
+    covariates <- fread(covariates_path, sep = "\t")
+    data <- left_join(data, covariates, by = c("FID", "IID"))
 
-    ## standardize bmi and height by sex to have mean 0 and variance 1
-    data[, bmi := standardize(bmi), by=sex]
-    data[, height := standardize(height), by=sex]
-    
+    ## standardize bmi and height by sex to have mean 0 and variance 1. remove upper and lower outliers, and any negative values.
+    data$height <- remove_outliers(data$height, remove_upper = T, remove_lower = T, remove_neg = T)
+    data[, height := standardize(height), by = sex]
+
+    data$bmi <- remove_outliers(data$bmi, remove_upper = T, remove_lower = T, remove_neg = T)
+    data[, bmi := standardize(bmi), by = sex]
+
+    ## remove upper and lower outliers from ea but don't standardize
+    data$ea <- remove_outliers(data$ea, remove_upper = T, remove_lower = T, remove_neg = F)
+
     ## remove duplicated rows
-    data = distinct(data, .keep_all = TRUE)
+    data <- distinct(data, .keep_all = TRUE)
+
+    ## remove rows with all NAs
+    data <- data[!apply(is.na(data[,3:ncol(data)]), 1, all),]
 
     return(data)
 

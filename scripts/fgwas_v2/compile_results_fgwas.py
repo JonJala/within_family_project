@@ -8,10 +8,8 @@ phenotypes = ['bmi', 'ea', 'height']
 
 def compile_results_fgwas(phenotypes, ancestry, effect, methods):
     
-    datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'direct', 'direct_se',
-                'pop', 'pop_se', 'paternal', 'paternal_se',
-                'maternal', 'maternal_se',
-                'incr_r2_proband'])
+    datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'pop', 'pop_se',
+                'r2_proband'])
     
     for method in methods:
         for phenotype in phenotypes:
@@ -19,20 +17,14 @@ def compile_results_fgwas(phenotypes, ancestry, effect, methods):
 
                 # fpgs results
                 proband = pd.read_csv(
-                    basepath + 'processed/fpgs/' + phenotype + f'/{method}/{ancestry}/{effect}_proband.pgs_effects.txt',
+                    basepath + 'processed/fpgs/' + phenotype + f'/{method}/{ancestry}/{effect}.1.effects.txt',
                     delim_whitespace=True,
-                    names = ['coeff', 'se', 'r2']
-                )
-
-                covariates_only = pd.read_csv(
-                    basepath + 'processed/fpgs/' + phenotype + '/' + method + '/' + ancestry + '/covariates.pgs_effects.txt',
-                    delim_whitespace=True,
-                    names = ['coeff', 'se', 'r2']
+                    names = ['coeff', 'se']
                 )
 
                 popest = proband.loc['proband', 'coeff']
                 popse = proband.loc['proband', 'se']
-                incrr2_proband = proband.loc['proband', 'r2'] - covariates_only.loc['age', 'r2']
+                r2_proband = popest**2 - popse**2
 
                 datfpgs_tmp = pd.DataFrame({
                         'method' : [method],
@@ -40,7 +32,7 @@ def compile_results_fgwas(phenotypes, ancestry, effect, methods):
                         'effect' : [effect],
                         'pop' : [popest],
                         'pop_se' : [popse],
-                        'incr_r2_proband' : [incrr2_proband],
+                        'r2_proband' : [r2_proband],
                 })
 
                 datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
@@ -55,8 +47,5 @@ def compile_results_fgwas(phenotypes, ancestry, effect, methods):
         f'/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/fgwas_fpgs_results_{ancestry}_{effect}.xlsx'
     )
 
-compile_results_fgwas(phenotypes, "sas", "direct", ['unified', 'robust', 'sibdiff', 'young'])
 compile_results_fgwas(phenotypes, "eur", "direct", ['unified', 'robust', 'sibdiff', 'young'])
-[]
-compile_results_fgwas(phenotypes, "sas", "population", ["unified"])
 compile_results_fgwas(phenotypes, "eur", "population", ["unified"])

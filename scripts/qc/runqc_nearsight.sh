@@ -2,18 +2,18 @@
 ### Run the easyqc pipeline
 reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/nearsight/nearsight_ref.sumstats.gz"
 
-#####################
-## ====== EB ====== #
-#####################
+# #####################
+# ## ====== EB ====== #
+# #####################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/nearsightedness_usual_ext/nearsightedness_usual_chr*_results.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/nearsight" \
-    --ldsc-ref "$reffile" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --hwe "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/HWE/chr*.hwe" \
-    --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT" \
-    --binary
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/nearsightedness_usual_ext/nearsightedness_usual_chr*_results.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/nearsight" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --hwe "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/HWE/chr*.hwe" \
+#     --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT" \
+#     --binary
 
 # #####################
 # # ====== UKB ====== #
@@ -30,15 +30,13 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
 #     --binary
 
-# ###############
-# ## iPSYCH
-# ###########
+###############
+## iPSYCH
+###########
 
-# ## do not use
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_nearsightedness_export.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/nearsight" \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile" \
-#     --binary
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_nearsightedness_export0.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/nearsight" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile" \
+    --binary

@@ -56,23 +56,23 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
 #     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
 
-# ################
-# # iPSYCH
-# ############
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_age_fb_export.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/aafb" \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile"
-
-#############
-# QIMR
+################
+# iPSYCH
 ############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/AgeFirstBirth/AFB_Chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/aafb" \
-    --ldsc-ref "$reffile" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --cptid
+    "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_age_fb_export0.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/aafb" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile"
+
+# #############
+# # QIMR
+# ############
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/AgeFirstBirth/AFB_Chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/aafb" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid

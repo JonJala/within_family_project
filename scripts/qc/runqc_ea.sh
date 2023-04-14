@@ -48,20 +48,20 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # # 0.8028 (0.1378)
 
 
-##########
-# MOBA
-############
+# ##########
+# # MOBA
+# ############
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/edu_chr*.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/ea" \
-    --ldsc-ref "$reffile" \
-    --effects "direct_averageparental" \
-    --toest "direct_population"  \
-    --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
-    --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/edu_chr*.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/ea" \
+#     --ldsc-ref "$reffile" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population"  \
+#     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+#     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 
-# # 0.9331 (0.3353)
+# # # 0.9331 (0.3353)
 
 # #########
 # # Estonian Biobank
@@ -186,15 +186,15 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # #     --toest "direct_population" \
 # #     --cptid
 
-# ################
-# # iPSYCH
-# ############
+################
+# iPSYCH
+############
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_ea_export.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/ea" \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_ea_export0.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/ea" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile"
 
 # #####################
 # # ====== CKB ====== #

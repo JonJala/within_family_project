@@ -91,29 +91,29 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
 
 
-# ################
-# # iPSYCH
-# ############
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_gpa_hs_export.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpahs" \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile" 
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_gpa9_export.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpa9" \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile" 
-
+################
+# iPSYCH
 ############
-# QIMR
-###########
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/IQ/IQ_Chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/cognition" \
-    --ldsc-ref "$reffile" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --cptid
+    "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_gpa_hs_export0.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpahs" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile" 
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_gpa9_export0.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpa9" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile" 
+
+# ############
+# # QIMR
+# ###########
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/IQ/IQ_Chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/cognition" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid

@@ -57,16 +57,16 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/hwe.formatted.gz' \
 #     --binary
 
-# ################
-# # iPSYCH
-# ############
+################
+# iPSYCH
+############
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_asthma_export.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/asthma" \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile" \
-#     --binary
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_asthma_export0.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/asthma" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile" \
+    --binary
 
 # #####################
 # # ====== UKB ====== #
@@ -83,15 +83,15 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
 #     --binary
 
-#####################
-# ====== CKB ====== #
-#####################
+# #####################
+# # ====== CKB ====== #
+# #####################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/asthma_all_chr.sumstats.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/asthma" \
-    --effects "direct_averageparental_population" \
-    --toest "direct_averageparental_population" \
-    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
-    --cptid \
-    --binary
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/asthma_all_chr.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/asthma" \
+#     --effects "direct_averageparental_population" \
+#     --toest "direct_averageparental_population" \
+#     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
+#     --cptid \
+#     --binary

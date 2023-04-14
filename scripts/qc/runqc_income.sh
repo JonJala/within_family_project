@@ -15,18 +15,18 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --toest "direct_population" \
 #     --hwe '/var/genetics/data/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
-#####################
-# MOBA
-##################
+# #####################
+# # MOBA
+# ##################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/inc_chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/income" \
-    --ldsc-ref "$reffile" \
-    --effects "direct_averageparental" \
-    --toest "direct_population"  \
-    --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
-    --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/inc_chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/income" \
+#     --ldsc-ref "$reffile" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population"  \
+#     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+#     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 
 ##########
 # STR
@@ -64,26 +64,26 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
 #     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
 
-# ################
-# # iPSYCH
-# ############
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_wage_export.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/income" \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile"
-
-####################
-# ====== UKB ====== #
-####################
+################
+# iPSYCH
+############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/income/income.sumstats.gz" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/income" \
-    --effects "direct_averageparental" \
+    "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_wage_export0.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/income" \
     --toest "direct_population" \
-    --bim_chromosome 99 \
-    --ldsc-ref "$reffile" \
-    --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
-    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
+    --ldsc-ref "$reffile"
+
+# ####################
+# # ====== UKB ====== #
+# ####################
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/income/income.sumstats.gz" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/income" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --bim_chromosome 99 \
+#     --ldsc-ref "$reffile" \
+#     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
+#     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'

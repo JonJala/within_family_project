@@ -97,8 +97,9 @@ filter_and_std <- function(data, sample_path, covariates_path) {
     data$bmi <- remove_outliers(data$bmi, remove_upper = T, remove_lower = T, remove_neg = T)
     data[, bmi := standardize(bmi), by = sex]
 
-    ## remove upper and lower outliers from ea but don't standardize
+    ## remove upper and lower outliers from ea, standardize within sex
     data$ea <- remove_outliers(data$ea, remove_upper = T, remove_lower = T, remove_neg = F)
+    data[, ea := standardize(ea), by = sex]
 
     ## remove duplicated rows
     data <- distinct(data, .keep_all = TRUE)

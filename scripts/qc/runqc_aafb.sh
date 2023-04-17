@@ -64,6 +64,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_age_fb_export0.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/aafb" \
     --toest "direct_population" \
+    --cptid \
     --ldsc-ref "$reffile"
 
 # #############

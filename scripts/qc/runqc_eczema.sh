@@ -51,6 +51,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_eczema_export0.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/eczema" \
     --toest "direct_population" \
+    --cptid \
     --ldsc-ref "$reffile" \
     --binary
 

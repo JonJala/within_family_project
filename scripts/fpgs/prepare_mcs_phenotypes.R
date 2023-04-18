@@ -16,17 +16,15 @@ library(metamisc)
 # 2. select the pheno and two ID columns
 # 3. rename the two ID columns to IID and FID, where FID = IID = Benjamin ID x 2
 # 4. get rid of the Benjamin ID columns
-# 5. perform whatever processing you need on the pheno, e.g. standardization, renaming, drop NAs, etc.
+# 5. perform whatever processing you need on the pheno, e.g. standardization, remove outliers, renaming, drop NAs, etc.
 # 6. merge all the phenos by FID and IID
 # 7. save
 
-# define functions to help with processing
-standardize <- function(x) {
-    out = (x - mean(x, na.rm=TRUE))/sd(x, na.rm=TRUE)
-    return(out)
-}
+## define functions to help with processing
 
+## read in file and rename columns
 read_and_rename <- function(pheno_code, pheno_name, file_path = "/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv") {
+    
     # read in the file
     pheno = fread(file_path)
     
@@ -49,14 +47,47 @@ read_and_rename <- function(pheno_code, pheno_name, file_path = "/var/genetics/d
     return(pheno)
 }
 
-# read in covariates
-covariates = fread("/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt")
+## filter to get relevant sample only
+filter_sample <- function(data, sample) {
+    data <- data %>% 
+            filter(IID %in% sample$IID)
+    return(data)
+}
+
+## set mean to 0 and variance 1
+standardize <- function(x) {
+    out = (x - mean(x, na.rm=TRUE))/sd(x, na.rm=TRUE)
+    return(out)
+}
+
+## function to remove outliers and negative values
+remove_outliers <- function(y, remove_upper = F, remove_lower = F, remove_neg = F) {
+  
+    y = as.numeric(y)
+
+    # Remove negatives
+    if (remove_neg) {
+    y[y < 0] <- NA
+    }
+
+    # Remove outliers (top / bottom 0.5%)
+    if (remove_lower) {
+    y[y < quantile(y, 0.005, na.rm = T)] <- NA
+    }
+    if (remove_upper) {
+    y[ y > quantile(y, 0.995, na.rm = T)] <- NA
+    }
+
+    # Return
+    return(y)
+
+}
 
 #---------------------------------------------------------------------------------------------------------------------
 # ea
 #---------------------------------------------------------------------------------------------------------------------
 
-## average of english and math grades
+## average of english and math grade z-scores
 ea = fread("/var/genetics/data/mcs/private/v1/processed/phen/EA/MCS_EA_zscore_mean.phen")
 
 # formatting ea
@@ -80,14 +111,13 @@ setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
 # cognition
 #---------------------------------------------------------------------------------------------------------------------
 
-## MCS verbal similarity score
+## MCS verbal similarity score. ranges from 0 to 19.
 
 cogverb = fread("/var/genetics/data/mcs/private/v1/raw/phen/GENDAC-2022-05-26_sweep6wordscore/csv/GENDAC_BENJAMIN_mcs_cm_structure_26-05-2022.csv")
 
 # formatting cognition
 cogverb = cogverb[, c(grep("(FCWRDSC|Benjamin*)", names(cogverb))), with=FALSE]
 cogverb$cogverb = rowSums(cogverb[, grep("FCWRDSC", names(cogverb)), with=FALSE])
-cogverb[, cogverb := standardize(cogverb)]
 
 cogverb[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
 cogverb[,FID := IID]
@@ -136,13 +166,12 @@ filled[filled < 0] <- 0
 cog_ass_filled <- cbind(cog_ass_partial[1:2], filled)
 names(cog_ass_filled) <- c("benjamin_id", "benjamin_fid", "GCNAAS0A", "GCNAAS0B", "GCNAAS0C", "GCNAAS0D", "GCNAAS0E", "GCNAAS0F", "GCNAAS0G", "GCNAAS0H", "GCNAAS0I", "GCNAAS0J")
 
-# sum over responses to create cognition variable, standardize and drop duplicates
+# sum over responses to create cognition variable, and drop duplicates. final variable ranges from 0 to 10.
 cognition <- cog_ass_filled %>%
             mutate(cognition = rowSums(across(c(grep("GCNAAS0", names(cog_ass_filled)))), na.rm = TRUE),
             IID = paste(benjamin_id, benjamin_id, sep="_"),
             FID = IID) %>%
             select(IID, FID, cognition) %>%
-            mutate(cognition = standardize(cognition)) %>%
             distinct(FID, .keep_all = TRUE)
 rownames(cognition) <- NULL
 
@@ -150,32 +179,22 @@ rownames(cognition) <- NULL
 # depression
 #---------------------------------------------------------------------------------------------------------------------
 
-# depression is reverse coded compared to our cohorts
+# depression is reverse coded compared to our cohorts (1 = depression, 2 = no depression). convert to binary 0/1, 1 = has depression.
 dep <- read_and_rename("GCDEAN00", "depression")
 dep[depression == 2, depression := 0]
-dep = dep[depression %in% c(0, 1)]
+dep[depression == -1, depression := NA] # set -1 to NA
 
 #---------------------------------------------------------------------------------------------------------------------
 # adhd
 #---------------------------------------------------------------------------------------------------------------------
 
-adhd <- read_and_rename("GHYPER_C", "adhd")
-
-# standardize
-adhd[, adhd := standardize(adhd)] 
+adhd <- read_and_rename("GHYPER_C", "adhd") # score from 0-10 corresponding to hyperactivity/inattention score. note: NOT BINARY
 
 #---------------------------------------------------------------------------------------------------------------------
-# age at first menarche
+# age at menarche
 #---------------------------------------------------------------------------------------------------------------------
 
 menarche <- read_and_rename("GCAGMN00", "agemenarche")
-
-# remove outliers
-menarche[agemenarche<quantile(agemenarche,0.001,na.rm=T)] = NA
-menarche[agemenarche>quantile(agemenarche,0.999,na.rm=T)] = NA
-
-# standardize
-menarche[, agemenarche := standardize(agemenarche)]
 
 #---------------------------------------------------------------------------------------------------------------------
 # eczema
@@ -191,9 +210,9 @@ eczema <- read_and_rename("GCCLSM0P", "eczema")
 cann <- read_and_rename("GCDRUA00", "cannabis")
 # table(cann$cannabis) # coded as 2, 1, -1; 2 = no, 1 = yes, -1 = missing? (https://cls.ucl.ac.uk/wp-content/uploads/2020/01/MCS7-Young-Person-Self-Completion-Questionnaire.pdf)
 
-# reverse coding and remove missing values
+# reverse coding and set missing to NA
 cann[cannabis == 2, cannabis := 0]
-cann = cann[cannabis %in% c(0, 1)]
+cann[cannabis == -1, cannabis := NA]
 
 #---------------------------------------------------------------------------------------------------------------------
 # drinks in last 12 months
@@ -209,9 +228,6 @@ drinks_12 <- read_and_rename("GCALCN00", "drinks_12_months")
 # 6 20-39 times
 # 7 40 or more times
 
-# remove missings
-drinks_12 = drinks_12[drinks_12_months %in% seq(1, 7)]
-
 # take midpoint of each bin
 # 1 = 0; 2 = 1.5; 3 = 4; 4 = 7.5; 5 = 14.5; 6 = 29.5; 7 = 40
 drinks_12[drinks_12_months == 1, drinks_12_months := 0]
@@ -222,8 +238,8 @@ drinks_12[drinks_12_months == 5, drinks_12_months := 14.5]
 drinks_12[drinks_12_months == 6, drinks_12_months := 29.5]
 drinks_12[drinks_12_months == 7, drinks_12_months := 40]
 
-# standardize
-drinks_12[, drinks_12_months := standardize(drinks_12_months)]
+# set missing to NA
+drinks_12[drinks_12_months == -1, drinks_12_months := NA]
 
 #---------------------------------------------------------------------------------------------------------------------
 # drinks in last 4 weeks
@@ -239,9 +255,6 @@ drinks_4 <- read_and_rename("GCALNF00", "dpw")
 # 6 20-39 times
 # 7 40 or more times
 
-# remove missings
-drinks_4 = drinks_4[dpw %in% seq(1, 7)]
-
 # take midpoint of each bin
 # 1 = 0; 2 = 1.5; 3 = 4; 4 = 7.5; 5 = 14.5; 6 = 29.5; 7 = 40
 drinks_4[dpw == 1, dpw := 0]
@@ -252,8 +265,8 @@ drinks_4[dpw == 5, dpw := 14.5]
 drinks_4[dpw == 6, dpw := 29.5]
 drinks_4[dpw == 7, dpw := 40]
 
-# standardize
-drinks_4[, dpw := standardize(dpw)]
+# set missing to NA
+drinks_4[dpw == -1, dpw := NA]
 
 #---------------------------------------------------------------------------------------------------------------------
 # depressive symptoms
@@ -261,9 +274,6 @@ drinks_4[, dpw := standardize(dpw)]
 
 dep_symp <- read_and_rename("GDCKESSL", "depsymp")
 # table(dep_symp$depressive_symptoms) # 0 to 24
-
-# standardize
-dep_symp[, depsymp := standardize(depsymp)]
 
 #---------------------------------------------------------------------------------------------------------------------
 # ever smoker
@@ -279,10 +289,10 @@ es <- read_and_rename("GCSMOK00", "eversmoker")
 # 5 I usually smoke between one and six cigarettes a week
 # 6 I usually smoke more than six cigarettes a week 
 
-# code as binary variable and remove missing values
+# code as binary variable and -1 to NA
+es[eversmoker == -1, eversmoker := NA]
 es[eversmoker == 1, eversmoker := 0]
-es[eversmoker != 0 & eversmoker != -1, eversmoker := 1]
-es = es[eversmoker %in% c(0, 1)]
+es[eversmoker > 0, eversmoker := 1]
 
 #---------------------------------------------------------------------------------------------------------------------
 # extraversion
@@ -291,11 +301,8 @@ es = es[eversmoker %in% c(0, 1)]
 extra <- read_and_rename("GDCEXTRAV", "extraversion")
 # table(extra$extraversion)
 
-# remove 0 and negative values
-extra = extra[extraversion > 0]
-
-# standardize
-extra[, extraversion := standardize(extraversion)]
+## scores should be between 3 and 21. remove values below 3.
+extra[extraversion < 3, extraversion := NA]
 
 #---------------------------------------------------------------------------------------------------------------------
 # hayfever
@@ -311,14 +318,15 @@ hayfever[, eczema := NULL]
 # hhincome
 #---------------------------------------------------------------------------------------------------------------------
 
+## read in data
 fid_map = fread("/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv", select = c("Benjamin_ID", "Benjamin_FID"))
-nrow(fid_map)
-
 hhincome = as.data.table(read_sav("/var/genetics/data/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_v7_mcs_family_structure_20221208.sav"))
+
+## rename columns
 hhincome = merge(hhincome, fid_map, by.x = "benjamin_fid", by.y = "Benjamin_FID")
 hhincome[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
 hhincome %<>% 
-    mutate(FID = IID, hhincome = standardize(FOEDE000)) %>%
+    mutate(FID = IID, hhincome = FOEDE000) %>%
     select(FID, IID, hhincome)
 
 #---------------------------------------------------------------------------------------------------------------------
@@ -328,18 +336,15 @@ hhincome %<>%
 neuro <- read_and_rename("GDCNEUROT", "neuroticism")
 # table(neuro$neuroticism)
 
-# remove 0 and negative values
-neuro = neuro[neuroticism > 0]
-
-# standardize
-neuro[, neuroticism := standardize(neuroticism)]
+## scores should be between 3 and 21. exclude values below 3.
+neuro[neuroticism < 3, neuroticism := NA]
 
 #---------------------------------------------------------------------------------------------------------------------
 # self-rated health
 #---------------------------------------------------------------------------------------------------------------------
 
 health <- read_and_rename("GCCGHE00", "self_rated_health")
-# table(health$health) # 1 to 5, -1 = missing? need to reverse order of scale so that higher values = higher level of wellbeing
+# table(health$self_rated_health) # 1 to 5, -1 = missing? need to reverse order of scale so that higher values = higher level of wellbeing
 
 # reorder scale
 health[self_rated_health == 1, health := 5]
@@ -347,36 +352,67 @@ health[self_rated_health == 2, health := 4]
 health[self_rated_health == 3, health := 3]
 health[self_rated_health == 4, health := 2]
 health[self_rated_health == 5, health := 1]
+health[self_rated_health == -1, health := NA]
 health[, self_rated_health := NULL]
-
-# remove missing values
-health = health[health > 0]
-
-# standardize
-health[, health := standardize(health)]
 
 #---------------------------------------------------------------------------------------------------------------------
 # subjective well-being
 #---------------------------------------------------------------------------------------------------------------------
 
 swb <- read_and_rename("GDWEMWBS", "swb")
-# table(swb$swb)
-
-# standardize
-swb[, swb := standardize(swb)]
+# summary(swb$swb) # looks fine -- score from 7 to 35
 
 #---------------------------------------------------------------------------------------------------------------------
-# merge phenos
+# merge phenos, standardize and remove outliers
 #---------------------------------------------------------------------------------------------------------------------
 
+## merge phenos
 # note: ea = average of english and math scores; cogverb = verbal similarity score; cog = cognitive assessment score
+phenotypes <- reduce(list(ht_bmi, ea, cognition, cogverb, dep, adhd, menarche, eczema, cann, drinks_4, dep_symp, es, extra, hayfever, neuro, health, hhincome, swb), merge, by = c("FID", "IID"), all=TRUE)
 
-phenotypes = reduce(list(ht_bmi, ea, cognition, cogverb, dep, adhd, menarche, eczema, cann, drinks_4, dep_symp, es, extra, hayfever, neuro, health, hhincome, swb), merge, by = c("FID", "IID"), all=TRUE)
-phenotypes = merge(phenotypes, covariates, by = c("FID", "IID"), all=TRUE)
+## filter to get relevant sample
+sample <- fread("/var/genetics/data/mcs/private/v1/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt", col.names = c("FID", "IID"))  # MCS EUR individuals + parents, MZ removed
+phenotypes <- filter_sample(phenotypes, sample)
 
-# standardize bmi and height by sex
-phenotypes[, bmi := standardize(bmi), by=sex]
+## process each variable as appropriate (remove outliers / negative values, standardize by sex)
+
+# remove outliers / negative values for quantitative phenos
+phenotypes$height <- remove_outliers(phenotypes$height, remove_upper = T, remove_lower = T, remove_neg = T)
+phenotypes$bmi <- remove_outliers(phenotypes$bmi, remove_upper = T, remove_lower = T, remove_neg = T)
+phenotypes$ea <- remove_outliers(phenotypes$ea, remove_upper = T, remove_lower = T, remove_neg = F)
+phenotypes$cognition <- remove_outliers(phenotypes$cognition, remove_upper = F, remove_lower = F, remove_neg = T)
+phenotypes$cogverb <- remove_outliers(phenotypes$cogverb, remove_upper = F, remove_lower = F, remove_neg = T)
+phenotypes$adhd <- remove_outliers(phenotypes$adhd, remove_upper = F, remove_lower = F, remove_neg = T) # need to check whether to convert to binary
+phenotypes$agemenarche <- remove_outliers(phenotypes$agemenarche, remove_upper = T, remove_lower = T, remove_neg = T)
+phenotypes$dpw <- remove_outliers(phenotypes$dpw, remove_upper = F, remove_lower = F, remove_neg = T)
+phenotypes$depsymp <- remove_outliers(phenotypes$depsymp, remove_upper = F, remove_lower = F, remove_neg = T)
+phenotypes$extraversion <- remove_outliers(phenotypes$extraversion, remove_upper = F, remove_lower = F, remove_neg = T)
+phenotypes$neuroticism <- remove_outliers(phenotypes$neuroticism, remove_upper = F, remove_lower = F, remove_neg = T)
+phenotypes$health <- remove_outliers(phenotypes$health, remove_upper = F, remove_lower = F, remove_neg = T)
+phenotypes$hhincome <- remove_outliers(phenotypes$hhincome, remove_upper = T, remove_lower = T, remove_neg = T)
+phenotypes$swb <- remove_outliers(phenotypes$swb, remove_upper = F, remove_lower = F, remove_neg = T)
+
+## standardize by sex
+
+# read in covariates and merge
+covariates <- fread("/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt")
+phenotypes <- left_join(phenotypes, covariates, by = c("FID", "IID"))
+
+# standardize by sex
 phenotypes[, height := standardize(height), by=sex]
+phenotypes[, bmi := standardize(bmi), by=sex]
+phenotypes[, ea := standardize(ea), by=sex]
+phenotypes[, cognition := standardize(cognition), by=sex]
+phenotypes[, cogverb := standardize(cogverb), by=sex]
+phenotypes[, adhd := standardize(adhd), by=sex] # check whether convert to binary
+phenotypes[, agemenarche := standardize(agemenarche), by=sex]
+phenotypes[, dpw := standardize(dpw), by=sex]
+phenotypes[, depsymp := standardize(depsymp), by=sex]
+phenotypes[, extraversion := standardize(extraversion), by=sex]
+phenotypes[, neuroticism := standardize(neuroticism), by=sex]
+phenotypes[, health := standardize(health), by=sex]
+phenotypes[, hhincome := standardize(hhincome), by=sex] # check this
+phenotypes[, swb := standardize(swb), by=sex]
 
 # remove duplicated rows
 phenotypes = distinct(phenotypes, .keep_all = TRUE)

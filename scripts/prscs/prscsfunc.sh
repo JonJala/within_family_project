@@ -29,7 +29,7 @@ function run_pgi(){
     fi
 
 
-    if [[ $PHENONAME == "ea" || $PHENONAME == "cognition" ]]; then
+    if [[ $PHENONAME == "ea" || $PHENONAME == "cognition" || $PHENONAME == "height" ]]; then
         out="${dirout}/${PHENONAME}/${DATASET}"
     else
         out="${dirout}/${PHENONAME}"

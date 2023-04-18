@@ -90,7 +90,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 ############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ipsych/private/v1/processed/sumstats/sumstats_depression_export0.txt" \
+    "/var/genetics/data/ipsych/public/v1/processed/sumstats/sumstats_depression_export0.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/depression" \
     --toest "direct_population" \
     --cptid \

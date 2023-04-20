@@ -13,13 +13,13 @@ function main(){
 
     # bash scripts/qc/runqc_${PHENO}.sh
     # bash scripts/usingpackage/${PHENO}/runmeta.sh
-    # bash scripts/sbayesr/${PHENO}_pgi.sh
+    # bash scripts/prscs/${PHENO}_pgi.sh
     # conda deactivate
 
     source ${sniparenv}
     bash scripts/fpgs/fpgs_${PHENO}.sh
     
-    # # ldsc stuff
+    # ldsc stuff
     # bash scripts/usingpackage/${PHENO}/ldsc_analysis.sh
 
 }
@@ -36,24 +36,24 @@ function main(){
 # time main cpd
 # time main depression
 # time main depsymp
-time main dpw
-time main ea
+# time main dpw
+# time main ea
 # time main eczema
 # time main eversmoker
-# time main extraversion
-# time main fev
-# time main hayfever
-# time main hdl
-# time main health
+time main extraversion
+time main fev
+time main hayfever
+time main hdl
+time main health
 # time main height
-# time main hhincome
-# time main income
-# time main migraine
-# time main morningperson
-# time main nchildren
-# time main nearsight
+time main hhincome
+time main income
+time main migraine
+time main morningperson
+time main nchildren
+time main nearsight
 time main neuroticism
-# time main nonhdl
+time main nonhdl
 time main swb
 
 echo "done with all!"

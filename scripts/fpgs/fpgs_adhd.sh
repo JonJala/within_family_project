@@ -6,5 +6,7 @@ snipar_path="/var/genetics/proj/within_family/snipar_simulate"
 
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
+# note: ADHD is not a binary outcome
+
 # base
-main "adhd" "" "1" "mcs" "prscs"
+main "adhd" "" "0" "mcs" "prscs"

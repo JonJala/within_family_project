@@ -322,11 +322,11 @@ hayfever[, eczema := NULL]
 fid_map = fread("/var/genetics/data/mcs/private/latest/raw/phen/MDAC-2020-0031-05A-BENJAMIN_addtional_vars/csv/GENDAC_BENJAMIN_mcs_cm_structure_2021_10_08.csv", select = c("Benjamin_ID", "Benjamin_FID"))
 hhincome = as.data.table(read_sav("/var/genetics/data/mcs/private/v1/raw/phen/MDAC-2020-0031-05A-BENJAMIN_v7_mcs_family_structure_20221208.sav"))
 
-## rename columns
+## rename columns and log transform
 hhincome = merge(hhincome, fid_map, by.x = "benjamin_fid", by.y = "Benjamin_FID")
 hhincome[,IID := paste(Benjamin_ID, Benjamin_ID, sep="_")]
 hhincome %<>% 
-    mutate(FID = IID, hhincome = FOEDE000) %>%
+    mutate(FID = IID, hhincome = log(FOEDE000)) %>%
     select(FID, IID, hhincome)
 
 #---------------------------------------------------------------------------------------------------------------------
@@ -382,7 +382,7 @@ phenotypes$bmi <- remove_outliers(phenotypes$bmi, remove_upper = T, remove_lower
 phenotypes$ea <- remove_outliers(phenotypes$ea, remove_upper = T, remove_lower = T, remove_neg = F)
 phenotypes$cognition <- remove_outliers(phenotypes$cognition, remove_upper = F, remove_lower = F, remove_neg = T)
 phenotypes$cogverb <- remove_outliers(phenotypes$cogverb, remove_upper = F, remove_lower = F, remove_neg = T)
-phenotypes$adhd <- remove_outliers(phenotypes$adhd, remove_upper = F, remove_lower = F, remove_neg = T) # need to check whether to convert to binary
+phenotypes$adhd <- remove_outliers(phenotypes$adhd, remove_upper = F, remove_lower = F, remove_neg = T)
 phenotypes$agemenarche <- remove_outliers(phenotypes$agemenarche, remove_upper = T, remove_lower = T, remove_neg = T)
 phenotypes$dpw <- remove_outliers(phenotypes$dpw, remove_upper = F, remove_lower = F, remove_neg = T)
 phenotypes$depsymp <- remove_outliers(phenotypes$depsymp, remove_upper = F, remove_lower = F, remove_neg = T)
@@ -404,14 +404,14 @@ phenotypes[, bmi := standardize(bmi), by=sex]
 phenotypes[, ea := standardize(ea), by=sex]
 phenotypes[, cognition := standardize(cognition), by=sex]
 phenotypes[, cogverb := standardize(cogverb), by=sex]
-phenotypes[, adhd := standardize(adhd), by=sex] # check whether convert to binary
+phenotypes[, adhd := standardize(adhd), by=sex]
 phenotypes[, agemenarche := standardize(agemenarche), by=sex]
 phenotypes[, dpw := standardize(dpw), by=sex]
 phenotypes[, depsymp := standardize(depsymp), by=sex]
 phenotypes[, extraversion := standardize(extraversion), by=sex]
 phenotypes[, neuroticism := standardize(neuroticism), by=sex]
 phenotypes[, health := standardize(health), by=sex]
-phenotypes[, hhincome := standardize(hhincome), by=sex] # check this
+phenotypes[, hhincome := standardize(hhincome), by=sex]
 phenotypes[, swb := standardize(swb), by=sex]
 
 # remove duplicated rows

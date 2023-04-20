@@ -21,9 +21,9 @@ pheno = fread(opt$pheno)
     # opt$pheno_name <- "ea"
 # }
 
-if (opt$pheno_name == "ea") {
-    opt$pheno_name <- "cognition" # read from cog col
-}
+# if (opt$pheno_name == "ea") {
+#     opt$pheno_name <- "cognition" # read from cog col
+# }
 
 if (is.null(opt$fid_pheno)) {
     setnames(pheno, old = c(opt$iid_pheno, opt$pheno_name), new=c("IID", "phenotype"))

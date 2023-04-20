@@ -22,8 +22,8 @@ else:
 
 # if args.phenocol == "cognition":
     # args.phenocol = "ea"
-if args.phenocol == "ea":
-    args.phenocol = "cognition"
+# if args.phenocol == "ea":
+#     args.phenocol = "cognition"
 
 if args.fid is not None:
     dat = dat[[args.fid, args.iid, args.phenocol]]

@@ -8,7 +8,7 @@ phenotypes = ['bmi', 'ea', 'height']
 
 def compile_results_fgwas(phenotypes, ancestry, effect, methods):
     
-    datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'pop', 'pop_se',
+    datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'dir', 'dir_se', 'pop', 'pop_se',
                 'r2_proband'])
     
     for method in methods:
@@ -22,6 +22,14 @@ def compile_results_fgwas(phenotypes, ancestry, effect, methods):
                     names = ['coeff', 'se']
                 )
 
+                full = pd.read_csv(
+                basepath + 'processed/fpgs/' + phenotype + f'/{method}/{ancestry}/{effect}.2.effects.txt',
+                delim_whitespace=True,
+                names = ['coeff', 'se']
+                )
+
+                direst = full.loc['proband', 'coeff']
+                dirse = full.loc['proband', 'se']
                 popest = proband.loc['proband', 'coeff']
                 popse = proband.loc['proband', 'se']
                 r2_proband = popest**2 - popse**2
@@ -30,6 +38,8 @@ def compile_results_fgwas(phenotypes, ancestry, effect, methods):
                         'method' : [method],
                         'phenotype' : [phenotype],
                         'effect' : [effect],
+                        'dir' : [direst],
+                        'dir_se' : [dirse],
                         'pop' : [popest],
                         'pop_se' : [popse],
                         'r2_proband' : [r2_proband],

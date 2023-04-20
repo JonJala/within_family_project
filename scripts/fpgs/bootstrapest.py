@@ -156,9 +156,9 @@ def bootstrap_est(args):
         ests_g2ratio = ((datg2f1/datg2f2)).loc['proband']
         ests = [ests_dif, ests_g1ratio, ests_g2ratio]
 
-    xout = bootstrap_inner(args) 
-    ses = np.std(xout, axis=1)
-    datout = pd.DataFrame({'est' : ests, 'se' : ses}, index=names)
+    # xout = bootstrap_inner(args) 
+    # ses = np.std(xout, axis=1)
+    datout = pd.DataFrame({'est' : ests}, index=names)
 
     return datout
 
@@ -186,6 +186,6 @@ if __name__ == '__main__':
 
 
     datout = bootstrap_est(args)
-    datout['ci_lo'] = datout['est'] - 1.96 * datout['se']
-    datout['ci_hi'] = datout['est'] + 1.96 * datout['se']
+    # datout['ci_lo'] = datout['est'] - 1.96 * datout['se']
+    # datout['ci_hi'] = datout['est'] + 1.96 * datout['se']
     datout.to_csv(args.outpath + '.bootests',  sep=' ')

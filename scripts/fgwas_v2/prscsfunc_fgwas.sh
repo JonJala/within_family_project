@@ -9,8 +9,8 @@ function run_pgi(){
     METHOD=$4
     
     dirout="/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}"
-    pheno="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
-    covariates="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
+    pheno="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
+    covariates="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
     outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2/eur/${METHOD}"
     pedigree="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
 

@@ -16,8 +16,8 @@ function withinfam_pred(){
 
     if [[ $DATASET == "mcs" ]]; then
 
-        PHENOFILE="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
-        COVAR="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
+        PHENOFILE="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
+        COVAR="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
         OUTPATH="/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${METHOD}"
         RAWPATH="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed"
         bedfilepath="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr@.dose"
@@ -119,14 +119,6 @@ function withinfam_pred(){
         --covariates $COVAR \
         --outprefix $OUTPATH/${EFFECT}${OUTSUFFIX}_full
 
-    # if [[ $DATASET == "mcs" ]]; then
-    #     ols="1"
-    #     kin="0"
-    # elif [[ $DATASET == "ukb" ]]; then
-    #     ols="0"
-    #     kin="1"
-    # fi
-
     if [[ ! -z $CLUMP ]]; then
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"
         mkdir -p $fpgs_out
@@ -138,28 +130,14 @@ function withinfam_pred(){
         mkdir -p $fpgs_out
     fi
 
-    # echo "Running fPGS regression..."
-    # if [[ $BINARY ]]; then
-    #     PYTHONPATH=${snipar_path} ${snipar_path}/snipar/scripts/pgs.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
-    #         --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}.pgs.txt \
-    #         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
-    #         --covar $COVAR \
-    #         --scale_phen | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}.reg.log"
-    # else
-    #     PYTHONPATH=${snipar_path} ${snipar_path}/snipar/scripts/pgs.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
-    #         --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}.pgs.txt \
-    #         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
-    #         --covar $COVAR | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}.reg.log"
-    # fi
-
     echo "Running fPGS regression..."
     python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
         --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+        --phenoname $PHENONAME \
         --dataset $DATASET \
         --sniparpath ${snipar_path} \
-        --binary $BINARY | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}.reg.log"
-
+        --binary $BINARY 2>&1 | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}.reg.log"
     
 }
 
@@ -174,8 +152,8 @@ function main(){
 
     if [[ $DATASET == "mcs" ]]; then
 
-        covar_fid="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt"
-        phenofile="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/${PHENONAME}/pheno.pheno"
+        covar_fid="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/covar_pedigfid.txt"
+        phenofile="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/${PHENONAME}/pheno.pheno"
         processed_dir="/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${METHOD}"
         RAWPATH="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed"
 
@@ -213,9 +191,9 @@ function main(){
         "direct" "$PHENONAME" \
         "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP"
     
-    # withinfam_pred $population_weights \
-    # "population" "$PHENONAME" \
-    # "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP"
+    withinfam_pred $population_weights \
+    "population" "$PHENONAME" \
+    "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP"
     
     # if [[ ! -z $CLUMP ]]; then
     #     fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"

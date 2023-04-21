@@ -156,8 +156,9 @@ function withinfam_pred(){
     python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
         --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
         --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+        --dataset $DATASET \
         --sniparpath ${snipar_path} \
-        --binary $BINARY | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}_full.reg.log"
+        --binary $BINARY | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}.reg.log"
 
     
 }

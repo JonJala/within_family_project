@@ -34,7 +34,6 @@ def run_fpgs_reg(args):
     print('Running pgs.py...')
 
     with tempfile.TemporaryDirectory() as dirout:
-        dirout="/var/genetics/proj/within_family/within_family_project/scratch/temp"
         pgs = pd.read_csv(args.pgs, delim_whitespace=True)
         pheno = pd.read_csv(args.phenofile, delim_whitespace=True, names = ["FID", "IID", "pheno"]).drop("FID", axis = 1)
         merged = pd.merge(pgs, pheno, on = "IID", how = 'inner')
@@ -45,6 +44,8 @@ def run_fpgs_reg(args):
         
         # create file with just covariates
         covar = merged.filter(regex="FID|IID|age|sex|V")
+        if args.dataset == "mcs":
+            covar = covar[covar.columns.drop(list(covar.filter(regex="age")))] # drop age covariates if MCS
         covar.to_csv(dirout + '/covar.txt', sep = '\t', index=False, na_rep = 'NA')
 
         # create file with just pheno
@@ -215,6 +216,7 @@ if __name__ == '__main__':
     parser.add_argument('--sniparpath', type=str,  help="Path to snipar installation")
     parser.add_argument('--gen_models', type=str,  help="Which multi-generational models should be fit in SNIPar pgs.py. 1 generation or 2 generation.")
     parser.add_argument('--covariates', type=str,  help="Path to covariates file")
+    parser.add_argument('--dataset', type=str,  help="Which validation dataset is being used, ukb or mcs")
     
     args = parser.parse_args()
 

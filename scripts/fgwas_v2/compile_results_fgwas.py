@@ -13,39 +13,39 @@ def compile_results_fgwas(phenotypes, ancestry, effect, methods):
     
     for method in methods:
         for phenotype in phenotypes:
-                print(f'Compiling results for {method} {phenotype} {effect}...')
+            print(f'Compiling results for {method} {phenotype} {effect}...')
 
-                # fpgs results
-                proband = pd.read_csv(
-                    basepath + 'processed/fpgs/' + phenotype + f'/{method}/{ancestry}/{effect}.1.effects.txt',
-                    delim_whitespace=True,
-                    names = ['coeff', 'se']
-                )
-
-                full = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + f'/{method}/{ancestry}/{effect}.2.effects.txt',
+            # fpgs results
+            proband = pd.read_csv(
+                basepath + 'processed/fpgs/' + phenotype + f'/{method}/{ancestry}/{effect}.1.effects.txt',
                 delim_whitespace=True,
                 names = ['coeff', 'se']
-                )
+            )
 
-                direst = full.loc['proband', 'coeff']
-                dirse = full.loc['proband', 'se']
-                popest = proband.loc['proband', 'coeff']
-                popse = proband.loc['proband', 'se']
-                r2_proband = popest**2 - popse**2
+            full = pd.read_csv(
+            basepath + 'processed/fpgs/' + phenotype + f'/{method}/{ancestry}/{effect}.2.effects.txt',
+            delim_whitespace=True,
+            names = ['coeff', 'se']
+            )
 
-                datfpgs_tmp = pd.DataFrame({
-                        'method' : [method],
-                        'phenotype' : [phenotype],
-                        'effect' : [effect],
-                        'dir' : [direst],
-                        'dir_se' : [dirse],
-                        'pop' : [popest],
-                        'pop_se' : [popse],
-                        'r2_proband' : [r2_proband],
-                })
+            direst = full.loc['proband', 'coeff']
+            dirse = full.loc['proband', 'se']
+            popest = proband.loc['proband', 'coeff']
+            popse = proband.loc['proband', 'se']
+            r2_proband = popest**2 - popse**2
 
-                datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
+            datfpgs_tmp = pd.DataFrame({
+                    'method' : [method],
+                    'phenotype' : [phenotype],
+                    'effect' : [effect],
+                    'dir' : [direst],
+                    'dir_se' : [dirse],
+                    'pop' : [popest],
+                    'pop_se' : [popse],
+                    'r2_proband' : [r2_proband],
+            })
+
+            datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
 
     floatcols = [c for c in datfpgs.columns if (c not in ['method', 'phenotype', 'effect'])]
     datfpgs[floatcols] = datfpgs[floatcols].apply(pd.to_numeric)

@@ -46,14 +46,14 @@ function run_pgi(){
     echo "Median N is ${NEFF}"
 
     for chr in {1..22}; do
-    prscs \
-        --ref_dir=${refldpanel} \
-        --bim_prefix="${PHENONAME}/validation" \
-        --sst_file="${PHENONAME}/${EFFECT}/meta.sumstats" \
-        --n_gwas=${NEFF} \
-        --chrom=${chr} \
-        --seed=1 \
-        --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights 2>&1 | tee "${dirout}/logs/${EFFECT}/${PHENONAME}/chr${chr}_meta_weights_prscs"
+        prscs \
+            --ref_dir=${refldpanel} \
+            --bim_prefix="${PHENONAME}/validation" \
+            --sst_file="${PHENONAME}/${EFFECT}/meta.sumstats" \
+            --n_gwas=${NEFF} \
+            --chrom=${chr} \
+            --seed=1 \
+            --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights 2>&1 | tee "${dirout}/logs/${EFFECT}/${PHENONAME}/chr${chr}_meta_weights_prscs"
     done
     wait
 

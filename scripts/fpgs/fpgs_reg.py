@@ -46,6 +46,8 @@ def run_fpgs_reg(args):
         covar = merged.filter(regex="FID|IID|age|sex|V")
         if args.dataset == "mcs":
             covar = covar[covar.columns.drop(list(covar.filter(regex="age")))] # drop age covariates if MCS
+        if args.phenoname == "aafb" or args.phenoname == "agemenarche":
+            covar = covar[covar.columns.drop(list(covar.filter(regex="sex")))] # drop sex covariates if phenotype only has one sex represented
         covar.to_csv(dirout + '/covar.txt', sep = '\t', index=False, na_rep = 'NA')
 
         # create file with just pheno
@@ -217,6 +219,7 @@ if __name__ == '__main__':
     parser.add_argument('--gen_models', type=str,  help="Which multi-generational models should be fit in SNIPar pgs.py. 1 generation or 2 generation.")
     parser.add_argument('--covariates', type=str,  help="Path to covariates file")
     parser.add_argument('--dataset', type=str,  help="Which validation dataset is being used, ukb or mcs")
+    parser.add_argument('--phenoname', type=str,  help="Phenotype name")
     
     args = parser.parse_args()
 

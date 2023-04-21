@@ -24,15 +24,17 @@ def make_rg_matrix(directmat, populationmat):
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
 
-## meta phenos
 # phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cognition', 'cpd', 'depression',
 #                  'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'income', 
 #                  'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
+phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cpd', 'depression',
+                 'depsymp', 'dpw', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'health', 'hhincome', 'income', 
+                 'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
 
-## fpgs phenos
-# phenotypes = ['aafb', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cognition', 'cpd', 'depression', 'depsymp',
-#                  'dpw', 'ea', 'extraversion', 'hayfever', 'hdl', 'health', 'income',
-#                  'migraine', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
+
+## note: take ea / cognition out depending on which outcome pheno you're using
+# mcs_phenos = ['ea', 'height', 'bmi', 'cognition', 'depression', 'adhd', 'agemenarche', 'eczema', 'cannabis' ,'dpw', 'depsymp', 'eversmoker', 'extraversion', 'neuroticism', 'health', 'hhincome', 'swb']
+mcs_phenos = ['ea', 'height', 'bmi', 'depression', 'adhd', 'agemenarche', 'eczema', 'cannabis' ,'dpw', 'depsymp', 'eversmoker', 'extraversion', 'neuroticism', 'health', 'hhincome', 'swb']
 
 metaanalysis = False
 fpgs = True
@@ -50,8 +52,7 @@ if fpgs == True:
                     'pop', 'pop_se', 'paternal', 'paternal_se',
                     'maternal', 'maternal_se',
                     'dir_pop_ratio', 
-                    'dir_pop_ratio_se', 
-                    'incr_r2_proband',  'incr_r2_full',
+                    'r2',  'r2_ci_low', 'r2_ci_high',
                     'parental_pgi_corr', 'parental_pgi_corr_se'])
     fpgsfiles = [fpgspath + ph for ph in phenotypes]
 
@@ -117,23 +118,20 @@ for phenotype in phenotypes:
             v_population_uncorr_direct_mrg_se = mrg.loc[mrg['correlation'] == 'v_population_uncorr_direct', 'SE'].values[0]
 
         if fpgs == True:
-            # fpgs results
+            ## fpgs results
+
+            # 1-generation model (proband only)
             proband = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + f'/{effect}_proband.pgs_effects.txt',
+                basepath + 'processed/fpgs/' + phenotype + f'/prscs/{effect}.1.effects.txt',
                 delim_whitespace=True,
-                names = ['coeff', 'se', 'r2']
+                names = ['coeff', 'se']
             )
 
+            # 2-generation model (proband and parents)
             full = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + f'/{effect}_full.pgs_effects.txt',
+                basepath + 'processed/fpgs/' + phenotype + f'/prscs/{effect}.2.effects.txt',
                 delim_whitespace=True,
-                names = ['coeff', 'se', 'r2']
-            )
-
-            covariates_only = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + '/covariates.pgs_effects.txt',
-                delim_whitespace=True,
-                names = ['coeff', 'se', 'r2']
+                names = ['coeff', 'se']
             )
 
             direst = full.loc['proband', 'coeff']
@@ -144,26 +142,27 @@ for phenotype in phenotypes:
             matse = full.loc['maternal', 'se']
             popest = proband.loc['proband', 'coeff']
             popse = proband.loc['proband', 'se']
+            popest_ci_low = popest - 1.96 * popse
+            popest_ci_high = popest + 1.96 * popse
+            r2 = popest**2 - popse**2 # beta squared minus sampling variance of beta
+            r2_ci_low = popest_ci_low**2 - popse**2 # lower CI of beta squared minus sampling variance of beta
+            r2_ci_high = popest_ci_high**2 - popse**2 # higher CI of beta squared minus sampling variance of beta
+            coeffratio_est = direst/popest
 
-            incrr2_proband = proband.loc['proband', 'r2'] - covariates_only.loc['age', 'r2']
-            incrr2_full = full.loc['proband', 'r2'] - covariates_only.loc['age', 'r2']
+            # parental PGI correlation from snipar log
+            if phenotype in mcs_phenos:
+                parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/' + phenotype + '/prscs/' + effect + '.log'
+            else:
+                parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/' + phenotype + '/prscs/' + effect + '.log'
 
-            coeffratio = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + f'/dirpop_ceoffratiodiff.bootests',
-                delim_whitespace=True
-            )
+            with open(parcorr_path) as f:
+                rglines = [l for l in f if l.startswith('Estimated correlation between maternal and paternal PGSs:')]
+                rg = rglines[0] if len(rglines) > 0 else None
+                if rg is not None:
+                    rg = rg.split(':')[1]
+                    parcorr_est = float(rg.split('S.E.=')[0])
+                    parcorr_se = float(rg.split('S.E.=')[1])
 
-            coeffratio = coeffratio.loc[f'{effect}_full/{effect}_proband', :]
-            coeffratio_est = coeffratio['est']
-            coeffratio_se = coeffratio['se']
-
-            # parental PGI correlation
-            parcorr = np.loadtxt(
-                basepath + 'processed/sbayesr/' + phenotype + '/' + effect + '/.parentalcorr'
-            )
-
-            parcorr_est = parcorr[0]
-            parcorr_se = parcorr[1]
 
         if metaanalysis == True:
             dattmp = pd.DataFrame(
@@ -200,9 +199,9 @@ for phenotype in phenotypes:
                     'maternal' : [matest],
                     'maternal_se' : [matse],
                     'dir_pop_ratio' : [coeffratio_est],
-                    'dir_pop_ratio_se' : [coeffratio_se], 
-                    'incr_r2_proband' : [incrr2_proband],
-                    'incr_r2_full' : [incrr2_full],
+                    'r2' : [r2],
+                    'r2_ci_low' : [r2_ci_low],
+                    'r2_ci_high' : [r2_ci_high],
                     'parental_pgi_corr' : [parcorr_est],
                     'parental_pgi_corr_se' : [parcorr_se]
             })

@@ -1,6 +1,6 @@
 '''
 Rename iPSYCH sumstats columns so that they align with QC pipeline
-and filter out SNPs with hwe p-values < 10^-6
+and filter out SNPs with hwe p-values < 10^-6 and info < 0.99
 '''
 
 import pandas as pd
@@ -27,8 +27,12 @@ for file in files:
     nrow_before = ss.shape[0]
     print(f"Number of SNPs before filtering: {nrow_before}")
 
-    # filter hwe p-values < 10^-6
-    ss = ss[ss["p"] < 10**-6]
+    # filter hwe p-values > 10^-6 only
+    ss = ss[ss["p"] > 10**-6]
+    
+    # filter info > 0.99 only
+    ss = ss[(ss["info_2012"] > 0.99) & (ss["info_2015"] > 0.99)]
+
     nrow_after = ss.shape[0]
     print(f"Number of SNPs after filtering: {nrow_after}")
 

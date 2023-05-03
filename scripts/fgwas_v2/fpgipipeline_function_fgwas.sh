@@ -22,6 +22,15 @@ function withinfam_pred(){
     mkdir -p $OUTPATH
     mkdir -p $within_family_path/processed/fpgs/${PHENONAME}
     
+    ## format weight files for fpgs
+    python ${within_family_path}/scripts/fpgs/format_weights.py \
+        $WTFILE \
+        --chr 0 --pos 2 --rsid 1 --a1 3 --a2 4 --beta 5 \
+        --sep "delim_whitespace" \
+        --outfileprefix ${outfileprefix}/${PHENONAME}_${EFFECT}_fpgs_formatted \
+        --sid-as-chrpos \
+        --prscs
+
     # generate pheno file
     pheno_out="$RAWPATH/phen/${PHENONAME}/${ANCESTRY}"
     mkdir -p ${pheno_out}

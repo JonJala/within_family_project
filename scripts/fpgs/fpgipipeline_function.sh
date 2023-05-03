@@ -82,7 +82,7 @@ function withinfam_pred(){
             --prscs
         fi
     fi
-    
+
     ## generate pheno file
     python $within_family_path/scripts/fpgs/format_pheno.py \
         $PHENOFILE \
@@ -190,9 +190,9 @@ function main(){
     withinfam_pred $direct_weights \
         "direct" "$PHENONAME" \
         "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP"
-    
+
     withinfam_pred $population_weights \
-    "population" "$PHENONAME" \
-    "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP"
+        "population" "$PHENONAME" \
+        "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP"
  
 }

@@ -24,22 +24,30 @@ def make_rg_matrix(directmat, populationmat):
 basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
 
+## all phenos
 # phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cognition', 'cpd', 'depression',
 #                  'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'income', 
 #                  'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
-phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cpd', 'depression',
-                 'depsymp', 'dpw', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'health', 'hhincome', 'income', 
-                 'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
 
+## phenos minus ea, cog, and height
+# phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cpd', 'depression',
+#                  'depsymp', 'dpw', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'hhincome', 'income', 
+#                  'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
+phenotypes = ['ea', 'cognition']
 
-## note: take ea / cognition out depending on which outcome pheno you're using
-# mcs_phenos = ['ea', 'height', 'bmi', 'cognition', 'depression', 'adhd', 'agemenarche', 'eczema', 'cannabis' ,'dpw', 'depsymp', 'eversmoker', 'extraversion', 'neuroticism', 'health', 'hhincome', 'swb']
-mcs_phenos = ['ea', 'height', 'bmi', 'depression', 'adhd', 'agemenarche', 'eczema', 'cannabis' ,'dpw', 'depsymp', 'eversmoker', 'extraversion', 'neuroticism', 'health', 'hhincome', 'swb']
+## mcs phenos, not including ea and cognition
+mcs_phenos = ['bmi', 'depression', 'adhd', 'agemenarche', 'eczema', 'cannabis' ,'dpw', 'depsymp', 'eversmoker', 'extraversion', 'neuroticism', 'health', 'height', 'hhincome', 'swb']
+
+height_validation = "mcs"
+
+ea_validation = "ukb"
+ea_pheno = "fluid_intelligence"
+cog_validation = "ukb"
+cog_pheno = "fluid_intelligence"
 
 metaanalysis = False
 fpgs = True
 ldsc = False
-
 
 if metaanalysis == True:
     dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
@@ -118,18 +126,32 @@ for phenotype in phenotypes:
             v_population_uncorr_direct_mrg_se = mrg.loc[mrg['correlation'] == 'v_population_uncorr_direct', 'SE'].values[0]
 
         if fpgs == True:
+
             ## fpgs results
 
+            if phenotype == "height":
+                proband_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{height_validation}/{effect}.1.effects.txt'
+                full_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{height_validation}/{effect}.2.effects.txt'
+            elif phenotype == "ea":
+                proband_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{ea_validation}/{ea_pheno}/{effect}.1.effects.txt'
+                full_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{ea_validation}/{ea_pheno}/{effect}.2.effects.txt'
+            elif phenotype == "cognition":
+                proband_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{cog_validation}/{cog_pheno}/{effect}.1.effects.txt'
+                full_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{cog_validation}/{cog_pheno}/{effect}.2.effects.txt'
+            else:
+                proband_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{effect}.1.effects.txt'
+                full_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{effect}.2.effects.txt'
+            
             # 1-generation model (proband only)
             proband = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + f'/prscs/{effect}.1.effects.txt',
+                proband_path,
                 delim_whitespace=True,
                 names = ['coeff', 'se']
             )
 
             # 2-generation model (proband and parents)
             full = pd.read_csv(
-                basepath + 'processed/fpgs/' + phenotype + f'/prscs/{effect}.2.effects.txt',
+                full_path,
                 delim_whitespace=True,
                 names = ['coeff', 'se']
             )
@@ -152,6 +174,16 @@ for phenotype in phenotypes:
             # parental PGI correlation from snipar log
             if phenotype in mcs_phenos:
                 parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/' + phenotype + '/prscs/' + effect + '.log'
+            elif phenotype == "ea":
+                if ea_validation == "mcs":
+                    parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/prscs/' + ea_pheno + '/' + effect + '.log'
+                elif ea_validation == "ukb":
+                    parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/ea/prscs/' + ea_pheno + '/' + effect + '.log'    
+            elif phenotype == "cognition":
+                if ea_validation == "mcs":
+                    parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/cognition/prscs/' + cog_pheno + '/' + effect + '.log'
+                elif ea_validation == "ukb":
+                    parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/cognition/prscs/' + cog_pheno + '/' + effect + '.log'    
             else:
                 parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/' + phenotype + '/prscs/' + effect + '.log'
 

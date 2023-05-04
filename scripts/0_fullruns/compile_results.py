@@ -25,26 +25,21 @@ basepath = '/var/genetics/proj/within_family/within_family_project/'
 fpgspath = basepath + 'processed/fpgs/'
 
 ## all phenos
-# phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cognition', 'cpd', 'depression',
-#                  'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'income', 
-#                  'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
-
-## phenos minus ea, cog, and height
-# phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cpd', 'depression',
-#                  'depsymp', 'dpw', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'hhincome', 'income', 
-#                  'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
-phenotypes = ['ea', 'cognition']
+phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cognition', 'cpd', 'depression',
+                 'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'income', 
+                 'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
 
 ## mcs phenos, not including ea and cognition
 mcs_phenos = ['bmi', 'depression', 'adhd', 'agemenarche', 'eczema', 'cannabis' ,'dpw', 'depsymp', 'eversmoker', 'extraversion', 'neuroticism', 'health', 'height', 'hhincome', 'swb']
 
+## choose validation cohort and outcome phenos for height, ea, and cognition
 height_validation = "mcs"
+ea_validation = "mcs"
+ea_pheno = "gcse"
+cog_validation = "mcs"
+cog_pheno = "cogass"
 
-ea_validation = "ukb"
-ea_pheno = "fluid_intelligence"
-cog_validation = "ukb"
-cog_pheno = "fluid_intelligence"
-
+## chooose which results to compile
 metaanalysis = False
 fpgs = True
 ldsc = False

@@ -43,7 +43,7 @@ def run_fpgs_reg(args):
         pgs_only.to_csv(dirout + '/pgs.txt', sep = ' ', index=False, na_rep='NA')
         
         # create file with just covariates
-        covar = merged.filter(regex="FID|IID|age|sex|V|PC")
+        covar = merged.filter(regex="FID|IID|age|sex|V|PC") # PCs start with "V" in MCS covars file, "PC" in UKB covars file
         if args.dataset == "mcs":
             covar = covar[covar.columns.drop(list(covar.filter(regex="age")))] # drop age covariates if MCS
         if args.phenoname == "aafb" or args.phenoname == "agemenarche":

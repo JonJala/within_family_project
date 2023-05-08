@@ -94,8 +94,8 @@ fpgs_plot_ea_cog <- function(data, dirpop, pheno, ncols = 3) {
         theme_classic() +
         scale_fill_discrete(labels = c("Direct", "Maternal", "Paternal", "Population")) +
         theme(legend.title = element_blank(), legend.position = "bottom", axis.text.x = element_blank(),
-                axis.ticks.x = element_blank(), axis.text.y = element_text(size = 11),
-                axis.title = element_blank(), strip.text.x = element_text(size = 11)) +
+                axis.ticks.x = element_blank(), axis.text.y = element_text(size = 9),
+                axis.title = element_blank(), strip.text.x = element_text(size = 9)) +
         facet_wrap(~validation_pheno_name, ncol = ncols)
         print(p)
         ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_", dirpop, "_effects_", pheno, ".png"), p)

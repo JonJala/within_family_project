@@ -5,7 +5,7 @@ pheno="ea"
 cohorts="ukb str moba mt lifelines hunt gs geisinger ft estonian_biobank dutch_twin botnia qimr"
 
 ## calculate direct and pop h2 for each cohort
-bash ${basepath}/calculate_h2.sh ${pheno} ${cohorts}
+bash ${basepath}/calculate_h2.sh ${pheno} "${cohorts}"
 
 ## compile h2 estimates into excel spreadsheet
 python ${basepath}/compile_h2_estimates.py \

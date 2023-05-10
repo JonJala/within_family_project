@@ -4,17 +4,31 @@
 # description: meta-analyze h2 across cohorts using metafor package
 # ---------------------------------------------------------------------
 
-list.of.packages <- c("data.table", "stringr", "metafor", "tidyr", "dplyr", "magrittr", "tidyverse", "readxl")
+list.of.packages <- c("data.table", "stringr", "metafor", "tidyr", "dplyr", "magrittr", "tidyverse", "readxl", "optparse")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos = "http://cran.rstudio.com/")
 lapply(list.of.packages, library, character.only = TRUE)
+
+# ---------------------------------------------------------------------
+# read in options
+# ---------------------------------------------------------------------
+
+option_list = list(
+  make_option(c("--cohorts"),  type="character", default=NULL, help="Cohorts to meta-analyze", metavar="character"),
+  make_option(c("--pheno"),  type="character", default=NULL, help="Phenotype", metavar="character")
+)
+opt_parser = OptionParser(option_list = option_list)
+opt = parse_args(opt_parser)
+
+cohorts <- strsplit(opt$cohorts, " ")
+pheno <- opt$pheno
 
 # ---------------------------------------------------------------------
 # meta-analyze h2 estimates
 # ---------------------------------------------------------------------
 
 ## read in and format data
-dat <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/h2_est_height.xlsx")
+dat <- read_excel(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/h2_est_", pheno, ".xlsx"))
 dat %<>% 
     fill(phenotype) %>%
     mutate(direct_h2_var = direct_h2_se^2, population_h2_var = population_h2_se^2,
@@ -22,7 +36,9 @@ dat %<>%
                                     cohort %in% c("botnia", "geisinger", "hunt", "lifelines") ~ str_to_title(cohort),
                                     cohort == "dutch_twin" ~ "Dutch Twin",
                                     cohort == "estonian_biobank" ~ "Estonian Biobank",
-                                    cohort == "minn_twins" ~ "Minn Twins"))
+                                    cohort == "ipsych" ~ "iPSYCH",
+                                    cohort == "minn_twins" ~ "Minn Twins"))  %>% 
+    filter(direct_h2_se < 0.25)
 direct <- escalc(measure="GEN", data=dat, yi=direct_h2, vi=direct_h2_var, slab=cohort)
 pop <- escalc(measure="GEN", data=dat, yi=population_h2, vi=population_h2_var, slab=cohort)
 
@@ -33,11 +49,11 @@ pop_res <- rma(yi = yi, vi = vi, data = pop)
 ## plot and save
 
 # direct
-png(file="/var/genetics/proj/within_family/within_family_project/processed/package_output/height_direct_h2_forest.png")
+png(file=paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/", pheno, "_direct_h2_forest.png"))
 forest(direct_res, header = "Cohort")
 dev.off()
 
 # population
-png(file="/var/genetics/proj/within_family/within_family_project/processed/package_output/height_population_h2_forest.png")
+png(file=paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/", pheno, "_population_h2_forest.png"))
 forest(pop_res, header = "Cohort")
 dev.off()

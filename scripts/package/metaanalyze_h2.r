@@ -51,13 +51,13 @@ pop_res <- rma(yi = yi, vi = vi, data = pop)
 # direct
 png(file=paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/", pheno, "_direct_h2_forest.png"))
 forest(direct_res, header = "Cohort", cex = 1, xlim = c(-2, 2))
-text(-2, -1, pos=4, cex=1, bquote(paste("RE Model (p = ", .(formatC(direct_res$QEp, digits=2, format="f")), "; ", I^2, " = ",
-     .(formatC(direct_res$I2, digits=1, format="f")), "%)")))
+text(-2, -1.1, pos=4, cex=1, bquote(paste("RE Model (p = ", .(formatC(direct_res$QEp, digits=2, format="f")), "; ", tau, " = ",
+     .(formatC(sqrt(direct_res$tau2), digits=3, format="f")), ")")))
 dev.off()
 
 # population
 png(file=paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/", pheno, "_population_h2_forest.png"))
 forest(pop_res, header = "Cohort", cex = 1, xlim = c(-2, 2))
-text(-2, -1, pos=4, cex=1, bquote(paste("RE Model (p = ", .(formatC(pop_res$QEp, digits=2, format="f")), "; ", I^2, " = ",
-     .(formatC(pop_res$I2, digits=1, format="f")), "%)")))
+text(-2, -1.1, pos=4, cex=1, bquote(paste("RE Model (p = ", .(formatC(pop_res$QEp, digits=2, format="f")), "; ", tau, " = ",
+     .(formatC(sqrt(pop_res$tau2), digits=3, format="f")), ")")))
 dev.off()

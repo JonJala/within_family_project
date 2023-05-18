@@ -105,7 +105,7 @@ function run_pgi(){
             
             plink2 --bfile /var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
             --chr $chr \
-            --score $scorefile 7 4 6 header center cols=+scoresums \
+            --score $scorefile 7 4 6 center cols=+scoresums \
             --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
 
         elif [[ $DATASET == "ukb" ]]; then
@@ -113,7 +113,7 @@ function run_pgi(){
             plink2 --bgen /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.bgen ref-last \
                 --oxford-single-chr $chr \
                 --sample /disk/genetics4/ukb/alextisyoung/hapmap3/haplotypes/imputed_phased/chr_${chr}_merged.sample \
-                --score $scorefile 2 4 6 header center cols=+scoresums \
+                --score $scorefile 2 4 6 center cols=+scoresums \
                 --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}
 
         fi

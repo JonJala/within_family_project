@@ -40,20 +40,20 @@ function main(){
 # time main ea
 # time main eczema
 # time main eversmoker
-time main extraversion
-time main fev
-time main hayfever
-time main hdl
-time main health
+# time main extraversion
+# time main fev
+# time main hayfever
+# time main hdl
+# time main health
 # time main height
-time main hhincome
+# time main hhincome
 time main income
 time main migraine
 time main morningperson
 time main nchildren
 time main nearsight
-time main neuroticism
+# time main neuroticism
 time main nonhdl
-time main swb
+# time main swb
 
 echo "done with all!"

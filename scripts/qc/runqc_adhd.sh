@@ -38,6 +38,4 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_adhd_export0.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/adhd" \
     --toest "direct_population" \
-    --ldsc-ref "$reffile" \
-    --cptid \
-    --binary
+    --ldsc-ref "$reffile"

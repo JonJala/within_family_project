@@ -8,7 +8,7 @@ if __name__ == '__main__':
     parser.add_argument('pgi', type=str, 
                         help='''Path to pgi scores''')
 
-    parser.add_argument('--pedigree', type=str, default='/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt',
+    parser.add_argument('--pedigree', type=str, default='/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt',
                         help='''Path to pedigree file''')
     
     parser.add_argument('--outprefix', type=str, default='.',

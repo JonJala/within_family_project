@@ -11,35 +11,35 @@ function main(){
 
     PHENO=$1
 
-    # bash scripts/qc/runqc_${PHENO}.sh
-    # bash scripts/usingpackage/${PHENO}/runmeta.sh
+    bash scripts/qc/runqc_${PHENO}.sh
+    bash scripts/usingpackage/${PHENO}/runmeta.sh
     # bash scripts/prscs/${PHENO}_pgi.sh
     # conda deactivate
 
-    source ${sniparenv}
-    bash scripts/fpgs/fpgs_${PHENO}.sh
+    # source ${sniparenv}
+    # bash scripts/fpgs/fpgs_${PHENO}.sh
     
     # ldsc stuff
     # bash scripts/usingpackage/${PHENO}/ldsc_analysis.sh
 
 }
 
-time main aafb
-time main adhd
-time main agemenarche
-time main asthma
-time main bmi
-time main bpd
-time main bps
-time main cannabis
-time main cognition
-time main cpd
-time main depression
-time main depsymp
-time main dpw
+# time main aafb
+# time main adhd
+# time main agemenarche
+# time main asthma
+# time main bmi
+# time main bpd
+# time main bps
+# time main cannabis
+# time main cognition
+# time main cpd
+# time main depression
+# time main depsymp
+# time main dpw
 # time main ea
-time main eczema
-time main eversmoker
+# time main eczema
+# time main eversmoker
 # time main extraversion
 # time main fev
 # time main hayfever
@@ -53,7 +53,7 @@ time main eversmoker
 # time main nchildren
 # time main nearsight
 # time main neuroticism
-# time main nonhdl
+time main nonhdl
 # time main swb
 
 echo "done with all!"

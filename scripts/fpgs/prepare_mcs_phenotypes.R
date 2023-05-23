@@ -102,7 +102,7 @@ setnames(ea, old=c("Z_EA"), new=c("ea"))
 # height and bmi
 #---------------------------------------------------------------------------------------------------------------------
 
-ht_bmi = fread("/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/bmi_height_sweep7.txt")
+ht_bmi = fread("/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/bmi_height_sweep7.txt")
 
 # rename
 setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
@@ -371,7 +371,7 @@ swb <- read_and_rename("GDWEMWBS", "swb")
 phenotypes <- reduce(list(ht_bmi, ea, cognition, cogverb, dep, adhd, menarche, eczema, cann, drinks_4, dep_symp, es, extra, hayfever, neuro, health, hhincome, swb), merge, by = c("FID", "IID"), all=TRUE)
 
 ## filter to get relevant sample
-sample <- fread("/var/genetics/data/mcs/private/v1/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt", col.names = c("FID", "IID"))  # MCS EUR individuals + parents, MZ removed
+sample <- fread("/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples.txt", col.names = c("FID", "IID"))  # MCS EUR individuals + parents, MZ removed
 phenotypes <- filter_sample(phenotypes, sample)
 
 ## process each variable as appropriate (remove outliers / negative values, standardize by sex)
@@ -395,7 +395,7 @@ phenotypes$swb <- remove_outliers(phenotypes$swb, remove_upper = F, remove_lower
 ## standardize by sex
 
 # read in covariates and merge
-covariates <- fread("/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt")
+covariates <- fread("/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/covar.txt")
 phenotypes <- left_join(phenotypes, covariates, by = c("FID", "IID"))
 
 # standardize by sex
@@ -418,4 +418,4 @@ phenotypes[, swb := standardize(swb), by=sex]
 phenotypes = distinct(phenotypes, .keep_all = TRUE)
 
 # save
-fwrite(phenotypes, file="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt", sep=" ", na="NA", quote = FALSE)
+fwrite(phenotypes, file="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt", sep=" ", na="NA", quote = FALSE)

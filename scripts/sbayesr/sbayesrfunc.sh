@@ -17,10 +17,10 @@ function run_pgi(){
 
     if [[ $DATASET == "mcs" ]]; then
 
-        pheno="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
-        covariates="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
+        pheno="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
+        covariates="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
         outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/sbayesr"
-        pedigree="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
+        pedigree="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
 
     elif [[ $DATASET == "ukb" ]]; then
         
@@ -85,7 +85,7 @@ function run_pgi(){
         
         if [[ $DATASET == "mcs" ]]; then
             
-            plink2 --bfile /var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
+            plink2 --bfile /var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/bgen/tmp/chr${chr}.dose \
             --chr $chr \
             --score $scorefile 12 5 8 header center cols=+scoresums \
             --out $outpath/${PHENONAME}/${EFFECT}/scores_${DATASET}_${chr}

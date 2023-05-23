@@ -9,10 +9,10 @@ function run_pgi(){
     METHOD=$4
     
     dirout="/var/genetics/proj/within_family/within_family_project/processed/fgwas_v2/${METHOD}"
-    pheno="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
-    covariates="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
+    pheno="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
+    covariates="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/covar.txt"
     outpath="/var/genetics/data/mcs/private/latest/processed/proj/within_family/pgs/fgwas_v2/eur/${METHOD}"
-    pedigree="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
+    pedigree="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/imputed_parents/pedigree.txt"
 
     mkdir -p ${dirout}
     mkdir -p ${outpath}
@@ -46,14 +46,14 @@ function run_pgi(){
     echo "Median N is ${NEFF}"
 
     for chr in {1..22}; do
-    prscs \
-        --ref_dir=${refldpanel} \
-        --bim_prefix="${PHENONAME}/validation" \
-        --sst_file="${PHENONAME}/${EFFECT}/meta.sumstats" \
-        --n_gwas=${NEFF} \
-        --chrom=${chr} \
-        --seed=1 \
-        --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights 2>&1 | tee "${dirout}/logs/${EFFECT}/${PHENONAME}/chr${chr}_meta_weights_prscs"
+        prscs \
+            --ref_dir=${refldpanel} \
+            --bim_prefix="${PHENONAME}/validation" \
+            --sst_file="${PHENONAME}/${EFFECT}/meta.sumstats" \
+            --n_gwas=${NEFF} \
+            --chrom=${chr} \
+            --seed=1 \
+            --out_dir=${PHENONAME}/${EFFECT}/weights/meta_weights 2>&1 | tee "${dirout}/logs/${EFFECT}/${PHENONAME}/chr${chr}_meta_weights_prscs"
     done
     wait
 

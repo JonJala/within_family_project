@@ -67,7 +67,7 @@ setnames(ea, old=c("Z_EA"), new=c("ea"))
 # height and bmi
 #---------------------------------------------------------------------------------------------------------------------
 
-ht_bmi = fread("/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/bmi_height_sweep7.txt")
+ht_bmi = fread("/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/bmi_height_sweep7.txt")
 
 # rename
 setnames(ht_bmi, old=c("height7", "bmi7"), new=c("height", "bmi"))
@@ -112,9 +112,9 @@ filter_and_std <- function(data, sample_path, covariates_path) {
 }
 
 ## get sas sample
-sas_pheno <- filter_and_std(phenotypes, sample_path = "/disk/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/sas_samples_mz_removed.txt", covariates_path = "/var/genetics/data/mcs/private/v1/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar_sas.txt")
-fwrite(sas_pheno, file="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes_sas.txt", sep=" ", na="NA", quote = FALSE)
+sas_pheno <- filter_and_std(phenotypes, sample_path = "/disk/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/sas_samples_mz_removed.txt", covariates_path = "/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/covar_sas.txt")
+fwrite(sas_pheno, file="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/phenotypes_sas.txt", sep=" ", na="NA", quote = FALSE)
 
 ## get eur sample
-eur_pheno <- filter_and_std(phenotypes, sample_path = "/disk/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples_mz_removed.txt", covariates_path = "/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/covar.txt")
-fwrite(eur_pheno, file="/var/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/phen/phenotypes_eur.txt", sep=" ", na="NA", quote = FALSE)
+eur_pheno <- filter_and_std(phenotypes, sample_path = "/disk/genetics/data/mcs/private/latest/raw/genotyped/NCDS_SFTP_1TB_1/imputed/filter_extract/eur_samples_mz_removed.txt", covariates_path = "/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/covar.txt")
+fwrite(eur_pheno, file="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/phenotypes_eur.txt", sep=" ", na="NA", quote = FALSE)

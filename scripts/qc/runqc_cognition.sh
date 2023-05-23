@@ -96,14 +96,14 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 ############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ipsych/public/v1/processed/sumstats/sumstats_gpa_hs_export0.txt" \
+    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_gpa_hs_export0.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpahs" \
     --toest "direct_population" \
     --cptid \
     --ldsc-ref "$reffile" 
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ipsych/public/v1/processed/sumstats/sumstats_gpa9_export0.txt" \
+    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_gpa9_export0.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpa9" \
     --toest "direct_population" \
     --cptid \

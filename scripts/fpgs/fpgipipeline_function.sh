@@ -189,10 +189,10 @@ function main(){
     # main prediction
     withinfam_pred $direct_weights \
         "direct" "$PHENONAME" \
-        "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP"
+        "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
 
     withinfam_pred $population_weights \
         "population" "$PHENONAME" \
-        "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP"
+        "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
  
 }

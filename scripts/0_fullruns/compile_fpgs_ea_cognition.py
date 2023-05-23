@@ -55,8 +55,8 @@ for phenotype in phenotypes:
             matse = full.loc['maternal', 'se']
             popest = proband.loc['proband', 'coeff']
             popse = proband.loc['proband', 'se']
-            popest_ci_low = popest - 1.96 * popse
-            popest_ci_high = popest + 1.96 * popse
+            popest_ci_low = popest - 1.96 * popse # 95% CI lower bound
+            popest_ci_high = popest + 1.96 * popse # 95% CI upper bound
             r2 = popest**2 - popse**2 # beta squared minus sampling variance of beta
             r2_ci_low = popest_ci_low**2 - popse**2 # lower CI of beta squared minus sampling variance of beta
             r2_ci_high = popest_ci_high**2 - popse**2 # higher CI of beta squared minus sampling variance of beta

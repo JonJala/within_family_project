@@ -111,17 +111,17 @@ def get_fpgs_results(phenotype, effect):
     basepath = '/var/genetics/proj/within_family/within_family_project/'
 
     if phenotype == "height":
-        proband_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{height_validation}/{effect}.1.effects.txt'
-        full_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{height_validation}/{effect}.2.effects.txt'
+        proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/{effect}.1.effects.txt"
+        full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/{effect}.2.effects.txt"
     elif phenotype == "ea":
-        proband_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{ea_validation}/{ea_pheno}/{effect}.1.effects.txt'
-        full_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{ea_validation}/{ea_pheno}/{effect}.2.effects.txt'
+        proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/{effect}.1.effects.txt"
+        full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/{effect}.2.effects.txt"
     elif phenotype == "cognition":
-        proband_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{cog_validation}/{cog_pheno}/{effect}.1.effects.txt'
-        full_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{cog_validation}/{cog_pheno}/{effect}.2.effects.txt'
+        proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/{effect}.1.effects.txt"
+        full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/{effect}.2.effects.txt"
     else:
-        proband_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{effect}.1.effects.txt'
-        full_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/{effect}.2.effects.txt'
+        proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{effect}.1.effects.txt"
+        full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{effect}.2.effects.txt"
     
     # 1-generation model (proband only)
     proband = pd.read_csv(

@@ -26,12 +26,9 @@ for phenotype in phenotypes:
             packageoutput = basepath + 'processed/package_output/'
 
             ## fpgs results
-            if validation_pheno in mcs_validation:
-                proband_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/mcs/{validation_pheno}/{effect}.1.effects.txt'
-                full_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/mcs/{validation_pheno}/{effect}.2.effects.txt'
-            elif validation_pheno in ukb_validation:
-                proband_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/ukb/{validation_pheno}/{effect}.1.effects.txt'
-                full_path = basepath + 'processed/fpgs/' + phenotype + f'/prscs/ukb/{validation_pheno}/{effect}.2.effects.txt'
+            data_set = "mcs" if if validation_pheno in mcs_validation else "ukb"
+            proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{data_set}/{validation_pheno}/{effect}.1.effects.txt" 
+            full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{data_set}/{validation_pheno}/{effect}.2.effects.txt"
 
             # 1-generation model (proband only)
             proband = pd.read_csv(

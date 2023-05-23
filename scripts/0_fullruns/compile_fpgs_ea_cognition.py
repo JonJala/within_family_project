@@ -26,7 +26,7 @@ for phenotype in phenotypes:
             packageoutput = basepath + 'processed/package_output/'
 
             ## fpgs results
-            data_set = "mcs" if if validation_pheno in mcs_validation else "ukb"
+            data_set = "mcs" if validation_pheno in mcs_validation else "ukb"
             proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{data_set}/{validation_pheno}/{effect}.1.effects.txt" 
             full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{data_set}/{validation_pheno}/{effect}.2.effects.txt"
 

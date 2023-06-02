@@ -106,7 +106,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/depression" \
     --ldsc-ref "$reffile" \
     --af-ref /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs/fin_1kg.frq \
-    --cptid \ 
+    --cptid \
     --effects "direct_averageparental" \
     --toest "direct_population" \
     --binary

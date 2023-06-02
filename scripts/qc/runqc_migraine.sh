@@ -42,17 +42,17 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz" \
 #     --binary
 
-################
-## iPSYCH
-############
+# ################
+# ## iPSYCH
+# ############
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_migraine_export0.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/migraine" \
-    --toest "direct_population" \
-    --ldsc-ref "$reffile" \
-    --cptid \
-    --binary
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_migraine_export0.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/migraine" \
+#     --toest "direct_population" \
+#     --ldsc-ref "$reffile" \
+#     --cptid \
+#     --binary
 
 # #####################
 # # ====== UKB ====== #
@@ -68,3 +68,17 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
 #     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
 #     --binary
+
+############
+# Finn Gen
+############
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/finngen/private/v1/processed/sumstats/migraine.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/migraine" \
+    --ldsc-ref "$reffile" \
+    --af-ref /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs/fin_1kg.frq \
+    --cptid \ 
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --binary

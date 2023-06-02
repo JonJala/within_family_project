@@ -29,14 +29,28 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/hwe.formatted.txt' \
 #     --binary
 
-################
-# iPSYCH
+# ################
+# # iPSYCH
+# ############
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_hayfever_export0.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/hayfever" \
+#     --toest "direct_population" \
+#     --cptid \
+#     --ldsc-ref $reffile \
+#     --binary
+
+############
+# Finn Gen
 ############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_hayfever_export0.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/hayfever" \
+    "/var/genetics/data/finngen/private/v1/processed/sumstats/allergic_rhinitis.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/hayfever" \
+    --ldsc-ref "$reffile" \
+    --af-ref /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs/fin_1kg.frq \
+    --cptid \ 
+    --effects "direct_averageparental" \
     --toest "direct_population" \
-    --cptid \
-    --ldsc-ref $reffile \
     --binary

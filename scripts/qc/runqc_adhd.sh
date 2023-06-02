@@ -30,12 +30,25 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info /"var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt" \
 #     --binary
 
-################
-## iPSYCH
+# ################
+# ## iPSYCH
+# ############
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_adhd_export0.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/adhd" \
+#     --toest "direct_population" \
+#     --ldsc-ref "$reffile"
+
+############
+# Finn Gen
 ############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_adhd_export0.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/adhd" \
+    "/var/genetics/data/finngen/private/v1/processed/sumstats/adhd.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/adhd" \
+    --ldsc-ref "$reffile" \
+    --af-ref /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs/fin_1kg.frq \
+    --effects "direct_averageparental" \
     --toest "direct_population" \
-    --ldsc-ref "$reffile"
+    --cptid

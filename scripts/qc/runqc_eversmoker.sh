@@ -140,15 +140,29 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --cptid \
 #     --binary
 
-#####################
-# ====== CKB ====== #
-#####################
+# #####################
+# # ====== CKB ====== #
+# #####################
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/ever_smoker_all_chr.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/eversmoker" \
+#     --effects "direct_averageparental_population" \
+#     --toest "direct_averageparental_population" \
+#     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
+#     --cptid \
+#     --binary
+
+############
+# Finn Gen
+############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/ever_smoker_all_chr.sumstats.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/eversmoker" \
-    --effects "direct_averageparental_population" \
-    --toest "direct_averageparental_population" \
-    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
-    --cptid \
+    "/var/genetics/data/finngen/private/v1/processed/sumstats/ever_smoker.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/eversmoker" \
+    --ldsc-ref "$reffile" \
+    --af-ref /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs/fin_1kg.frq \
+    --cptid \ 
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
     --binary

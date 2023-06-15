@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 /var/genetics/proj/within_family/within_family_project/scripts/qc/runqc_eczema.sh
-# /var/genetics/proj/within_family/within_family_project/scripts/qc/runqc_bmi.sh
+/var/genetics/proj/within_family/within_family_project/scripts/qc/runqc_bmi.sh
 /var/genetics/proj/within_family/within_family_project/scripts/qc/runqc_height.sh
 /var/genetics/proj/within_family/within_family_project/scripts/qc/runqc_adhd.sh
 /var/genetics/proj/within_family/within_family_project/scripts/qc/runqc_eczema.sh

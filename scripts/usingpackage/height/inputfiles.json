@@ -51,5 +51,9 @@
 
     "fhs" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/height/CLEANED.out.gz"
+    },
+
+    "finngen" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/height/CLEANED.out.gz"
     }
 }

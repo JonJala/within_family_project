@@ -1,8 +1,6 @@
 import pandas as pd
 import argparse
 
-## get median n for use in prscs
-
 parser=argparse.ArgumentParser()
 parser.add_argument('--pheno', type=str, 
                     help='''Phenotype name''')

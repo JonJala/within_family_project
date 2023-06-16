@@ -1,13 +1,13 @@
 import pandas as pd
 import argparse
 
-## compile marginal correlation estimates from sinpar into excel spreadsheet
+## compile marginal correlation estimates from snipar into excel spreadsheet
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--pheno', type=str, 
-                    help='''Phenotype name''')
+                    help='Phenotype name')
 parser.add_argument('--cohorts', type=str, 
-                    help='''Phenotype cohorts''')
+                    help='Phenotype cohorts')
 args=parser.parse_args()
 
 basepath = '/var/genetics/proj/within_family/within_family_project/'

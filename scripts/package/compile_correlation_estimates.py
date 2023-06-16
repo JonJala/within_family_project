@@ -37,7 +37,7 @@ for cohort in cohorts:
 
     dat = dat.append(dat_tmp, ignore_index=True)
 
-floatcols = [c for c in dat.columns if (c not in ['phenotype', 'cohort'])]
+floatcols = [c for c in dat.columns if c not in ['phenotype', 'cohort']]
 dat[floatcols] = dat[floatcols].apply(pd.to_numeric)
 # dat = dat.pivot(index=['phenotype', 'cohort'], columns='effect', values=None)
 # dat = dat.reorder_levels(['effect', None], axis=1)

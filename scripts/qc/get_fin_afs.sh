@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # -----------------------------------------------------------------------------------------------------------------
-## convert finnish 1kg af ref file to format needed for WF
+## get finnish af ref file 
 # -----------------------------------------------------------------------------------------------------------------
 
 cd /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs

@@ -41,18 +41,45 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --ldsc-ref $reffile \
 #     --binary
 
-############
-# Finn Gen
-############
+# #########
+# # Hunt
+# ######
 
-## 6/19/2023 : This data will hopefully be moved from private to public, and it's likely OK to use it this way, but this is an issue that does need to be resolved in a more permanent way. This code / paradigm shouldn't be copy-pasted or used elsewhere as-is
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/rhinitisEv/rhinitisEv_chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/hayfever" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --rsid_readfrombim "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/bimfiles/Eduhunt_results_chr*.bim,0,2,1, " \
+#     --info '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/info.formatted.gz' \
+#     --hwe '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/hwe.formatted.gz'
+
+#####################
+# ====== UKB ====== #
+#####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/finngen/private/v1/processed/sumstats/allergic_rhinitis.sumstats.gz" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/hayfever" \
-    --ldsc-ref "$reffile" \
-    --af-ref /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs/fin_1kg.frq \
-    --cptid \
+    "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/hayfever/hayfever.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/hayfever" \
     --effects "direct_averageparental" \
     --toest "direct_population" \
-    --binary
+    --bim_chromosome 99 \
+    --ldsc-ref $reffile \
+    --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
+    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
+
+# ############
+# # Finn Gen
+# ############
+
+# ## 6/19/2023 : This data will hopefully be moved from private to public, and it's likely OK to use it this way, but this is an issue that does need to be resolved in a more permanent way. This code / paradigm shouldn't be copy-pasted or used elsewhere as-is
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/finngen/private/v1/processed/sumstats/allergic_rhinitis.sumstats.gz" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/hayfever" \
+#     --ldsc-ref "$reffile" \
+#     --af-ref /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs/fin_1kg.frq \
+#     --cptid \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --binary

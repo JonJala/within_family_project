@@ -70,18 +70,18 @@ PYTHONPATH="/var/genetics/proj/within_family/within_family_project/"
 #     --hwe "/var/genetics/data/lifelines/public/v1/raw/sumstats/fgwas/fgwas_ll_info_hwe.formatted.txt"
 # # 0.8591 (0.0775)
 
-###########
-# MOBA
-############
+# ###########
+# # MOBA
+# ############
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/bmi_chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/bmi" \
-    --ldsc-ref "$reffile" \
-    --effects "direct_averageparental" \
-    --toest "direct_population"  \
-    --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
-    --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/bmi_chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/bmi" \
+#     --ldsc-ref "$reffile" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population"  \
+#     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+#     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 
 
 #     # 0.9627 (0.2823)
@@ -214,3 +214,19 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --toest "direct_averageparental_population" \
 #     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
 #     --cptid
+
+############
+# Finn Gen
+############
+
+## 6/19/2023 : This data will hopefully be moved from private to public, and it's likely OK to use it this way, but this is an issue that does need to be resolved in a more permanent way. This code / paradigm shouldn't be copy-pasted or used elsewhere as-is
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/finngen/private/v1/processed/sumstats/bmi.sumstats.gz" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/bmi" \
+    --ldsc-ref "$reffile" \
+    --ldscores "/disk/genetics/data/finngen/private/v1/raw/ld_scores/" \
+    --cptid \
+    --af-ref /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs/fin_1kg.frq \
+    --effects "direct_averageparental" \
+    --toest "direct_population"

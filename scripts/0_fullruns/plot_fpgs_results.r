@@ -40,7 +40,7 @@ df <- merge(values, se) %>%
 # plot fpgs coefficients
 # ---------------------------------------------------------------------
 
-fpgs_plot <- function(data, dirpop, valid, ncols = 5) {
+fpgs_plot <- function(data, dirpop, valid, ncols = 6) {
         lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_maternal"), paste0(dirpop, "_paternal"), paste0(dirpop, "_pop"))
         p <- ggplot(data %>% filter(validation == valid, dir_pop == dirpop, measure %in% lvls),
                 aes(x = factor(measure, levels = lvls), y = value, fill = factor(measure, levels = lvls))) +
@@ -51,10 +51,10 @@ fpgs_plot <- function(data, dirpop, valid, ncols = 5) {
         scale_fill_discrete(labels = c("Direct", "Maternal", "Paternal", "Population")) +
         theme(legend.title = element_blank(), legend.position = "bottom", axis.text.x = element_blank(),
                 axis.ticks.x = element_blank(), axis.text.y = element_text(size = 11),
-                axis.title = element_blank(), strip.text.x = element_text(size = 11)) +
+                axis.title = element_blank(), strip.text.x = element_text(size = 9.5)) +
         facet_wrap(~pheno_name, ncol = ncols)
         print(p)
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_", dirpop, "_effects_", valid, ".png"), p)
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_", dirpop, "_effects_", valid, ".png"), p, width = 7, height = 5)
 }
 
 fpgs_plot(df, "direct", "mcs")
@@ -84,7 +84,7 @@ df_ea_cog <- merge(values_ea_cog, se_ea_cog) %>%
                                                   validation_pheno == "ea4" ~ "EA4 Outcome",
                                                   validation_pheno == "fluid_intelligence" ~ "UKB Fluid Intelligence"))
 
-fpgs_plot_ea_cog <- function(data, dirpop, pheno, ncols = 3) {
+fpgs_plot_ea_cog <- function(data, dirpop, pheno, ylim, ncols = 3) {
         lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_maternal"), paste0(dirpop, "_paternal"), paste0(dirpop, "_pop"))
         p <- ggplot(data %>% filter(phenotype == pheno, dir_pop == dirpop, measure %in% lvls),
                 aes(x = factor(measure, levels = lvls), y = value, fill = factor(measure, levels = lvls))) +
@@ -92,19 +92,20 @@ fpgs_plot_ea_cog <- function(data, dirpop, pheno, ncols = 3) {
         geom_hline(yintercept = 0) +
         geom_linerange(aes(ymin = value - 1.96*se, ymax = value + 1.96*se), colour="black", linewidth = 0.5) +
         theme_classic() +
+        ylim(ylim) +
         scale_fill_discrete(labels = c("Direct", "Maternal", "Paternal", "Population")) +
         theme(legend.title = element_blank(), legend.position = "bottom", axis.text.x = element_blank(),
                 axis.ticks.x = element_blank(), axis.text.y = element_text(size = 9),
-                axis.title = element_blank(), strip.text.x = element_text(size = 9)) +
+                axis.title = element_blank(), strip.text.x = element_text(size = 8)) +
         facet_wrap(~validation_pheno_name, ncol = ncols)
         print(p)
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_", dirpop, "_effects_", pheno, ".png"), p)
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_", dirpop, "_effects_", pheno, ".png"), p, width = 6, height = 6)
 }
 
-fpgs_plot_ea_cog(df_ea_cog, "direct", "ea")
-fpgs_plot_ea_cog(df_ea_cog, "direct", "cognition")
-fpgs_plot_ea_cog(df_ea_cog, "population", "ea")
-fpgs_plot_ea_cog(df_ea_cog, "population", "cognition")
+fpgs_plot_ea_cog(df_ea_cog, "direct", "ea", ylim = c(-0.08, 0.28))
+fpgs_plot_ea_cog(df_ea_cog, "population", "ea", ylim = c(-0.08, 0.28))
+fpgs_plot_ea_cog(df_ea_cog, "direct", "cognition", ylim = c(-0.05, 0.15))
+fpgs_plot_ea_cog(df_ea_cog, "population", "cognition", ylim = c(-0.05, 0.15))
 
 # ---------------------------------------------------------------------
 # plot parental pgi corrs

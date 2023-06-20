@@ -91,6 +91,3 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --ldsc-ref "$reffile" \
     --toest "direct_paternal_maternal_averageparental_population" \
     --cptid
-
-
-

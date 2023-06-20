@@ -24,7 +24,11 @@
     "ukb" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/depression/CLEANED.out.gz"
 
-    }
+    },
 
+    "finngen" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/depression/CLEANED.out.gz"
+
+    }
 
 }

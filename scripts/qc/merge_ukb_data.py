@@ -16,7 +16,7 @@ import os
 # "AAFB", "household.income", "subjective.well.being", "drinks.per.week", "menarche", "ever.smoked", "ever.cannabis", 
 # "EA", "FEV1", "height", "depressive.symptoms"]
 
-phenos = ["asthma", "BPsys", "BPdia", "ECZEMA", "BL_HDL", "income", "MIGRAINE", "morning.person", "NC", 
+phenos = ["asthma", "hayfever", "BPsys", "BPdia", "ECZEMA", "BL_HDL", "income", "MIGRAINE", "morning.person", "NC", 
 "nonhdl", "NEARSIGHTED", "mdd"]
 
 for pheno in phenos:

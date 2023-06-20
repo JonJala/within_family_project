@@ -340,6 +340,11 @@ if metaanalysis == True:
     ]
     ]
 
+    # flip signs of correlations when negative
+    dat['rg_ref_direct'] = dat['rg_ref_direct'].abs()
+    dat['rg_ref_population'] = dat['rg_ref_population'].abs()
+
+    # save to excel
     dat.to_excel(
         '/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx'
     )

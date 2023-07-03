@@ -13,6 +13,10 @@
 
     "qimr" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/aafb/CLEANED.out.gz"
+    },
+
+    "finngen" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/aafb/CLEANED.out.gz"
     }
 
 }

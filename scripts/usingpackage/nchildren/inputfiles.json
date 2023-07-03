@@ -25,6 +25,10 @@
 
     "qimr" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/nchildren/CLEANED.out.gz"
+    },
+
+    "finngen" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/nchildren/CLEANED.out.gz"
     }
 
 }

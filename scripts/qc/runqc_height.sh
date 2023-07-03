@@ -213,10 +213,8 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 ############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/finngen/private/v1/processed/sumstats/height.sumstats.gz" \
+    "/var/genetics/data/finngen/private/v1/processed/sumstats/height.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/height" \
     --ldsc-ref "$reffile" \
-    --af-ref /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs/fin_1kg.frq \
     --effects "direct_averageparental" \
-    --toest "direct_population" \
-    --cptid
+    --toest "direct_population"

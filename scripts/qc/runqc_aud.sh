@@ -11,7 +11,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/finngen/private/v1/processed/sumstats/alcohol_use_disorder.sumstats.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/alc" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/aud" \
     --effects "direct_averageparental" \
     --ldsc-ref $reffile \
     --toest "direct_population" \

@@ -3,10 +3,6 @@
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/aafb/CLEANED.out.gz"
     },
 
-    "ft" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/aafb/CLEANED.out.gz"
-    },
-
     "eb" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/aafb/CLEANED.out.gz"
     },

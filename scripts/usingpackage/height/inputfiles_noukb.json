@@ -9,10 +9,6 @@
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/height/CLEANED.out.gz"
     },
 
-    "ft" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/height/CLEANED.out.gz"
-    },
-
     "gs" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/height/CLEANED.out.gz"
     },
@@ -37,8 +33,12 @@
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/height/CLEANED.out.gz"
     },
     
-    "botnia" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/height/CLEANED.out.gz"
+    "eb" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/height/CLEANED.out.gz"
+    },
+
+    "dt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/height/CLEANED.out.gz"
     },
 
     "qimr" : {

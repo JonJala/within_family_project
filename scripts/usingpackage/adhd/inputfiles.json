@@ -1,8 +1,4 @@
 {
-    "ft" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/adhd/CLEANED.out.gz"
-    },
-
     "geisinger" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/adhd/CLEANED.out.gz"
     },

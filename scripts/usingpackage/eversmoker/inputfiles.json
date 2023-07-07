@@ -20,10 +20,6 @@
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/eversmoker/CLEANED.out.gz"
     },
 
-    "ft" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/eversmoker/CLEANED.out.gz"
-    },
-
     "dutchtwin" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/eversmoker/CLEANED.out.gz"
     },

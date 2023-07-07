@@ -71,6 +71,49 @@ for qcfolder in qcfolders:
 datout = datout.loc[datout['Cohort'] != 'Ea4', :]
 datout = datout.loc[datout['Cohort'] != 'Otherqc']
 
+## reformat / captitalize
+
+# cohort names
+datout.replace("Estonian_Biobank", "Estonian Biobank", inplace=True)
+datout.replace("Ukb", "UKB", inplace=True)
+datout.replace("Minn_Twins", "Minn Twins", inplace=True)
+datout.replace("Gs", "GS", inplace=True)
+datout.replace("Moba", "MOBA", inplace=True)
+datout.replace("Str", "STR", inplace=True)
+datout.replace("Ft", "FT", inplace=True)
+datout.replace("Ipsych", "iPSYCH", inplace=True)
+datout.replace("Dutch_Twin", "Dutch Twin", inplace=True)
+datout.replace("Qimr", "QIMR", inplace=True)
+datout.replace("Fhs", "FHS", inplace=True)
+datout.replace("Ckb", "CKB", inplace=True)
+datout.replace("Finngen", "FinnGen", inplace=True)
+
+# phenotypes
+datout.replace("Cho18", "CHO18", inplace=True)
+datout.replace("Bmi", "BMI", inplace=True)
+datout.replace("Ldl18", "LDL18", inplace=True)
+datout.replace("Hdl18", "HDL18", inplace=True)
+datout.replace("Ldl", "LDL", inplace=True)
+datout.replace("Hdl", "HDL", inplace=True)
+datout.replace("Tgl", "TGL", inplace=True)
+datout.replace("Ea", "EA", inplace=True)
+datout.replace("Tgl18", "TGL18", inplace=True)
+datout.replace("Bmi18", "BMI18", inplace=True)
+datout.replace("Mdd", "MDD", inplace=True)
+datout.replace("Aafb", "AAFB", inplace=True)
+datout.replace("Aud", "AUD", inplace=True)
+datout.replace("Copd", "COPD", inplace=True)
+datout.replace("Bpd", "BPD", inplace=True)
+datout.replace("Adhd", "ADHD", inplace=True)
+datout.replace("Bps", "BPS", inplace=True)
+datout.replace("Cpd", "CPD", inplace=True)
+datout.replace("Fev", "FEV1", inplace=True)
+datout.replace("Dpw", "DPW", inplace=True)
+datout.replace("Swb", "SWB", inplace=True)
+datout.replace("Nonhdl", "Non-HDL", inplace=True)
+datout.replace("Ea_Years", "EA", inplace=True)
+
+# export
 datout.to_csv(
     basepath + 'processed/package_output/cohortstats.txt',
     index = False,

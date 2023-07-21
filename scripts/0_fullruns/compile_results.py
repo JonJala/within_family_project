@@ -261,8 +261,8 @@ def get_ldsc_results(phenotypes):
 ### compile results
 
 ## all phenos
-phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'bmi', 'bpd', 'bps', 'cannabis', 'cognition', 'cpd', 'depression',
-                 'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'income', 
+phenotypes = ['aafb', 'adhd', 'agemenarche', 'asthma', 'aud', 'bmi', 'bpd', 'bps', 'cannabis', 'cognition', 'copd', 'cpd', 'depression',
+                 'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'hypertension', 'income', 
                  'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb']
 
 ## mcs phenos, not including ea and cognition
@@ -276,7 +276,7 @@ cog_validation = "mcs"
 cog_pheno = "cogass"
 
 ## chooose which results to compile
-metaanalysis = False
+metaanalysis = True
 fpgs = False
 ldsc = True
 
@@ -341,8 +341,8 @@ if metaanalysis == True:
     ]
 
     # flip signs of correlations when negative
-    dat['rg_ref_direct'] = dat['rg_ref_direct'].abs()
-    dat['rg_ref_population'] = dat['rg_ref_population'].abs()
+    dat['rg_ref_direct'].mask(dat['rg_ref_direct'] < 0, -1*dat['rg_ref_direct'], inplace = True)
+    dat['rg_ref_population'].mask(dat['rg_ref_population'] < 0, -1*dat['rg_ref_population'], inplace = True)
 
     # save to excel
     dat.to_excel(

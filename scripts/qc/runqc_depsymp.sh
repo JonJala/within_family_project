@@ -3,18 +3,18 @@
 
 reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/dep_ref/DS_Full.sumstats.gz"
 
-##########
-# MOBA
-#########
+# ##########
+# # MOBA
+# #########
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/depanx_chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/depsymp" \
-    --ldsc-ref "$reffile" \
-    --effects "direct_averageparental" \
-    --toest "direct_population"  \
-    --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
-    --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/depanx_chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/depsymp" \
+#     --ldsc-ref "$reffile" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population"  \
+#     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+#     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 
 # ####################
 # # ====== UKB ====== #
@@ -73,14 +73,14 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --ldsc-ref $reffile \
 #     --cptid
 
-# #####################
-# # ====== CKB ====== #
-# #####################
+#####################
+# ====== CKB ====== #
+#####################
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/bin_depressive_symptoms_all_chr.sumstats.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/depsymp" \
-#     --effects "direct_averageparental_population" \
-#     --toest "direct_averageparental_population" \
-#     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
-#     --cptid
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/bin_depressive_symptoms_all_chr.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/depsymp" \
+    --effects "direct_averageparental_population" \
+    --toest "direct_averageparental_population" \
+    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
+    --cptid

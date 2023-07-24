@@ -21,7 +21,7 @@ def convert_sumstats(pheno, sumstats_path, savepath, dbsnp38, separator = " "):
     ss = pd.concat([pd.read_csv(f, sep = separator, compression = "gzip") for f in files])
 
     # create chrposid column
-    dbsnp38["ChrPosID"] = dbsnp38[0].str[3:]
+    dbsnp38["ChrPosID"] = dbsnp38[0].str[3:] # remove "chr" prefix from chrposid
     ss["ChrPosID"] = ss["chromosome"].astype(str) + ":" + ss["pos"].astype(str)
 
     # merge

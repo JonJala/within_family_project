@@ -25,14 +25,14 @@ ${ldscpath}/munge_sumstats.py \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
-echo "Ccopdualting RG of population effect with reference sample"
+echo "Calculating RG of population effect with reference sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/copd/populationmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/copd/population_reference_sample
 
-echo "Ccopdualting RG of direct effect with reference sample"
+echo "Calculating RG of direct effect with reference sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/copd/directmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \

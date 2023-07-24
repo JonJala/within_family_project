@@ -25,7 +25,7 @@ ${ldscpath}/munge_sumstats.py \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
-echo "Caudualting RG of population effect with reference sample"
+echo "Calculating RG of population effect with reference sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/aud/populationmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -33,7 +33,7 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/aud/population_reference_sample
 # 0.901 (0.0059)
 
-echo "Caudualting RG of direct effect with reference sample"
+echo "Calculating RG of direct effect with reference sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/aud/directmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \

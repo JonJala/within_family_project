@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # -----------------------------------------------------------------------------------------------------------------
-## get finnish af ref file 
+## get finnish af ref file from 1kG data
 # -----------------------------------------------------------------------------------------------------------------
 
 cd /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs

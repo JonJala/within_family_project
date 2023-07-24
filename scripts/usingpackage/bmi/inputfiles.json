@@ -13,10 +13,6 @@
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bmi/CLEANED.out.gz"
     },
 
-    "ft" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/bmi/CLEANED.out.gz"
-    },
-
     "gs" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/bmi/CLEANED.out.gz"
     },
@@ -46,10 +42,6 @@
 
     "mt" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/bmi/CLEANED.out.gz"
-    },
-
-    "botnia" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bmi/CLEANED.out.gz"
     },
 
     "qimr" : {

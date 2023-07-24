@@ -16,18 +16,18 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/info.formatted.gz' \
 #     --hwe '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/hwe.formatted.gz'
 
-#############
-# MOBA
-###############
+# #############
+# # MOBA
+# ###############
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/fert_chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/nchildren" \
-    --ldsc-ref "$reffile" \
-    --effects "direct_averageparental" \
-    --toest "direct_population"  \
-    --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
-    --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/fert_chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/nchildren" \
+#     --ldsc-ref "$reffile" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population"  \
+#     --info "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/info.formatted.txt.gz" \
+#     --hwe "/var/genetics/data/moba/public/latest/raw/sumstats/fgwas/snpqcstats/sampleQC/hwe.formatted.txt.gz"
 
 # ##########
 # # STR
@@ -93,14 +93,27 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --cptid
 
-# #####################
-# # ====== CKB ====== #
-# #####################
+#####################
+# ====== CKB ====== #
+#####################
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/num_children_all_chr.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/nchildren" \
+    --effects "direct_averageparental_population" \
+    --toest "direct_averageparental_population" \
+    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
+    --cptid
+
+# ############
+# # Finn Gen
+# ############
+
+# ## 6/19/2023 : This data will hopefully be moved from private to public, and it's likely OK to use it this way, but this is an issue that does need to be resolved in a more permanent way. This code / paradigm shouldn't be copy-pasted or used elsewhere as-is
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/num_children_all_chr.sumstats.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/nchildren" \
-#     --effects "direct_averageparental_population" \
-#     --toest "direct_averageparental_population" \
-#     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
-#     --cptid
+#     "/var/genetics/data/finngen/private/v1/processed/sumstats/number_of_children.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/nchildren" \
+#     --ldsc-ref "$reffile" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population"

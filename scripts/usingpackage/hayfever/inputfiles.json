@@ -8,8 +8,12 @@
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/hayfever/CLEANED.out.gz"
     },
 
+    "ukb" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/hayfever/CLEANED.out.gz"
+    },
+
     "hunt" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/rhinitis/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/hayfever/CLEANED.out.gz"
     },
 
     "finngen" : {

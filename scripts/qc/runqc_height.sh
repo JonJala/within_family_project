@@ -196,27 +196,25 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --ldsc-ref $reffile \
 #     --cptid
 
-# #####################
-# # ====== CKB ====== #
-# #####################
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_standing_height_mm_all_chr.sumstats.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/height" \
-#     --effects "direct_averageparental_population" \
-#     --toest "direct_averageparental_population" \
-#     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
-#     --cptid
-
-############
-# Finn Gen
-############
+#####################
+# ====== CKB ====== #
+#####################
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/finngen/private/v1/processed/sumstats/height.sumstats.gz" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/height" \
-    --ldsc-ref "$reffile" \
-    --af-ref /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/fin_afs/fin_1kg.frq \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
+    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_standing_height_mm_all_chr.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/height" \
+    --effects "direct_averageparental_population" \
+    --toest "direct_averageparental_population" \
+    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
     --cptid
+
+# ############
+# # Finn Gen
+# ############
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/finngen/private/v1/processed/sumstats/height.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/height" \
+#     --ldsc-ref "$reffile" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population"

@@ -14,10 +14,6 @@
     "hunt" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/hunt/nchildren/CLEANED.out.gz"
     },
-
-    "ft" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/nchildren/CLEANED.out.gz"
-    },
     
     "ukb" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/nchildren/CLEANED.out.gz"
@@ -25,6 +21,10 @@
 
     "qimr" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/nchildren/CLEANED.out.gz"
+    },
+
+    "finngen" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/nchildren/CLEANED.out.gz"
     }
 
 }

@@ -56,16 +56,16 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
 #     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
 
-################
-# iPSYCH
-############
+# ################
+# # iPSYCH
+# ############
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_age_fb_export0.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/aafb" \
-    --toest "direct_population" \
-    --cptid \
-    --ldsc-ref "$reffile"
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_age_fb_export0.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/aafb" \
+#     --toest "direct_population" \
+#     --cptid \
+#     --ldsc-ref "$reffile"
 
 # #############
 # # QIMR
@@ -77,3 +77,16 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 #     --ldsc-ref "$reffile" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --cptid
+
+############
+# Finn Gen
+############
+
+## 6/19/2023 : This data will hopefully be moved from private to public, and it's likely OK to use it this way, but this is an issue that does need to be resolved in a more permanent way. This code / paradigm shouldn't be copy-pasted or used elsewhere as-is
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/finngen/private/v1/processed/sumstats/aafb_women.sumstats.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/aafb" \
+    --ldsc-ref "$reffile" \
+    --effects "direct_averageparental" \
+    --toest "direct_population"

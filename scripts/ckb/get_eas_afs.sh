@@ -10,4 +10,4 @@ plink2 --pmerge-list /var/genetics/data/1000G/public/20130502/processed/gen/EAS/
       --set-all-var-ids "@:#" \
       --freq cols=-chrom,+reffreq,-altfreq,-nobs
 
-sed "1s/.*/ChrPosID    a1    a2    freq1/" /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/plink2.afreq > /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq
+sed "1s/.*/ChrPosID\ta1\ta2\tfreq1/" /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/plink2.afreq > /var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq

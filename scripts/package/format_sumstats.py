@@ -13,6 +13,8 @@ parser.add_argument('--chrposid', action='store_true', default = False, help = '
 parser.add_argument('--parsum', type = str, default = False, help = "Whether to sum paternal and maternal effects")
 args = parser.parse_args()
 
+## functions from SNIPar gwas.py
+
 def outarray_effect(est, ses, freqs, vy):
     N_effective = vy/(2*freqs*(1-freqs)*np.power(ses,2))
     Z = est/ses

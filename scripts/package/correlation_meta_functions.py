@@ -149,7 +149,7 @@ def get_correlations(cohort, processed_ss, pheno, raw_ss = "NA", chrposid = Fals
 source /var/genetics/proj/within_family/snipar_venv/bin/activate
 {snipar_path}/scripts/correlate.py {processed_ss} \
     "{within_family_path}/processed/qc/{cohort}/{pheno}/marginal" \
-    --ldscores {ldscores}
+    --ldscores {ldscores} | tee {within_family_path}/processed/qc/{cohort}/{pheno}/marginal_corrs.log 
     ''',
     shell=True, check=True,
     executable='/usr/bin/bash')

@@ -118,8 +118,8 @@ def format_sumstats(sumstats, chrposid, avg_ntc):
             outfile = outfile.replace('.hdf5', '.gz')
         elif file.endswith('.hdf5'):
             outfile = outfile.replace('.hdf5', '.sumstats.gz')
-        if '/hdf5/' in file:
-            outfile = outfile.replace('/hdf5/', '')
+        if '/hdf5' in file:
+            outfile = outfile.replace('/hdf5', '')
 
         os.makedirs(outfile.replace(outfile.split("/").pop(), ""), exist_ok=True)
 
@@ -141,9 +141,9 @@ def get_correlations(cohort, processed_ss, pheno, raw_ss = "NA", chrposid = Fals
     
     if chrposid:
         print("Using chr:pos IDs")
-        ldscores = "/disk/genetics/data/alkesgroup/public/v1/processed/ld_scores/eur_w_ld_chr/chrposid/@"
+        ldscores = "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/ldscores/junming_phased/@" # ld scores using phased SNPs, chrposids
     else:
-        ldscores = "/disk/genetics/data/alkesgroup/public/v1/raw/ld_scores/eur_w_ld_chr/@"
+        ldscores = "/disk/genetics/ukb/jguan/ukb_analysis/output/ldsc/v2/@" # ld scores using phased SNPs, rsids
     
     subprocess.run(f'''
 source /var/genetics/proj/within_family/snipar_venv/bin/activate

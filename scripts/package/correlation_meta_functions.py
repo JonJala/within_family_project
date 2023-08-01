@@ -112,7 +112,9 @@ def format_sumstats(sumstats, chrposid, avg_ntc):
         sigma2 = hf.get('sigma2')[()]
         tau = hf.get('tau')[()]
 
-        outfile = file.replace('/raw/', '/processed/') # processed directory
+        outfile = file
+        if '/raw/' in file:
+            outfile = outfile.replace('/raw/', '/processed/') # processed directory
         outfile = outfile.replace(outfile.split("/").pop(), "gz/" + outfile.split("/").pop()) # gz subfolder
         if file.endswith('.sumstats.hdf5'):
             outfile = outfile.replace('.hdf5', '.gz')

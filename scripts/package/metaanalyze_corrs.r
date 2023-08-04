@@ -25,7 +25,7 @@ pheno <- opt$pheno
 # ---------------------------------------------------------------------
 
 ## read in and format data
-dat <- read_excel(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/marginal_corrs_", pheno, ".xlsx"))
+dat <- read_excel(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/correlation_meta/marginal_corrs_", pheno, ".xlsx"))
 dat$corr <- as.numeric(dat$corr)
 dat$se <- as.numeric(dat$se)
 dat %<>% 
@@ -46,7 +46,7 @@ res <- rma(yi = yi, vi = vi, data = dat_final)
 ## plot and save
 
 # direct
-png(file=paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/", pheno, "_corr_forest.png"))
+png(file=paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/correlation_meta/", pheno, "_corr_forest.png"))
 forest(res, header = "Cohort", cex = 1, xlim = c(-4, 4))
 text(-4, -1.05, pos=4, cex=1, bquote(paste("RE Model (p = ", .(formatC(res$QEp, digits=2, format="f")), "; ", tau, " = ",
      .(formatC(sqrt(res$tau2), digits=3, format="f")), ")")))

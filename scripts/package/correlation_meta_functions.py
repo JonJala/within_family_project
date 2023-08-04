@@ -186,7 +186,7 @@ def compile_correlation_estimates(phenotype, cohorts):
     floatcols = [c for c in dat.columns if c not in ['phenotype', 'cohort']]
     dat[floatcols] = dat[floatcols].apply(pd.to_numeric)
     dat.to_excel(
-        f'/var/genetics/proj/within_family/within_family_project/processed/package_output/marginal_corrs_{phenotype}.xlsx',
+        f'/var/genetics/proj/within_family/within_family_project/processed/package_output/correlation_meta/marginal_corrs_{phenotype}.xlsx',
         index = False,
         na_rep = "NA"
     )

@@ -15,10 +15,10 @@ all_cohorts = ["estonian_biobank", "ukb", "hunt", "geisinger", "finngen"]
 ## calculate correlations for each cohort using correlate.py
 ## ------------------------------------------------------------------------------------------------
 
-# corr.get_correlations(cohort = "finngen", processed_ss = "/disk/genetics/data/finngen/private/v1/processed/sumstats/eczema", pheno = pheno, chrposid = False, format = False, avg_ntc = True)
-# corr.get_correlations(cohort = "estonian_biobank", processed_ss = "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/Eczema_ext/Eczema_chr@_results", pheno = pheno, chrposid = False, format = False, avg_ntc = False)
-# corr.get_correlations(cohort = "ukb", processed_ss = "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/ECZEMA/ECZEMA", pheno = pheno, chrposid = False, format = False, avg_ntc = True)
-# corr.get_correlations(cohort = "hunt", raw_ss = "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/eczemaEv/eczemaEv_chr*.sumstats.hdf5", processed_ss = "/var/genetics/data/hunt/public/latest/processed/sumstats/fgwas/eczemaEv/gz/eczemaEv_chr@", pheno = pheno, chrposid = True, format = True, avg_ntc = False)
+corr.get_correlations(cohort = "finngen", processed_ss = "/disk/genetics/data/finngen/private/v1/processed/sumstats/eczema", pheno = pheno, chrposid = False, format = False, avg_ntc = True)
+corr.get_correlations(cohort = "estonian_biobank", processed_ss = "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/newresults/Eczema_ext/Eczema_chr@_results", pheno = pheno, chrposid = False, format = False, avg_ntc = False)
+corr.get_correlations(cohort = "ukb", processed_ss = "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/ECZEMA/ECZEMA", pheno = pheno, chrposid = False, format = False, avg_ntc = True)
+corr.get_correlations(cohort = "hunt", raw_ss = "/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/eczemaEv/eczemaEv_chr*.sumstats.hdf5", processed_ss = "/var/genetics/data/hunt/public/latest/processed/sumstats/fgwas/eczemaEv/gz/eczemaEv_chr@", pheno = pheno, chrposid = True, format = True, avg_ntc = False)
 corr.get_correlations(cohort = "geisinger", raw_ss = "/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.ECZEMA.chr*.sumstats.hdf5", processed_ss = "/var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/OUTPUT/gz/fGWAS.OUT.GHS145k.hg38.GSA.OMNI.EUR.sampleQC.PCA.WF_GWAS.ECZEMA.chr@", pheno = pheno, chrposid = False, format = True, avg_ntc = False)
 
 ## ------------------------------------------------------------------------------------------------

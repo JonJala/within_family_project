@@ -32,7 +32,7 @@ dat %<>%
     fill(phenotype) %>%
     mutate(var = se^2,
      cohort = case_when(cohort %in% c("ukb", "str", "fhs", "ft", "gs", "moba", "qimr") ~ toupper(cohort),
-                                    cohort %in% c("botnia", "geisinger", "hunt", "lifelines") ~ str_to_title(cohort),
+                                    cohort %in% c("botnia", "geisinger", "hunt", "lifelines", "finngen") ~ str_to_title(cohort),
                                     cohort == "dutch_twin" ~ "Dutch Twin",
                                     cohort == "estonian_biobank" ~ "Estonian Biobank",
                                     cohort == "ipsych" ~ "iPSYCH",

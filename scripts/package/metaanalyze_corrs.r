@@ -37,7 +37,7 @@ dat %<>%
                                     cohort == "estonian_biobank" ~ "Estonian Biobank",
                                     cohort == "ipsych" ~ "iPSYCH",
                                     cohort == "minn_twins" ~ "Minn Twins"))  %>% 
-    filter(se < 0.25)
+    filter(se < 0.5)
 dat_final <- escalc(measure="GEN", data=dat, yi=corr, vi=var, slab=cohort)
 
 ## fit random-effects model

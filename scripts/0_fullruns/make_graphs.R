@@ -6,7 +6,6 @@ library(stringr)
 library(ggpubr)
 library(latex2exp)
 library(RColorBrewer)
-library(ggrepel)
 theme_set(theme_pubr())
 
 ## --------------------------------------------------------------------------------

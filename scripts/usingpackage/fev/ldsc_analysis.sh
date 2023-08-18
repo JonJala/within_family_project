@@ -61,4 +61,4 @@ ${ldscpath}/ldsc.py \
 source /var/genetics/proj/within_family/snipar_venv/bin/activate
 /var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/fev/meta.nfilter \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/fev/marginal \
---ldscores /disk/genetics/ukb/alextisyoung/hapmap3/ldscores/@
+--ldscores /disk/genetics/ukb/jguan/ukb_analysis/output/ldsc/v2/@

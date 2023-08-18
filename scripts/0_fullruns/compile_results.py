@@ -278,7 +278,7 @@ cog_pheno = "cogass"
 ## chooose which results to compile
 metaanalysis = True
 fpgs = False
-ldsc = True
+ldsc = False
 
 ## initialize dataframes for saving results
 if metaanalysis == True:    

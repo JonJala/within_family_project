@@ -25,6 +25,10 @@
 
     "fhs" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/bps/CLEANED.out.gz"
+    },
+
+    "ft": {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/bps/CLEANED.out.gz"
     }
 
 }

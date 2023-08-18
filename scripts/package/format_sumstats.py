@@ -10,7 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--sumstats', type=str, 
                     help='Path to sumstats file(s). Use * to specify multiple files.')
 parser.add_argument('--chrposid', action='store_true', default = False, help = 'Whether to make SNP ID chr:pos ID')
-parser.add_argument('--parsum', type = str, default = False, help = "Whether to sum paternal and maternal effects")
+parser.add_argument('--parsum', action='store_true', default = False, help = "Whether to sum paternal and maternal effects")
 args = parser.parse_args()
 
 ## functions from SNIPar gwas.py
@@ -98,7 +98,12 @@ for i in range(len(files)):
     chr = metadata[:, 0].astype(float).astype(int)
     pos = metadata[:, 2].astype(float).astype(int)
     if args.chrposid:
-        SNP = chr.astype(str) + ':' + pos.astype(str)
+        def get_chrposid(a, b):
+            if a is None or b is None:
+                return np.nan
+            return str(a) + ":" + str(b)
+        SNP = [get_chrposid(a, b) for a, b in zip(chr, pos)]
+        SNP = np.array(SNP)
     else:
         SNP = metadata[:, 1]
     alleles = metadata[:, 3:5]
@@ -114,7 +119,7 @@ for i in range(len(files)):
         outfile = outfile.replace('.hdf5', '.gz')
     elif file.endswith('.hdf5'):
         outfile = outfile.replace('.hdf5', '.sumstats.gz')
-    if file.contains('/hdf5/'):
+    if '/hdf5/' in file:
         outfile = outfile.replace('/hdf5/', '')
 
     os.makedirs(outfile.replace(outfile.split("/").pop(), ""), exist_ok=True)

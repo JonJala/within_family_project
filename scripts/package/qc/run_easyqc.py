@@ -727,8 +727,3 @@ the reader will try and infer the chromosome number from the file name.''')
 
     if args.ldsc_ref is not None:
         run_ldsc_rg(args)
-
-
-
-
-    

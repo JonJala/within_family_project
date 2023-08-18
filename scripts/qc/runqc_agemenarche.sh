@@ -24,7 +24,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
 #     "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Menarche/NTR_Menarche_CHR*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/menarche" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/agemenarche" \
 #     --ldsc-ref "$reffile" \
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --cptid \

@@ -42,16 +42,20 @@ compute_corrs <- function(bed_path, fam_path, sibs) {
 
 }
 
+## read in sibs file
+sibs <- fread("/disk/genetics/ukb/alextisyoung/haplotypes/relatives/bedfiles/hap.kin0") # list of sibs in UKB
+sibs %<>% filter(InfType == "FS") # full sibs only
+
 ## compute correlations for low info snps
 low_info_bed <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_low_info.bed" 
 low_info_fam <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_low_info.fam"
 low_info_corr <- compute_corrs(low_info_bed, low_info_fam, sibs)
 hist(low_info_corr)
-mean(low_info_corr)
+mean(low_info_corr, na.rm = T)
 
 ## compute correlations for high info snps
 high_info_bed <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_high_info.bed" 
 high_info_fam <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_high_info.fam"
 high_info_corr <- compute_corrs(high_info_bed, high_info_fam, sibs)
 hist(high_info_corr)
-mean(high_info_corr)
+mean(high_info_corr, na.rm = T)

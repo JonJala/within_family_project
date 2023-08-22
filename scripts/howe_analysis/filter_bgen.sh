@@ -9,7 +9,7 @@ plink2 --bgen /disk/genetics2/ukb/orig/UKBv3/imputed_data/ukb_imp_chr1_v3.bgen r
     --sample /disk/genetics2/ukb/orig/UKBv3/sample/ukb11425_imp_chr1_22_v3_s487395.sample \
     --keep /disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs.txt \
     --extract /disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/low_info_snps.txt \
-    --make-bed \
+    --export A \
     --out /disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_low_info
 
 ## high info SNPs
@@ -17,5 +17,5 @@ plink2 --bgen /disk/genetics2/ukb/orig/UKBv3/imputed_data/ukb_imp_chr1_v3.bgen r
     --sample /disk/genetics2/ukb/orig/UKBv3/sample/ukb11425_imp_chr1_22_v3_s487395.sample \
     --keep /disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs.txt \
     --extract /disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/high_info_snps.txt \
-    --make-bed \
+    --export A \
     --out /disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_high_info

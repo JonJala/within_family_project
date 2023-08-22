@@ -4,7 +4,7 @@
 ## description: compute gcs between sibs for howe et al info score analysis
 ## ---------------------------------------------------------------------
 
-list.of.packages <- c("data.table", "dplyr", "magrittr", "tidyverse", "plinkFile", "genio")
+list.of.packages <- c("data.table", "dplyr", "magrittr", "tidyverse")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos = "http://cran.rstudio.com/")
 lapply(list.of.packages, library, character.only = TRUE)
@@ -13,22 +13,21 @@ lapply(list.of.packages, library, character.only = TRUE)
 ## compute correlations using plink filtered files
 ## ---------------------------------------------------------------------
 
-compute_corrs <- function(bed_path, fam_path, sibs) {
+compute_corrs <- function(raw_path, sibs) {
     
-    ## read in bed and fam files
-    bed <- readBED(bed_path)
-    fam <- read_fam(fam_path)
+    ## read in .raw file
+    raw <- fread(raw_path) %>%
+                select(-FID, -PAT, -MAT, -SEX, -PHENOTYPE)
 
-    ## process sibling data
-    bed_dat <- data.table(ID = as.numeric(fam$id), bed)
+    ## merge with sibling data
     sib1_dat <- sibs %>%
                     select(ID1) %>%
-                    rename(ID = ID1) %>%
-                    left_join(bed_dat)
+                    rename(IID = ID1) %>%
+                    left_join(raw)
     sib2_dat <- sibs %>%
                     select(ID2) %>%
-                    rename(ID = ID2) %>%
-                    left_join(bed_dat)
+                    rename(IID = ID2) %>%
+                    left_join(raw)
 
     ## compute corrs
     cors <- c()
@@ -47,15 +46,15 @@ sibs <- fread("/disk/genetics/ukb/alextisyoung/haplotypes/relatives/bedfiles/hap
 sibs %<>% filter(InfType == "FS") # full sibs only
 
 ## compute correlations for low info snps
-low_info_bed <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_low_info.bed" 
-low_info_fam <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_low_info.fam"
-low_info_corr <- compute_corrs(low_info_bed, low_info_fam, sibs)
+low_info_raw <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_low_info.raw" 
+low_info_corr <- compute_corrs(low_info_raw, sibs)
 hist(low_info_corr)
 mean(low_info_corr, na.rm = T)
+sum(is.na(low_info_corr))
 
 ## compute correlations for high info snps
-high_info_bed <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_high_info.bed" 
-high_info_fam <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_high_info.fam"
-high_info_corr <- compute_corrs(high_info_bed, high_info_fam, sibs)
+high_info_raw <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_high_info.raw" 
+high_info_corr <- compute_corrs(high_info_raw, sibs)
 hist(high_info_corr)
 mean(high_info_corr, na.rm = T)
+sum(is.na(high_info_corr))

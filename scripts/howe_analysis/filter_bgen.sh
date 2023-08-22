@@ -1,8 +1,8 @@
 #!/usr/bin/bash
 
-## ---------------------------------------------------------------------
-## description: filter bgen to sample and snps of interest
-## ---------------------------------------------------------------------
+## -------------------------------------------------------------------------------------------
+## description: filter bgen to sample and snps of interest for howe et al info score analysis
+## -------------------------------------------------------------------------------------------
 
 ## low info snps
 plink2 --bgen /disk/genetics2/ukb/orig/UKBv3/imputed_data/ukb_imp_chr1_v3.bgen ref-first \

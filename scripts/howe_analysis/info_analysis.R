@@ -24,13 +24,13 @@ dat <- fread("/disk/genetics2/ukb/orig/UKBv3/imputed_data/ukb_mfi_chr1_v3.txt")
 low_info <- dat %>%
                     filter(0.3 < V8 & V8 < 0.31) # filter info score between 0.3 and 0.31
 low_info_snps <- sample(low_info$V2, 100, replace = FALSE) # randomly select 100 snps
-fwrite(data.frame(low_info_snps), "/disk/genetics4/ukb/tammytan/wf/howe_analysis/low_info_snps.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
+fwrite(data.frame(low_info_snps), "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/low_info_snps.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
 
 # high info snps
 high_info <- data %>%
                     filter(V8 > 0.99)
 high_info_snps <- sample(high_info$V2, 100, replace = FALSE)
-fwrite(data.frame(high_info_snps), "/disk/genetics4/ukb/tammytan/wf/howe_analysis/high_info_snps.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
+fwrite(data.frame(high_info_snps), "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/high_info_snps.txt", col.names = FALSE, row.names = FALSE, quote = FALSE)
 
 
 ## list of sibs
@@ -41,7 +41,7 @@ sibs %<>% filter(InfType == "FS") # full sibs only
 sib1 <- data.frame(sibs$FID1, sibs$ID1, fix.empty.names =  FALSE)
 sib2 <- data.frame(sibs$FID2, sibs$ID2, fix.empty.names =  FALSE)
 all_sibs <- rbind(sib1, sib2)
-fwrite(all_sibs, "/disk/genetics4/ukb/tammytan/wf/howe_analysis/all_sibs.txt", col.names = FALSE, row.names = FALSE, quote = FALSE, sep = "\t")
+fwrite(all_sibs, "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs.txt", col.names = FALSE, row.names = FALSE, quote = FALSE, sep = "\t")
 
 ## ---------------------------------------------------------------------
 ## analysis using plink generated files
@@ -77,15 +77,15 @@ compute_corrs <- function(bed_path, fam_path, sibs) {
 }
 
 ## compute correlations for low info snps
-low_info_bed <- "/disk/genetics4/ukb/tammytan/wf/howe_analysis/all_sibs_low_info.bed" 
-low_info_fam <- "/disk/genetics4/ukb/tammytan/wf/howe_analysis/all_sibs_low_info.fam"
+low_info_bed <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_low_info.bed" 
+low_info_fam <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_low_info.fam"
 low_info_corr <- compute_corrs(low_info_bed, low_info_fam, sibs)
 hist(low_info_corr)
 mean(low_info_corr)
 
 ## compute correlations for high info snps
-high_info_bed <- "/disk/genetics4/ukb/tammytan/wf/howe_analysis/all_sibs_high_info.bed" 
-high_info_fam <- "/disk/genetics4/ukb/tammytan/wf/howe_analysis/all_sibs_high_info.fam"
+high_info_bed <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_high_info.bed" 
+high_info_fam <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_high_info.fam"
 high_info_corr <- compute_corrs(high_info_bed, high_info_fam, sibs)
 hist(high_info_corr)
 mean(high_info_corr)

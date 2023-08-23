@@ -45,16 +45,27 @@ compute_corrs <- function(raw_path, sibs) {
 sibs <- fread("/disk/genetics/ukb/alextisyoung/haplotypes/relatives/bedfiles/hap.kin0") # list of sibs in UKB
 sibs %<>% filter(InfType == "FS") # full sibs only
 
-## compute correlations for low info snps
-low_info_raw <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_low_info.raw" 
-low_info_corr <- compute_corrs(low_info_raw, sibs)
-hist(low_info_corr)
-mean(low_info_corr, na.rm = T)
-sum(is.na(low_info_corr))
+## compute correlations
+raw_path <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/plink_out"
+raw_files <- list.files(path = raw_path, pattern = ".raw")
+corr_df <- data.frame(info = NULL, mean = NULL, sd = NULL, n_na = NULL, stringsAsFactors = FALSE)
+for (file in raw_files) {
+    
+    print(paste0("Computing correlations for ", file, "."))
+    raw <- paste0(raw_path, "/", file)
+    corrs <- compute_corrs(raw, sibs)
+    f <- str_replace(file, ".raw", "")
 
-## compute correlations for high info snps
-high_info_raw <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_analysis/all_sibs_high_info.raw" 
-high_info_corr <- compute_corrs(high_info_raw, sibs)
-hist(high_info_corr)
-mean(high_info_corr, na.rm = T)
-sum(is.na(high_info_corr))
+    # plot histogram
+    png(paste0("/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/", f, "_hist.png"))
+    hist(corrs)
+    dev.off()
+
+    # add summary stats to table
+    mean <- mean(corrs, na.rm = T)
+    sd <- sd(corrs, na.rm = T)
+    n_na <- sum(is.na(corrs))
+    corr_df <- rbind(corr_df, data.frame(info = f, mean = mean, sd = sd, n_na = n_na, stringsAsFactors = FALSE))
+
+}
+fwrite(corr_df, "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/corrs.csv", col.names = TRUE, row.names = FALSE, quote = FALSE)

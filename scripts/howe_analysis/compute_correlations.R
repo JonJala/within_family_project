@@ -16,7 +16,8 @@ lapply(list.of.packages, library, character.only = TRUE)
 compute_corrs <- function(raw_path, sibs) {
     
     ## read in .raw file
-    raw <- fread(raw_path) %>%
+    raw <- fread(raw_path)
+    raw <- raw[, .SD, .SDcols = unique(names(raw))] %>%
                 select(-FID, -PAT, -MAT, -SEX, -PHENOTYPE)
 
     ## merge with sibling data

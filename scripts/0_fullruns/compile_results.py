@@ -221,6 +221,7 @@ def get_ldsc_results(phenotypes):
         --rg {populationresults} \
         --ref-ld-chr {eur_w_ld_chr} \
         --w-ld-chr {eur_w_ld_chr} \
+        --print-delete-vals \
         --out {basepath}/processed/package_output/populationrg \
         --print-estimates \
         --write-excel \
@@ -232,6 +233,7 @@ def get_ldsc_results(phenotypes):
         --ref-ld-chr {eur_w_ld_chr} \
         --w-ld-chr {eur_w_ld_chr} \
         --out {basepath}/processed/package_output/directrg \
+        --print-delete-vals \
         --print-estimates \
         --write-excel \
         --filelabels {phenolabels}
@@ -276,9 +278,9 @@ cog_validation = "mcs"
 cog_pheno = "cogass"
 
 ## chooose which results to compile
-metaanalysis = True
+metaanalysis = False
 fpgs = False
-ldsc = False
+ldsc = True
 
 ## initialize dataframes for saving results
 if metaanalysis == True:    

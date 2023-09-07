@@ -150,53 +150,92 @@ create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = 
 
 }
 
-## generate scatterplot filtering on each phenotype
-for (pheno in all_phenos) {
-    print(pheno)
-    create_scatterplot(phenos, save = TRUE, save_suffix = pheno, filter_pheno = pheno)
-}
+# ## generate scatterplot filtering on each phenotype
+# for (pheno in all_phenos) {
+#     print(pheno)
+#     create_scatterplot(phenos, save = TRUE, save_suffix = pheno, filter_pheno = pheno)
+# }
 
 ## --------------------------------------------------------------------------------
 ## create density plot
 ## --------------------------------------------------------------------------------
 
-create_density_plot <- function(phenos, save = TRUE) {
+create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suffix = NA, palette = NA) {
 
     # process data
     dat = process_data(phenos)
     
-    # pairs with SE < 0.07
-    dat_points = dat %>%
+    if (is.null(dat_points)) {
+        # plot points with direct rg SE < 0.07
+        dat_points = dat %>%
                 filter(!is.na(direct_rg_se) & direct_rg_se < 0.07 & phenotype %in% phenos)
+    }
 
     # get colour palette
-    palette <- c("#E93993", "#CCEBDE", "#B2BFDC", "#C46627", "#10258A", "#E73B3C", "#DDDDDD",
+    if (is.na(palette)) {
+        set.seed(23)
+        n <- length(unique(dat$phenotype))
+        if (n < 29) {
+            palette <- c("#E93993", "#CCEBDE", "#B2BFDC", "#C46627", "#10258A", "#E73B3C", "#DDDDDD",
                         "#FF8F1F", "#FCD3E6", "#B9E07A", "#A3F6FF", "#FFFF69", "#47AA42", "#A0DBD0",
                         "#5791C2", "#E9B82D", "#FC9284", "#7850A4", "#CEB8D7", "#FDC998", "#ADADAD",
                         "#00441B", "#028189", "#67001F", "#525252", "#FE69FC", "#A0D99B", "#4B1DB7")
+        } else {
+            palette1 <- c("#E93993", "#CCEBDE", "#B2BFDC", "#C46627", "#10258A", "#E73B3C", "#DDDDDD",
+                            "#FF8F1F", "#FCD3E6", "#B9E07A", "#A3F6FF", "#FFFF69", "#47AA42", "#A0DBD0",
+                            "#5791C2", "#E9B82D", "#FC9284", "#7850A4", "#CEB8D7", "#FDC998", "#ADADAD",
+                            "#00441B", "#028189", "#67001F", "#525252", "#FE69FC", "#A0D99B", "#4B1DB7")
+            qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+            col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+            palette2 <- sample(col_vector, n-length(palette1), replace = T)
+            palette <- c(palette1, palette2)
+        }
+    }
 
     # plot
-    ggplot(dat, aes(x=pop_rg, y=direct_rg) ) +
-        stat_density_2d(aes(fill = ..level..), geom = "polygon", show.legend = FALSE) +
-        scale_fill_distiller(palette="Greys", direction=1) +
-        geom_abline(intercept=0, slope=1, linetype="solid", color="gray") +
-        geom_hline(yintercept=0, linetype="dotted") +
-        geom_vline(xintercept=0, linetype="dotted") +
-        xlim(-0.9, 0.9) +
-        ylim(-0.9, 0.9) +
-        geom_point(dat = dat_points, aes(pop_rg, direct_rg, colour=phenotype, shape=phenotype), alpha=0.6) +
-        geom_linerange(dat = dat_points, aes(x=pop_rg, ymin = direct_rg_lo, ymax=direct_rg_hi, color = phenotype), alpha=0.6) +
-        geom_linerange(dat = dat_points, aes(y=direct_rg, xmin = pop_rg_lo, xmax=pop_rg_hi, color = phenotype), alpha=0.6) +  
-        scale_colour_manual(values = c(palette("Paired"), palette)) +
-        scale_shape_manual(values = seq(1, nrow(dat_points))) +
-        theme(legend.position = "bottom", legend.title = element_blank())
+    p <- ggplot(dat, aes(x=pop_rg, y=direct_rg) ) +
+            stat_density_2d(aes(fill = ..level..), geom = "polygon", show.legend = FALSE) +
+            scale_fill_distiller(palette="Greys", direction=1) +
+            geom_abline(intercept=0, slope=1, linetype="solid", color="gray") +
+            geom_hline(yintercept=0, linetype="dotted") +
+            geom_vline(xintercept=0, linetype="dotted") +
+            xlim(-0.9, 0.9) +
+            ylim(-0.9, 0.9) +
+            geom_point(dat = dat_points, aes(pop_rg, direct_rg, colour=phenotype, shape=phenotype), alpha=0.6) +
+            geom_linerange(dat = dat_points, aes(x=pop_rg, ymin = direct_rg_lo, ymax=direct_rg_hi, color = phenotype), alpha=0.6) +
+            geom_linerange(dat = dat_points, aes(y=direct_rg, xmin = pop_rg_lo, xmax=pop_rg_hi, color = phenotype), alpha=0.6) +  
+            scale_colour_manual(values = c(palette("Paired"), palette)) +
+            scale_shape_manual(values = seq(1, nrow(dat_points))) +
+            theme(legend.position = "bottom", legend.title = element_blank())
 
-    if (save) {
-        ggsave("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg_density.pdf",
+    # save
+    if (save & is.na(save_suffix)) {
+        ggsave("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg_density.png",
+        height = 7, width = 9)
+    } else if (save & !is.na(save_suffix)) {
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg_density_", save_suffix, ".png"),
         height = 7, width = 9)
     }
 
 }
 
-# create density plot
-create_density_plot(phenos, save = TRUE)
+# create density plot with points for pairs with direct rg SE < 0.07
+# create_density_plot(phenos, save = TRUE)
+
+## --------------------------------------------------------------------------------
+## create density plot for traits with jackknife pval < 0.05 only
+## --------------------------------------------------------------------------------
+
+jack <- fread("/disk/genetics/proj/within_family/within_family_project/processed/ldsc/jackknife_pvals.csv")
+jack_phenos <- jack %>% 
+                filter(p < 0.05) %>% 
+                select(trait) %>% 
+                pull %>%
+                str_replace("\\(\\'", "") %>%
+                str_replace("\\'\\)", "") %>%
+                str_replace("\\', \\'", "_")
+dat = process_data(phenos)
+jack_points <- dat %>%
+                filter(phenotype %in% jack_phenos)
+
+create_density_plot(phenos, dat_points = jack_points, save = TRUE, save_suffix = "jackknife")

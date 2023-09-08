@@ -1,8 +1,10 @@
 #!/usr/bin/bash
 
 # -------------------------------------------------------------------------------------------
-# description: filter bgen to sample and snps of interest for howe et al info score analysis
+# description: get plink files needed for howe et al info score analysis
 # -------------------------------------------------------------------------------------------
+
+# get dosages from .raw files
 
 keep_dir=/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/keep
 
@@ -19,5 +21,21 @@ do
             --export A \
             --make-pgen \
             --out /disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/plink_out/${file}
+
+done
+
+
+## convert pgen files to .bed to get hard calls
+
+for pfile in /disk/genetics/data/ukb/private/v3/processed/proj/within_family/howe_info_analysis/plink_out/snps_0_*.pgen
+do 
+
+    filename=${snp_list##*/}
+    prefix=${pfile%.*}
+    out=$(basename $prefix)
+    
+    plink2 --pfile ${prefix} \
+            --make-bed \
+            --out /disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/plink_out/bed/${out}
 
 done

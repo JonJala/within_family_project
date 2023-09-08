@@ -25,7 +25,7 @@ dat %<>% filter(V6 > 0.01) # filter MAF > 0.01 as per howe et al.; 772k SNPs lef
 for (i in seq(0.3, 0.99, 0.01)) {
     j <- i + 0.01
     info <- dat %>%
-            filter(i < V8 & V8 < j) # filter info score
+            filter(i <= V8 & V8 < j) # filter info score
     if (nrow(info) >= 1000) {
         print(paste0("Randomly selecting 1k SNPs with INFO between ", i, " and ", j, "."))
         snps <- sample(info$V2, 1000, replace = FALSE) # randomly select 1000 snps

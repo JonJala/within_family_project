@@ -77,11 +77,12 @@ for (file in raw_files) {
     
     print(paste0("Computing correlations for ", file, "."))
     raw <- paste0(raw_path, "/", file)
-    corrs <- compute_corrs(raw, sibs)
+    corrs <- compute_corrs(sibs, raw_path = raw)
     f <- str_replace(file, ".raw", "")
     info <- f %>%
                 str_replace("snps_", "") %>%
-                str_replace("_", ".")
+                str_replace("_", ".") %>%
+                as.numeric()
 
     # get n snps
     keep <- fread(paste0("/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/howe_info_analysis/keep/", f, ".txt"), header = FALSE)
@@ -90,7 +91,7 @@ for (file in raw_files) {
     # plot histogram
     ggplot(data.frame(corrs), aes(x = corrs)) +
         geom_histogram(binwidth = 0.01, fill = "#56B4E9", colour = "#56B4E9", alpha = 0.5) +
-        labs(title = paste0("Genetic Correlations for SNPS with INFO = ", info, " (n = ", n_snps, ")"),
+        labs(title = paste0("Genetic Correlations for SNPS with INFO = ", info, "-", info+0.01, " (n = ", n_snps, ")"),
              x = "Genetic Correlation",
              y = "Count") +
         theme_classic() +
@@ -128,7 +129,8 @@ for (file in files) {
     corrs <- compute_corrs(sibs, hard_calls = TRUE, bed_path = bed_path, fam_path = fam_path)
     info <- file %>%
                 str_replace("snps_", "") %>%
-                str_replace("_", ".")
+                str_replace("_", ".") %>%
+                as.numeric()
 
     # get n snps
     keep <- fread(paste0("/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/howe_info_analysis/keep/", file, ".txt"), header = FALSE)
@@ -137,7 +139,7 @@ for (file in files) {
     # plot histogram
     ggplot(data.frame(corrs), aes(x = corrs)) +
         geom_histogram(binwidth = 0.02, fill = "#56B4E9", colour = "#56B4E9", alpha = 0.5) +
-        labs(title = paste0("Genetic Correlations for SNPS with INFO = ", info, " (n = ", n_snps, ")"),
+        labs(title = paste0("Genetic Correlations for SNPS with INFO = ", info, "-", info+0.01, " (n = ", n_snps, ")"),
              x = "Genetic Correlation",
              y = "Count") +
         theme_classic() +

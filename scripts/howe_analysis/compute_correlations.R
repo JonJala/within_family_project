@@ -5,11 +5,10 @@
 ## ---------------------------------------------------------------------
 
 list.of.packages <- c("data.table", "dplyr", "magrittr", "tidyverse", "ggplot2", "plinkFile",
-                        "genio")
+                        "genio", "ggplot2")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos = "http://cran.rstudio.com/")
 lapply(list.of.packages, library, character.only = TRUE)
-
 
 ## ---------------------------------------------------------------------
 ## define function to compute correlations
@@ -154,3 +153,35 @@ for (file in files) {
 
 }
 fwrite(corr_df_hardcalls, "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/hard_calls/corrs.csv", col.names = TRUE, row.names = FALSE, quote = FALSE)
+
+
+## ---------------------------------------------------------------------
+## plot mean correlation for each info level
+## ---------------------------------------------------------------------
+
+plot_mean_correlations <- function(path, save_path) {
+
+    # get data
+    dat <- fread(path)
+    dat %<>% mutate(info = str_replace(str_replace(info, "snps_", ""), "_", ".") %>% as.numeric(),
+                    se = sd/sqrt(n_snps))
+    
+    # plot correlations
+    ggplot(dat, aes(x = info, y = mean)) +
+        geom_point() + 
+        # geom_errorbar(aes(ymin=mean-1.96*se, ymax=mean+1.96*se), width=.01,
+        #              position=position_dodge(.9)) +
+        theme_classic() +
+        labs(x = "INFO Score", y = "Genetic Correlation") +
+        ggtitle("Mean Genetic Correlations by INFO Score")
+    ggsave(save_path)
+
+}
+
+## dosages
+dosage_path <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/corrs.csv"
+plot_mean_correlations(dosage_path, "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/mean_corrs.png")
+
+## hard calls
+hardcall_path <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/hard_calls/corrs.csv"
+plot_mean_correlations(hardcall_path, "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/hard_calls/mean_corrs.png")

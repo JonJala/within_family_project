@@ -30,15 +30,15 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info /"var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt" \
 #     --binary
 
-# ################
-# ## iPSYCH
-# ############
+################
+## iPSYCH
+############
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_adhd_export0.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/adhd" \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/disk/genetics/data/ipsych/public/v2/processed/sumstats/sumstats_adhd_export_plinkfiltered.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/adhd" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile"
 
 ############
 # Finn Gen

@@ -184,25 +184,25 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # #     --toest "direct_population" \
 # #     --cptid
 
-# ################
-# # iPSYCH
-# ############
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_ea_export0.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/ea" \
-#     --cptid \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile"
-
-#####################
-# ====== CKB ====== #
-#####################
+################
+# iPSYCH
+############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/edu_years_all_chr.sumstats.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/ea" \
-    --effects "direct_averageparental_population" \
-    --toest "direct_averageparental_population" \
-    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
-    --cptid
+    "/disk/genetics/data/ipsych/public/v2/processed/sumstats/sumstats_ea_export_plinkfiltered.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/ea" \
+    --cptid \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile"
+
+# #####################
+# # ====== CKB ====== #
+# #####################
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/edu_years_all_chr.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/ea" \
+#     --effects "direct_averageparental_population" \
+#     --toest "direct_averageparental_population" \
+#     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
+#     --cptid

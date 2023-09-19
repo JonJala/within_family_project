@@ -59,7 +59,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 ############
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_wage_export0.txt" \
+    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_wage_export_plinkfiltered.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/income" \
     --toest "direct_population" \
     --cptid \

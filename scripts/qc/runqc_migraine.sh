@@ -42,17 +42,17 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Info/hwe.txt.gz" \
 #     --binary
 
-# ################
-# ## iPSYCH
-# ############
+################
+## iPSYCH
+############
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_migraine_export0.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/migraine" \
-#     --toest "direct_population" \
-#     --ldsc-ref "$reffile" \
-#     --cptid \
-#     --binary
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_migraine_export_plinkfiltered.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/migraine" \
+    --toest "direct_population" \
+    --ldsc-ref "$reffile" \
+    --cptid \
+    --binary
 
 # #####################
 # # ====== UKB ====== #
@@ -69,16 +69,16 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
 #     --binary
 
-############
-# Finn Gen
-############
+# ############
+# # Finn Gen
+# ############
 
-## 6/19/2023 : This data will hopefully be moved from private to public, and it's likely OK to use it this way, but this is an issue that does need to be resolved in a more permanent way. This code / paradigm shouldn't be copy-pasted or used elsewhere as-is
+# ## 6/19/2023 : This data will hopefully be moved from private to public, and it's likely OK to use it this way, but this is an issue that does need to be resolved in a more permanent way. This code / paradigm shouldn't be copy-pasted or used elsewhere as-is
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/finngen/private/v1/processed/sumstats/migraine.sumstats.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/migraine" \
-    --ldsc-ref "$reffile" \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
-    --binary
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/finngen/private/v1/processed/sumstats/migraine.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/migraine" \
+#     --ldsc-ref "$reffile" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --binary

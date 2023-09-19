@@ -17,6 +17,18 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
 #     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
 
+## just testing
+
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/disk/genetics4/ukb/alextisyoung/imputed/height/chr_*.sumstats.hdf5" \
+    --outprefix "/disk/genetics4/ukb/tammytan/qc" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --bim_chromosome 99 \
+    --ldsc-ref $reffile \
+    --hwe '/disk/genetics/ukb/alextisyoung/hapmap3/hwe/hwe.formatted' \
+    --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted'
+
 # ######################
 # # generation scotland
 # ######################
@@ -200,13 +212,13 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ====== CKB ====== #
 #####################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_standing_height_mm_all_chr.sumstats.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/height" \
-    --effects "direct_averageparental_population" \
-    --toest "direct_averageparental_population" \
-    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
-    --cptid
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_standing_height_mm_all_chr.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/height" \
+#     --effects "direct_averageparental_population" \
+#     --toest "direct_averageparental_population" \
+#     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
+#     --cptid
 
 # ############
 # # Finn Gen

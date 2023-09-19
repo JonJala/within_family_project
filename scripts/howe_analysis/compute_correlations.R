@@ -90,9 +90,10 @@ for (file in raw_files) {
     # plot histogram
     ggplot(data.frame(corrs), aes(x = corrs)) +
         geom_histogram(binwidth = 0.01, fill = "#56B4E9", colour = "#56B4E9", alpha = 0.5) +
-        labs(title = paste0("Genetic Correlations for SNPS with INFO = ", info, "-", info+0.01, " (n = ", n_snps, ")"),
-             x = "Genetic Correlation",
+        labs(title = paste0("Sib Genotype Corrs for SNPS with INFO = ", info, "-", info+0.01, " (n = ", n_snps, ")"),
+             x = "Sibling Genotype Correlation",
              y = "Count") +
+        geom_vline(xintercept=0.5, linetype="dotted") +
         theme_classic() +
         theme(legend.position="none")
     ggsave(paste0("/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/", f, "_hist.png"))
@@ -117,9 +118,9 @@ sibs %<>% filter(InfType == "FS") # full sibs only
 
 ## compute correlations
 path <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/plink_out/bed"
-files <- list.files(path = path, pattern = "snps_0_[0-9].bed") %>%
+files <- list.files(path = path, pattern = "snps_0_[0-9]*.bed") %>%
                 str_replace_all(".bed", "")
-corr_df_hardcalls <- data.frame(info = NULL, mean = NULL, sd = NULL, n_na = NULL, n_snps = NULL, stringsAsFactors = FALSE)
+corr_df_hardcalls <- data.frame(info = NULL, mean = NULL, median = NULL, min = NULL, max = NULL, sd = NULL, n_na = NULL, n_snps = NULL, stringsAsFactors = FALSE)
 for (file in files) {
     
     print(paste0("Computing correlations for ", file, "."))
@@ -138,18 +139,22 @@ for (file in files) {
     # plot histogram
     ggplot(data.frame(corrs), aes(x = corrs)) +
         geom_histogram(binwidth = 0.02, fill = "#56B4E9", colour = "#56B4E9", alpha = 0.5) +
-        labs(title = paste0("Genetic Correlations for SNPS with INFO = ", info, "-", info+0.01, " (n = ", n_snps, ")"),
-             x = "Genetic Correlation",
+        labs(title = paste0("Sib Genotype Corrs for SNPS with INFO = ", info, "-", info+0.01, " (n = ", n_snps, ")"),
+             x = "Sibling Genotype Correlation",
              y = "Count") +
+        geom_vline(xintercept=0.5, linetype="dotted") +
         theme_classic() +
         theme(legend.position="none")
     ggsave(paste0("/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/hard_calls/", file, "_hist.png"))
 
     # add summary stats to table
     mean <- mean(corrs, na.rm = T)
+    median <- median(corrs, na.rm = T)
+    min <- min(corrs, na.rm = T)
+    max <- max(corrs, na.rm = T)
     sd <- sd(corrs, na.rm = T)
     n_na <- sum(is.na(corrs))
-    corr_df_hardcalls <- rbind(corr_df_hardcalls, data.frame(info = file, mean = mean, sd = sd, n_na = n_na, n_snps = n_snps, stringsAsFactors = FALSE))
+    corr_df_hardcalls <- rbind(corr_df_hardcalls, data.frame(info = file, mean = mean, median = median, min = min, max = max, sd = sd, n_na = n_na, n_snps = n_snps, stringsAsFactors = FALSE))
 
 }
 fwrite(corr_df_hardcalls, "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/hard_calls/corrs.csv", col.names = TRUE, row.names = FALSE, quote = FALSE)
@@ -159,7 +164,7 @@ fwrite(corr_df_hardcalls, "/disk/genetics/data/ukb/private/latest/processed/proj
 ## plot mean correlation for each info level
 ## ---------------------------------------------------------------------
 
-plot_mean_correlations <- function(path, save_path) {
+plot_mean_correlations <- function(path, save_path, title) {
 
     # get data
     dat <- fread(path)
@@ -172,16 +177,17 @@ plot_mean_correlations <- function(path, save_path) {
         # geom_errorbar(aes(ymin=mean-1.96*se, ymax=mean+1.96*se), width=.01,
         #              position=position_dodge(.9)) +
         theme_classic() +
-        labs(x = "INFO Score", y = "Genetic Correlation") +
-        ggtitle("Mean Genetic Correlations by INFO Score")
+        labs(x = "INFO Score", y = "Mean Sibling Genotype Correlation") +
+        geom_hline(yintercept=0.5, linetype="dotted") +
+        ggtitle(title)
     ggsave(save_path)
 
 }
 
 ## dosages
 dosage_path <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/corrs.csv"
-plot_mean_correlations(dosage_path, "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/mean_corrs.png")
+plot_mean_correlations(path = dosage_path, save_path = "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/mean_corrs.png", title = "Mean Sib. Genotype Corr. by INFO Score (dosage-based)")
 
 ## hard calls
 hardcall_path <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/hard_calls/corrs.csv"
-plot_mean_correlations(hardcall_path, "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/hard_calls/mean_corrs.png")
+plot_mean_correlations(path = hardcall_path, save_path = "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/output/hard_calls/mean_corrs.png", title = "Mean Sib. Genotype Corr. by INFO Score (hard call-based)")

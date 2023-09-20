@@ -50,7 +50,7 @@ compute_corrs <- function(sibs, raw_path = NULL, hard_calls = FALSE, bed_path = 
     
     ## compute corrs
     cors <- c()
-    for (i in 1:100) {
+    for (i in 1:ncol(sib1_dat)-1) {
         j <- i + 1
         cor <- cor(sib1_dat[, ..j], sib2_dat[, ..j], use = "pairwise.complete.obs")
         cors <- append(cors, cor[1])

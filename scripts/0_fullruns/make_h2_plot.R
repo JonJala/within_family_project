@@ -18,7 +18,7 @@ h2_plot <- function(save = TRUE) {
     dat = read_excel(
     "/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx"
     )
-    dat %<>% filter(h2_se_direct < 0.25)
+    dat %<>% filter(h2_se_direct < 0.25, h2_direct > 0)
 
     # get colour palette
     set.seed(42)

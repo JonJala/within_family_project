@@ -112,10 +112,6 @@ fwrite(corr_df, "/disk/genetics/data/ukb/private/latest/processed/proj/within_fa
 ## compute correlations using hard calls from .bed files
 ## ---------------------------------------------------------------------
 
-## read in sibs file
-sibs <- fread("/disk/genetics/ukb/alextisyoung/haplotypes/relatives/bedfiles/hap.kin0") # list of sibs in UKB
-sibs %<>% filter(InfType == "FS") # full sibs only
-
 ## compute correlations
 path <- "/disk/genetics/data/ukb/private/latest/processed/proj/within_family/howe_info_analysis/plink_out/bed"
 files <- list.files(path = path, pattern = "snps_0_[0-9]*.bed") %>%

@@ -12,12 +12,11 @@ function main(){
     PHENO=$1
 
     # bash scripts/qc/runqc_${PHENO}.sh
-    # bash scripts/usingpackage/${PHENO}/runmeta.sh
-    # bash scripts/prscs/${PHENO}_pgi.sh
-    # conda deactivate
+    bash scripts/usingpackage/${PHENO}/runmeta.sh
+    bash scripts/prscs/${PHENO}_pgi.sh
 
-    # source ${sniparenv}
-    # bash scripts/fpgs/fpgs_${PHENO}.sh
+    source ${sniparenv}
+    bash scripts/fpgs/fpgs_${PHENO}.sh
     # python scripts/usingpackage/${PHENO}/correlation_meta.py
     
     # ldsc stuff

@@ -84,7 +84,7 @@ for (file in raw_files) {
                 as.numeric()
 
     # get n snps
-    keep <- fread(paste0("/disk/genetics3/data_dirs/ukb/private/v3/processed/proj/within_family/howe_info_analysis/keep/", f, ".txt"), header = FALSE)
+    keep <- fread(paste0("/var/genetics/data/ukb/private/v3/processed/proj/within_family/howe_info_analysis/keep/", f, ".txt"), header = FALSE)
     n_snps <- nrow(keep)
 
     # plot histogram

@@ -5,4 +5,3 @@ scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/packa
 python $scriptpath/run_metaanalysis.py \
 "/var/genetics/proj/within_family/within_family_project/scripts/usingpackage/eczema/inputfiles.json" \
 --outprefix "/var/genetics/proj/within_family/within_family_project/processed/package_output/eczema/meta" | tee /var/genetics/proj/within_family/within_family_project/processed/package_output/eczema/meta.log
-

@@ -85,28 +85,28 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info '/disk/genetics2/ukb/orig/UKBv3/imputed_data/info.formatted' \
 #     --binary
 
-# ################
-# # iPSYCH
-# ############
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_depression_export0.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/depression" \
-#     --toest "direct_population" \
-#     --cptid \
-#     --ldsc-ref "$reffile" \
-#     --binary
-
+################
+# iPSYCH
 ############
-# Finn Gen
-############
-
-## 6/19/2023 : This data will hopefully be moved from private to public, and it's likely OK to use it this way, but this is an issue that does need to be resolved in a more permanent way. This code / paradigm shouldn't be copy-pasted or used elsewhere as-is
 
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/finngen/private/v1/processed/sumstats/depression.sumstats.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/depression" \
-    --ldsc-ref "$reffile" \
-    --effects "direct_averageparental" \
+    "/disk/genetics/data/ipsych/public/v2/processed/sumstats/sumstats_depression_export_plinkfiltered.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/depression" \
     --toest "direct_population" \
+    --cptid \
+    --ldsc-ref "$reffile" \
     --binary
+
+# ############
+# # Finn Gen
+# ############
+
+# ## 6/19/2023 : This data will hopefully be moved from private to public, and it's likely OK to use it this way, but this is an issue that does need to be resolved in a more permanent way. This code / paradigm shouldn't be copy-pasted or used elsewhere as-is
+
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/finngen/private/v1/processed/sumstats/depression.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/depression" \
+#     --ldsc-ref "$reffile" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --binary

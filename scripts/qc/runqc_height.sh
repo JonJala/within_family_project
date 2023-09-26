@@ -200,13 +200,13 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # ====== CKB ====== #
 #####################
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_standing_height_mm_all_chr.sumstats.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/height" \
-    --effects "direct_averageparental_population" \
-    --toest "direct_averageparental_population" \
-    --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
-    --cptid
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_standing_height_mm_all_chr.sumstats.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/height" \
+#     --effects "direct_averageparental_population" \
+#     --toest "direct_averageparental_population" \
+#     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
+#     --cptid
 
 # ############
 # # Finn Gen

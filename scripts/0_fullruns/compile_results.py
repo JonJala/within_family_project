@@ -3,6 +3,11 @@ import numpy as np
 import subprocess
 import json
 
+## chooose which results to compile
+metaanalysis = False
+fpgs = False
+ldsc = True
+
 ### define functions for compiling results
 
 def make_rg_matrix(directmat, populationmat):
@@ -221,20 +226,21 @@ def get_ldsc_results(phenotypes):
         --rg {populationresults} \
         --ref-ld-chr {eur_w_ld_chr} \
         --w-ld-chr {eur_w_ld_chr} \
+        --print-delete-vals \
         --out {basepath}/processed/package_output/populationrg \
         --print-estimates \
         --write-excel \
         --filelabels {phenolabels}
 
-
-    {ssgacrepopath}/ldsc_mod/ldsc.py \
-        --rg {directresults} \
-        --ref-ld-chr {eur_w_ld_chr} \
-        --w-ld-chr {eur_w_ld_chr} \
-        --out {basepath}/processed/package_output/directrg \
-        --print-estimates \
-        --write-excel \
-        --filelabels {phenolabels}
+    # {ssgacrepopath}/ldsc_mod/ldsc.py \
+    #     --rg {directresults} \
+    #     --ref-ld-chr {eur_w_ld_chr} \
+    #     --w-ld-chr {eur_w_ld_chr} \
+    #     --out {basepath}/processed/package_output/directrg \
+    #     --print-delete-vals \
+    #     --print-estimates \
+    #     --write-excel \
+    #     --filelabels {phenolabels}
     '''
     subprocess.run(bashcommand,
         shell=True, check=True,
@@ -257,6 +263,49 @@ def get_ldsc_results(phenotypes):
         basepath + '/processed/package_output/direct_population_rg_matrix.xlsx'
     )
 
+def get_heritabilities(phenotypes):
+
+    ssgacrepopath = "/var/genetics/proj/within_family/ssgac"
+    basepath = '/var/genetics/proj/within_family/within_family_project/'
+    phenotypes.sort()
+    populationresults = [basepath + 'processed/package_output/' + p + '/populationmunged.sumstats.gz' for p in phenotypes]
+    directresults = [basepath + 'processed/package_output/' + p + '/directmunged.sumstats.gz' for p in phenotypes]
+    populationresults = ','.join(populationresults)
+    directresults = ','.join(directresults)
+    eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
+    act = "/disk/genetics/pub/python_env/anaconda2/bin/activate"
+    pyenv = "/disk/genetics/pub/python_env/anaconda2/envs/mama"
+    phenolabels = ','.join(phenotypes)
+    print(phenolabels)
+
+    bashcommand = f'''
+    echo "Running LDSC-MOD"
+    source {act} {pyenv}
+
+    {ssgacrepopath}/ldsc_mod/ldsc.py \
+        --h2 {populationresults} \
+        --ref-ld-chr {eur_w_ld_chr} \
+        --w-ld-chr {eur_w_ld_chr} \
+        --print-delete-vals \
+        --out {basepath}/processed/package_output/populationh2 \
+        --print-estimates \
+        --write-excel \
+        --filelabels {phenolabels}
+
+    {ssgacrepopath}/ldsc_mod/ldsc.py \
+        --h2 {directresults} \
+        --ref-ld-chr {eur_w_ld_chr} \
+        --w-ld-chr {eur_w_ld_chr} \
+        --out {basepath}/processed/package_output/directh2 \
+        --print-delete-vals \
+        --print-estimates \
+        --write-excel \
+        --filelabels {phenolabels}
+    '''
+    subprocess.run(bashcommand,
+        shell=True, check=True,
+        executable='/usr/bin/bash')
+
 
 ### compile results
 
@@ -274,11 +323,6 @@ ea_validation = "mcs"
 ea_pheno = "gcse"
 cog_validation = "mcs"
 cog_pheno = "cogass"
-
-## chooose which results to compile
-metaanalysis = True
-fpgs = False
-ldsc = False
 
 ## initialize dataframes for saving results
 if metaanalysis == True:    
@@ -363,4 +407,5 @@ if fpgs == True:
 
 ## compile and save ldsc results
 if ldsc == True:
-    get_ldsc_results(phenotypes)
+    # get_ldsc_results(phenotypes)
+    get_heritabilities(phenotypes)

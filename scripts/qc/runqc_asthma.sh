@@ -64,6 +64,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/disk/genetics/data/ipsych/public/v2/processed/sumstats/sumstats_asthma_export_plinkfiltered.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/asthma" \
+    --effects "direct_averageparental" \
     --toest "direct_population" \
     --ldsc-ref "$reffile" \
     --cptid \
@@ -91,8 +92,8 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
 #     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/asthma_all_chr.sumstats.txt" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/asthma" \
-#     --effects "direct_averageparental_population" \
-#     --toest "direct_averageparental_population" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
 #     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
 #     --cptid \
 #     --binary

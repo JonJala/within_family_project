@@ -29,17 +29,18 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --info '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/info.formatted.gz' \
 #     --hwe '/var/genetics/data/hunt/public/latest/raw/sumstats/fgwas/snpstats/hwe.formatted.gz'
 
-# #####
-# # Finnish twins
-# #####
+#####
+# Finnish twins
+#####
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/afb.chr*.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/aafb" \
-#     --ldsc-ref $reffile \
-#     --toest "direct_population" \
-#     --hwe "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe" \
-#     --info "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt"
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/afb.chr*.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/aafb" \
+    --ldsc-ref $reffile \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --hwe "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe" \
+    --info "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt"
 
 
 # #####################
@@ -63,6 +64,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/disk/genetics/data/ipsych/public/v2/processed/sumstats/sumstats_age_fb_export_plinkfiltered.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/aafb" \
+    --effects "direct_averageparental" \
     --toest "direct_population" \
     --cptid \
     --ldsc-ref "$reffile"

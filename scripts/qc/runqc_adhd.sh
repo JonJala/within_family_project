@@ -17,18 +17,19 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe '/var/genetics/data/geisinger/public/latest/raw/sumstats/fgwas/OUTPUT.SNP_INFO/hwe.formatted.txt' \
 #     --binary
 
-# #####
-# ## Finnish twins
-# #####
+#####
+## Finnish twins
+#####
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/ADHD.chr*.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/adhd" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_population" \
-#     --hwe "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe" \
-#     --info /"var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt" \
-#     --binary
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/ADHD.chr*.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/adhd" \
+    --ldsc-ref "$reffile" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --hwe "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe" \
+    --info /"var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt" \
+    --binary
 
 ################
 ## iPSYCH
@@ -37,6 +38,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/disk/genetics/data/ipsych/public/v2/processed/sumstats/sumstats_adhd_export_plinkfiltered.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/adhd" \
+    --effects "direct_averageparental" \
     --toest "direct_population" \
     --ldsc-ref "$reffile"
 

@@ -58,12 +58,13 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 # # botnia
 # ###########
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/botnia_fam/private/latest/processed/sumstats/fgwas/7/chr_*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bpd" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_population" \
-#     --cptid
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/botnia_fam/private/latest/processed/sumstats/fgwas/7/chr_*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bpd" \
+    --ldsc-ref "$reffile" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --cptid
 
 # ####################
 # # ====== UKB ====== #
@@ -97,7 +98,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_dbp_mean_all_chr.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/bpd" \
-    --effects "direct_averageparental_population" \
-    --toest "direct_averageparental_population" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
     --cptid

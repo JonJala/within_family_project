@@ -2,6 +2,10 @@
 
     "eb" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/nearsight/CLEANED.out.gz"
+    },
+
+    "ipsych" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/nearsight/CLEANED.out.gz"
     }
 
 }

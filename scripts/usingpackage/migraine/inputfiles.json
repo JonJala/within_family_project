@@ -17,7 +17,10 @@
 
     "finngen" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/migraine/CLEANED.out.gz"
-    }
+    },
 
+    "ipsych" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/migraine/CLEANED.out.gz"
+    }
 
 }

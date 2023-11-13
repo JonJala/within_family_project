@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-## partitioned LDSC analysis for h2. based off /disk/genetics4/projects/EA4/code/partitionedLDSC/runldsc.sh
+## partitioned LDSC analysis for h2. based off /disk/genetics4/projects/EA4/code/partitionedLDSC/runldsc.sh and https://github.com/bulik/ldsc/wiki/Partitioned-Heritability-from-Continuous-Annotations
 
 pheno="height"
 effect="direct"

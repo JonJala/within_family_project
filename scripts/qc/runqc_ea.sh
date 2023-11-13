@@ -186,6 +186,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
 # iPSYCH
 ############
 
+# ea
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/disk/genetics/data/ipsych/public/v2/processed/sumstats/sumstats_ea_export_plinkfiltered.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/ea" \
@@ -193,6 +194,24 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --effects "direct_averageparental" \
     --toest "direct_population" \
     --ldsc-ref "$reffile"
+
+# gpahs
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_gpa_hs_export_plinkfiltered.txt" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpahs" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --cptid \
+    --ldsc-ref "$reffile" 
+
+# gpa9
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_gpa9_export_plinkfiltered.txt" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpa9" \
+#     --effects "direct_averageparental" \
+#     --toest "direct_population" \
+#     --cptid \
+#     --ldsc-ref "$reffile" 
 
 #####################
 # ====== CKB ====== #

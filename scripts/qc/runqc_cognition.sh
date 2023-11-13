@@ -93,27 +93,6 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
 
-
-###############
-# iPSYCH
-###########
-
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_gpa_hs_export_plinkfiltered.txt" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpahs" \
-    --effects "direct_averageparental" \
-    --toest "direct_population" \
-    --cptid \
-    --ldsc-ref "$reffile" 
-
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/ipsych/public/latest/processed/sumstats/sumstats_gpa9_export_plinkfiltered.txt" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpa9" \
-#     --effects "direct_averageparental" \
-#     --toest "direct_population" \
-#     --cptid \
-#     --ldsc-ref "$reffile" 
-
 # ############
 # # QIMR
 # ###########

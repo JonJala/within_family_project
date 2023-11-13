@@ -1,7 +1,7 @@
 {
     "lifelines" : {
 
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/cognition/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/cognition18/CLEANED.out.gz"
 
 },
 
@@ -11,25 +11,21 @@
 },
 
     "str" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/IQ/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/cognition/CLEANED.out.gz"
 
     },
 
     "ft" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/iq/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/cognition/CLEANED.out.gz"
 
     },
 
     "mt" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/iq/CLEANED.out.gz"
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/cognition/CLEANED.out.gz"
     },
 
     "qimr" : {
         "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/cognition/CLEANED.out.gz"
-    },
-
-    "ipsych" : {
-        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ipsych/gpahs/CLEANED.out.gz"
     }
 
 }

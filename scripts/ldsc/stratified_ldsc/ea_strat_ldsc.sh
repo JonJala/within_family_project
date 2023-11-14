@@ -10,7 +10,7 @@ ea4_dir="/disk/genetics4/projects/EA4"
 within_family_directory="/var/genetics/proj/within_family/within_family_project"
 
 # == Using Phase 3 data == #
-echo "Running Partitioned LDSC"
+echo "Running Stratified LDSC"
 python ${ldscpath}/ldsc.py \
   --h2 ${within_family_directory}/processed/package_output/${pheno}/${effect}munged.sumstats.gz \
   --ref-ld-chr ${ea4_dir}/derived_data/partitionedLDSC/rawdata/1000G_Phase3_baselineLD_ldscores/baselineLD. \

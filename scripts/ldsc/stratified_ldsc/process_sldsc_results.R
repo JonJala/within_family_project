@@ -174,29 +174,23 @@ process_cahoy3 <- function(effect, basepath, control = FALSE) {
 }
 
 ## function to process all cahoy results
-process_cahoy <- function(basepath, needed_annotations) {
+process_cahoy <- function(basepath) {
 
     ## process cahoy 1
-    cahoy1_direct <- process_cahoy1("direct", basepath)
     cahoy1_direct_control <- process_cahoy1("direct", basepath, control = TRUE) %>% 
                                 filter(Category == "Astrocytes")
-    cahoy1_population <- process_cahoy1("population", basepath)
     cahoy1_population_control <- process_cahoy1("population", basepath, control = TRUE) %>%
                                     filter(Category == "Astrocytes")
 
     ## process cahoy 2
-    cahoy2_direct <- process_cahoy2("direct", basepath)
     cahoy2_direct_control <- process_cahoy2("direct", basepath, control = TRUE) %>%
                                 filter(Category == "Oligodendrocytes")
-    cahoy2_population <- process_cahoy2("population", basepath)
     cahoy2_population_control <- process_cahoy2("population", basepath, control = TRUE) %>%
                                     filter(Category == "Oligodendrocytes")
 
     ## process cahoy 3
-    cahoy3_direct <- process_cahoy3("direct", basepath)
     cahoy3_direct_control <- process_cahoy3("direct", basepath, control = TRUE) %>%
                                 filter(Category == "Neurons")
-    cahoy3_population <- process_cahoy3("population", basepath)
     cahoy3_population_control <- process_cahoy3("population", basepath, control = TRUE) %>%
                                     filter(Category == "Neurons")
 
@@ -212,8 +206,7 @@ process_cahoy <- function(basepath, needed_annotations) {
     cahoy_in <- cahoy_direct %>% 
         bind_rows(cahoy_population) %>% 
         mutate(enrich_lo = Enrichment - 1.96 * Enrichment_std_error,
-            enrich_hi = Enrichment + 1.96 * Enrichment_std_error) %>%
-        filter(Category %in% needed_annotations)
+            enrich_hi = Enrichment + 1.96 * Enrichment_std_error)
 
     return(cahoy_in)
 
@@ -273,7 +266,7 @@ baseline_in <- baseline_direct %>%
     bind_rows(baseline_population %>% mutate(effect = "Population"))
 
 ## process cahoy
-cahoy_in <- process_cahoy(basepath, needed_annotations)
+cahoy_in <- process_cahoy(basepath)
 
 ## combine
 data <- rbind(baseline_in, cahoy_in) %>%

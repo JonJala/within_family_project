@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## ---------------------------------------------------------------------
-## description: create plots of fpgs results
+## description: create plots of sldsc results
 ## ---------------------------------------------------------------------
 
 list.of.packages <- c("data.table", "tidyr", "dplyr", "magrittr", "tidyverse", "ggplot2",

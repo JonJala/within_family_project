@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-## partitioned LDSC analysis for h2. based off /disk/genetics4/projects/EA4/code/partitionedLDSC/runldsc.sh and https://github.com/bulik/ldsc/wiki/Partitioned-Heritability-from-Continuous-Annotations
+## stratified LDSC analysis for h2. based off /disk/genetics4/projects/EA4/code/partitionedLDSC/runldsc.sh and https://github.com/bulik/ldsc/wiki/Partitioned-Heritability-from-Continuous-Annotations
 
 pheno="height"
 effect="direct"
@@ -19,7 +19,7 @@ python ${ldscpath}/ldsc.py \
   --overlap-annot \
   --print-coefficients \
   --print-delete-vals \
-  --out ${within_family_directory}/processed/ldsc/partitioned_ldsc/${pheno}/${effect}.baselineLD
+  --out ${within_family_directory}/processed/ldsc/stratified_ldsc/${pheno}/${effect}.baselineLD
 
 
 echo "Using Cahoy et al annotations - baseline controls"
@@ -31,7 +31,7 @@ python ${ldscpath}/ldsc.py \
   --overlap-annot \
   --print-coefficients \
   --print-delete-vals \
-  --out ${within_family_directory}/processed/ldsc/partitioned_ldsc/${pheno}/${effect}.cahoy.1
+  --out ${within_family_directory}/processed/ldsc/stratified_ldsc/${pheno}/${effect}.cahoy.1
 
 python ${ldscpath}/ldsc.py \
   --h2 ${within_family_directory}/processed/package_output/${pheno}/${effect}munged.sumstats.gz \
@@ -41,7 +41,7 @@ python ${ldscpath}/ldsc.py \
   --overlap-annot \
   --print-coefficients \
   --print-delete-vals \
-  --out ${within_family_directory}/processed/ldsc/partitioned_ldsc/${pheno}/${effect}.cahoy.2
+  --out ${within_family_directory}/processed/ldsc/stratified_ldsc/${pheno}/${effect}.cahoy.2
 
 python ${ldscpath}/ldsc.py \
   --h2 ${within_family_directory}/processed/package_output/${pheno}/${effect}munged.sumstats.gz \
@@ -51,7 +51,7 @@ python ${ldscpath}/ldsc.py \
   --overlap-annot \
   --print-coefficients \
   --print-delete-vals \
-  --out ${within_family_directory}/processed/ldsc/partitioned_ldsc/${pheno}/${effect}.cahoy.3
+  --out ${within_family_directory}/processed/ldsc/stratified_ldsc/${pheno}/${effect}.cahoy.3
 
 echo "Using Cahoy et al annotations - baseline controls + cahoy controls"
 
@@ -63,7 +63,7 @@ python ${ldscpath}/ldsc.py \
   --overlap-annot \
   --print-coefficients \
   --print-delete-vals \
-  --out ${within_family_directory}/processed/ldsc/partitioned_ldsc/${pheno}/${effect}.cahoy.1.control
+  --out ${within_family_directory}/processed/ldsc/stratified_ldsc/${pheno}/${effect}.cahoy.1.control
 
 
 python ${ldscpath}/ldsc.py \
@@ -74,7 +74,7 @@ python ${ldscpath}/ldsc.py \
   --overlap-annot \
   --print-coefficients \
   --print-delete-vals \
-  --out ${within_family_directory}/processed/ldsc/partitioned_ldsc/${pheno}/${effect}.cahoy.2.control
+  --out ${within_family_directory}/processed/ldsc/stratified_ldsc/${pheno}/${effect}.cahoy.2.control
 
 python ${ldscpath}/ldsc.py \
   --h2 ${within_family_directory}/processed/package_output/${pheno}/${effect}munged.sumstats.gz \
@@ -84,7 +84,7 @@ python ${ldscpath}/ldsc.py \
   --overlap-annot \
   --print-coefficients \
   --print-delete-vals \
-  --out ${within_family_directory}/processed/ldsc/partitioned_ldsc/${pheno}/${effect}.cahoy.3.control
+  --out ${within_family_directory}/processed/ldsc/stratified_ldsc/${pheno}/${effect}.cahoy.3.control
 
 
 echo "=================="

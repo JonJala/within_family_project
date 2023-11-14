@@ -14,6 +14,8 @@ lapply(list.of.packages, library, character.only = TRUE)
 ## define functions
 ## ---------------------------------------------------------------------
 
+pheno <- "height"
+
 # function to process baseline sldsc data
 process_baseline_results <- function(effect, basepath, needed_annotations) {
 
@@ -254,7 +256,6 @@ needed_annotations <- c(
     # "CpG content (50 kb)"
 )
 
-pheno <- "ea"
 basepath <- paste0("/var/genetics/proj/within_family/within_family_project/processed/ldsc/stratified_ldsc/", pheno, "/")
 
 ## process baseline

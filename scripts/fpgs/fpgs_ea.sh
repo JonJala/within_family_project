@@ -10,7 +10,7 @@ source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 # main "ea" "" "0" "ukb" "sbayesr"
 
 # prscs
-# main "ea" "" "0" "mcs" "prscs"
+main "ea" "" "0" "mcs" "prscs"
 main "ea" "" "0" "ukb" "prscs"
 
 # clumping analysis

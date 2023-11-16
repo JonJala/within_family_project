@@ -4,7 +4,7 @@ import subprocess
 import json
 
 ## chooose which results to compile
-metaanalysis = False
+metaanalysis = True
 fpgs = False
 ldsc = True
 
@@ -408,4 +408,4 @@ if fpgs == True:
 ## compile and save ldsc results
 if ldsc == True:
     get_ldsc_results(phenotypes)
-    get_heritabilities(phenotypes)
+    # get_heritabilities(phenotypes) # for jackknife estimates

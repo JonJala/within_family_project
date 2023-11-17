@@ -2,9 +2,9 @@
 
 ## stratified LDSC analysis. based off /disk/genetics4/projects/EA4/code/partitionedLDSC/runldsc.sh and https://github.com/bulik/ldsc/wiki/Partitioned-Heritability-from-Continuous-Annotations
 
-ldscpath="/disk/genetics2/pub/repo/ssgac/ldsc_mod"
-merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
-ea4_dir="/disk/genetics4/projects/EA4"
+ldscpath="/var/genetics/code/ssgac/ssgac/ldsc_mod"
+merge_alleles="/disk/genetics/data/misc/hapmap/hapmap3.snplist"
+ea4_dir="/var/genetics/proj/ea4"
 within_family_directory="/var/genetics/proj/within_family/within_family_project"
 
 for pheno in "height" "ea"

@@ -4,7 +4,7 @@ import subprocess
 import json
 
 ## chooose which results to compile
-metaanalysis = False
+metaanalysis = True
 fpgs = False
 ldsc = True
 
@@ -12,7 +12,7 @@ ldsc = True
 
 def make_rg_matrix(directmat, populationmat):
     '''
-    Make upper triangle the popualtion rgs
+    Make upper triangle the population rgs
     lower triange is direct rgs
     '''
 
@@ -232,15 +232,15 @@ def get_ldsc_results(phenotypes):
         --write-excel \
         --filelabels {phenolabels}
 
-    # {ssgacrepopath}/ldsc_mod/ldsc.py \
-    #     --rg {directresults} \
-    #     --ref-ld-chr {eur_w_ld_chr} \
-    #     --w-ld-chr {eur_w_ld_chr} \
-    #     --out {basepath}/processed/package_output/directrg \
-    #     --print-delete-vals \
-    #     --print-estimates \
-    #     --write-excel \
-    #     --filelabels {phenolabels}
+    {ssgacrepopath}/ldsc_mod/ldsc.py \
+        --rg {directresults} \
+        --ref-ld-chr {eur_w_ld_chr} \
+        --w-ld-chr {eur_w_ld_chr} \
+        --out {basepath}/processed/package_output/directrg \
+        --print-delete-vals \
+        --print-estimates \
+        --write-excel \
+        --filelabels {phenolabels}
     '''
     subprocess.run(bashcommand,
         shell=True, check=True,
@@ -407,5 +407,5 @@ if fpgs == True:
 
 ## compile and save ldsc results
 if ldsc == True:
-    # get_ldsc_results(phenotypes)
-    get_heritabilities(phenotypes)
+    get_ldsc_results(phenotypes)
+    # get_heritabilities(phenotypes) # for jackknife estimates

@@ -3,17 +3,18 @@
 
 reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/neuroticism_ref/neuroticism_ref.sumstats.gz"
 
-# #################
-# # Minnesota twins
-# #################
+#################
+# Minnesota twins
+#################
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/minn_twins/public/latest/raw/sumstats/fgwas/sumstats/STRESS_chr*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/stress" \
-#     --ldsc-ref "$reffile" \
-#     --cptid \
-#     --toest "direct_population" \
-#     --hwe '/var/genetics/data/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/minn_twins/public/latest/raw/sumstats/fgwas/sumstats/STRESS_chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/neuroticism" \
+    --ldsc-ref "$reffile" \
+    --cptid \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --hwe '/var/genetics/data/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
 
 # # #################
@@ -37,6 +38,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/neuroticism.chr*.hdf5" \
 #     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/neuroticism" \
 #     --ldsc-ref "$reffile" \
+#     --effects "direct_averageparental" \
 #     --toest "direct_population" \
 #     --hwe "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe" \
 #     --info "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt"
@@ -81,13 +83,13 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 #     --hwe "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/hwe/chr_*.hwe" \
 #     --info "/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/info/combined_clean.info.gz"
 
-#############
-# QIMR
-############
+# #############
+# # QIMR
+# ############
 
-python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-    "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/Neuroticism/Neuroticism_Chr*.sumstats.hdf5" \
-    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/neuroticism" \
-    --ldsc-ref "$reffile" \
-    --toest "direct_paternal_maternal_averageparental_population" \
-    --cptid
+# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+#     "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/Neuroticism/Neuroticism_Chr*.sumstats.hdf5" \
+#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/neuroticism" \
+#     --ldsc-ref "$reffile" \
+#     --toest "direct_paternal_maternal_averageparental_population" \
+#     --cptid

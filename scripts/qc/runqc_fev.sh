@@ -64,7 +64,7 @@ reffile="/var/genetics/proj/within_family/within_family_project/processed/refere
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/fev1_mean_all_chr.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/fev" \
-    --effects "direct_averageparental_population" \
-    --toest "direct_averageparental_population" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
     --cptid

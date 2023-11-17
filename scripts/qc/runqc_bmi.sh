@@ -23,14 +23,14 @@ PYTHONPATH="/var/genetics/proj/within_family/within_family_project/"
 # # ==== MT ========= #
 # ####################
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/minn_twins/public/latest/raw/sumstats/fgwas/sumstats/BMI_chr*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/bmi" \
-#     --ldsc-ref "$reffile" \
-#     --cptid \
-#     --toest "direct_population" \
-#     --hwe '/var/genetics/data/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
-# # 1.1505 (0.9728)
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/minn_twins/public/latest/raw/sumstats/fgwas/sumstats/BMI_chr*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/bmi" \
+    --ldsc-ref "$reffile" \
+    --cptid \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --hwe '/var/genetics/data/minn_twins/public/v1/raw/sumstats/fgwas/sumstats/snpstats/hardy.hwe'
 
 
 # #######################
@@ -98,35 +98,34 @@ PYTHONPATH="/var/genetics/proj/within_family/within_family_project/"
 #     --hwe "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/HWE/chr*.hwe" \
 #     --info "/var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/ImputationQuality_formatted.TXT"
 
-# ##########
-# # STR
-# ##########
+##########
+# STR
+##########
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/bmi/bmi_chr*.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/str/bmi" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_population" \
-#     --bim_bp 3 --bim_a1 4 --bim_a2 5 \
-#     --info "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/info.txt.gz" \
-#     --hwe "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/hardy.txt.gz" \
-#     --rsid_readfrombim "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPs/chr_*.bim,0,3,1, "
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/bmi/bmi_chr*.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/str/bmi" \
+    --ldsc-ref "$reffile" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --bim_bp 3 --bim_a1 4 --bim_a2 5 \
+    --info "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/info.txt.gz" \
+    --hwe "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPstats/hardy.txt.gz" \
+    --rsid_readfrombim "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/SNPs/chr_*.bim,0,3,1, "
 
-# # NA
+#####
+# Finnish twins
+#####
 
-# #####
-# # Finnish twins
-# #####
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/BMI.chr*.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/bmi" \
+    --ldsc-ref "$reffile" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
+    --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/BMI.chr*.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/bmi" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_population" \
-#     --hwe /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/hardy.hwe \
-#     --info /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/snpstats/info.txt
-
-# #  0.8264 (0.1247)
 
 # ############
 # # Geisinger
@@ -181,16 +180,17 @@ PYTHONPATH="/var/genetics/proj/within_family/within_family_project/"
 #     --toest "direct_paternal_maternal_averageparental_population" \
 #     --cptid
 
-# #############
-# # botnia
-# ###########
+#############
+# botnia
+###########
 
-# python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
-#     "/var/genetics/data/botnia_fam/private/latest/processed/sumstats/fgwas/6/chr_*.sumstats.hdf5" \
-#     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bmi" \
-#     --ldsc-ref "$reffile" \
-#     --toest "direct_population" \
-#     --cptid
+python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
+    "/var/genetics/data/botnia_fam/private/latest/processed/sumstats/fgwas/6/chr_*.sumstats.hdf5" \
+    --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/botnia/bmi" \
+    --ldsc-ref "$reffile" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
+    --cptid
 
 # #####################
 # # ====== FHS ====== #
@@ -210,8 +210,8 @@ PYTHONPATH="/var/genetics/proj/within_family/within_family_project/"
 python /var/genetics/proj/within_family/within_family_project/scripts/package/qc/run_easyqc.py \
     "/var/genetics/data/ckb/private/v1/processed/sumstats/Dec_2022/residue_bmi_calc_all_chr.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/ckb/bmi" \
-    --effects "direct_averageparental_population" \
-    --toest "direct_averageparental_population" \
+    --effects "direct_averageparental" \
+    --toest "direct_population" \
     --af-ref "/var/genetics/proj/within_family/within_family_project/processed/qc/otherqc/eas_afs/eas_1kg.frq" \
     --cptid
 

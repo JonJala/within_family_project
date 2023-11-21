@@ -150,11 +150,11 @@ create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = 
 
 }
 
-# ## generate scatterplot filtering on each phenotype
-# for (pheno in all_phenos) {
-#     print(pheno)
-#     create_scatterplot(phenos, save = TRUE, save_suffix = pheno, filter_pheno = pheno)
-# }
+## generate scatterplot filtering on each phenotype
+for (pheno in all_phenos) {
+    print(pheno)
+    create_scatterplot(phenos, save = TRUE, save_suffix = pheno, filter_pheno = pheno)
+}
 
 ## --------------------------------------------------------------------------------
 ## create density plot
@@ -210,10 +210,10 @@ create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suf
 
     # save
     if (save & is.na(save_suffix)) {
-        ggsave("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg_density.png",
+        ggsave("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg_density.pdf",
         height = 7, width = 9)
     } else if (save & !is.na(save_suffix)) {
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg_density_", save_suffix, ".png"),
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg_density_", save_suffix, ".pdf"),
         height = 7, width = 9)
     }
 

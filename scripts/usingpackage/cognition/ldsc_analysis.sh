@@ -41,7 +41,7 @@ ${ldscpath}/munge_sumstats.py \
 
 
 
-# echo "Calcualting RG of population effect with reference cognitionnition sample"
+# echo "Calculating RG of population effect with reference cognitionnition sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/cognition/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/intelligence_ref/intelligence_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -53,6 +53,13 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/cognition/direct_reference_sample
+
+echo "Calculating RG of population effect with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/cognition/populationmunged.sumstats.gz,${within_family_path}/processed/package_output/cognition/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/cognition/direct_population
 
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/cognition/maternalmunged.sumstats.gz,${within_family_path}/processed/package_output/cognition/paternalmunged.sumstats.gz \

@@ -40,23 +40,26 @@ ${ldscpath}/munge_sumstats.py \
 
 
 
-echo "Calcualting RG of population effect with reference BMI sample"
+echo "Calculating RG of population effect with reference BMI sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/bmi/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/bmi/population_reference_sample
-# 0.9389 (0.0107)
 
-echo "Calcualting RG of direct effect with reference BMI sample"
+echo "Calculating RG of direct effect with reference BMI sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/bmi/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/bmi/direct_reference_sample
-# 0.9389 (0.0107)
 
-
+echo "Calculating RG of population effect with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/bmi/populationmunged.sumstats.gz,${within_family_path}/processed/package_output/bmi/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/bmi/direct_population
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/bmi/directmunged.sumstats.gz \

@@ -39,6 +39,12 @@ ${ldscpath}/ldsc.py \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/copd/direct_reference_sample
 
+echo "Calculating RG of population effect with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/copd/populationmunged.sumstats.gz,${within_family_path}/processed/package_output/copd/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/copd/direct_population
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/copd/directmunged.sumstats.gz \

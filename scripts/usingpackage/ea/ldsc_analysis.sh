@@ -45,7 +45,7 @@ ${ldscpath}/munge_sumstats.py \
 --N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
 --merge-alleles ${hm3snps}
 
-echo "Calcualting RG of population effect with reference EA sample"
+echo "Calculating RG of population effect with reference EA sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/ea/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -53,7 +53,7 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/ea/population_reference_sample
 # 1.0353 (0.0159)
 
-echo "Calcualting RG of direct effect with reference EA sample"
+echo "Calculating RG of direct effect with reference EA sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/ea/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -61,6 +61,12 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/ea/direct_reference_sample
 # 1.0353 (0.0159)
 
+echo "Calculating RG of population effect with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/ea/populationmunged.sumstats.gz,${within_family_path}/processed/package_output/ea/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/ea/direct_population
 
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/ea/paternalmunged.sumstats.gz,${within_family_path}/processed/package_output/ea/maternalmunged.sumstats.gz \

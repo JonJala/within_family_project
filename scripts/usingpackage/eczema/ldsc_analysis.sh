@@ -25,7 +25,7 @@ ${ldscpath}/munge_sumstats.py \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
-echo "Calcualting RG of population effect with reference sample"
+echo "Calculating RG of population effect with reference sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/eczema/populationmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -33,7 +33,7 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/eczema/population_reference_sample
 # 0.901 (0.0059)
 
-echo "Calcualting RG of direct effect with reference sample"
+echo "Calculating RG of direct effect with reference sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/eczema/directmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -41,6 +41,12 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/eczema/direct_reference_sample
 # 0.901 (0.0059)
 
+echo "Calculating RG of population effect with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/eczema/populationmunged.sumstats.gz,${within_family_path}/processed/package_output/eczema/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/eczema/direct_population
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/eczema/directmunged.sumstats.gz \

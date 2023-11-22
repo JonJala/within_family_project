@@ -31,7 +31,6 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/aud/population_reference_sample
-# 0.901 (0.0059)
 
 echo "Calculating RG of direct effect with reference sample"
 ${ldscpath}/ldsc.py \
@@ -39,8 +38,13 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/aud/direct_reference_sample
-# 0.901 (0.0059)
 
+echo "Calculating RG of population effect with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/aud/populationmunged.sumstats.gz,${within_family_path}/processed/package_output/aud/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/aud/direct_population
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/aud/directmunged.sumstats.gz \

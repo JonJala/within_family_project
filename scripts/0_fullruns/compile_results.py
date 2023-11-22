@@ -4,9 +4,9 @@ import subprocess
 import json
 
 ## chooose which results to compile
-metaanalysis = True
-fpgs = False
-ldsc = True
+metaanalysis = False
+fpgs = True
+ldsc = False
 
 ### define functions for compiling results
 
@@ -347,6 +347,8 @@ for phenotype in phenotypes:
             dattmp = get_meta_results(phenotype, effect) 
             dat = dat.append(dattmp, ignore_index=True)
         if fpgs == True:
+            if phenotype in ['aud', 'copd', 'hypertension']:
+                continue
             datfpgs_tmp = get_fpgs_results(phenotype, effect)
             datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
 

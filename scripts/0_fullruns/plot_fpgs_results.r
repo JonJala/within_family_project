@@ -54,7 +54,7 @@ fpgs_plot <- function(data, dirpop, valid, ncols = 6) {
                 axis.title = element_blank(), strip.text.x = element_text(size = 9.5)) +
         facet_wrap(~pheno_name, ncol = ncols)
         print(p)
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_", dirpop, "_effects_", valid, ".png"), p, width = 7, height = 5)
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_plots/fpgs_", dirpop, "_effects_", valid, ".png"), p, width = 7, height = 5)
 }
 
 fpgs_plot(df, "direct", "mcs")
@@ -67,22 +67,22 @@ fpgs_plot(df, "population", "ukb")
 # ---------------------------------------------------------------------
 
 fpgs_ea_cog <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_results_ea_cognition.xlsx")
-fpgs_ea_cog %<>% fill(phenotype) # fill down missing phenotype values from merged rows
+fpgs_ea_cog %<>% fill(phenotype, validation_pheno) # fill down missing phenotype values from merged rows
 
 values_ea_cog <- fpgs_ea_cog %>%
-                select(ends_with(c("phenotype", "pheno", "_direct","_pop","_paternal","_maternal","_corr"))) %>%
+                select(ends_with(c("phenotype", "dataset", "pheno", "_direct","_pop","_paternal","_maternal","_corr"))) %>%
                 gather(measure, value, direct_direct:population_parental_pgi_corr)
 se_ea_cog <- fpgs_ea_cog %>%
-        select(ends_with(c("phenotype", "pheno",  "direct_se", "pop_se", "paternal_se", "maternal_se", "_corr_se"))) %>%
+        select(ends_with(c("phenotype", "dataset", "pheno",  "direct_se", "pop_se", "paternal_se", "maternal_se", "_corr_se"))) %>%
         gather(measure, se, direct_direct_se:population_parental_pgi_corr_se) %>%
         mutate(measure = substr(measure, 1, nchar(measure)-3))
 df_ea_cog <- merge(values_ea_cog, se_ea_cog) %>%
         mutate(dir_pop = str_extract(measure, "[^_]+"),
-                validation_pheno_name = case_when(validation_pheno == "cogass" ~ "MCS S7 Cognitive Assessment",
-                                                  validation_pheno == "cogverb" ~ "MCS S6 Word Activity",
-                                                  validation_pheno == "gcse" ~ "Avg. Eng. & Math GCSE Score",
-                                                  validation_pheno == "ea4" ~ "EA4 Outcome",
-                                                  validation_pheno == "fluid_intelligence" ~ "UKB Fluid Intelligence"))
+                validation_pheno_name = case_when(dataset == "mcs" & validation_pheno == "cognition" ~ "MCS S7 Cognitive Assessment",
+                                                  dataset == "mcs" & validation_pheno == "cogverb" ~ "MCS S6 Word Activity",
+                                                  dataset == "mcs" & validation_pheno == "ea" ~ "Avg. Eng. & Math GCSE Score",
+                                                  dataset == "ukb" & validation_pheno == "ea" ~ "EA4 Outcome",
+                                                  dataset == "ukb" & validation_pheno == "cognition" ~ "UKB Fluid Intelligence"))
 
 fpgs_plot_ea_cog <- function(data, dirpop, pheno, ylim, ncols = 3) {
         lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_maternal"), paste0(dirpop, "_paternal"), paste0(dirpop, "_pop"))
@@ -99,7 +99,7 @@ fpgs_plot_ea_cog <- function(data, dirpop, pheno, ylim, ncols = 3) {
                 axis.title = element_blank(), strip.text.x = element_text(size = 8)) +
         facet_wrap(~validation_pheno_name, ncol = ncols)
         print(p)
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_", dirpop, "_effects_", pheno, ".png"), p, width = 6, height = 6)
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_plots/fpgs_", dirpop, "_effects_", pheno, ".png"), p, width = 6, height = 6)
 }
 
 fpgs_plot_ea_cog(df_ea_cog, "direct", "ea", ylim = c(-0.08, 0.28))
@@ -135,7 +135,7 @@ plot_parental_corrs <- function(data, valid, ncols = 5) {
                 axis.title = element_blank(), strip.text.x = element_text(size = 11)) +
         facet_wrap(~pheno_name, ncol = ncols)
         print(p)
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/parental_corrs_", valid, ".png"), p)
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_plots/parental_corrs_", valid, ".png"), p)
 }
 
 plot_parental_corrs(corrs_df, "mcs")

@@ -130,14 +130,17 @@ function withinfam_pred(){
         mkdir -p $fpgs_out
     fi
 
-    echo "Running fPGS regression..."
-    python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
-        --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
-        --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
-        --phenoname $PHENONAME \
-        --dataset $DATASET \
-        --sniparpath ${snipar_path} \
-        --binary $BINARY 2>&1 | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}.reg.log"
+    ## don't run regression for ea and cognition here (do it separately using fpgs_ea_cognition.sh)
+    if [[ $PHENONAME != "ea" && $PHENONAME != "cognition" ]]; then
+        echo "Running fPGS regression..."
+        python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
+            --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
+            --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+            --phenoname $PHENONAME \
+            --dataset $DATASET \
+            --sniparpath ${snipar_path} \
+            --binary $BINARY 2>&1 | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}.reg.log"
+    fi
     
 }
 

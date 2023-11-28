@@ -58,7 +58,7 @@ def get_meta_results(phenotype, effect):
             h2est = None
             h2se = None
 
-    # get rg
+    # get rg with ref
     with open(packageoutput + phenotype + f'/{effect}_reference_sample.log') as f:
         rglines = [l for l in f if l.startswith('Genetic Correlation:')]
         rg = rglines[0] if len(rglines) > 0 else None
@@ -69,6 +69,18 @@ def get_meta_results(phenotype, effect):
         else:
             rgest = None
             rgse = None
+
+    # get dir-pop rg from ldsc
+    with open(packageoutput + phenotype + '/direct_population.log') as f:
+        ldsc_rglines = [l for l in f if l.startswith('Genetic Correlation:')]
+        ldsc_rg = ldsc_rglines[0] if len(ldsc_rglines) > 0 else None
+        if ldsc_rg is not None:
+            ldsc_rg = ldsc_rg.split(':')[1]
+            ldsc_rgest = float(ldsc_rg.split('(')[0])
+            ldsc_rgse = float(ldsc_rg.split('(')[1].replace(')', ''))
+        else:
+            ldsc_rgest = None
+            ldsc_rgse = None
     
     # dir-pop dir-ntc marginal correlations
     mrg = pd.read_csv(
@@ -101,6 +113,8 @@ def get_meta_results(phenotype, effect):
             'dir_pop_rg_se' : [dir_pop_mrg_se],
             'dir_ntc_rg' : [dir_ntc_mrg],
             'dir_ntc_rg_se' : [dir_ntc_mrg_se],
+            'dir_pop_rg_ldsc' : [ldsc_rgest],
+            'dir_pop_rg_se_ldsc' : [ldsc_rgse],
             'n_cohorts' : [ncohorts],
             'reg_population_direct': [reg_population_direct_mrg],
             'reg_population_direct_se': [reg_population_direct_mrg_se],
@@ -162,14 +176,14 @@ def get_fpgs_results(phenotype, effect):
         parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/' + phenotype + '/prscs/' + effect + '.log'
     elif phenotype == "ea":
         if ea_validation == "mcs":
-            parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/prscs/' + ea_pheno + '/' + effect + '.log'
+            parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/prscs/' + effect + '.log'
         elif ea_validation == "ukb":
-            parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/ea/prscs/' + ea_pheno + '/' + effect + '.log'    
+            parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/ea/prscs/' + effect + '.log'    
     elif phenotype == "cognition":
         if ea_validation == "mcs":
-            parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/cognition/prscs/' + cog_pheno + '/' + effect + '.log'
+            parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/cognition/prscs/' + effect + '.log'
         elif ea_validation == "ukb":
-            parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/cognition/prscs/' + cog_pheno + '/' + effect + '.log'    
+            parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/cognition/prscs/' + effect + '.log'    
     else:
         parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/' + phenotype + '/prscs/' + effect + '.log'
 
@@ -320,15 +334,16 @@ mcs_phenos = ['bmi', 'depression', 'adhd', 'agemenarche', 'eczema', 'cannabis' ,
 ## choose validation cohort and outcome phenos for height, ea, and cognition
 height_validation = "mcs"
 ea_validation = "mcs"
-ea_pheno = "gcse"
+ea_pheno = "ea" # ea validation pheno
 cog_validation = "mcs"
-cog_pheno = "cogass"
+cog_pheno = "cognition" # cognition validation pheno
 
 ## initialize dataframes for saving results
 if metaanalysis == True:    
     dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
         'h2_se', 'rg_ref', 'rg_ref_se', 
-        'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 
+        'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se',
+        'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc',
         'n_cohorts', 'reg_population_direct', 'reg_population_direct_se',
         'v_population_uncorr_direct', 'v_population_uncorr_direct_se'])
 if fpgs == True:
@@ -359,7 +374,8 @@ if metaanalysis == True:
     dat.columns = ['_'.join(column) for column in dat.columns.to_flat_index()]
     dat = dat.drop(
         ['n_cohorts_population', 'dir_pop_rg_population', 'dir_pop_rg_se_population', 'dir_ntc_rg_population', 'dir_ntc_rg_se_population',
-        'reg_population_direct_population', 'reg_population_direct_se_population', 'v_population_uncorr_direct_population', 'v_population_uncorr_direct_se_population'], 
+        'reg_population_direct_population', 'reg_population_direct_se_population', 'v_population_uncorr_direct_population', 'v_population_uncorr_direct_se_population',
+        'dir_pop_rg_ldsc_population', 'dir_pop_rg_se_ldsc_population'], 
         axis = 1
     )
     dat = dat.rename(
@@ -369,6 +385,8 @@ if metaanalysis == True:
             'dir_pop_rg_se_direct' : 'dir_pop_rg_se',
             'dir_ntc_rg_direct' : 'dir_ntc_rg',
             'dir_ntc_rg_se_direct' : 'dir_ntc_rg_se',
+            'dir_pop_rg_ldsc_direct' : 'dir_pop_rg_ldsc',
+            'dir_pop_rg_se_ldsc_direct' : 'dir_pop_rg_se_ldsc',
             'v_population_uncorr_direct_direct': 'v_population_uncorr_direct',
             'v_population_uncorr_direct_se_direct': 'v_population_uncorr_direct_se',
             'reg_population_direct_direct': 'reg_population_direct',
@@ -381,8 +399,8 @@ if metaanalysis == True:
         ['n_cohorts', 'n_eff_median_direct', 'n_eff_median_population',
         'h2_direct','h2_se_direct', 'h2_population','h2_se_population',
         'rg_ref_direct','rg_ref_se_direct',  'rg_ref_population', 'rg_ref_se_population',
-        'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 'reg_population_direct',
-        'reg_population_direct_se', 'v_population_uncorr_direct', 'v_population_uncorr_direct_se'
+        'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc', 'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 
+        'reg_population_direct', 'reg_population_direct_se', 'v_population_uncorr_direct', 'v_population_uncorr_direct_se'
     ]
     ]
 
@@ -410,4 +428,4 @@ if fpgs == True:
 ## compile and save ldsc results
 if ldsc == True:
     get_ldsc_results(phenotypes)
-    # get_heritabilities(phenotypes) # for jackknife estimates
+    # get_heritabilities(phenotypes) # for jackknife estimates -- do not run / leave for now

@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+
+within_family_path="/var/genetics/proj/within_family/within_family_project"
+snipar_path="/var/genetics/proj/within_family/snipar_simulate"
+sniparenv="/var/genetics/proj/within_family/snipar_venv/bin/activate"
+
+source ${sniparenv}
+
+function run_fpgs_regression(){
+    
+    PHENONAME=$1
+    VALIDATION=$2
+    BINARY=$3
+    METHOD=$4
+    DATASET=$5
+    OUTSUFFIX=$6
+
+    if [[ $DATASET == "mcs" ]]; then
+        PHENOFILE="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed/phen/phenotypes.txt"
+        RAWPATH="/var/genetics/data/mcs/private/latest/raw/downloaded/NCDS_SFTP_1TB_1/imputed"
+        OUTPATH="/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/${PHENONAME}/${METHOD}"
+    elif [[ $DATASET == "ukb" ]]; then  
+        PHENOFILE="/var/genetics/data/ukb/private/v3/processed/proj/within_family/phen/ukb_phenos.txt"
+        RAWPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family"
+        OUTPATH="/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/${PHENONAME}/${METHOD}"
+    fi
+
+    pheno_out="$RAWPATH/phen/${PHENONAME}/${VALIDATION}"
+    mkdir -p $pheno_out
+
+    ## generate pheno file
+    python $within_family_path/scripts/fpgs/format_pheno.py \
+        $PHENOFILE \
+        --iid IID --fid FID --phenocol $VALIDATION \
+        --outprefix ${pheno_out}/pheno  \
+        --sep "delim_whitespace" \
+        --binary $BINARY
+
+    fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${DATASET}/${VALIDATION}"
+    mkdir -p $fpgs_out
+
+    for EFFECT in "direct" "population"
+    do
+        ## run regression
+        echo "Running fPGS regression..."
+        python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
+            --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
+            --phenofile ${pheno_out}/pheno.pheno \
+            --phenoname $PHENONAME \
+            --dataset $DATASET \
+            --sniparpath ${snipar_path} \
+            --binary $BINARY 2>&1 | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${DATASET}_${EFFECT}${OUTSUFFIX}.reg.log"
+    done
+
+}
+
+## mcs outcomes
+for pheno in "ea" "cognition"
+do
+    for validation in "ea" "cognition" "cogverb"
+    do
+        run_fpgs_regression "${pheno}" "${validation}" "0" "prscs" "mcs" ""
+    done
+done
+
+## ukb outcomes
+for pheno in "ea" "cognition"
+do
+    for validation in "ea" "cognition"
+    do
+        run_fpgs_regression "${pheno}" "${validation}" "0" "prscs" "ukb" ""
+    done
+done

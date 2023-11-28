@@ -219,23 +219,5 @@ create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suf
 
 }
 
-# create density plot with points for pairs with direct rg SE < 0.07
-# create_density_plot(phenos, save = TRUE)
-
-## --------------------------------------------------------------------------------
-## create density plot for traits with jackknife pval < 0.05 only
-## --------------------------------------------------------------------------------
-
-jack <- fread("/disk/genetics/proj/within_family/within_family_project/processed/ldsc/jackknife_pvals.csv")
-jack_phenos <- jack %>% 
-                filter(p < 0.05) %>% 
-                select(trait) %>% 
-                pull %>%
-                str_replace("\\(\\'", "") %>%
-                str_replace("\\'\\)", "") %>%
-                str_replace("\\', \\'", "_")
-dat = process_data(phenos)
-jack_points <- dat %>%
-                filter(phenotype %in% jack_phenos)
-
-create_density_plot(phenos, dat_points = jack_points, save = TRUE, save_suffix = "jackknife")
+## create density plot with points for pairs with direct rg SE < 0.07
+create_density_plot(phenos, save = TRUE)

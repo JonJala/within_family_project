@@ -168,7 +168,7 @@ def compile_correlation_estimates(phenotype, cohorts):
         print(f'Compiling results for {cohort}...')
         packageoutput = basepath + 'processed/qc/'
         
-        # h2 from ldsc log
+        # corr from snipar output
         path = packageoutput + cohort + '/' + phenotype + '/marginal_corrs.txt'
         corrs = pd.read_csv(path, sep=" ")
         corr = corrs["est"][0]

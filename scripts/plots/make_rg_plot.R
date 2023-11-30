@@ -141,10 +141,10 @@ create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = 
 
     # save
     if (save & is.na(save_suffix)) {
-        ggsave("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg.pdf",
+        ggsave("/var/genetics/proj/within_family/within_family_project/processed/figures/rg_figures/direct_pop_rg.pdf",
         height = 7, width = 9)
     } else if (save & !is.na(save_suffix)) {
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg_", save_suffix, ".pdf"),
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/rg_figures/direct_pop_rg_", save_suffix, ".pdf"),
         height = 7, width = 9)
     }
 
@@ -210,10 +210,10 @@ create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suf
 
     # save
     if (save & is.na(save_suffix)) {
-        ggsave("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg_density.pdf",
+        ggsave("/var/genetics/proj/within_family/within_family_project/processed/figures/rg_figures/direct_pop_rg_density.pdf",
         height = 7, width = 9)
     } else if (save & !is.na(save_suffix)) {
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/rg_figures/direct_pop_rg_density_", save_suffix, ".pdf"),
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/rg_figures/direct_pop_rg_density_", save_suffix, ".pdf"),
         height = 7, width = 9)
     }
 

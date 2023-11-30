@@ -49,7 +49,7 @@ h2_plot <- function(save = TRUE) {
 
     # save
     if (save) {
-        ggsave("/var/genetics/proj/within_family/within_family_project/processed/package_output/h2_plot.pdf",
+        ggsave("/var/genetics/proj/within_family/within_family_project/processed/figures/h2_plot.pdf",
         height = 8, width = 10)
     }
 

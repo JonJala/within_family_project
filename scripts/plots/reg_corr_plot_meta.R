@@ -37,7 +37,7 @@ ggplot(cor_results %>% filter(!is.na(dir_pop_rg), dir_pop_rg < 1 & dir_pop_rg > 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "none")+
   xlab('phenotype')+ylab('Correlation between direct and population effects')+
   scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1,1.25,1.5))
-ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/package_output/direct_population_correlations.pdf',width=9,height=6,device=cairo_pdf)
+ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_population_correlations.pdf',width=9,height=6,device=cairo_pdf)
 
 # plot direct to ntc corr
 cor_results$phenotype = factor(cor_results$phenotype,cor_results$phenotype[order(cor_results$dir_ntc_rg)])
@@ -47,4 +47,4 @@ ggplot(cor_results %>% filter(!is.na(dir_ntc_rg), dir_ntc_rg < 1 & dir_ntc_rg > 
   xlab('phenotype')+ylab('Correlation between direct effects and average NTCs')+geom_hline(yintercept=1.0)+
   geom_hline(yintercept=-1.0)+geom_hline(yintercept=0,linetype='dashed')+
   scale_y_continuous(breaks=c(-1,0,1))
-ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/package_output/direct_avg_ntc_correlations.pdf',width=9,height=6,device=cairo_pdf)
+ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_avg_ntc_correlations.pdf',width=9,height=6,device=cairo_pdf)

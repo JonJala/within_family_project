@@ -25,14 +25,31 @@ se <- data %>%
         gather(measure, se, direct_direct_se:population_parental_pgi_corr_se) %>%
         mutate(measure = substr(measure, 1, nchar(measure)-3))
 
-capitalized <- c("aafb", "adhd", "bmi", "bpd", "bps", "cpd", "dpw", "ea", "hdl", "swb")
+capitalized <- c("adhd", "bmi", "ea", "hdl")
 mcs_phenos <- c('ea', 'cognition', 'bmi', 'depression', 'adhd', 'agemenarche', 'eczema', 'cannabis' ,'dpw', 'depsymp', 'eversmoker', 'extraversion', 'neuroticism', 'health', 'height', 'hhincome', 'swb')
 df <- merge(values, se) %>%
         mutate(dir_pop = str_extract(measure, "[^_]+"),
         pheno_name = case_when(phenotype %in% capitalized ~ toupper(phenotype),
-                        !(phenotype %in% c(capitalized, "nonhdl", "fev")) ~ str_to_title(phenotype),
                         phenotype == "nonhdl" ~ "Non-HDL",
-                        phenotype == "fev" ~ "FEV1"),
+                        phenotype == "fev" ~ "FEV1",
+                        phenotype == "agemenarche" ~ "Age-at-menarche",
+                        phenotype == "bps" ~ "BPS",
+                        phenotype == "bpd" ~ "BPD",
+                        phenotype == "cognition" ~ "Cognitive performance",
+                        phenotype == "depsymp" ~ "Depressive symptoms",
+                        phenotype == "eversmoker" ~ "Ever-smoker",
+                        phenotype == "dpw" ~ "Drinks-per-week",
+                        phenotype == "hayfever" ~ "Allergic rhinitis",
+                        phenotype == "health" ~ "Self-rated health",
+                        phenotype == "hhincome" ~ "Household income",
+                        phenotype == "swb" ~ "Subjective well-being",
+                        phenotype == "nchildren" ~ "Number of children",
+                        phenotype == "nearsight" ~ "Myopia",
+                        phenotype == "aud" ~ "Alcohol use disorder",
+                        phenotype == "cpd" ~ "Cigarettes per day",
+                        phenotype == "aafb" ~ "Age at first birth",
+                        phenotype == "morningperson" ~ "Morning person",
+                        phenotype %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "income", "migraine", "neuroticism") ~ str_to_title(phenotype)),
         validation = case_when(phenotype %in% mcs_phenos ~ "mcs",
                         !(phenotype %in% mcs_phenos) ~ "ukb"))
 
@@ -52,9 +69,9 @@ fpgs_plot <- function(data, dirpop, valid, ncols = 6) {
         theme(legend.title = element_blank(), legend.position = "bottom", axis.text.x = element_blank(),
                 axis.ticks.x = element_blank(), axis.text.y = element_text(size = 11),
                 axis.title = element_blank(), strip.text.x = element_text(size = 9.5)) +
-        facet_wrap(~pheno_name, ncol = ncols)
+        facet_wrap(~pheno_name, ncol = ncols, labeller = labeller(phenoname = label_wrap_gen(10)))
         print(p)
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/fpgs_", dirpop, "_effects_", valid, ".png"), p, width = 7, height = 5)
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/fpgs_", dirpop, "_effects_", valid, ".png"), p)
 }
 
 fpgs_plot(df, "direct", "mcs")

@@ -12,14 +12,14 @@ source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/p
 
 echo "Munging!!"
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/migraine/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/migraine/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/migraine/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/migraine/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/migraine/meta.sumstats.gz \
 --out ${within_family_path}/processed/package_output/migraine/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --merge-alleles ${hm3snps} \
@@ -65,6 +65,6 @@ ${ldscpath}/ldsc.py \
 
 # Changing env
 source /var/genetics/proj/within_family/snipar_venv/bin/activate
-/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/migraine/meta.nfilter \
+/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/migraine/meta \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/migraine/marginal \
 --ldscores /disk/genetics/ukb/jguan/ukb_analysis/output/ldsc/v2/@

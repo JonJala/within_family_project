@@ -4,8 +4,8 @@ import subprocess
 import json
 
 ## chooose which results to compile
-metaanalysis = False
-fpgs = True
+metaanalysis = True
+fpgs = False
 ldsc = False
 
 ### define functions for compiling results
@@ -48,8 +48,10 @@ def get_meta_results(phenotype, effect):
 
     # get h2
     with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
+        
         h2lines = [l for l in f if l.startswith('Total Observed scale h2')]
         h2 = h2lines[0] if len(h2lines) > 0 else None
+        
         if h2 is not None:
             h2 = h2.split(':')[1]
             h2est = float(h2.split('(')[0])
@@ -57,6 +59,43 @@ def get_meta_results(phenotype, effect):
         else:
             h2est = None
             h2se = None
+
+    # get h2 intercept
+    with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
+        
+        # get intercept
+        h2_intercept_lines = [l for l in f if l.startswith('Intercept')]
+        h2_intercept = h2_intercept_lines[0] if len(h2_intercept_lines) > 0 else None
+        
+        if h2_intercept is not None:
+            h2_intercept = h2_intercept.split(':')[1]
+            h2_intercept_est = float(h2_intercept.split('(')[0])
+            h2_intercept_se = float(h2_intercept.split('(')[1].replace(')', ''))
+        else:
+            h2_intercept_est = None
+            h2_intercept_se = None
+
+    # get ldsc ratio
+    with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
+        
+        # get intercept
+        ratio_lines = [l for l in f if l.startswith('Ratio')]
+        ratio = ratio_lines[0] if len(ratio_lines) > 0 else None
+
+        if ratio.startswith("Ratio < 0"):
+            ratio_est = 0 # "Ratio < 0 (usually indicates GC correction)." but to keep it as numeric, set to 0
+            ratio_se = None
+        elif ratio is not None:
+            ratio = ratio.split(':')[1]
+            if ratio.startswith(" NA"):
+                ratio_est = None
+                ratio_se = None
+            else:
+                ratio_est = float(ratio.split('(')[0])
+                ratio_se = float(ratio.split('(')[1].replace(')', ''))
+        else:
+            ratio_est = None
+            ratio_se = None
 
     # get rg with ref
     with open(packageoutput + phenotype + f'/{effect}_reference_sample.log') as f:
@@ -107,6 +146,10 @@ def get_meta_results(phenotype, effect):
             'n_eff_median' : [neff], 
             'h2' : [h2est], 
             'h2_se': [h2se],
+            'h2_intercept' : [h2_intercept_est], 
+            'h2_intercept_se': [h2_intercept_se],
+            'ratio' : [ratio_est], 
+            'ratio_se': [ratio_se],
             'rg_ref' : [rgest],
             'rg_ref_se' : [rgse],
             'dir_pop_rg' : [dir_pop_mrg],
@@ -341,9 +384,9 @@ cog_pheno = "cognition" # cognition validation pheno
 ## initialize dataframes for saving results
 if metaanalysis == True:    
     dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
-        'h2_se', 'rg_ref', 'rg_ref_se', 
-        'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se',
-        'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc',
+        'h2_se', 'h2_intercept', 'h2_intercept_se', 'ratio', 'ratio_se', 
+        'rg_ref', 'rg_ref_se', 'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 
+        'dir_ntc_rg_se', 'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc',
         'n_cohorts', 'reg_population_direct', 'reg_population_direct_se',
         'v_population_uncorr_direct', 'v_population_uncorr_direct_se'])
 if fpgs == True:
@@ -398,6 +441,8 @@ if metaanalysis == True:
     dat = dat[
         ['n_cohorts', 'n_eff_median_direct', 'n_eff_median_population',
         'h2_direct','h2_se_direct', 'h2_population','h2_se_population',
+        'h2_intercept_direct', 'h2_intercept_se_direct', 'h2_intercept_population', 'h2_intercept_se_population',
+        'ratio_direct', 'ratio_se_direct', 'ratio_population', 'ratio_se_population',
         'rg_ref_direct','rg_ref_se_direct',  'rg_ref_population', 'rg_ref_se_population',
         'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc', 'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 
         'reg_population_direct', 'reg_population_direct_se', 'v_population_uncorr_direct', 'v_population_uncorr_direct_se'

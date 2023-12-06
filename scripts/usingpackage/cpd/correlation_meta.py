@@ -5,7 +5,7 @@
 ## ------------------------------------------------------------------------------------------------
 
 import sys
-sys.path.insert(1, '/var/genetics/proj/within_family/within_family_project/scripts/package')
+sys.path.insert(1, '/var/genetics/proj/within_family/within_family_project/scripts/package/correlation_meta')
 import correlation_meta_functions as corr
 
 pheno = "cpd"

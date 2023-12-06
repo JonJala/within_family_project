@@ -159,7 +159,7 @@ def adjust_se(sumstats, pheno):
         ss.to_csv(save_path, sep=" ", index=False)
 
 # function to run correlate.py
-def get_correlations(cohort, processed_ss, pheno, raw_ss = "NA", chrposid = False, format = False, avg_ntc = False):
+def get_correlations(cohort, processed_ss, pheno, raw_ss = "NA", chrposid = False, format = False, avg_ntc = False, adjust_std_errors = True):
 
     within_family_path = "/var/genetics/proj/within_family/within_family_project"
     snipar_path = "/var/genetics/proj/within_family/snipar_simulate/snipar"
@@ -172,7 +172,7 @@ def get_correlations(cohort, processed_ss, pheno, raw_ss = "NA", chrposid = Fals
         format_sumstats(raw_ss, chrposid, avg_ntc)
         print("Finished formatting sumstats")
 
-    if adjust_se:
+    if adjust_std_errors:
         adjust_se(processed_ss, pheno)
         processed_ss = processed_ss.rsplit("/", 1)[0] + "/adjusted_se/" + processed_ss.rsplit("/", 1)[1]
     

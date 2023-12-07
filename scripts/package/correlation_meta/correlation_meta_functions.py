@@ -127,39 +127,8 @@ def format_sumstats(sumstats, chrposid, avg_ntc):
 
         write_txt_output(chrom = chr, snp_ids = SNP, pos = pos, alleles = alleles, outfile = outfile, alpha = theta, alpha_cov= S, sigma2=sigma2, tau=tau, freqs=f, parsum = avg_ntc, sib = False)
 
-# adjust standard errors by multiplying by the sqrt of the direct h2 intercept
-def adjust_se(sumstats, pheno):
-
-    # get h2 intercept
-    meta = pd.read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx")
-    intercept = meta[meta.phenotype == pheno]["h2_intercept_direct"].values[0]
-    sqrt_intercept = np.sqrt(intercept)
-
-    # read in sumstats
-    ss_path = sumstats.replace("@", "*") +".sumstats.gz"
-    files = glob.glob(ss_path)
-
-    # create folder
-    path = files[0].rsplit("/", 1)[0] + "/adjusted_se/"
-    if not os.path.exists(path):
-        os.makedirs(path)
-    
-    for i in range(len(files)):
-
-        file = files[i]
-        print('Converting SEs for '+file)
-        ss = pd.read_csv(file, sep=" ")
-
-        # multiply standard errors by sqrt of intercept
-        ss["direct_SE"] = ss["direct_SE"] * sqrt_intercept
-        ss["population_SE"] = ss["population_SE"] * sqrt_intercept        
-
-        # save sumstats
-        save_path = path + file.rsplit("/", 1)[1]
-        ss.to_csv(save_path, sep=" ", index=False)
-
 # function to run correlate.py
-def get_correlations(cohort, processed_ss, pheno, raw_ss = "NA", chrposid = False, format = False, avg_ntc = False, adjust_std_errors = True):
+def get_correlations(cohort, processed_ss, pheno, raw_ss = "NA", chrposid = False, format = False, avg_ntc = False):
 
     within_family_path = "/var/genetics/proj/within_family/within_family_project"
     snipar_path = "/var/genetics/proj/within_family/snipar_simulate/snipar"
@@ -171,10 +140,6 @@ def get_correlations(cohort, processed_ss, pheno, raw_ss = "NA", chrposid = Fals
             print("Converting to chr:pos IDs")
         format_sumstats(raw_ss, chrposid, avg_ntc)
         print("Finished formatting sumstats")
-
-    if adjust_std_errors:
-        adjust_se(processed_ss, pheno)
-        processed_ss = processed_ss.rsplit("/", 1)[0] + "/adjusted_se/" + processed_ss.rsplit("/", 1)[1]
     
     if chrposid:
         print("Using chr:pos IDs")

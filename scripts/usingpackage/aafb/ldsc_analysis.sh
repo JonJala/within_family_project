@@ -63,6 +63,6 @@ ${ldscpath}/ldsc.py \
 
 # Changing env
 source /var/genetics/proj/within_family/snipar_venv/bin/activate
-/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/aafb/meta.nfilter \
+/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/aafb/meta_adj_se \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/aafb/marginal \
 --ldscores /disk/genetics/ukb/jguan/ukb_analysis/output/ldsc/v2/@

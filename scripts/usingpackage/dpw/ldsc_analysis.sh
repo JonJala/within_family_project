@@ -12,14 +12,14 @@ source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/p
 
 echo "Munging!!"
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/dpw/meta.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/dpw/meta.nfilter.sumstats.gz \
 --out ${within_family_path}/processed/package_output/dpw/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/dpw/meta.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/dpw/meta.nfilter.sumstats.gz \
 --out ${within_family_path}/processed/package_output/dpw/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --merge-alleles ${hm3snps} \
@@ -53,18 +53,16 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/dpw/direct_h2
-#  0.3274 (0.0175)
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/dpw/populationmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/dpw/population_h2
-#  0.3274 (0.0175)
 
 
 # Changing env
 source /var/genetics/proj/within_family/snipar_venv/bin/activate
-/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/dpw/meta \
+/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/dpw/meta_adj_se \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/dpw/marginal \
 --ldscores /disk/genetics/ukb/jguan/ukb_analysis/output/ldsc/v2/@

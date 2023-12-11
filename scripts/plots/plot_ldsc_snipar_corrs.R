@@ -33,8 +33,8 @@ ggplot(meta, aes(x = dir_pop_rg_ldsc, y = dir_pop_rg, colour = phenotype, shape 
   geom_errorbar(aes(xmin = dir_pop_rg_ldsc - dir_pop_rg_se_ldsc, xmax = dir_pop_rg_ldsc + dir_pop_rg_se_ldsc), colour = "grey", alpha = 0.6) +
   geom_hline(yintercept=1, linetype="dotted") +
   geom_vline(xintercept=1, linetype="dotted") +
-  xlim(0.25, 1.2) +
-  ylim(0.25, 1.2) +
+  xlim(0, 1.5) +
+  ylim(0, 1.5) +
   scale_colour_manual(values = palette) +
   scale_shape_manual(values = c(seq(1, 25), seq(1,n-25))) +
   geom_abline(intercept = 0, slope = 1, color = "grey") +

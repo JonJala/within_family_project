@@ -209,20 +209,33 @@ def get_fpgs_results(phenotype, effect):
             delim_whitespace=True
     )
 
+    # ntc coefficients and ratios
+    ntc_ratio = pd.read_csv(
+        f"{basepath}/processed/fpgs/{phenotype}/prscs/ntc_ratios.txt",
+        delim_whitespace=True,
+    )
+
     direst = full.loc['proband', 'coeff']
     dirse = full.loc['proband', 'se']
     patest = full.loc['paternal', 'coeff']
     patse = full.loc['paternal', 'se']
     matest = full.loc['maternal', 'coeff']
     matse = full.loc['maternal', 'se']
+    avg_ntc_est = ntc_ratio['average_NTC', 'estimates']
+    avg_ntc_se = ntc_ratio['average_NTC', 'SE']
     popest = proband.loc['proband', 'coeff']
     popse = proband.loc['proband', 'se']
     popest_ci_low = popest - 1.96 * popse
     popest_ci_high = popest + 1.96 * popse
+    maternal_minus_paternal_est = ntc_ratio['maternal_minus_paternal', 'estimates']
+    maternal_minus_paternal_se = ntc_ratio['maternal_minus_paternal', 'SE']
+    parental_direct_ratio_est = ntc_ratio['parental_direct_ratio', 'estimates']
+    parental_direct_ratio_se = ntc_ratio['parental_direct_ratio', 'SE']
     r2 = popest**2 - popse**2 # beta squared minus sampling variance of beta
     r2_ci_low = popest_ci_low**2 - popse**2 # lower CI of beta squared minus sampling variance of beta
     r2_ci_high = popest_ci_high**2 - popse**2 # higher CI of beta squared minus sampling variance of beta
     
+    # direct to pop ratio
     coeffratio = coeffratio.loc[f'{effect}_full/{effect}_proband', :]
     coeffratio_est = coeffratio['est']
     coeffratio_se = coeffratio['se']
@@ -258,12 +271,18 @@ def get_fpgs_results(phenotype, effect):
         'direct_se' : [dirse],
         'pop' : [popest],
         'pop_se' : [popse],
+        'avg_ntc' : [avg_ntc_est],
+        'avg_ntc_se' : [avg_ntc_se],
         'paternal' : [patest],
         'paternal_se' : [patse],
         'maternal' : [matest],
         'maternal_se' : [matse],
+        'maternal_minus_paternal_est' : [maternal_minus_paternal_est],
+        'maternal_minus_paternal_se' : [maternal_minus_paternal_se],
         'dir_pop_ratio' : [coeffratio_est],
         'dir_pop_ratio_se': [coeffratio_se],
+        'parental_direct_ratio_est' : [parental_direct_ratio_est],
+        'parental_direct_ratio_se' : [parental_direct_ratio_se],
         'r2' : [r2],
         'r2_ci_low' : [r2_ci_low],
         'r2_ci_high' : [r2_ci_high],
@@ -405,9 +424,12 @@ if metaanalysis == True:
         'v_population_uncorr_direct', 'v_population_uncorr_direct_se'])
 if fpgs == True:
     datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'direct', 'direct_se',
-                    'pop', 'pop_se', 'paternal', 'paternal_se',
+                    'pop', 'pop_se', 'avg_ntc', 'avg_ntc_se',
+                    'paternal', 'paternal_se',
                     'maternal', 'maternal_se',
+                    'maternal_minus_paternal_est', 'maternal_minus_paternal_se',
                     'dir_pop_ratio', 'dir_pop_ratio_se',
+                    'parental_direct_ratio_est', 'parental_direct_ratio_se',
                     'r2',  'r2_ci_low', 'r2_ci_high',
                     'parental_pgi_corr', 'parental_pgi_corr_se'])
 

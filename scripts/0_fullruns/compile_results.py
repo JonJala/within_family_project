@@ -4,8 +4,8 @@ import subprocess
 import json
 
 ## chooose which results to compile
-metaanalysis = True
-fpgs = False
+metaanalysis = False
+fpgs = True
 ldsc = False
 
 ### define functions for compiling results
@@ -176,18 +176,22 @@ def get_fpgs_results(phenotype, effect):
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/{effect}.2.effects.txt"
         ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/dirpop_coeffratiodiff.bootests"
+        ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{height_validation}/ntc_ratios.txt"
     elif phenotype == "ea":
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/{effect}.2.effects.txt"
         ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/dirpop_coeffratiodiff.bootests"
+        ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/ntc_ratios.txt"
     elif phenotype == "cognition":
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/{effect}.2.effects.txt"
         ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/dirpop_coeffratiodiff.bootests"
+        ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/ntc_ratios.txt"
     else:
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{effect}.2.effects.txt"
         ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/dirpop_coeffratiodiff.bootests"
+        ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/ntc_ratios.txt"
     
     # 1-generation model (proband only)
     proband = pd.read_csv(
@@ -211,7 +215,7 @@ def get_fpgs_results(phenotype, effect):
 
     # ntc coefficients and ratios
     ntc_ratio = pd.read_csv(
-        f"{basepath}/processed/fpgs/{phenotype}/prscs/ntc_ratios.txt",
+        ntc_path,
         delim_whitespace=True,
     )
 
@@ -221,16 +225,16 @@ def get_fpgs_results(phenotype, effect):
     patse = full.loc['paternal', 'se']
     matest = full.loc['maternal', 'coeff']
     matse = full.loc['maternal', 'se']
-    avg_ntc_est = ntc_ratio['average_NTC', 'estimates']
-    avg_ntc_se = ntc_ratio['average_NTC', 'SE']
+    avg_ntc_est = ntc_ratio.loc[ntc_ratio['rn'] == 'average_NTC', 'estimates'].values[0]
+    avg_ntc_se = ntc_ratio.loc[ntc_ratio['rn'] == 'average_NTC', 'SE'].values[0]
     popest = proband.loc['proband', 'coeff']
     popse = proband.loc['proband', 'se']
     popest_ci_low = popest - 1.96 * popse
     popest_ci_high = popest + 1.96 * popse
-    maternal_minus_paternal_est = ntc_ratio['maternal_minus_paternal', 'estimates']
-    maternal_minus_paternal_se = ntc_ratio['maternal_minus_paternal', 'SE']
-    parental_direct_ratio_est = ntc_ratio['parental_direct_ratio', 'estimates']
-    parental_direct_ratio_se = ntc_ratio['parental_direct_ratio', 'SE']
+    maternal_minus_paternal_est = ntc_ratio.loc[ntc_ratio['rn'] == 'maternal_minus_paternal', 'estimates'].values[0]
+    maternal_minus_paternal_se = ntc_ratio.loc[ntc_ratio['rn'] == 'maternal_minus_paternal', 'SE'].values[0]
+    parental_direct_ratio_est = ntc_ratio.loc[ntc_ratio['rn'] == 'parental_direct_ratio', 'estimates'].values[0]
+    parental_direct_ratio_se = ntc_ratio.loc[ntc_ratio['rn'] == 'parental_direct_ratio', 'SE'].values[0]
     r2 = popest**2 - popse**2 # beta squared minus sampling variance of beta
     r2_ci_low = popest_ci_low**2 - popse**2 # lower CI of beta squared minus sampling variance of beta
     r2_ci_high = popest_ci_high**2 - popse**2 # higher CI of beta squared minus sampling variance of beta

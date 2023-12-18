@@ -10,6 +10,8 @@ def compile_results(datfpgs, phenotype, effect, dataset, validation_pheno, basep
     ## fpgs results
     proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/{effect}.1.effects.txt" 
     full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/{effect}.2.effects.txt"
+    ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/dirpop_coeffratiodiff.bootests"
+    ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/ntc_ratios.txt"
 
     # 1-generation model (proband only)
     proband = pd.read_csv(
@@ -25,20 +27,42 @@ def compile_results(datfpgs, phenotype, effect, dataset, validation_pheno, basep
         names = ['coeff', 'se']
     )
 
+    # dir-pop coeff ratio
+    coeffratio = pd.read_csv(
+            ratio_path,
+            delim_whitespace=True
+    )
+
+    # ntc coefficients and ratios
+    ntc_ratio = pd.read_csv(
+        ntc_path,
+        delim_whitespace=True,
+    )
+
     direst = full.loc['proband', 'coeff']
     dirse = full.loc['proband', 'se']
     patest = full.loc['paternal', 'coeff']
     patse = full.loc['paternal', 'se']
     matest = full.loc['maternal', 'coeff']
     matse = full.loc['maternal', 'se']
+    avg_ntc_est = ntc_ratio.loc[ntc_ratio['rn'] == 'average_NTC', 'estimates'].values[0]
+    avg_ntc_se = ntc_ratio.loc[ntc_ratio['rn'] == 'average_NTC', 'SE'].values[0]
     popest = proband.loc['proband', 'coeff']
     popse = proband.loc['proband', 'se']
-    popest_ci_low = popest - 1.96 * popse # 95% CI lower bound
-    popest_ci_high = popest + 1.96 * popse # 95% CI upper bound
+    popest_ci_low = popest - 1.96 * popse
+    popest_ci_high = popest + 1.96 * popse
+    maternal_minus_paternal_est = ntc_ratio.loc[ntc_ratio['rn'] == 'maternal_minus_paternal', 'estimates'].values[0]
+    maternal_minus_paternal_se = ntc_ratio.loc[ntc_ratio['rn'] == 'maternal_minus_paternal', 'SE'].values[0]
+    parental_direct_ratio_est = ntc_ratio.loc[ntc_ratio['rn'] == 'parental_direct_ratio', 'estimates'].values[0]
+    parental_direct_ratio_se = ntc_ratio.loc[ntc_ratio['rn'] == 'parental_direct_ratio', 'SE'].values[0]
     r2 = popest**2 - popse**2 # beta squared minus sampling variance of beta
     r2_ci_low = popest_ci_low**2 - popse**2 # lower CI of beta squared minus sampling variance of beta
     r2_ci_high = popest_ci_high**2 - popse**2 # higher CI of beta squared minus sampling variance of beta
-    coeffratio_est = direst/popest
+    
+    # direct to pop ratio
+    coeffratio = coeffratio.loc[f'{effect}_full/{effect}_proband', :]
+    coeffratio_est = coeffratio['est']
+    coeffratio_se = coeffratio['se']
 
     # parental PGI correlation from snipar log
     if dataset == "mcs":
@@ -63,11 +87,18 @@ def compile_results(datfpgs, phenotype, effect, dataset, validation_pheno, basep
             'direct_se' : [dirse],
             'pop' : [popest],
             'pop_se' : [popse],
+            'avg_ntc' : [avg_ntc_est],
+            'avg_ntc_se' : [avg_ntc_se],
             'paternal' : [patest],
             'paternal_se' : [patse],
             'maternal' : [matest],
             'maternal_se' : [matse],
+            'maternal_minus_paternal_est' : [maternal_minus_paternal_est],
+            'maternal_minus_paternal_se' : [maternal_minus_paternal_se],
             'dir_pop_ratio' : [coeffratio_est],
+            'dir_pop_ratio_se': [coeffratio_se],
+            'parental_direct_ratio_est' : [parental_direct_ratio_est],
+            'parental_direct_ratio_se' : [parental_direct_ratio_se],
             'r2' : [r2],
             'r2_ci_low' : [r2_ci_low],
             'r2_ci_high' : [r2_ci_high],
@@ -89,11 +120,14 @@ ukb_validation = ['ea', 'cognition']
 validation_phenos = mcs_validation + ukb_validation
 
 datfpgs = pd.DataFrame(columns=['phenotype', 'validation_pheno', 'dataset', 'effect', 'direct', 'direct_se',
-                'pop', 'pop_se', 'paternal', 'paternal_se',
-                'maternal', 'maternal_se',
-                'dir_pop_ratio', 
-                'r2',  'r2_ci_low', 'r2_ci_high',
-                'parental_pgi_corr', 'parental_pgi_corr_se'])
+                    'pop', 'pop_se', 'avg_ntc', 'avg_ntc_se',
+                    'paternal', 'paternal_se',
+                    'maternal', 'maternal_se',
+                    'maternal_minus_paternal_est', 'maternal_minus_paternal_se',
+                    'dir_pop_ratio', 'dir_pop_ratio_se',
+                    'parental_direct_ratio_est', 'parental_direct_ratio_se',
+                    'r2',  'r2_ci_low', 'r2_ci_high',
+                    'parental_pgi_corr', 'parental_pgi_corr_se'])
 fpgsfiles = [fpgspath + ph for ph in phenotypes]
 
 ## make table of results

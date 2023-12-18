@@ -100,7 +100,7 @@ read_gen_models = function(gen1_effects,gen2_effects,gen2_vcov,savepath,gen3_eff
   if (sign_flip){results[,1] = -results[,1]}
 
   # save
-  fwrite(as.data.table(results, keep.rownames = T), paste0(savepath, "/ntc_ratios.txt"), quote = F, sep = "\t", row.names = TRUE, col.names = TRUE, na = "NA")
+  fwrite(as.data.table(results, keep.rownames = T), paste0(savepath, "/ntc_ratios.txt"), quote = F, sep = "\t", row.names = FALSE, col.names = TRUE, na = "NA")
   }
 }
 

@@ -83,6 +83,19 @@ function bootstrap_coeffratio_ests(){
 
 }
 
+function get_ntc_ratios(){
+
+    PHENONAME=$1
+    VALIDATION=$2
+    METHOD=$3
+    DATASET=$4
+
+    ## get ntc coeffs, ratios, and SEs
+    Rscript ${within_family_path}/scripts/fpgs/get_ntc_ratios.R \
+        --filepath "${within_family_path}/processed/fpgs/${PHENONAME}/${METHOD}/${DATASET}/${VALIDATION}"
+
+}
+
 
 
 ## mcs outcomes
@@ -91,7 +104,8 @@ do
     for validation in "ea" "cognition" "cogverb"
     do
         # run_fpgs_regression "${pheno}" "${validation}" "0" "prscs" "mcs" ""
-        bootstrap_coeffratio_ests "${pheno}" "${validation}" "prscs" "mcs"
+        # bootstrap_coeffratio_ests "${pheno}" "${validation}" "prscs" "mcs"
+        get_ntc_ratios "${pheno}" "${validation}" "prscs" "mcs"
     done
 done
 
@@ -101,6 +115,7 @@ do
     for validation in "ea" "cognition"
     do
         # run_fpgs_regression "${pheno}" "${validation}" "0" "prscs" "ukb" ""
-        bootstrap_coeffratio_ests "${pheno}" "${validation}" "prscs" "ukb"
+        # bootstrap_coeffratio_ests "${pheno}" "${validation}" "prscs" "ukb"
+        get_ntc_ratios "${pheno}" "${validation}" "prscs" "ukb"
     done
 done

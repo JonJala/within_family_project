@@ -11,6 +11,8 @@ phenos = ['aafb', 'adhd', 'agemenarche', 'asthma', 'aud', 'bmi', 'bpd', 'bps', '
 
 for pheno in phenos:
 
+    print(f"Starting " + pheno)
+
     # get meta ss
     path = f"/var/genetics/proj/within_family/within_family_project/processed/package_output/{pheno}/meta.sumstats.gz"
     ss = pd.read_csv(path, sep=" ")

@@ -24,6 +24,10 @@ for pheno in phenos:
     ss["direct_SE"] = ss["direct_SE"] * sqrt_intercept
     ss["population_SE"] = ss["population_SE"] * sqrt_intercept
 
+    # adjust z
+    ss['direct_Z'] = ss['direct_Beta'] - ss['direct_Beta'].mean() / ss['direct_SE']
+    ss['population_Z'] = ss['population_Beta'] - ss['population_Beta'].mean() / ss['population_SE']
+    
     # save
     savepath = f"/var/genetics/proj/within_family/within_family_project/processed/package_output/{pheno}/meta_adj_se.sumstats.gz"
     ss.to_csv(savepath, sep = ' ', index = False, na_rep = "nan")

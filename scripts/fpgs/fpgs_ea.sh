@@ -5,10 +5,6 @@ within_family_path="/var/genetics/proj/within_family/within_family_project"
 
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
-# sbayesr
-# main "ea" "" "0" "mcs" "sbayesr"
-# main "ea" "" "0" "ukb" "sbayesr"
-
 # prscs
 main "ea" "" "0" "mcs" "prscs"
 main "ea" "" "0" "ukb" "prscs"

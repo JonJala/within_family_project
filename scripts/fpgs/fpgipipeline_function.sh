@@ -149,18 +149,6 @@ function withinfam_pred(){
             --dataset $DATASET \
             --sniparpath ${snipar_path} \
             --binary $BINARY 2>&1 | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}.reg.log"
-        
-        # bootstrap to get dir/pop ratio and SEs
-        python ${within_family_path}/scripts/fpgs/bootstrapest.py \
-            ${fpgs_out}/dirpop_coeffratiodiff \
-            --pgsgroup1 ${processed_dir}/population_full.pgs.txt,${processed_dir}/population_proband.pgs.txt \
-            --pgsgroup2 ${processed_dir}/direct_full.pgs.txt,${processed_dir}/direct_proband.pgs.txt \
-            --phenofile ${phenofile} \
-            --pgsreg-r2 
-
-        # get ntc coeffs, ratios, and SEs
-        Rscript ${within_family_path}/scripts/fpgs/get_ntc_ratios.R \
-            --filepath ${fpgs_out}
 
     fi
     
@@ -219,5 +207,22 @@ function main(){
     withinfam_pred $population_weights \
         "population" "$PHENONAME" \
         "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
+
+
+    if [[ $PHENONAME != "ea" && $PHENONAME != "cognition" ]]; then
+
+        # bootstrap to get dir/pop ratio and SEs
+        python ${within_family_path}/scripts/fpgs/bootstrapest.py \
+            ${fpgs_out}/dirpop_coeffratiodiff \
+            --pgsgroup1 ${processed_dir}/population_full.pgs.txt,${processed_dir}/population_proband.pgs.txt \
+            --pgsgroup2 ${processed_dir}/direct_full.pgs.txt,${processed_dir}/direct_proband.pgs.txt \
+            --phenofile ${phenofile} \
+            --pgsreg-r2 
+
+        # get ntc coeffs, ratios, and SEs
+        Rscript ${within_family_path}/scripts/fpgs/get_ntc_ratios.R \
+            --filepath ${fpgs_out}
+
+    fi
 
 }

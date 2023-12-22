@@ -4,8 +4,8 @@ import subprocess
 import json
 
 ## chooose which results to compile
-metaanalysis = False
-fpgs = True
+metaanalysis = True
+fpgs = False
 ldsc = False
 
 ### define functions for compiling results

@@ -12,14 +12,14 @@ source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/p
 
 echo "Munging!!"
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/aud/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/aud/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/aud/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/aud/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/aud/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/aud/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --merge-alleles ${hm3snps} \

@@ -12,35 +12,35 @@ echo "Munging!!"
 source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/python_env/anaconda2/envs/ldsc
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/ea/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/ea/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/ea/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/paternalmunged \
 --N-col direct_N --p paternal_pval --signed-sumstats paternal_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/ea/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/maternalmunged \
 --N-col direct_N --p maternal_pval --signed-sumstats maternal_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/ea/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/ntcmunged \
 --N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
 --merge-alleles ${hm3snps}

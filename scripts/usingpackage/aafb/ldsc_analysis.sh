@@ -12,14 +12,14 @@ source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/p
 
 echo "Munging!!"
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/aafb/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/aafb/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/aafb/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/aafb/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/aafb/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/aafb/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --merge-alleles ${hm3snps} \
@@ -51,14 +51,12 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/aafb/direct_h2
-#  0.3274 (0.0175)
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/aafb/populationmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/aafb/population_h2
-#  0.3274 (0.0175)
 
 
 # Changing env

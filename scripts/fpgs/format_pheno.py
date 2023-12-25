@@ -20,11 +20,6 @@ if args.sep == 'delim_whitespace':
 else:
     dat = pd.read_csv(args.phenofile, delimiter = args.sep, compression = args.compression)
 
-# if args.phenocol == "cognition":
-#     args.phenocol = "ea"
-# if args.phenocol == "ea":
-    # args.phenocol = "cognition"
-
 if args.fid is not None:
     dat = dat[[args.fid, args.iid, args.phenocol]]
     dat = dat.rename(columns = {args.iid : 'IID', args.fid : 'FID'})

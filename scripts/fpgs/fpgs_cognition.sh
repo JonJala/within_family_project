@@ -7,7 +7,7 @@ source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
 main "cognition" "" "0" "mcs" "prscs"
-# main "cognition" "" "0" "ukb" "prscs"
+main "cognition" "" "0" "ukb" "prscs"
 
 # clumping analysis
 # main "cognition" "" "0" "mcs" "clump"

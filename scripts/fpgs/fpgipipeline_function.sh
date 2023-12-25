@@ -114,10 +114,18 @@ function withinfam_pred(){
             --scale_pgs | tee $OUTPATH/${EFFECT}${OUTSUFFIX}.log 
     fi 
 
+    # full set of pgis + covariates
     python ${within_family_path}/scripts/fpgs/attach_covar.py \
         $OUTPATH/${EFFECT}${OUTSUFFIX}.pgs.txt \
         --covariates $COVAR \
         --outprefix $OUTPATH/${EFFECT}${OUTSUFFIX}_full
+
+    # just proband pgi + covariates
+    python ${within_family_path}/scripts/fpgs/attach_covar.py \
+        $OUTPATH/${EFFECT}${OUTSUFFIX}.pgs.txt \
+        --covariates $COVAR \
+        --keepeffect "proband" \
+        --outprefix $OUTPATH/${EFFECT}${OUTSUFFIX}_proband
 
     if [[ ! -z $CLUMP ]]; then
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"
@@ -130,14 +138,19 @@ function withinfam_pred(){
         mkdir -p $fpgs_out
     fi
 
-    echo "Running fPGS regression..."
-    python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
-        --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
-        --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
-        --phenoname $PHENONAME \
-        --dataset $DATASET \
-        --sniparpath ${snipar_path} \
-        --binary $BINARY 2>&1 | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}.reg.log"
+    ## don't run regression for ea and cognition here (do it separately using fpgs_ea_cognition.sh)
+    if [[ $PHENONAME != "ea" && $PHENONAME != "cognition" ]]; then
+
+        echo "Running fPGS regression..."
+        python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
+            --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
+            --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
+            --phenoname $PHENONAME \
+            --dataset $DATASET \
+            --sniparpath ${snipar_path} \
+            --binary $BINARY 2>&1 | tee "${within_family_path}/processed/fpgs/logs/${PHENONAME}_${EFFECT}${OUTSUFFIX}.reg.log"
+
+    fi
     
 }
 
@@ -194,5 +207,22 @@ function main(){
     withinfam_pred $population_weights \
         "population" "$PHENONAME" \
         "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
- 
+
+
+    if [[ $PHENONAME != "ea" && $PHENONAME != "cognition" ]]; then
+
+        # bootstrap to get dir/pop ratio and SEs
+        python ${within_family_path}/scripts/fpgs/bootstrapest.py \
+            ${fpgs_out}/dirpop_coeffratiodiff \
+            --pgsgroup1 ${processed_dir}/population_full.pgs.txt,${processed_dir}/population_proband.pgs.txt \
+            --pgsgroup2 ${processed_dir}/direct_full.pgs.txt,${processed_dir}/direct_proband.pgs.txt \
+            --phenofile ${phenofile} \
+            --pgsreg-r2 
+
+        # get ntc coeffs, ratios, and SEs
+        Rscript ${within_family_path}/scripts/fpgs/get_ntc_ratios.R \
+            --filepath ${fpgs_out}
+
+    fi
+
 }

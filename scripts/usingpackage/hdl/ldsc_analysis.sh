@@ -12,28 +12,28 @@ echo "Munging!!"
 source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/python_env/anaconda2/envs/ldsc
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/hdl/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/hdl/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/hdl/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/hdl/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/hdl/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/hdl/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/hdl/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/hdl/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/hdl/maternalmunged \
 --N-col direct_N --p maternal_pval --signed-sumstats maternal_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/hdl/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/hdl/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/hdl/paternalmunged \
 --N-col direct_N --p paternal_pval --signed-sumstats paternal_z,0 \
 --merge-alleles ${hm3snps} \
@@ -41,20 +41,26 @@ ${ldscpath}/munge_sumstats.py \
 
 
 
-echo "Calcualting RG of population effect with reference HDL sample"
+echo "Calculating RG of population effect with reference HDL sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/hdl/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/population_reference_sample
-# 0.9389 (0.0107)
 
-echo "Calcualting RG of direct effect with reference HDL sample"
+echo "Calculating RG of direct effect with reference HDL sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/hdl/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/hdl_ref/hdl_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/direct_reference_sample
+
+echo "Calculating RG of population effect with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/hdl/populationmunged.sumstats.gz,${within_family_path}/processed/package_output/hdl/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/hdl/direct_population
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/hdl/directmunged.sumstats.gz \
@@ -70,6 +76,6 @@ ${ldscpath}/ldsc.py \
 
 # Changing env
 source /var/genetics/proj/within_family/snipar_venv/bin/activate
-/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/hdl/meta.nfilter \
+/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/hdl/meta_adj_se \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/hdl/marginal \
 --ldscores /disk/genetics/ukb/jguan/ukb_analysis/output/ldsc/v2/@

@@ -12,53 +12,55 @@ source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/p
 
 echo "Munging!!"
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/asthma/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/asthma/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/asthma/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/asthma/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/asthma/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/asthma/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
-echo "Calcualting RG of population effect with reference sample"
+echo "Calculating RG of population effect with reference sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/asthma/populationmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/asthma/population_reference_sample
-# 0.901 (0.0059)
 
-echo "Calcualting RG of direct effect with reference sample"
+echo "Calculating RG of direct effect with reference sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/asthma/directmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/asthma/direct_reference_sample
-# 0.901 (0.0059)
 
+echo "Calculating RG of population effect with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/asthma/populationmunged.sumstats.gz,${within_family_path}/processed/package_output/asthma/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/asthma/direct_population
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/asthma/directmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/asthma/direct_h2
-#  0.3274 (0.0175)
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/asthma/populationmunged.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/asthma/population_h2
-#  0.3274 (0.0175)
 
 
 # Changing env
 source /var/genetics/proj/within_family/snipar_venv/bin/activate
-/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/asthma/meta.nfilter \
+/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py /var/genetics/proj/within_family/within_family_project/processed/package_output/asthma/meta_adj_se \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/asthma/marginal \
 --ldscores /disk/genetics/ukb/jguan/ukb_analysis/output/ldsc/v2/@

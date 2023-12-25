@@ -12,40 +12,40 @@ echo "Munging!!"
 source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/python_env/anaconda2/envs/ldsc
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/ea/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/ea/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/ea/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/paternalmunged \
 --N-col direct_N --p paternal_pval --signed-sumstats paternal_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/ea/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/maternalmunged \
 --N-col direct_N --p maternal_pval --signed-sumstats maternal_z,0 \
 --merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
+--sumstats ${within_family_path}/processed/package_output/ea/meta_adj_se.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/ntcmunged \
 --N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
 --merge-alleles ${hm3snps}
 
-echo "Calcualting RG of population effect with reference EA sample"
+echo "Calculating RG of population effect with reference EA sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/ea/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -53,7 +53,7 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/ea/population_reference_sample
 # 1.0353 (0.0159)
 
-echo "Calcualting RG of direct effect with reference EA sample"
+echo "Calculating RG of direct effect with reference EA sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/ea/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
@@ -61,6 +61,12 @@ ${ldscpath}/ldsc.py \
 --out ${within_family_path}/processed/package_output/ea/direct_reference_sample
 # 1.0353 (0.0159)
 
+echo "Calculating RG of population effect with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/ea/populationmunged.sumstats.gz,${within_family_path}/processed/package_output/ea/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/ea/direct_population
 
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/ea/paternalmunged.sumstats.gz,${within_family_path}/processed/package_output/ea/maternalmunged.sumstats.gz \
@@ -92,6 +98,6 @@ ${ldscpath}/ldsc.py \
 
 # Changing env
 source /var/genetics/proj/within_family/snipar_venv/bin/activate
-/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta.nfilter \
+/var/genetics/proj/within_family/snipar_simulate/snipar/scripts/correlate.py  /var/genetics/proj/within_family/within_family_project/processed/package_output/ea/meta_adj_se \
 /var/genetics/proj/within_family/within_family_project/processed/package_output/ea/marginal \
 --ldscores /disk/genetics/ukb/jguan/ukb_analysis/output/ldsc/v2/@

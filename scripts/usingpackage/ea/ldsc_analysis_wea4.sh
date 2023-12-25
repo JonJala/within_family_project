@@ -47,7 +47,7 @@ echo "Munging!!"
 # --N-col direct_N --p avg_parental_pval --signed-sumstats avg_parental_z,0 \
 # --merge-alleles ${hm3snps}
 
-# echo "Calcualting RG of population effect with reference EA sample"
+# echo "Calculating RG of population effect with reference EA sample"
 # ${ldscpath}/ldsc.py \
 # --rg ${within_family_path}/processed/package_output/ea/meta_analysis_pop_wea4.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \

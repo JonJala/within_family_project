@@ -6,7 +6,7 @@ import json
 ## chooose which results to compile
 metaanalysis = True
 fpgs = False
-ldsc = True
+ldsc = False
 
 ### define functions for compiling results
 
@@ -48,8 +48,10 @@ def get_meta_results(phenotype, effect):
 
     # get h2
     with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
+        
         h2lines = [l for l in f if l.startswith('Total Observed scale h2')]
         h2 = h2lines[0] if len(h2lines) > 0 else None
+        
         if h2 is not None:
             h2 = h2.split(':')[1]
             h2est = float(h2.split('(')[0])
@@ -58,7 +60,44 @@ def get_meta_results(phenotype, effect):
             h2est = None
             h2se = None
 
-    # get rg
+    # get h2 intercept
+    with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
+        
+        # get intercept
+        h2_intercept_lines = [l for l in f if l.startswith('Intercept')]
+        h2_intercept = h2_intercept_lines[0] if len(h2_intercept_lines) > 0 else None
+        
+        if h2_intercept is not None:
+            h2_intercept = h2_intercept.split(':')[1]
+            h2_intercept_est = float(h2_intercept.split('(')[0])
+            h2_intercept_se = float(h2_intercept.split('(')[1].replace(')', ''))
+        else:
+            h2_intercept_est = None
+            h2_intercept_se = None
+
+    # get ldsc ratio
+    with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
+        
+        # get intercept
+        ratio_lines = [l for l in f if l.startswith('Ratio')]
+        ratio = ratio_lines[0] if len(ratio_lines) > 0 else None
+
+        if ratio.startswith("Ratio < 0"):
+            ratio_est = 0 # "Ratio < 0 (usually indicates GC correction)." but to keep it as numeric, set to 0
+            ratio_se = None
+        elif ratio is not None:
+            ratio = ratio.split(':')[1]
+            if ratio.startswith(" NA"):
+                ratio_est = None
+                ratio_se = None
+            else:
+                ratio_est = float(ratio.split('(')[0])
+                ratio_se = float(ratio.split('(')[1].replace(')', ''))
+        else:
+            ratio_est = None
+            ratio_se = None
+
+    # get rg with ref
     with open(packageoutput + phenotype + f'/{effect}_reference_sample.log') as f:
         rglines = [l for l in f if l.startswith('Genetic Correlation:')]
         rg = rglines[0] if len(rglines) > 0 else None
@@ -69,6 +108,18 @@ def get_meta_results(phenotype, effect):
         else:
             rgest = None
             rgse = None
+
+    # get dir-pop rg from ldsc
+    with open(packageoutput + phenotype + '/direct_population.log') as f:
+        ldsc_rglines = [l for l in f if l.startswith('Genetic Correlation:')]
+        ldsc_rg = ldsc_rglines[0] if len(ldsc_rglines) > 0 else None
+        if ldsc_rg is not None:
+            ldsc_rg = ldsc_rg.split(':')[1]
+            ldsc_rgest = float(ldsc_rg.split('(')[0])
+            ldsc_rgse = float(ldsc_rg.split('(')[1].replace(')', ''))
+        else:
+            ldsc_rgest = None
+            ldsc_rgse = None
     
     # dir-pop dir-ntc marginal correlations
     mrg = pd.read_csv(
@@ -95,12 +146,18 @@ def get_meta_results(phenotype, effect):
             'n_eff_median' : [neff], 
             'h2' : [h2est], 
             'h2_se': [h2se],
+            'h2_intercept' : [h2_intercept_est], 
+            'h2_intercept_se': [h2_intercept_se],
+            'ratio' : [ratio_est], 
+            'ratio_se': [ratio_se],
             'rg_ref' : [rgest],
             'rg_ref_se' : [rgse],
             'dir_pop_rg' : [dir_pop_mrg],
             'dir_pop_rg_se' : [dir_pop_mrg_se],
             'dir_ntc_rg' : [dir_ntc_mrg],
             'dir_ntc_rg_se' : [dir_ntc_mrg_se],
+            'dir_pop_rg_ldsc' : [ldsc_rgest],
+            'dir_pop_rg_se_ldsc' : [ldsc_rgse],
             'n_cohorts' : [ncohorts],
             'reg_population_direct': [reg_population_direct_mrg],
             'reg_population_direct_se': [reg_population_direct_mrg_se],
@@ -118,15 +175,23 @@ def get_fpgs_results(phenotype, effect):
     if phenotype == "height":
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/{effect}.2.effects.txt"
+        ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/dirpop_coeffratiodiff.bootests"
+        ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{height_validation}/ntc_ratios.txt"
     elif phenotype == "ea":
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/{effect}.2.effects.txt"
+        ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/dirpop_coeffratiodiff.bootests"
+        ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/ntc_ratios.txt"
     elif phenotype == "cognition":
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/{effect}.2.effects.txt"
+        ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/dirpop_coeffratiodiff.bootests"
+        ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/ntc_ratios.txt"
     else:
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{effect}.2.effects.txt"
+        ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/dirpop_coeffratiodiff.bootests"
+        ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/ntc_ratios.txt"
     
     # 1-generation model (proband only)
     proband = pd.read_csv(
@@ -142,34 +207,56 @@ def get_fpgs_results(phenotype, effect):
         names = ['coeff', 'se']
     )
 
+    # dir-pop coeff ratio
+    coeffratio = pd.read_csv(
+            ratio_path,
+            delim_whitespace=True
+    )
+
+    # ntc coefficients and ratios
+    ntc_ratio = pd.read_csv(
+        ntc_path,
+        delim_whitespace=True,
+    )
+
     direst = full.loc['proband', 'coeff']
     dirse = full.loc['proband', 'se']
     patest = full.loc['paternal', 'coeff']
     patse = full.loc['paternal', 'se']
     matest = full.loc['maternal', 'coeff']
     matse = full.loc['maternal', 'se']
+    avg_ntc_est = ntc_ratio.loc[ntc_ratio['rn'] == 'average_NTC', 'estimates'].values[0]
+    avg_ntc_se = ntc_ratio.loc[ntc_ratio['rn'] == 'average_NTC', 'SE'].values[0]
     popest = proband.loc['proband', 'coeff']
     popse = proband.loc['proband', 'se']
     popest_ci_low = popest - 1.96 * popse
     popest_ci_high = popest + 1.96 * popse
+    maternal_minus_paternal_est = ntc_ratio.loc[ntc_ratio['rn'] == 'maternal_minus_paternal', 'estimates'].values[0]
+    maternal_minus_paternal_se = ntc_ratio.loc[ntc_ratio['rn'] == 'maternal_minus_paternal', 'SE'].values[0]
+    parental_direct_ratio_est = ntc_ratio.loc[ntc_ratio['rn'] == 'parental_direct_ratio', 'estimates'].values[0]
+    parental_direct_ratio_se = ntc_ratio.loc[ntc_ratio['rn'] == 'parental_direct_ratio', 'SE'].values[0]
     r2 = popest**2 - popse**2 # beta squared minus sampling variance of beta
     r2_ci_low = popest_ci_low**2 - popse**2 # lower CI of beta squared minus sampling variance of beta
     r2_ci_high = popest_ci_high**2 - popse**2 # higher CI of beta squared minus sampling variance of beta
-    coeffratio_est = direst/popest
+    
+    # direct to pop ratio
+    coeffratio = coeffratio.loc[f'{effect}_full/{effect}_proband', :]
+    coeffratio_est = coeffratio['est']
+    coeffratio_se = coeffratio['se']
 
     # parental PGI correlation from snipar log
     if phenotype in mcs_phenos:
         parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/' + phenotype + '/prscs/' + effect + '.log'
     elif phenotype == "ea":
         if ea_validation == "mcs":
-            parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/prscs/' + ea_pheno + '/' + effect + '.log'
+            parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/ea/prscs/' + effect + '.log'
         elif ea_validation == "ukb":
-            parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/ea/prscs/' + ea_pheno + '/' + effect + '.log'    
+            parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/ea/prscs/' + effect + '.log'    
     elif phenotype == "cognition":
         if ea_validation == "mcs":
-            parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/cognition/prscs/' + cog_pheno + '/' + effect + '.log'
+            parcorr_path = '/var/genetics/data/mcs/private/latest/processed/pgs/fpgs/cognition/prscs/' + effect + '.log'
         elif ea_validation == "ukb":
-            parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/cognition/prscs/' + cog_pheno + '/' + effect + '.log'    
+            parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/cognition/prscs/' + effect + '.log'    
     else:
         parcorr_path = '/var/genetics/data/ukb/private/latest/processed/proj/within_family/pgs/fpgs/' + phenotype + '/prscs/' + effect + '.log'
 
@@ -188,11 +275,18 @@ def get_fpgs_results(phenotype, effect):
         'direct_se' : [dirse],
         'pop' : [popest],
         'pop_se' : [popse],
+        'avg_ntc' : [avg_ntc_est],
+        'avg_ntc_se' : [avg_ntc_se],
         'paternal' : [patest],
         'paternal_se' : [patse],
         'maternal' : [matest],
         'maternal_se' : [matse],
+        'maternal_minus_paternal_est' : [maternal_minus_paternal_est],
+        'maternal_minus_paternal_se' : [maternal_minus_paternal_se],
         'dir_pop_ratio' : [coeffratio_est],
+        'dir_pop_ratio_se': [coeffratio_se],
+        'parental_direct_ratio_est' : [parental_direct_ratio_est],
+        'parental_direct_ratio_se' : [parental_direct_ratio_se],
         'r2' : [r2],
         'r2_ci_low' : [r2_ci_low],
         'r2_ci_high' : [r2_ci_high],
@@ -320,22 +414,26 @@ mcs_phenos = ['bmi', 'depression', 'adhd', 'agemenarche', 'eczema', 'cannabis' ,
 ## choose validation cohort and outcome phenos for height, ea, and cognition
 height_validation = "mcs"
 ea_validation = "mcs"
-ea_pheno = "gcse"
+ea_pheno = "ea" # ea validation pheno
 cog_validation = "mcs"
-cog_pheno = "cogass"
+cog_pheno = "cognition" # cognition validation pheno
 
 ## initialize dataframes for saving results
 if metaanalysis == True:    
     dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
-        'h2_se', 'rg_ref', 'rg_ref_se', 
-        'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 
+        'h2_se', 'h2_intercept', 'h2_intercept_se', 'ratio', 'ratio_se', 
+        'rg_ref', 'rg_ref_se', 'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 
+        'dir_ntc_rg_se', 'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc',
         'n_cohorts', 'reg_population_direct', 'reg_population_direct_se',
         'v_population_uncorr_direct', 'v_population_uncorr_direct_se'])
 if fpgs == True:
     datfpgs = pd.DataFrame(columns=['phenotype', 'effect', 'direct', 'direct_se',
-                    'pop', 'pop_se', 'paternal', 'paternal_se',
+                    'pop', 'pop_se', 'avg_ntc', 'avg_ntc_se',
+                    'paternal', 'paternal_se',
                     'maternal', 'maternal_se',
-                    'dir_pop_ratio', 
+                    'maternal_minus_paternal_est', 'maternal_minus_paternal_se',
+                    'dir_pop_ratio', 'dir_pop_ratio_se',
+                    'parental_direct_ratio_est', 'parental_direct_ratio_se',
                     'r2',  'r2_ci_low', 'r2_ci_high',
                     'parental_pgi_corr', 'parental_pgi_corr_se'])
 
@@ -347,6 +445,8 @@ for phenotype in phenotypes:
             dattmp = get_meta_results(phenotype, effect) 
             dat = dat.append(dattmp, ignore_index=True)
         if fpgs == True:
+            if phenotype in ['aud', 'copd', 'hypertension']:
+                continue
             datfpgs_tmp = get_fpgs_results(phenotype, effect)
             datfpgs = datfpgs.append(datfpgs_tmp, ignore_index=True)
 
@@ -357,7 +457,8 @@ if metaanalysis == True:
     dat.columns = ['_'.join(column) for column in dat.columns.to_flat_index()]
     dat = dat.drop(
         ['n_cohorts_population', 'dir_pop_rg_population', 'dir_pop_rg_se_population', 'dir_ntc_rg_population', 'dir_ntc_rg_se_population',
-        'reg_population_direct_population', 'reg_population_direct_se_population', 'v_population_uncorr_direct_population', 'v_population_uncorr_direct_se_population'], 
+        'reg_population_direct_population', 'reg_population_direct_se_population', 'v_population_uncorr_direct_population', 'v_population_uncorr_direct_se_population',
+        'dir_pop_rg_ldsc_population', 'dir_pop_rg_se_ldsc_population'], 
         axis = 1
     )
     dat = dat.rename(
@@ -367,6 +468,8 @@ if metaanalysis == True:
             'dir_pop_rg_se_direct' : 'dir_pop_rg_se',
             'dir_ntc_rg_direct' : 'dir_ntc_rg',
             'dir_ntc_rg_se_direct' : 'dir_ntc_rg_se',
+            'dir_pop_rg_ldsc_direct' : 'dir_pop_rg_ldsc',
+            'dir_pop_rg_se_ldsc_direct' : 'dir_pop_rg_se_ldsc',
             'v_population_uncorr_direct_direct': 'v_population_uncorr_direct',
             'v_population_uncorr_direct_se_direct': 'v_population_uncorr_direct_se',
             'reg_population_direct_direct': 'reg_population_direct',
@@ -378,9 +481,11 @@ if metaanalysis == True:
     dat = dat[
         ['n_cohorts', 'n_eff_median_direct', 'n_eff_median_population',
         'h2_direct','h2_se_direct', 'h2_population','h2_se_population',
+        'h2_intercept_direct', 'h2_intercept_se_direct', 'h2_intercept_population', 'h2_intercept_se_population',
+        'ratio_direct', 'ratio_se_direct', 'ratio_population', 'ratio_se_population',
         'rg_ref_direct','rg_ref_se_direct',  'rg_ref_population', 'rg_ref_se_population',
-        'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 'reg_population_direct',
-        'reg_population_direct_se', 'v_population_uncorr_direct', 'v_population_uncorr_direct_se'
+        'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc', 'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 
+        'reg_population_direct', 'reg_population_direct_se', 'v_population_uncorr_direct', 'v_population_uncorr_direct_se'
     ]
     ]
 
@@ -408,4 +513,4 @@ if fpgs == True:
 ## compile and save ldsc results
 if ldsc == True:
     get_ldsc_results(phenotypes)
-    # get_heritabilities(phenotypes) # for jackknife estimates
+    # get_heritabilities(phenotypes) # for jackknife estimates -- do not run / leave for now

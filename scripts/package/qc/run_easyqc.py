@@ -198,7 +198,8 @@ def process_dat(dat, args):
     S_vec = np.array(dat['S'].tolist())
 
 
-    # normalize cols by phenotypic variance
+    # normalize effect estimates by phenotypic std dev (non-binary traits) or phenotypic variance (binary traits)
+    # S_vec = vcov matrix for theta estimates
     if not args.binary:
         theta_vec = theta_vec * 1/np.sqrt(phvar)
         S_vec = S_vec * 1/(phvar)

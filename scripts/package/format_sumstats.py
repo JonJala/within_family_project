@@ -6,6 +6,8 @@ import argparse
 import glob
 import os
 
+## note: i think this script can be deleted. i think it has been incorporated into correlation_meta_functions
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--sumstats', type=str, 
                     help='Path to sumstats file(s). Use * to specify multiple files.')

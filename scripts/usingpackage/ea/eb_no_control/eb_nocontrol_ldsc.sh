@@ -24,7 +24,7 @@ echo "Munging!!"
 # --merge-alleles ${hm3snps} \
 # --n-min 1.0
 
-echo "Calcualting RG of population effect with reference EA sample"
+echo "Calculating RG of population effect with reference EA sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/ea/eb_nocontrol/pop_munge.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \

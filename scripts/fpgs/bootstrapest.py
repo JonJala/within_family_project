@@ -25,7 +25,7 @@ def runpgi_reg(dfpgs, pheno):
     datols['const'] = 1.0
     reg = sm.OLS(
         endog=datols['pheno'], 
-        exog=datols[[c for c in datols if c not in ['IID', 'FID_x', 'FID_y', 'pheno']]],
+        exog=datols[[c for c in datols if c not in ['IID', 'FID_x', 'FID_y', 'FATHER_ID', 'MOTHER_ID', 'pheno']]],
         missing='drop'
     ).fit()
 
@@ -35,7 +35,7 @@ def runpgi_reg(dfpgs, pheno):
 
     df = pd.DataFrame(
         {
-            'vars' : [c for c in datols if c not in ['IID', 'FID_x', 'FID_y', 'pheno']], 
+            'vars' : [c for c in datols if c not in ['IID', 'FID_x', 'FID_y', 'MOTHER_ID', 'FATHER_ID', 'pheno']], 
             'ests' : ests,
             'se' : ses
         }
@@ -156,9 +156,9 @@ def bootstrap_est(args):
         ests_g2ratio = ((datg2f1/datg2f2)).loc['proband']
         ests = [ests_dif, ests_g1ratio, ests_g2ratio]
 
-    # xout = bootstrap_inner(args) 
-    # ses = np.std(xout, axis=1)
-    datout = pd.DataFrame({'est' : ests}, index=names)
+    xout = bootstrap_inner(args) 
+    ses = np.std(xout, axis=1)
+    datout = pd.DataFrame({'est' : ests, 'se' : ses}, index=names)
 
     return datout
 
@@ -174,7 +174,7 @@ if __name__ == '__main__':
     parser.add_argument('--phenofile', type=str, help = '''Phenotype file to use''')
     parser.add_argument('--phenofile2', type=str, help='''Second phenotype file''')
     parser.add_argument('--pgsgroup1', type=str, help='''PGS group 1. The direct/pop ratio will be
-    constructed between these. Files seperated by comma''')
+    constructed between these. Files separated by comma''')
     parser.add_argument('--pgsgroup2', type=str, help='''PGS group 2. The direct/pop ratio will be
     constructed between these. Then that will be subtracted from the ratio constructed in group 1''')
     parser.add_argument('--pgsreg-r2', action='store_true', default=False, help='''Should R squares be reported''')
@@ -186,6 +186,6 @@ if __name__ == '__main__':
 
 
     datout = bootstrap_est(args)
-    # datout['ci_lo'] = datout['est'] - 1.96 * datout['se']
-    # datout['ci_hi'] = datout['est'] + 1.96 * datout['se']
+    datout['ci_lo'] = datout['est'] - 1.96 * datout['se']
+    datout['ci_hi'] = datout['est'] + 1.96 * datout['se']
     datout.to_csv(args.outpath + '.bootests',  sep=' ')

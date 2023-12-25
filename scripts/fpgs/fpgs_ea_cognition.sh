@@ -105,7 +105,7 @@ do
     do
         # run_fpgs_regression "${pheno}" "${validation}" "0" "prscs" "mcs" ""
         # bootstrap_coeffratio_ests "${pheno}" "${validation}" "prscs" "mcs"
-        get_ntc_ratios "${pheno}" "${validation}" "prscs" "mcs"
+        # get_ntc_ratios "${pheno}" "${validation}" "prscs" "mcs"
     done
 done
 
@@ -116,6 +116,6 @@ do
     do
         # run_fpgs_regression "${pheno}" "${validation}" "0" "prscs" "ukb" ""
         # bootstrap_coeffratio_ests "${pheno}" "${validation}" "prscs" "ukb"
-        get_ntc_ratios "${pheno}" "${validation}" "prscs" "ukb"
+        # get_ntc_ratios "${pheno}" "${validation}" "prscs" "ukb"
     done
 done

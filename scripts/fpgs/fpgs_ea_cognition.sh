@@ -103,9 +103,8 @@ for pheno in "ea" "cognition"
 do
     for validation in "ea" "cognition" "cogverb"
     do
-        # run_fpgs_regression "${pheno}" "${validation}" "0" "prscs" "mcs" ""
-        # bootstrap_coeffratio_ests "${pheno}" "${validation}" "prscs" "mcs"
-        # get_ntc_ratios "${pheno}" "${validation}" "prscs" "mcs"
+        run_fpgs_regression "${pheno}" "${validation}" "0" "prscs" "mcs" ""
+        get_ntc_ratios "${pheno}" "${validation}" "prscs" "mcs"
     done
 done
 
@@ -114,8 +113,7 @@ for pheno in "ea" "cognition"
 do
     for validation in "ea" "cognition"
     do
-        # run_fpgs_regression "${pheno}" "${validation}" "0" "prscs" "ukb" ""
-        # bootstrap_coeffratio_ests "${pheno}" "${validation}" "prscs" "ukb"
-        # get_ntc_ratios "${pheno}" "${validation}" "prscs" "ukb"
+        run_fpgs_regression "${pheno}" "${validation}" "0" "prscs" "ukb" ""
+        get_ntc_ratios "${pheno}" "${validation}" "prscs" "ukb"
     done
 done

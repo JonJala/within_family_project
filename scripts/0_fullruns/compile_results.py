@@ -175,22 +175,18 @@ def get_fpgs_results(phenotype, effect):
     if phenotype == "height":
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/{effect}.2.effects.txt"
-        ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/dirpop_coeffratiodiff.bootests"
         ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{height_validation}/ntc_ratios.txt"
     elif phenotype == "ea":
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/{effect}.2.effects.txt"
-        ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/dirpop_coeffratiodiff.bootests"
         ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{ea_validation}/{ea_pheno}/ntc_ratios.txt"
     elif phenotype == "cognition":
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/{effect}.2.effects.txt"
-        ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/dirpop_coeffratiodiff.bootests"
         ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{cog_validation}/{cog_pheno}/ntc_ratios.txt"
     else:
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{effect}.1.effects.txt"
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{effect}.2.effects.txt"
-        ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/dirpop_coeffratiodiff.bootests"
         ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/ntc_ratios.txt"
     
     # 1-generation model (proband only)
@@ -205,12 +201,6 @@ def get_fpgs_results(phenotype, effect):
         full_path,
         delim_whitespace=True,
         names = ['coeff', 'se']
-    )
-
-    # dir-pop coeff ratio
-    coeffratio = pd.read_csv(
-            ratio_path,
-            delim_whitespace=True
     )
 
     # ntc coefficients and ratios
@@ -238,11 +228,6 @@ def get_fpgs_results(phenotype, effect):
     r2 = popest**2 - popse**2 # beta squared minus sampling variance of beta
     r2_ci_low = popest_ci_low**2 - popse**2 # lower CI of beta squared minus sampling variance of beta
     r2_ci_high = popest_ci_high**2 - popse**2 # higher CI of beta squared minus sampling variance of beta
-    
-    # direct to pop ratio
-    coeffratio = coeffratio.loc[f'{effect}_full/{effect}_proband', :]
-    coeffratio_est = coeffratio['est']
-    coeffratio_se = coeffratio['se']
 
     # parental PGI correlation from snipar log
     if phenotype in mcs_phenos:
@@ -283,8 +268,6 @@ def get_fpgs_results(phenotype, effect):
         'maternal_se' : [matse],
         'maternal_minus_paternal_est' : [maternal_minus_paternal_est],
         'maternal_minus_paternal_se' : [maternal_minus_paternal_se],
-        'dir_pop_ratio' : [coeffratio_est],
-        'dir_pop_ratio_se': [coeffratio_se],
         'parental_direct_ratio_est' : [parental_direct_ratio_est],
         'parental_direct_ratio_se' : [parental_direct_ratio_se],
         'r2' : [r2],
@@ -432,7 +415,6 @@ if fpgs == True:
                     'paternal', 'paternal_se',
                     'maternal', 'maternal_se',
                     'maternal_minus_paternal_est', 'maternal_minus_paternal_se',
-                    'dir_pop_ratio', 'dir_pop_ratio_se',
                     'parental_direct_ratio_est', 'parental_direct_ratio_se',
                     'r2',  'r2_ci_low', 'r2_ci_high',
                     'parental_pgi_corr', 'parental_pgi_corr_se'])

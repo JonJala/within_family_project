@@ -10,7 +10,6 @@ def compile_results(datfpgs, phenotype, effect, dataset, validation_pheno, basep
     ## fpgs results
     proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/{effect}.1.effects.txt" 
     full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/{effect}.2.effects.txt"
-    ratio_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/dirpop_coeffratiodiff.bootests"
     ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/ntc_ratios.txt"
 
     # 1-generation model (proband only)
@@ -25,12 +24,6 @@ def compile_results(datfpgs, phenotype, effect, dataset, validation_pheno, basep
         full_path,
         delim_whitespace=True,
         names = ['coeff', 'se']
-    )
-
-    # dir-pop coeff ratio
-    coeffratio = pd.read_csv(
-            ratio_path,
-            delim_whitespace=True
     )
 
     # ntc coefficients and ratios
@@ -58,11 +51,6 @@ def compile_results(datfpgs, phenotype, effect, dataset, validation_pheno, basep
     r2 = popest**2 - popse**2 # beta squared minus sampling variance of beta
     r2_ci_low = popest_ci_low**2 - popse**2 # lower CI of beta squared minus sampling variance of beta
     r2_ci_high = popest_ci_high**2 - popse**2 # higher CI of beta squared minus sampling variance of beta
-    
-    # direct to pop ratio
-    coeffratio = coeffratio.loc[f'{effect}_full/{effect}_proband', :]
-    coeffratio_est = coeffratio['est']
-    coeffratio_se = coeffratio['se']
 
     # parental PGI correlation from snipar log
     if dataset == "mcs":
@@ -95,8 +83,6 @@ def compile_results(datfpgs, phenotype, effect, dataset, validation_pheno, basep
             'maternal_se' : [matse],
             'maternal_minus_paternal_est' : [maternal_minus_paternal_est],
             'maternal_minus_paternal_se' : [maternal_minus_paternal_se],
-            'dir_pop_ratio' : [coeffratio_est],
-            'dir_pop_ratio_se': [coeffratio_se],
             'parental_direct_ratio_est' : [parental_direct_ratio_est],
             'parental_direct_ratio_se' : [parental_direct_ratio_se],
             'r2' : [r2],
@@ -124,7 +110,6 @@ datfpgs = pd.DataFrame(columns=['phenotype', 'validation_pheno', 'dataset', 'eff
                     'paternal', 'paternal_se',
                     'maternal', 'maternal_se',
                     'maternal_minus_paternal_est', 'maternal_minus_paternal_se',
-                    'dir_pop_ratio', 'dir_pop_ratio_se',
                     'parental_direct_ratio_est', 'parental_direct_ratio_se',
                     'r2',  'r2_ci_low', 'r2_ci_high',
                     'parental_pgi_corr', 'parental_pgi_corr_se'])

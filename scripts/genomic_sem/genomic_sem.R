@@ -45,10 +45,12 @@ save(LDSCoutput,file="/var/genetics/proj/within_family/within_family_project/scr
 
 load("/var/genetics/proj/within_family/within_family_project/scratch/LDSCoutput.RData")
 
-gen_cov <- LDSCoutput$S # genetic covariances. note, not correlations. diagonal is heritabilities
-sampling_vcov <- LDSCoutput$V # sampling variances and covariances
+gen_cov <- LDSCoutput$S # genetic covariances. note, not correlations
+sampling_vcov <- LDSCoutput$V # sampling vcov of covariances
+dimnames(sampling_vcov) <- list(c(), c("bmi_direct_bmi_direct", "bmi_direct_bmi_pop", "bmi_direct_ea_direct", "bmi_direct_ea_pop", "bmi_pop_bmi_pop", "bmi_pop_ea_direct", "bmi_pop_ea_pop", "ea_direct_ea_direct", "ea_direct_ea_pop", "ea_pop_ea_pop"))
 
-## transform covariance matrix into correlation matrix
+## transform covariance matrix into correlation matrix and get difference between correlations
+
 covariance_to_correlation <- function(matrix) {
     M <- matrix(nrow = nrow(matrix), ncol = ncol(matrix))
     diag(M) <- 1
@@ -62,25 +64,39 @@ covariance_to_correlation <- function(matrix) {
 }
 
 gen_corr <- covariance_to_correlation(gen_cov)
+diff <- gen_corr[3,1] - gen_corr[4,2]
 
-bmi_ea_rg_direct <- gen_cov[1,3]/(sqrt(gen_cov[1,1])*sqrt(gen_cov[3,3]))
-bmi_ea_rg_pop <- gen_cov[2,4]/(sqrt(gen_cov[2,2])*sqrt(gen_cov[4,4]))
-bmi_ea_dir_pop_rg_diff <- bmi_ea_rg_direct - bmi_ea_rg_pop
+## get variances of correlations from log file (manually inputting for now)
+var_bmi_ea_direct <- 0.0477^2
+var_bmi_ea_direct <- 0.0223^2
 
-## convert sampling vcov of variances to vcov of correlations
+## use delta method to approximate covariance of correlation
 
+# create sigma matrix. rows are direct, cols are pop
+sigma <- matrix(c(sampling_vcov[3,7], sampling_vcov[8,7],sampling_vcov[1,7],
+                sampling_vcov[3,10], sampling_vcov[8,10],sampling_vcov[1,10],
+                sampling_vcov[3,5], sampling_vcov[8,5],sampling_vcov[1,5]), nrow = 3, ncol = 3)
 
+df_1 <- 1 / (sqrt(gen_cov[3,3]*gen_cov[1,1]))
+df_2 <- -0.5*gen_cov[3,3]^(-1.5) * gen_cov[1,3]/sqrt(gen_cov[1,1])
+df_3 <- -0.5*gen_cov[1,1]^(-1.5) * gen_cov[1,3]/sqrt(gen_cov[3,3])
+dg_1 <- 1 / (sqrt(gen_cov[2,2]*gen_cov[4,4]))
+dg_2 <- -0.5*gen_cov[4,4]^(-1.5) * gen_cov[2,4]/sqrt(gen_cov[2,2])
+dg_3 <- -0.5*gen_cov[2,2]^(-1.5) * gen_cov[2,4]/sqrt(gen_cov[4,4])
 
+cov <- df_1 * dg_1 * sigma[1,1] +
+        df_1 * dg_2 * sigma[1,2] +
+        df_1 * dg_3 * sigma[1,3] +
+        df_2 * dg_1 * sigma[2,1] +
+        df_2 * dg_2 * sigma[2,2] +
+        df_2 * dg_3 * sigma[2,3] +
+        df_3 * dg_1 * sigma[3,1] +
+        df_3 * dg_2 * sigma[3,2] +
+        df_3 * dg_3 * sigma[3,3]
 
-## get standard error of difference
-bmi_direct_ea_direct_var <- sampling_vcov[3,3]
-bmi_pop_ea_pop_var <- sampling_vcov[7,7]
-bmi_ea_direct_pop_cov <- sampling_vcov[3,7]
-
-var_diff <- bmi_direct_ea_direct_var + bmi_pop_ea_pop_var + 2*bmi_ea_direct_pop_cov
+## variance and p-val of the difference between the correlations
+var_diff <- var_bmi_ea_direct + var_bmi_ea_direct + 2*cov
 se_diff <- sqrt(var_diff)
 
-## get p-value
-z <- bmi_ea_dir_pop_rg_diff/se_diff
+z <- diff/se_diff
 p <- 2*pnorm(abs(z), lower.tail = FALSE)
-2*pt(z, df = 1000, lower.tail = FALSE)

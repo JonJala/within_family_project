@@ -161,24 +161,24 @@ pheno2 <- "ea"
 
 # just bmi direct and bmi pop, junming's ld scores
 run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, "bmi/directmunged.sumstats.gz"), paste0(ss_basepath, "bmi/populationmunged.sumstats.gz")), 
-                    ld=eur_ldsc,
-                    wld=eur_ldsc,
+                    ld=junming_ldsc,
+                    wld=junming_ldsc,
                     trait.names=c("bmi_direct", "bmi_pop"),
                     outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/junming_ldsc/", "bmi"),
                     filename=paste0("bmi"))
 
 # just ea direct and ea pop, junming's ld scores
 run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, "ea/directmunged.sumstats.gz"), paste0(ss_basepath, "ea/populationmunged.sumstats.gz")), 
-                    ld=eur_ldsc,
-                    wld=eur_ldsc,
+                    ld=junming_ldsc,
+                    wld=junming_ldsc,
                     trait.names=c("ea_direct", "ea_pop"),
                     outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/junming_ldsc/", "ea"),
                     filename=paste0("ea"))
 
 # just bmi direct and ea direct, junming's ld scores
 run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, "bmi/directmunged.sumstats.gz"), paste0(ss_basepath, "ea/directmunged.sumstats.gz")), 
-                    ld=eur_ldsc,
-                    wld=eur_ldsc,
+                    ld=junming_ldsc,
+                    wld=junming_ldsc,
                     trait.names=c("bmi_direct", "ea_direct"),
                     outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/junming_ldsc/", "bmi_ea_direct"),
                     filename=paste0("bmi_ea_direct"))

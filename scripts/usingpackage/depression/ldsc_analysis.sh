@@ -14,14 +14,12 @@ ${ldscpath}/munge_sumstats.py \
 --sumstats ${within_family_path}/processed/package_output/depression/meta.nfilter.sumstats.gz \
 --out ${within_family_path}/processed/package_output/depression/populationmunged \
 --N-col population_N --p population_pval --signed-sumstats population_z,0 \
---merge-alleles ${hm3snps} \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py \
 --sumstats ${within_family_path}/processed/package_output/depression/meta.nfilter.sumstats.gz \
 --out ${within_family_path}/processed/package_output/depression/directmunged \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
---merge-alleles ${hm3snps} \
 --n-min 1.0
 
 echo "Calculating RG of population effect with reference sample"

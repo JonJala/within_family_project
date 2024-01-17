@@ -47,7 +47,6 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/ea/population_reference_sample
-# 1.0353 (0.0159)
 
 echo "Calculating RG of direct effect with reference EA sample"
 ${ldscpath}/ldsc.py \
@@ -55,7 +54,6 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/ea/direct_reference_sample
-# 1.0353 (0.0159)
 
 echo "Calculating RG of population effect with direct effect"
 ${ldscpath}/ldsc.py \
@@ -69,7 +67,6 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/ea/maternal_vs_paternal
-# -0.0501 (0.3567)
 
 
 ${ldscpath}/ldsc.py \
@@ -77,8 +74,6 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/ea/h2_ntc
-# 0.0367 (0.0072)
-
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/ea/directmunged.sumstats.gz \

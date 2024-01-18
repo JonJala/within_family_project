@@ -109,7 +109,6 @@ analyze_genomicSEM_results <- function(LDSCoutput, logfile, outfile, basepath = 
 ## ---------------------------------------------------------------------
 
 eur_ldsc <- "/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
-junming_ldsc <- "/disk/genetics/ukb/jguan/ukb_analysis/output/ldsc/v2/"
 ss_basepath <- "/var/genetics/proj/within_family/within_family_project/processed/package_output/"
 
 pheno1 <-"bmi"
@@ -117,85 +116,44 @@ pheno2 <- "ea"
 
 ## run genomic SEM
 
-# # for bmi and ea, using ldsc ld scores
-# run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, pheno1, "/directmunged.sumstats.gz"), paste0(ss_basepath, pheno1, "/populationmunged.sumstats.gz"), paste0(ss_basepath, pheno2, "/directmunged.sumstats.gz"), paste0(ss_basepath, pheno2, "/populationmunged.sumstats.gz")), 
-#                     ld=eur_ldsc,
-#                     wld=eur_ldsc,
-#                     trait.names=c(paste0(pheno1, "_direct"), paste0(pheno1, "_pop"), paste0(pheno2, "_direct"), paste0(pheno2, "_pop")),
-#                     outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/eur_ldsc/", pheno1, "_", pheno2),
-#                     filename=paste0(pheno1, "_", pheno2))
+# for bmi and ea
+run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, pheno1, "/directmunged.sumstats.gz"), paste0(ss_basepath, pheno1, "/populationmunged.sumstats.gz"), paste0(ss_basepath, pheno2, "/directmunged.sumstats.gz"), paste0(ss_basepath, pheno2, "/populationmunged.sumstats.gz")), 
+                    ld=eur_ldsc,
+                    wld=eur_ldsc,
+                    trait.names=c(paste0(pheno1, "_direct"), paste0(pheno1, "_pop"), paste0(pheno2, "_direct"), paste0(pheno2, "_pop")),
+                    outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/eur_ldsc/", pheno1, "_", pheno2),
+                    filename=paste0(pheno1, "_", pheno2))
 
-# # just bmi direct and bmi pop, ldsc ld scores
-# run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, "bmi/directmunged.sumstats.gz"), paste0(ss_basepath, "bmi/populationmunged.sumstats.gz")), 
-#                     ld=eur_ldsc,
-#                     wld=eur_ldsc,
-#                     trait.names=c("bmi_direct", "bmi_pop"),
-#                     outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/eur_ldsc/", "bmi"),
-#                     filename=paste0("bmi"))
-
-# # just ea direct and ea pop, ldsc ld scores
-# run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, "ea/directmunged.sumstats.gz"), paste0(ss_basepath, "ea/populationmunged.sumstats.gz")), 
-#                     ld=eur_ldsc,
-#                     wld=eur_ldsc,
-#                     trait.names=c("ea_direct", "ea_pop"),
-#                     outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/eur_ldsc/", "ea"),
-#                     filename=paste0("ea"))
-
-# # just bmi direct and ea direct, ldsc ld scores
-# run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, "bmi/directmunged.sumstats.gz"), paste0(ss_basepath, "ea/directmunged.sumstats.gz")), 
-#                     ld=eur_ldsc,
-#                     wld=eur_ldsc,
-#                     trait.names=c("bmi_direct", "ea_direct"),
-#                     outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/eur_ldsc/", "bmi_ea_direct"),
-#                     filename=paste0("bmi_ea_direct"))
-
-
-
-# # for bmi and ea, using junming's ld scores
-# run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, pheno1, "/directmunged.sumstats.gz"), paste0(ss_basepath, pheno1, "/populationmunged.sumstats.gz"), paste0(ss_basepath, pheno2, "/directmunged.sumstats.gz"), paste0(ss_basepath, pheno2, "/populationmunged.sumstats.gz")), 
-#                     ld=junming_ldsc,
-#                     wld=junming_ldsc,
-#                     trait.names=c(paste0(pheno1, "_direct"), paste0(pheno1, "_pop"), paste0(pheno2, "_direct"), paste0(pheno2, "_pop")),
-#                     outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/junming_ldsc/", pheno1, "_", pheno2),
-#                     filename=paste0(pheno1, "_", pheno2))
-
-# just bmi direct and bmi pop, junming's ld scores
+# just bmi direct and bmi pop
 run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, "bmi/directmunged.sumstats.gz"), paste0(ss_basepath, "bmi/populationmunged.sumstats.gz")), 
-                    ld=junming_ldsc,
-                    wld=junming_ldsc,
+                    ld=eur_ldsc,
+                    wld=eur_ldsc,
                     trait.names=c("bmi_direct", "bmi_pop"),
-                    outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/junming_ldsc/", "bmi"),
+                    outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/eur_ldsc/", "bmi"),
                     filename=paste0("bmi"))
 
-# just ea direct and ea pop, junming's ld scores
+# just ea direct and ea pop
 run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, "ea/directmunged.sumstats.gz"), paste0(ss_basepath, "ea/populationmunged.sumstats.gz")), 
-                    ld=junming_ldsc,
-                    wld=junming_ldsc,
+                    ld=eur_ldsc,
+                    wld=eur_ldsc,
                     trait.names=c("ea_direct", "ea_pop"),
-                    outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/junming_ldsc/", "ea"),
+                    outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/eur_ldsc/", "ea"),
                     filename=paste0("ea"))
 
-# just bmi direct and ea direct, junming's ld scores
+# just bmi direct and ea direct
 run_ldsc_genomicSEM(traits=c(paste0(ss_basepath, "bmi/directmunged.sumstats.gz"), paste0(ss_basepath, "ea/directmunged.sumstats.gz")), 
-                    ld=junming_ldsc,
-                    wld=junming_ldsc,
+                    ld=eur_ldsc,
+                    wld=eur_ldsc,
                     trait.names=c("bmi_direct", "ea_direct"),
-                    outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/junming_ldsc/", "bmi_ea_direct"),
+                    outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/eur_ldsc/", "bmi_ea_direct"),
                     filename=paste0("bmi_ea_direct"))
 
+# ---------------------------------------------------------------------
+# analyze results
+# ---------------------------------------------------------------------
 
-## ---------------------------------------------------------------------
-## analyze results
-## ---------------------------------------------------------------------
-
-# # for bmi and ea, using ldsc ld scores
-# analyze_genomicSEM_results(LDSCoutput=paste0("LDSCoutput_", pheno1, "_", pheno2, ".RData"),
-#                             logfile=paste0(pheno1, "_", pheno2, "_ldsc.log"),
-#                             outfile=paste0(pheno1, "_", pheno2, "_results.txt"),
-#                             basepath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/eur_ldsc/", pheno1, "_", pheno2, "/"))
-
-# # for bmi and ea, using junming's ld scores
-# analyze_genomicSEM_results(LDSCoutput=paste0("LDSCoutput_", pheno1, "_", pheno2, ".RData"),
-#                             logfile=paste0(pheno1, "_", pheno2, "_ldsc.log"),
-#                             outfile=paste0(pheno1, "_", pheno2, "_results.txt"),
-#                             basepath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/junming_ldsc/", pheno1, "_", pheno2, "/"))
+# for bmi and ea
+analyze_genomicSEM_results(LDSCoutput=paste0("LDSCoutput_", pheno1, "_", pheno2, ".RData"),
+                            logfile=paste0(pheno1, "_", pheno2, "_ldsc.log"),
+                            outfile=paste0(pheno1, "_", pheno2, "_results.txt"),
+                            basepath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/eur_ldsc/", pheno1, "_", pheno2, "/"))

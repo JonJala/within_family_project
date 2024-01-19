@@ -40,14 +40,14 @@ munge_sumstats <- function(meta_ss, trait.names, outpath) {
 
     direct_out <- paste0(outpath, "/directmunged_temp.sumstats.gz")
     direct <- meta_ss %>% 
-                select(SNP, A1, A2, direct_N, direct_Z, direct_P) %>%
-                rename(N = direct_N, effect = direct_Z, P = direct_P)
+                select(SNP, A1, A2, direct_N, direct_Z, direct_pval) %>%
+                rename(N = direct_N, effect = direct_Z, P = direct_pval)
     fwrite(direct, direct_out, sep="\t", quote=F, row.names=F, col.names=T, na="NA")
 
     population_out <- paste0(outpath, "/populationmunged_temp.sumstats.gz")
     population <- meta_ss %>% 
-                select(SNP, A1, A2, population_N, population_Z, population_P) %>%
-                rename(N = population_N, effect = population_Z, P = population_P)
+                select(SNP, A1, A2, population_N, population_Z, population_pval) %>%
+                rename(N = population_N, effect = population_Z, P = population_pval)
     fwrite(population, population_out, sep="\t", quote=F, row.names=F, col.names=T, na="NA")
 
     #define the reference file being used to allign alleles across summary stats
@@ -56,6 +56,10 @@ munge_sumstats <- function(meta_ss, trait.names, outpath) {
 
     #run munge
     munge(files=c(direct_out, population_out),hm3=hm3,trait.names=trait.names)
+
+    # delete temp files
+    file.remove(direct_out)
+    file.remove(population_out)
 
 }
 
@@ -149,6 +153,7 @@ run_single_trait <- function(pheno, direct_ss, pop_ss, ref_ss, ldsc, sample.prev
                     trait.names=c(paste0(pheno, "_direct"), paste0(pheno, "_pop"), "reference"),
                     sample.prev=sample.prev,
                     population.prev=population.prev,
+                    filename=pheno,
                     outpath=outpath)
 
 }

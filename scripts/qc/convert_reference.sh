@@ -21,7 +21,7 @@ ${ldscpath}/munge_sumstats.py  \
 --chunksize 50000
 
 ${ldscpath}/munge_sumstats.py  \
---sumstats ${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.txt  \
+--sumstats ${within_family_path}/processed/reference_samples/ea_ref/ea_ref.txt  \
 --merge-alleles ${merge_alleles} \
 --out ${within_family_path}/processed/reference_samples/ea_ref/ea_ref \
 --N 1100000 \

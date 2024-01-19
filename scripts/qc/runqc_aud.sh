@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 ### Run the easyqc pipeline
 
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/drinksperweek_ref/dpw_ref.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/dpw_ref/dpw_ref.sumstats.gz"
 
 ############
 # Finn Gen

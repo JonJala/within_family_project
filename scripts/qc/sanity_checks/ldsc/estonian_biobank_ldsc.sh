@@ -7,7 +7,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/bmi.sumstats,${within_family_path}/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+# --rg /var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/bmi.sumstats,${within_family_path}/bmi_ref/bmi_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out /var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/bmi_ldsc
@@ -27,13 +27,13 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --out /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_pop.sumstats
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_dir.sumstats.sumstats.gz,${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz \
+# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_dir.sumstats.sumstats.gz,${within_family_path}/processed/depression_ref/depression_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/mdd_ref/mdd_dir
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_pop.sumstats.sumstats.gz,${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz \
+# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_pop.sumstats.sumstats.gz,${within_family_path}/processed/depression_ref/depression_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/mdd_ref/mdd_pop
@@ -45,7 +45,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # --out ${within_family_path}/processed/mdd_ref/mdd_dir_pop
 
 # ${ldscpath}/ldsc.py \
-# --rg ${within_family_path}/processed/smoking_ref/Smokinginit.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/smoke_pop.sumstats \
+# --rg ${within_family_path}/processed/eversmoker_ref/eversmoker_ref.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/smoke_pop.sumstats \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/eb/ldsc_smokever
@@ -61,7 +61,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 # ${ldscpath}/ldsc.py \
-# --rg ${within_family_path}/processed/dep_ref/DS_Full.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/depression_pop.sumstats \
+# --rg ${within_family_path}/processed/depsymp_ref/depsymp_ref.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/depression_pop.sumstats \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/eb/depression
@@ -83,7 +83,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # 1.0224 (0.2611)
 
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/ea_pop.sumstats \
+--rg ${within_family_path}/processed/reference_samples/ea_ref/ea_ref.sumstats.gz,/var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/ea_pop.sumstats \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/sanity_checks/eb/ea

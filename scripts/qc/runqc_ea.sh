@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 ### Run the easyqc pipeline
 
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/ea_ref.sumstats.gz"
 
 # #####################
 # # ====== UKB ====== #

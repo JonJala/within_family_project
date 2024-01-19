@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/intelligence_ref/intelligence_ref.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/cognition_ref/cognition_ref.sumstats.gz"
 
 #############
 # Lifelines

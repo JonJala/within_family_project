@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 ### Run the easyqc pipeline
 
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/inc_ref/hourly_wage.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/hhincome_ref/hhincome_ref.sumstats.gz"
 
 ##########
 # STR

@@ -15,7 +15,7 @@ Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
 
 # Rscript ${within_family_path}/scripts/ldpred2/runldpred2.R \
 #     --bfile $gsbed \
-#     --sumstats "${within_family_path}/processed/ea_ref/GWAS_EA_excl23andMe.txt" \
+#     --sumstats "${within_family_path}/processed/ea_ref/ea_ref.txt" \
 #     --outfile "${within_family_path}/processed/ldpred2/ea_pgi_ref" \
 #     --chr "CHR" --pos "POS" --rsid "MarkerName" --a1 "A1" --a2 "A2" --gwas_samplesize 1100000 \
 #     --beta "Beta" --beta_se "SE" \

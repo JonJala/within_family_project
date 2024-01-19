@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 ### Run the easyqc pipeline
 
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/inc_ref/hourly_wage.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/income_ref/income_ref.sumstats.gz"
 
 #################
 # Minnesota twins

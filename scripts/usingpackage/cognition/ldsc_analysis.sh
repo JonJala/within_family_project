@@ -39,13 +39,13 @@ ${ldscpath}/munge_sumstats.py \
 
 # echo "Calculating RG of population effect with reference sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/cognition/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/intelligence_ref/intelligence_ref.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/cognition/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/cognition_ref/cognition_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/cognition/population_reference_sample
 
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/cognition/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/intelligence_ref/intelligence_ref.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/cognition/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/cognition_ref/cognition_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/cognition/direct_reference_sample

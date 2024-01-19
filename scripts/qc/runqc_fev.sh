@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/fev1_ref/fev1_ref.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/fev_ref/fev_ref.sumstats.gz"
 
 # #########
 # # Hunt

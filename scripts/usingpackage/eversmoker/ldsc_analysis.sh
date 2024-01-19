@@ -43,14 +43,14 @@ ${ldscpath}/munge_sumstats.py /
 
 echo "Calculating RG of population effect with reference dpression sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/eversmoker/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/smoking_ref/Smokinginit.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/eversmoker/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/eversmoker_ref/eversmoker_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/eversmoker/population_reference_sample
 
 echo "Calculating RG of direct effect with reference eversmoker sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/eversmoker/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/smoking_ref/Smokinginit.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/eversmoker/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/eversmoker_ref/eversmoker_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/eversmoker/direct_reference_sample

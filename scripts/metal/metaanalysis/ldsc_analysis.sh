@@ -159,7 +159,7 @@ ${ldscpath}/ldsc.py \
 
 echo "Calculating Genetic Correlation between EA pop with reference EA"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/metal_output/metal_pop_ea1_munged.sumstats.gz,${within_family_path}/processed/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+--rg ${within_family_path}/processed/metal_output/metal_pop_ea1_munged.sumstats.gz,${within_family_path}/processed/ea_ref/ea_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/metal_ldsc/ea_ref_cons \
@@ -167,14 +167,14 @@ ${ldscpath}/ldsc.py \
 
 echo "Calculating Genetic Correlation between EA pop with reference EA"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/metal_output/metal_pop_ea1_munged.sumstats.gz,${within_family_path}/processed/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+--rg ${within_family_path}/processed/metal_output/metal_pop_ea1_munged.sumstats.gz,${within_family_path}/processed/ea_ref/ea_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/metal_ldsc/ea_ref
 
 echo "Calculating Genetic Correlation between BMI Pop and Reference BMI"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/metal_output/metal_pop_bmi1_munged.sumstats.gz,${within_family_path}/processed/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+--rg ${within_family_path}/processed/metal_output/metal_pop_bmi1_munged.sumstats.gz,${within_family_path}/processed/bmi_ref/bmi_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/metal_ldsc/bmi_ref_cons \
@@ -182,7 +182,7 @@ ${ldscpath}/ldsc.py \
 
 echo "Calculating Genetic Correlation between BMI Pop and Reference BMI"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/metal_output/metal_pop_bmi1_munged.sumstats.gz,${within_family_path}/processed/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+--rg ${within_family_path}/processed/metal_output/metal_pop_bmi1_munged.sumstats.gz,${within_family_path}/processed/bmi_ref/bmi_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/metal_ldsc/bmi_ref
@@ -190,14 +190,14 @@ ${ldscpath}/ldsc.py \
 
 echo "Calculating Genetic Correlation between EA ref and BMI ref"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/ea_ref/GWAS_EA_excl23andMe.sumstats.gz,${within_family_path}/processed/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+--rg ${within_family_path}/processed/ea_ref/ea_ref.sumstats.gz,${within_family_path}/processed/bmi_ref/bmi_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/metal_ldsc/bmi_ea_ref
 
 echo "Calculating Genetic Correlation between EA ref and BMI ref"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/ea_ref/GWAS_EA_excl23andMe.sumstats.gz,${within_family_path}/processed/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+--rg ${within_family_path}/processed/ea_ref/ea_ref.sumstats.gz,${within_family_path}/processed/bmi_ref/bmi_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/metal_ldsc/bmi_ea_ref_cons \

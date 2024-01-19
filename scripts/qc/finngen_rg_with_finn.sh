@@ -5,8 +5,8 @@
 # pheno="bmi"
 pheno="height"
 sumstats="/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/${pheno}/CLEANED.out.gz"
-# ldsc_ref="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz" ## bmi ref
-ldsc_ref="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.sumstats.gz" ## height ref
+# ldsc_ref="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bmi_ref/bmi_ref.sumstats.gz" ## bmi ref
+ldsc_ref="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/height_ref/height_ref.sumstats.gz" ## height ref
 ldscores="/disk/genetics/data/finngen/private/v1/processed/ld_scores/"    
 merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 ldsc_path="/var/genetics/tools/ldsc/ldsc"

@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 ### Run the easyqc pipeline
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/smoking_ref/cpd.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/cpd_ref/cpd_ref.sumstats.gz"
 
 #################
 # Minnesota twins

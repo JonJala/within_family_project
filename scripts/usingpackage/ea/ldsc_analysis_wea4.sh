@@ -49,7 +49,7 @@ echo "Munging!!"
 
 # echo "Calculating RG of population effect with reference EA sample"
 # ${ldscpath}/ldsc.py \
-# --rg ${within_family_path}/processed/package_output/ea/meta_analysis_pop_wea4.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+# --rg ${within_family_path}/processed/package_output/ea/meta_analysis_pop_wea4.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/ea_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/package_output/ea/ea_wea4_reference_sample

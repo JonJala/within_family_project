@@ -5,7 +5,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # BMI
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/bmi.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+# --rg /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/bmi.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/bmi_ref/bmi_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/moba/ldsc_bmi
@@ -14,7 +14,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # height
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/ht.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.sumstats.gz \
+# --rg /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/ht.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/height_ref/height_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/moba/ldsc_ht
@@ -22,7 +22,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # Depressive symptoms
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/depanx.pop.sumstats.gz,/var/genetics/proj/within_family/within_family_project/processed/dep_ref/DS_Full.sumstats.gz \
+# --rg /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/depanx.pop.sumstats.gz,/var/genetics/proj/within_family/within_family_project/processed/depsymp_ref/depsymp_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/moba/ldsc_depanx
@@ -30,7 +30,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # Income
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/inc.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/inc_ref/hourly_wage.sumstats.gz \
+# --rg /var/genetics/data/moba/public/latest/processed/sumstats/fgwas/inc.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/hhincome_ref/hhincome_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/moba/ldsc_inc_hh

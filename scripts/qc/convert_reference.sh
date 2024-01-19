@@ -12,7 +12,7 @@ ldscpath="/disk/genetics/tools/ldsc/ldsc"
 eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
-# testing out ldsc on reference files
+
 ${ldscpath}/munge_sumstats.py  \
 --sumstats  /var/genetics/data/published/yengo_2018_bmi/raw/sumstats/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.txt  \
 --merge-alleles ${merge_alleles} \
@@ -26,7 +26,6 @@ ${ldscpath}/munge_sumstats.py  \
 --out ${within_family_path}/processed/reference_samples/ea_ref/ea_ref \
 --N 1100000 \
 --chunksize 50000
-
 
 ${ldscpath}/munge_sumstats.py  \
 --sumstats /var/genetics/data/published/howard_2019_mdd/raw/sumstats/PGC_UKB_depression_genome-wide.txt \
@@ -79,8 +78,6 @@ ${ldscpath}/munge_sumstats.py  \
 --N 286301 --a1 Effect_Allele --a2 Non_effect_Allele \
 --out ${within_family_path}/processed/reference_samples/hhincome_ref/hhincome_ref \
 --chunksize 50000
-
-# Fertility / NEB
 
 ${ldscpath}/munge_sumstats.py  \
 --sumstats /var/genetics/data/published/barban_2016_repro/raw/sumstats/NumberChildrenEverBorn_Male.txt \
@@ -221,11 +218,11 @@ ${ldscpath}/munge_sumstats.py  \
 --out ${within_family_path}/processed/reference_samples/adhd_ref/adhd_ref \
 --N 20183 --signed-sumstats OR,1 --frq FRQ_A_19099
 
-${ldscpath}/munge_sumstats.py  \
---sumstats /var/genetics/proj/within_family/within_family_project/processed/reference_samples/migraine_ref/migraine_ihgc2021_gws_gwama_0.txt \
---merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/reference_samples/migraine_ref/migraine_ref \
---N-col Neff --signed-sumstat z,1 --snp rs_number --a1 reference_allele --a2 other_allele --p p.value
+# ${ldscpath}/munge_sumstats.py  \
+# --sumstats /var/genetics/proj/within_family/within_family_project/processed/reference_samples/migraine_ref/migraine_ihgc2021_gws_gwama_0.txt \
+# --merge-alleles ${merge_alleles} \
+# --out ${within_family_path}/processed/reference_samples/migraine_ref/migraine_ref \
+# --N-col Neff --signed-sumstat z,1 --snp rs_number --a1 reference_allele --a2 other_allele --p p.value
 
 ${ldscpath}/munge_sumstats.py  \
 --sumstats /var/genetics/data/published/berg_2015_extraversion/raw/sumstats/GPC-2.EXTRAVERSION_formatted.full.txt \

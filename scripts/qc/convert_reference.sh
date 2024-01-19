@@ -21,7 +21,7 @@ ${ldscpath}/munge_sumstats.py  \
 --chunksize 50000
 
 ${ldscpath}/munge_sumstats.py  \
---sumstats ${within_family_path}/processed/reference_samples/ea_ref/ea_ref.txt  \
+--sumstats ${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.txt  \
 --merge-alleles ${merge_alleles} \
 --out ${within_family_path}/processed/reference_samples/ea_ref/ea_ref \
 --N 1100000 \
@@ -222,9 +222,9 @@ ${ldscpath}/munge_sumstats.py  \
 --N 20183 --signed-sumstats OR,1 --frq FRQ_A_19099
 
 ${ldscpath}/munge_sumstats.py  \
---sumstats /var/genetics/proj/within_family/within_family_project/processed/reference_samples/migarine_ref/migraine_ihgc2021_gws_gwama_0.txt \
+--sumstats /var/genetics/proj/within_family/within_family_project/processed/reference_samples/migraine_ref/migraine_ihgc2021_gws_gwama_0.txt \
 --merge-alleles ${merge_alleles} \
---out ${within_family_path}/processed/reference_samples/migarine_ref/migraine_ref \
+--out ${within_family_path}/processed/reference_samples/migraine_ref/migraine_ref \
 --N-col Neff --signed-sumstat z,1 --snp rs_number --a1 reference_allele --a2 other_allele --p p.value
 
 ${ldscpath}/munge_sumstats.py  \

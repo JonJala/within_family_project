@@ -21,11 +21,28 @@ for (pheno in phenotypes) {
                outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/", pheno, "/"),
                trait.names=c("direct", "population"))
 
-    run_single_trait(pheno = pheno,
+    if (pheno == "aud") {
+        ref_ss <- "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/dpw_ref/dpw_ref.sumstats.gz"
+    } else if (pheno == "copd") {
+        ref_ss <- "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/fev_ref/fev_ref.sumstats.gz"
+    } else if (pheno == "hypertension") {
+        ref_ss <- "/var/genetics/proj/within_family/within_family_project/processed/reference_samples/bps_ref/bps_ref.sumstats.gz"
+    } else {
+        ref_ss <- paste0("/var/genetics/proj/within_family/within_family_project/processed/reference_samples/", pheno, "_ref/", pheno, "_ref.sumstats.gz")
+    }
+
+    if (pheno == "migraine") { ## no reference sample
+        run_single_trait(pheno = pheno,
                     direct_ss = paste0(ss_basepath, pheno, "/direct.sumstats.gz"),
                     pop_ss = paste0(ss_basepath, pheno, "/population.sumstats.gz"),
-                    ref_ss = paste0("/var/genetics/proj/within_family/within_family_project/processed/reference_samples/", pheno, "_ref/", pheno, "_ref.sumstats.gz"),
                     ldsc = ldsc)
+    } else {
+        run_single_trait(pheno = pheno,
+                    direct_ss = paste0(ss_basepath, pheno, "/direct.sumstats.gz"),
+                    pop_ss = paste0(ss_basepath, pheno, "/population.sumstats.gz"),
+                    ref_ss = ref_ss,
+                    ldsc = ldsc)
+    }
 
     print(paste0("Finished with ", pheno))
 

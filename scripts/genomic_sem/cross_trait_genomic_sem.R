@@ -4,7 +4,7 @@
 ## description: run cross-trait genomic SEM
 ## ---------------------------------------------------------------------
 
-source("/var/genetics/proj/within_family/within_family_project/scripts/package/genomic_sem/genomic_sem_functions.R")
+source("/var/genetics/proj/within_family/within_family_project/scripts/genomic_sem/genomic_sem_functions.R")
 
 ldsc <- "/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 ss_basepath <- "/var/genetics/proj/within_family/within_family_project/processed/package_output/"

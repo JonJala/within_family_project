@@ -20,10 +20,10 @@ for (pheno1 in phenotypes) {
         if (pheno2_index > pheno1_index) {
             run_cross_trait(pheno1 = pheno1,
                             pheno2 = pheno2,
-                            pheno1_direct = paste0(ss_basepath, pheno1, "/directmunged.sumstats.gz"),
-                            pheno1_pop = paste0(ss_basepath, pheno1, "/populationmunged.sumstats.gz"),
-                            pheno2_direct = paste0(ss_basepath, pheno2, "/directmunged.sumstats.gz"),
-                            pheno2_pop = paste0(ss_basepath, pheno2, "/populationmunged.sumstats.gz"),
+                            pheno1_direct = paste0(ss_basepath, pheno1, "/direct.sumstats.gz"),
+                            pheno1_pop = paste0(ss_basepath, pheno1, "/population.sumstats.gz"),
+                            pheno2_direct = paste0(ss_basepath, pheno2, "/direct.sumstats.gz"),
+                            pheno2_pop = paste0(ss_basepath, pheno2, "/population.sumstats.gz"),
                             ldsc = ldsc,
                             analyze_results = TRUE)
         }

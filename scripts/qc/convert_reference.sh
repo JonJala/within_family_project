@@ -63,7 +63,7 @@ ${ldscpath}/munge_sumstats.py  \
 --out ${within_family_path}/processed/reference_samples/depsymp_ref/depsymp_ref \
 --chunksize 50000
 
-Hourly Income
+## Hourly Income
 ${ldscpath}/munge_sumstats.py  \
 --sumstats ${within_family_path}/processed/reference_samples/inc_ref/GWAS_hourly_wage_UKB.txt \
 --merge-alleles ${merge_alleles} \
@@ -71,7 +71,7 @@ ${ldscpath}/munge_sumstats.py  \
 --out ${within_family_path}/processed/reference_samples/income_ref/income_ref \
 --chunksize 50000
 
-# HH Income
+## HH Income
 ${ldscpath}/munge_sumstats.py  \
 --sumstats /var/genetics/data/published/hill_2019_income/raw/sumstats/Household_Income_UKBiobank.txt.gz \
 --merge-alleles ${merge_alleles} \
@@ -182,6 +182,7 @@ ${ldscpath}/munge_sumstats.py  \
 --out ${within_family_path}/processed/reference_samples/cholestrol_ref/cholestrol_ref \
 --N 100000 --signed-sumstat GC.Zscore,0 --snp MarkerName
 
+# sumstats don't have enough SNPs
 ${ldscpath}/munge_sumstats.py  \
 --sumstats /var/genetics/data/published/backman_2021_cannabis/raw/sumstats/GCST90078474_buildGRCh38_rsmid.tsv.gz \
 --merge-alleles ${merge_alleles} \
@@ -218,6 +219,7 @@ ${ldscpath}/munge_sumstats.py  \
 --out ${within_family_path}/processed/reference_samples/adhd_ref/adhd_ref \
 --N 20183 --signed-sumstats OR,1 --frq FRQ_A_19099
 
+# doesn't exist
 # ${ldscpath}/munge_sumstats.py  \
 # --sumstats /var/genetics/proj/within_family/within_family_project/processed/reference_samples/migraine_ref/migraine_ihgc2021_gws_gwama_0.txt \
 # --merge-alleles ${merge_alleles} \

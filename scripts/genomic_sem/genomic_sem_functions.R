@@ -140,14 +140,15 @@ analyze_genomicSEM_results <- function(LDSCoutput, logfile, outfile, basepath = 
 }
 
 ## single trait analysis, including corr with ref ss, for ST3
-run_single_trait <- function(pheno, direct_ss, pop_ss, ref_ss, ldsc, sample.prev=c(NA,NA,NA,NA), population.prev=c(NA,NA,NA,NA)) {
+run_single_trait <- function(pheno, direct_ss, pop_ss, ldsc, ref_ss = NA, sample.prev=c(NA,NA,NA,NA), population.prev=c(NA,NA,NA,NA)) {
     
     outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/", pheno, "/")
     if(!dir.exists(outpath)) {
         dir.create(outpath, recursive = TRUE)
     }
 
-    run_ldsc_genomicSEM(traits=c(direct_ss, pop_ss, ref_ss), 
+    if (!is.na(ref_ss)) {
+        run_ldsc_genomicSEM(traits=c(direct_ss, pop_ss, ref_ss), 
                     ld=ldsc,
                     wld=ldsc,
                     trait.names=c(paste0(pheno, "_direct"), paste0(pheno, "_pop"), "reference"),
@@ -155,6 +156,17 @@ run_single_trait <- function(pheno, direct_ss, pop_ss, ref_ss, ldsc, sample.prev
                     population.prev=population.prev,
                     filename=pheno,
                     outpath=outpath)
+
+    } else {
+        run_ldsc_genomicSEM(traits=c(direct_ss, pop_ss),
+                        ld=ldsc,
+                        wld=ldsc,
+                        trait.names=c(paste0(pheno, "_direct"), paste0(pheno, "_pop")),
+                        sample.prev=sample.prev,
+                        population.prev=population.prev,
+                        filename=pheno,
+                        outpath=outpath)
+    }
 
 }
 

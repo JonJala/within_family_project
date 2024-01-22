@@ -31,7 +31,7 @@ for (pheno in phenotypes) {
         ref_ss <- paste0("/var/genetics/proj/within_family/within_family_project/processed/reference_samples/", pheno, "_ref/", pheno, "_ref.sumstats.gz")
     }
 
-    if (pheno == "migraine") { ## no reference sample
+    if (pheno == "migraine" || pheno == "cannabis") {
         run_single_trait(pheno = pheno,
                     direct_ss = paste0(ss_basepath, pheno, "/direct.sumstats.gz"),
                     pop_ss = paste0(ss_basepath, pheno, "/population.sumstats.gz"),

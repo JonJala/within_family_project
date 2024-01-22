@@ -210,19 +210,9 @@ function main(){
 
 
     if [[ $PHENONAME != "ea" && $PHENONAME != "cognition" ]]; then
-
-        # bootstrap to get dir/pop ratio and SEs
-        python ${within_family_path}/scripts/fpgs/bootstrapest.py \
-            ${fpgs_out}/dirpop_coeffratiodiff \
-            --pgsgroup1 ${processed_dir}/population_full.pgs.txt,${processed_dir}/population_proband.pgs.txt \
-            --pgsgroup2 ${processed_dir}/direct_full.pgs.txt,${processed_dir}/direct_proband.pgs.txt \
-            --phenofile ${phenofile} \
-            --pgsreg-r2 
-
         # get ntc coeffs, ratios, and SEs
         Rscript ${within_family_path}/scripts/fpgs/get_ntc_ratios.R \
             --filepath ${fpgs_out}
-
     fi
 
 }

@@ -4,9 +4,9 @@ import subprocess
 import json
 
 ## chooose which results to compile
-metaanalysis = True
+metaanalysis = False
 fpgs = False
-ldsc = False
+ldsc = True
 
 ### define functions for compiling results
 
@@ -520,5 +520,5 @@ if fpgs == True:
 
 ## compile and save ldsc results
 if ldsc == True:
-    get_ldsc_results(phenotypes)
+    subprocess.call ("Rscript /var/genetics/proj/within_family/within_family_project/scripts/0_fullruns/compile_correlation_matrix.R", shell=True)
     # get_heritabilities(phenotypes) # for jackknife estimates -- do not run / leave for now

@@ -99,8 +99,10 @@ analyze_genomicSEM_results <- function(LDSCoutput, logfile, outfile, basepath = 
     ## get variances of correlations from log file
     log <- readLines(logfile)
     corrs <- grep("Genetic Correlation between", log, value = T)
-    var_direct <- as.numeric(strsplit(strsplit(corrs[2], "\\(")[[1]][2], "\\)")[[1]][1])^2
-    var_pop <- as.numeric(strsplit(strsplit(corrs[5], "\\(")[[1]][2], "\\)")[[1]][1])^2
+    se_direct <- as.numeric(strsplit(strsplit(corrs[2], "\\(")[[1]][2], "\\)")[[1]][1])
+    var_direct <- se_direct^2
+    se_pop <- as.numeric(strsplit(strsplit(corrs[5], "\\(")[[1]][2], "\\)")[[1]][1])
+    var_pop <- se_pop^2
 
     ## use delta method to approximate covariance of correlation
 
@@ -133,14 +135,51 @@ analyze_genomicSEM_results <- function(LDSCoutput, logfile, outfile, basepath = 
     z <- diff/se_diff
     p <- 2*pnorm(abs(z), lower.tail = FALSE)
 
-    results <- data.table(variable=c("corr1", "corr2", "corr_diff", "cov", "se", "z", "p"), value=c(corr1, corr2, diff, cov, se_diff, z, p))
+    results <- data.table(variable=c("corr1", "corr1_se", "corr2", "corr2_se", "corr_diff", "corr_diff_se", "z", "p"), value=c(corr1, se_direct, corr2, se_pop, diff, se_diff, z, p))
     print(results)
     fwrite(results, outfile, sep="\t", quote=F, row.names=F, col.names=T)
 
 }
 
+get_h2_results <- function(phenotype, ref = TRUE) {
+
+    load(paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/", phenotype, "/LDSCoutput_", phenotype, ".RData"))
+    log <- readLines(paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/", phenotype, "/", phenotype, "_ldsc.log"))
+
+    # direct h2
+    h2_lines <- grep("Total Observed Scale h2", log, value = T)
+    direct_h2_line <- h2_lines[1]
+    direct_h2 <- as.numeric(strsplit(strsplit(direct_h2_line, ": ")[[1]][2], " \\(")[[1]][1])
+    direct_h2_se <- as.numeric(strsplit(strsplit(direct_h2_line, "\\(")[[1]][2], "\\)")[[1]][1])
+    
+    # pop h2
+    pop_h2_line <- h2_lines[2]
+    pop_h2 <- as.numeric(strsplit(strsplit(pop_h2_line, ": ")[[1]][2], " \\(")[[1]][1])
+    pop_h2_se <- as.numeric(strsplit(strsplit(pop_h2_line, "\\(")[[1]][2], "\\)")[[1]][1])
+
+    # cov between direct and pop h2
+    if (ref == TRUE) { # if genomicSEM has been run with the reference sumstats included
+        cov <- LDSCoutput$V[4,1]
+    } else { # if no reference ss
+        cov <- LDSCoutput$V[3,1]
+    }
+    
+    
+    # get h2 diff se
+    h2_diff <- direct_h2 - pop_h2
+    h2_diff_var <- direct_h2_se^2 + pop_h2_se^2 - 2*cov
+    h2_diff_se <- sqrt(h2_diff_var)
+
+    z <- h2_diff/h2_diff_se
+    p <- 2*pnorm(abs(z), lower.tail = FALSE)
+
+    results <- data.table(variable=c("direct_h2", "direct_h2_se", "pop_h2", "pop_h2_se", "h2_diff", "h2_diff_se", "z", "p"), value=c(direct_h2, direct_h2_se, pop_h2, pop_h2_se, h2_diff, h2_diff_se, z, p))
+    fwrite(results, paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/", phenotype, "/h2_results_", phenotype, ".txt"), sep="\t", quote=F, row.names=F, col.names=T)
+
+}
+
 ## single trait analysis, including corr with ref ss, for ST3
-run_single_trait <- function(pheno, direct_ss, pop_ss, ldsc, ref_ss = NA, sample.prev=c(NA,NA,NA,NA), population.prev=c(NA,NA,NA,NA)) {
+run_single_trait <- function(pheno, direct_ss, pop_ss, ldsc, h2_results = TRUE, ref_ss = NA, sample.prev=c(NA,NA,NA,NA), population.prev=c(NA,NA,NA,NA)) {
     
     outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/", pheno, "/")
     if(!dir.exists(outpath)) {
@@ -156,7 +195,9 @@ run_single_trait <- function(pheno, direct_ss, pop_ss, ldsc, ref_ss = NA, sample
                     population.prev=population.prev,
                     filename=pheno,
                     outpath=outpath)
-
+        if (h2_results) {
+            get_h2_results(pheno)
+        }
     } else {
         run_ldsc_genomicSEM(traits=c(direct_ss, pop_ss),
                         ld=ldsc,
@@ -166,6 +207,9 @@ run_single_trait <- function(pheno, direct_ss, pop_ss, ldsc, ref_ss = NA, sample
                         population.prev=population.prev,
                         filename=pheno,
                         outpath=outpath)
+        if (h2_results) {
+            get_h2_results(pheno, ref = FALSE)
+        }
     }
 
 }

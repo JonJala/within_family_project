@@ -32,7 +32,7 @@ compile_results <- function(phenotypes) {
     ## format
 
     # rename columns
-    colnames(results_table) <- c("pheno1", "pheno2", "corr1", "corr2", "corr_diff", "cov", "se", "z", "p")
+    colnames(results_table) <- c("pheno1", "pheno2", "corr1", "corr1_se", "corr2", "corr2_se", "corr_diff", "corr_diff_se", "z", "p")
     
     # format pheno names
     results_table <- results_table %>%

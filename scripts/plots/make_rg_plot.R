@@ -74,6 +74,7 @@ process_data <- function(phenos, filter_pheno = NA) {
     "/var/genetics/proj/within_family/within_family_project/processed/package_output/direct_population_rg_matrix.xlsx"
     )
     setDT(dat)
+    dat <- cbind(names(dat), dat)
     setnames(dat, names(dat)[1], 'phenotype')
     dat = reformat_matrix(dat)
     if (!is.na(filter_pheno)) {
@@ -150,11 +151,11 @@ create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = 
 
 }
 
-## generate scatterplot filtering on each phenotype
-for (pheno in all_phenos) {
-    print(pheno)
-    create_scatterplot(phenos, save = TRUE, save_suffix = pheno, filter_pheno = pheno)
-}
+# ## generate scatterplot filtering on each phenotype
+# for (pheno in all_phenos) {
+#     print(pheno)
+#     create_scatterplot(phenos, save = TRUE, save_suffix = pheno, filter_pheno = pheno)
+# }
 
 ## --------------------------------------------------------------------------------
 ## create density plot
@@ -219,5 +220,24 @@ create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suf
 
 }
 
-## create density plot with points for pairs with direct rg SE < 0.07
-create_density_plot(phenos, save = TRUE)
+# ## create density plot with points for pairs with direct rg SE < 0.07
+# create_density_plot(phenos, save = TRUE)
+
+## create density plot with points for pairs where direct rg and pop rg are statistically significantly different from each other
+results <- read_xlsx("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/cross_trait/cross_trait_results.xlsx")
+results <- results %>%
+            mutate(p_adj = p.adjust(p, method='BH')) %>%
+            filter(p_adj < 0.05) %>%
+            mutate(pheno_pair = paste0(pheno1, "_", pheno2))
+sig_phenos <- tolower(results$pheno_pair) %>%
+                str_replace("cigarettes per day", "cpd") %>%
+                str_replace("-", "") %>%
+                str_replace("cognitive performance", "cognition") %>%
+                str_replace("1", "")
+dat_points <- process_data(phenos)
+dat_points <- dat_points %>%
+                filter(phenotype %in% sig_phenos)
+create_density_plot(phenos,
+                    dat_points = dat_points,
+                    save_suffix = "sig",
+                    save = TRUE)

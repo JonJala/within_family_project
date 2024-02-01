@@ -5,6 +5,7 @@ library(readxl)
 library(stringr)
 library(ggpubr)
 library(latex2exp)
+library(ggrepel)
 library(RColorBrewer)
 theme_set(theme_pubr())
 
@@ -182,10 +183,11 @@ create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suf
                         "#5791C2", "#E9B82D", "#FC9284", "#7850A4", "#CEB8D7", "#FDC998", "#ADADAD",
                         "#00441B", "#028189", "#67001F", "#525252", "#FE69FC", "#A0D99B", "#4B1DB7")
         } else {
-            palette1 <- c("#E93993", "#CCEBDE", "#B2BFDC", "#C46627", "#10258A", "#E73B3C", "#DDDDDD",
-                            "#FF8F1F", "#FCD3E6", "#B9E07A", "#A3F6FF", "#FFFF69", "#47AA42", "#A0DBD0",
-                            "#5791C2", "#E9B82D", "#FC9284", "#7850A4", "#CEB8D7", "#FDC998", "#ADADAD",
-                            "#00441B", "#028189", "#67001F", "#525252", "#FE69FC", "#A0D99B", "#4B1DB7")
+            palette1 <- c("#E93993", "#FF8F1F", "#00441B", "#7850A4", "#028189", "#67001F",
+                        "#CCEBDE", "#B2BFDC", "#C46627", "#10258A", "#E73B3C", "#DDDDDD",
+                            "#FCD3E6", "#B9E07A", "#A3F6FF", "#FFFF69", "#47AA42", "#A0DBD0",
+                            "#5791C2", "#E9B82D", "#FC9284", "#CEB8D7", "#FDC998", "#ADADAD",
+                            "#525252", "#FE69FC", "#A0D99B", "#4B1DB7")
             qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
             col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
             palette2 <- sample(col_vector, n-length(palette1), replace = T)
@@ -202,12 +204,15 @@ create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suf
             geom_vline(xintercept=0, linetype="dotted") +
             xlim(-0.9, 0.9) +
             ylim(-0.9, 0.9) +
+            xlab("Genetic correlation (population)") +
+            ylab("Genetic correlation (direct)") +
             geom_point(dat = dat_points, aes(pop_rg, direct_rg, colour=phenotype, shape=phenotype), alpha=0.6) +
+            geom_label_repel(data = dat_points, aes(pop_rg, direct_rg, label=phenotype), box.padding = 1.3) +
             geom_linerange(dat = dat_points, aes(x=pop_rg, ymin = direct_rg_lo, ymax=direct_rg_hi, color = phenotype), alpha=0.6) +
             geom_linerange(dat = dat_points, aes(y=direct_rg, xmin = pop_rg_lo, xmax=pop_rg_hi, color = phenotype), alpha=0.6) +  
-            scale_colour_manual(values = c(palette("Paired"), palette)) +
+            scale_colour_manual(values = c(palette, palette("Paired"))) +
             scale_shape_manual(values = seq(1, nrow(dat_points))) +
-            theme(legend.position = "bottom", legend.title = element_blank())
+            theme(legend.position = "none")
 
     # save
     if (save & is.na(save_suffix)) {
@@ -233,9 +238,18 @@ sig_phenos <- tolower(results$pheno_pair) %>%
                 str_replace("-", "") %>%
                 str_replace("cognitive performance", "cognition") %>%
                 str_replace("1", "")
-dat_points <- process_data(phenos)
-dat_points <- dat_points %>%
+dat_points <- process_data(phenos) %>%
                 filter(phenotype %in% sig_phenos)
+dat_points$phenotype <- dat_points$phenotype %>% 
+                            str_replace("_", " x ") %>%
+                            str_replace("ea", "EA") %>%
+                            str_replace("asthma", "Asthma") %>%
+                            str_replace("bmi", "BMI") %>%
+                            str_replace("eversmoker", "Ever-smoker") %>%
+                            str_replace("height", "Height") %>%
+                            str_replace("cognition", "Cognitive performance") %>%
+                            str_replace("fev", "FEV1") %>%
+                            str_replace("neuroticism", "Neuroticism")
 create_density_plot(phenos,
                     dat_points = dat_points,
                     save_suffix = "sig",

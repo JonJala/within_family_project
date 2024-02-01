@@ -104,22 +104,22 @@ phenotypes <- c("aafb", "adhd", "agemenarche", "asthma", "aud", "bmi", "bpd", "b
                  "depsymp", "dpw", "ea", "eczema", "eversmoker", "extraversion", "fev", "hayfever", "hdl", "health", "height", "hhincome", "hypertension", "income", 
                  "migraine", "morningperson", "nchildren", "nearsight", "neuroticism", "nonhdl", "swb")
 
-# for (pheno1 in phenotypes) {
-#     pheno1_index <- which(phenotypes == pheno1)
-#     for (pheno2 in phenotypes) {
-#         pheno2_index <- which(phenotypes == pheno2)
-#         if (pheno2_index > pheno1_index) {
-#             run_cross_trait(pheno1 = pheno1,
-#                             pheno2 = pheno2,
-#                             pheno1_direct = paste0(ss_basepath, pheno1, "/direct.sumstats.gz"),
-#                             pheno1_pop = paste0(ss_basepath, pheno1, "/population.sumstats.gz"),
-#                             pheno2_direct = paste0(ss_basepath, pheno2, "/direct.sumstats.gz"),
-#                             pheno2_pop = paste0(ss_basepath, pheno2, "/population.sumstats.gz"),
-#                             ldsc = ldsc,
-#                             analyze_results = TRUE)
-#         }
-#     }
-# }
+for (pheno1 in phenotypes) {
+    pheno1_index <- which(phenotypes == pheno1)
+    for (pheno2 in phenotypes) {
+        pheno2_index <- which(phenotypes == pheno2)
+        if (pheno2_index > pheno1_index) {
+            run_cross_trait(pheno1 = pheno1,
+                            pheno2 = pheno2,
+                            pheno1_direct = paste0(ss_basepath, pheno1, "/direct.sumstats.gz"),
+                            pheno1_pop = paste0(ss_basepath, pheno1, "/population.sumstats.gz"),
+                            pheno2_direct = paste0(ss_basepath, pheno2, "/direct.sumstats.gz"),
+                            pheno2_pop = paste0(ss_basepath, pheno2, "/population.sumstats.gz"),
+                            ldsc = ldsc,
+                            analyze_results = TRUE)
+        }
+    }
+}
 
 ## compile results
 compile_results(phenotypes)

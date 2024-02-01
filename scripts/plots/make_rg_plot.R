@@ -226,7 +226,6 @@ create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suf
 ## create density plot with points for pairs where direct rg and pop rg are statistically significantly different from each other
 results <- read_xlsx("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/cross_trait/cross_trait_results.xlsx")
 results <- results %>%
-            mutate(p_adj = p.adjust(p, method='BH')) %>%
             filter(p_adj < 0.05) %>%
             mutate(pheno_pair = paste0(pheno1, "_", pheno2))
 sig_phenos <- tolower(results$pheno_pair) %>%

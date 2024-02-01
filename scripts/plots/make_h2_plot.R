@@ -20,6 +20,35 @@ h2_plot <- function(save = TRUE) {
     )
     dat %<>% filter(h2_se_direct < 0.25, h2_direct > 0)
 
+    # rename phenotypes
+    dat %<>%
+        mutate(phenotype = case_when(phenotype %in% c("adhd", "bmi", "copd", "ea", "hdl") ~ toupper(phenotype),
+                                phenotype == "nonhdl" ~ "Non-HDL",
+                                phenotype == "fev" ~ "FEV1",
+                                phenotype == "agemenarche" ~ "Age-at-menarche",
+                                phenotype == "bps" ~ "BPS",
+                                phenotype == "bpd" ~ "BPD",
+                                phenotype == "cognition" ~ "Cognitive performance",
+                                phenotype == "depsymp" ~ "Depressive symptoms",
+                                phenotype == "eversmoker" ~ "Ever-smoker",
+                                phenotype == "dpw" ~ "Drinks-per-week",
+                                phenotype == "hayfever" ~ "Allergic rhinitis",
+                                phenotype == "health" ~ "Self-rated health",
+                                phenotype == "hhincome" ~ "Household income",
+                                phenotype == "swb" ~ "Subjective well-being",
+                                phenotype == "nchildren" ~ "Number of children",
+                                phenotype == "nearsight" ~ "Myopia",
+                                phenotype == "aud" ~ "Alcohol use disorder",
+                                phenotype == "cpd" ~ "Cigarettes per day",
+                                phenotype == "aafb" ~ "Age at first birth",
+                                phenotype == "morningperson" ~ "Morning person",
+                                phenotype %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "income", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(phenotype)))
+
+    # significant points to be labelled
+    sig_points <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/h2_diff_results.xlsx")
+    sig_points %<>% filter(p_adj < 0.05)
+    dat_points <- dat %>% filter(phenotype %in% sig_points$phenotype)
+
     # get colour palette
     set.seed(42)
     n <- length(unique(dat$phenotype))
@@ -36,6 +65,7 @@ h2_plot <- function(save = TRUE) {
     dat %>%
         ggplot() +
         geom_point(aes(x = h2_population, y = h2_direct, colour=phenotype, shape=phenotype), alpha=0.6) +
+        geom_label_repel(data = dat_points, aes(x = h2_population, y = h2_direct, label = phenotype), xlim = c(0.18, NA), box.padding = 1) +
         geom_linerange(aes(x=h2_population, ymin = h2_direct-h2_se_direct, ymax=h2_direct+h2_se_direct, color = phenotype), alpha=0.6) +
         geom_linerange(aes(y=h2_direct, xmin = h2_population-h2_se_population, xmax=h2_population+h2_se_population, color = phenotype), alpha=0.6) +
         geom_abline(yintercept=0, slope=1, linetype="solid", color="gray") +
@@ -50,9 +80,10 @@ h2_plot <- function(save = TRUE) {
     # save
     if (save) {
         ggsave("/var/genetics/proj/within_family/within_family_project/processed/figures/h2_plot.pdf",
-        height = 8, width = 10)
+        height = 10, width = 12)
     }
 
 }
 
+# plot
 h2_plot(save = TRUE)

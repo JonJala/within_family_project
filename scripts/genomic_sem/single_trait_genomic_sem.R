@@ -39,26 +39,26 @@ for (pheno in phenotypes) {
         ref_ss <- paste0("/var/genetics/proj/within_family/within_family_project/processed/reference_samples/", pheno, "_ref/", pheno, "_ref.sumstats.gz")
     }
 
-    ## munge
-    munge_sumstats(paste0(meta_ss="/var/genetics/proj/within_family/within_family_project/processed/package_output/", pheno, "/meta.nfilter.sumstats.gz"),
-               outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/", pheno, "/"),
-               trait.names=c("direct", "population"))
+    # ## munge
+    # munge_sumstats(paste0(meta_ss="/var/genetics/proj/within_family/within_family_project/processed/package_output/", pheno, "/meta.nfilter.sumstats.gz"),
+    #            outpath=paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/", pheno, "/"),
+    #            trait.names=c("direct", "population"))
 
-    # run genomicSEM
-    if (pheno == "migraine" || pheno == "cannabis") {
-        run_single_trait(pheno = pheno,
-                    direct_ss = paste0(ss_basepath, pheno, "/direct.sumstats.gz"),
-                    pop_ss = paste0(ss_basepath, pheno, "/population.sumstats.gz"),
-                    ldsc = ldsc,
-                    h2_results = compile_h2_results)
-    } else {
-        run_single_trait(pheno = pheno,
-                    direct_ss = paste0(ss_basepath, pheno, "/direct.sumstats.gz"),
-                    pop_ss = paste0(ss_basepath, pheno, "/population.sumstats.gz"),
-                    ref_ss = ref_ss,
-                    ldsc = ldsc,
-                    h2_results = compile_h2_results)
-    }
+    # # run genomicSEM
+    # if (pheno == "migraine" || pheno == "cannabis") {
+    #     run_single_trait(pheno = pheno,
+    #                 direct_ss = paste0(ss_basepath, pheno, "/direct.sumstats.gz"),
+    #                 pop_ss = paste0(ss_basepath, pheno, "/population.sumstats.gz"),
+    #                 ldsc = ldsc,
+    #                 h2_results = compile_h2_results)
+    # } else {
+    #     run_single_trait(pheno = pheno,
+    #                 direct_ss = paste0(ss_basepath, pheno, "/direct.sumstats.gz"),
+    #                 pop_ss = paste0(ss_basepath, pheno, "/population.sumstats.gz"),
+    #                 ref_ss = ref_ss,
+    #                 ldsc = ldsc,
+    #                 h2_results = compile_h2_results)
+    # }
 
     if (compile_h2_results) {
         h2_results <- fread(paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/", pheno, "/h2_results_", pheno, ".txt"))
@@ -109,9 +109,10 @@ if (compile_h2_results) {
     h2_results_table <- h2_results_table %>%
                             select(-c(direct_h2_se, pop_h2_se, h2_diff_se))                                
 
-    # add -log10(p) column
+    # add -log10(p) and adjusted pval column
     h2_results_table <- h2_results_table %>%
-                            mutate(log_p = -log10(p))
+                            mutate(log_p = -log10(p),
+                                    p_adj = p.adjust(p, method='BH'))
     h2_results_table <- h2_results_table[order(h2_results_table$log_p, decreasing = TRUE),] # arrange in order of -log10(p)
 
     # write to file

@@ -4,7 +4,7 @@
 ## description: run genomic SEM
 ## ---------------------------------------------------------------------
 
-list.of.packages <- c("GenomicSEM", "data.table", "dplyr")
+list.of.packages <- c("GenomicSEM", "data.table", "dplyr", "stringr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos = "http://cran.rstudio.com/")
 lapply(list.of.packages, library, character.only = TRUE)
@@ -23,7 +23,7 @@ run_ldsc_genomicSEM <- function(traits, ld, wld, trait.names, outpath, filename,
     setwd(outpath)
     
     # run LDSC
-    LDSCoutput <- ldsc(traits=traits,sample.prev=sample.prev,population.prev=population.prev,ld=ld,wld=wld,trait.names=trait.names,ldsc.log=filename)
+    LDSCoutput <- ldsc(traits=traits,sample.prev=sample.prev,population.prev=population.prev,ld=ld,wld=wld,trait.names=trait.names,ldsc.log=filename, stand = TRUE)
 
     # save output
     save(LDSCoutput,file=paste0(outpath, "/", "LDSCoutput_", filename, ".RData"))
@@ -63,21 +63,8 @@ munge_sumstats <- function(meta_ss, trait.names, outpath) {
 
 }
 
-## convert covariance matrix to correlation matrix
-covariance_to_correlation <- function(matrix) {
-    M <- matrix(nrow = nrow(matrix), ncol = ncol(matrix))
-    diag(M) <- 1
-    for (i in 1:nrow(M)) {
-        for (j in 1:ncol(M)) {
-        M[i,j] <- matrix[i,j]/sqrt(matrix[i,i]*matrix[j,j])
-        }
-    }
-    dimnames(M) <- dimnames(matrix)
-    return(M)
-}
-
 ## analyze results from cross-trait analysis and get SE and p-values for difference between correlations
-analyze_genomicSEM_results <- function(LDSCoutput, logfile, outfile, basepath = NA) {
+analyze_genomicSEM_results <- function(LDSCoutput, pheno1, pheno2, logfile, outfile, basepath = NA) {
 
     if (!is.na(basepath)) {
         LDSCoutput <- paste0(basepath, LDSCoutput)
@@ -87,55 +74,57 @@ analyze_genomicSEM_results <- function(LDSCoutput, logfile, outfile, basepath = 
 
     ## load and extract data
     load(LDSCoutput)
-    gen_cov <- LDSCoutput$S # genetic covariances. note, not correlations
-    sampling_vcov <- LDSCoutput$V # sampling vcov of covariances
 
-    ## transform covariance matrix into correlation matrix and get difference between correlations
-    gen_corr <- covariance_to_correlation(gen_cov)
-    corr1 <- gen_corr[3,1]
-    corr2 <- gen_corr[4,2]
-    diff <- corr1 -  corr2
+    ## run user specified model
 
-    ## get variances of correlations from log file
-    log <- readLines(logfile)
-    corrs <- grep("Genetic Correlation between", log, value = T)
-    se_direct <- as.numeric(strsplit(strsplit(corrs[2], "\\(")[[1]][2], "\\)")[[1]][1])
-    var_direct <- se_direct^2
-    se_pop <- as.numeric(strsplit(strsplit(corrs[5], "\\(")[[1]][2], "\\)")[[1]][1])
-    var_pop <- se_pop^2
+    # define model
+    model <- '
+    pheno1_direct_std =~ NA*pheno1_direct
+    pheno1_pop_std =~ NA*pheno1_pop
+    pheno2_direct_std =~ NA*pheno2_direct
+    pheno2_pop_std =~ NA*pheno2_pop
 
-    ## use delta method to approximate covariance of correlation
+    pheno1_direct_std ~~ 1*pheno1_direct_std
+    pheno1_pop_std ~~ 1*pheno1_pop_std
+    pheno2_direct_std ~~ 1*pheno2_direct_std
+    pheno2_pop_std ~~ 1*pheno2_pop_std
 
-    # create sigma matrix. rows are direct, cols are pop
-    sigma <- matrix(c(sampling_vcov[3,7], sampling_vcov[8,7],sampling_vcov[1,7],
-                    sampling_vcov[3,10], sampling_vcov[8,10],sampling_vcov[1,10],
-                    sampling_vcov[3,5], sampling_vcov[8,5],sampling_vcov[1,5]), nrow = 3, ncol = 3)
+    pheno1_direct ~~ 0*pheno1_direct
+    pheno1_pop ~~ 0*pheno1_pop
+    pheno2_direct ~~ 0*pheno2_direct
+    pheno2_pop ~~ 0*pheno2_pop
 
-    df_1 <- 1 / (sqrt(gen_cov[3,3]*gen_cov[1,1]))
-    df_2 <- -0.5*gen_cov[3,3]^(-1.5) * gen_cov[1,3]/sqrt(gen_cov[1,1])
-    df_3 <- -0.5*gen_cov[1,1]^(-1.5) * gen_cov[1,3]/sqrt(gen_cov[3,3])
-    dg_1 <- 1 / (sqrt(gen_cov[2,2]*gen_cov[4,4]))
-    dg_2 <- -0.5*gen_cov[4,4]^(-1.5) * gen_cov[2,4]/sqrt(gen_cov[2,2])
-    dg_3 <- -0.5*gen_cov[2,2]^(-1.5) * gen_cov[2,4]/sqrt(gen_cov[4,4])
+    pheno1_direct_std ~~ rg1*pheno2_direct_std
+    pheno1_pop_std ~~ rg2*pheno2_pop_std
 
-    cov <- df_1 * dg_1 * sigma[1,1] +
-            df_1 * dg_2 * sigma[1,2] +
-            df_1 * dg_3 * sigma[1,3] +
-            df_2 * dg_1 * sigma[2,1] +
-            df_2 * dg_2 * sigma[2,2] +
-            df_2 * dg_3 * sigma[2,3] +
-            df_3 * dg_1 * sigma[3,1] +
-            df_3 * dg_2 * sigma[3,2] +
-            df_3 * dg_3 * sigma[3,3]
+    diff := rg1 - rg2
+    '
 
-    ## variance and p-val of the difference between the correlations
-    var_diff <- var_direct + var_pop - 2*cov
-    se_diff <- sqrt(var_diff)
+    # replace placeholders with phenos
+    model <- str_replace_all(model, "pheno1", pheno1)
+    model <- str_replace_all(model, "pheno2", pheno2)
 
-    z <- diff/se_diff
+    # run model
+    output <- usermodel(LDSCoutput, estimation = "DWLS", model = model, CFIcalc = TRUE, std.lv = TRUE, imp_cov = FALSE)
+
+    # save output
+    save(output, file = paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/cross_trait/", pheno1, "_", pheno2, "/", pheno1, "_", pheno2, "_modeloutput.RData"))
+
+    # get results
+    results <- output$results
+    direct_results <- results[results$lhs == paste0(pheno1, "_direct_std") & results$rhs == paste0(pheno2, "_direct_std"),]
+    direct_rg <- as.numeric(direct_results$Unstand_Est)
+    direct_rg_se <- as.numeric(direct_results$Unstand_SE)
+    pop_results <- results[results$lhs == paste0(pheno1, "_population_std") & results$rhs == paste0(pheno2, "_population_std"),]
+    pop_rg <- as.numeric(pop_results$Unstand_Est)
+    pop_rg_se <- as.numeric(pop_results$Unstand_SE)
+    diff_results <- results[results$lhs == "diff",]
+    diff_est <- as.numeric(diff_results$Unstand_Est)
+    diff_se <- as.numeric(diff_results$Unstand_SE)
+    z <- diff_est/diff_se
     p <- 2*pnorm(abs(z), lower.tail = FALSE)
 
-    results <- data.table(variable=c("corr1", "corr1_se", "corr2", "corr2_se", "corr_diff", "corr_diff_se", "z", "p"), value=c(corr1, se_direct, corr2, se_pop, diff, se_diff, z, p))
+    results <- data.table(variable=c("direct_rg", "direct_rg_se", "pop_rg", "pop_rg_se", "diff_est", "diff_se", "z", "p"), value=c(direct_rg, direct_rg_se, pop_rg, pop_rg_se, diff_est, diff_se, z, p))
     print(results)
     fwrite(results, outfile, sep="\t", quote=F, row.names=F, col.names=T)
 
@@ -231,6 +220,8 @@ run_cross_trait <- function(pheno1, pheno2, pheno1_direct, pheno1_pop, pheno2_di
 
     if (analyze_results) {
         analyze_genomicSEM_results(LDSCoutput=paste0("LDSCoutput_", pheno1, "_", pheno2, ".RData"),
+                            pheno1 = pheno1,
+                            pheno2 = pheno2,
                             logfile=paste0(pheno1, "_", pheno2, "_ldsc.log"),
                             outfile=paste0(pheno1, "_", pheno2, "_results.txt"),
                             basepath=outpath)

@@ -75,6 +75,8 @@ analyze_genomicSEM_results <- function(LDSCoutput, pheno1, pheno2, logfile, outf
     ## load and extract data
     load(LDSCoutput)
 
+    print(paste0("Running for ", pheno1, " x ", pheno2))
+
     ## run user specified model
 
     # define model
@@ -115,9 +117,50 @@ analyze_genomicSEM_results <- function(LDSCoutput, pheno1, pheno2, logfile, outf
     direct_results <- results[results$lhs == paste0(pheno1, "_direct_std") & results$rhs == paste0(pheno2, "_direct_std"),]
     direct_rg <- as.numeric(direct_results$Unstand_Est)
     direct_rg_se <- as.numeric(direct_results$Unstand_SE)
-    pop_results <- results[results$lhs == paste0(pheno1, "_population_std") & results$rhs == paste0(pheno2, "_population_std"),]
+    pop_results <- results[results$lhs == paste0(pheno1, "_pop_std") & results$rhs == paste0(pheno2, "_pop_std"),]
     pop_rg <- as.numeric(pop_results$Unstand_Est)
     pop_rg_se <- as.numeric(pop_results$Unstand_SE)
+    
+    # flip sign on genetic correlations if necessary
+    pheno1_direct_unstand <- results$Unstand_Est[results$lhs == paste0(pheno1, "_direct_std") & results$rhs == paste0(pheno1, "_direct") & results$op == "=~"]
+    pheno2_direct_unstand <- results$Unstand_Est[results$lhs == paste0(pheno2, "_direct_std") & results$rhs == paste0(pheno2, "_direct") & results$op == "=~"]
+    pheno1_pop_unstand <- results$Unstand_Est[results$lhs == paste0(pheno1, "_pop_std") & results$rhs == paste0(pheno1, "_pop") & results$op == "=~"]
+    pheno2_pop_unstand <- results$Unstand_Est[results$lhs == paste0(pheno2, "_pop_std") & results$rhs == paste0(pheno2, "_pop") & results$op == "=~"]
+    direct_rg_new <- direct_rg * sign(pheno1_direct_unstand) * sign(pheno2_direct_unstand)
+    pop_rg_new <- pop_rg * sign(pheno1_pop_unstand) * sign(pheno2_pop_unstand)
+
+    ## if the rgs have changed after sign flipping, need to rerun model
+    if ((direct_rg_new != direct_rg) | (pop_rg_new != pop_rg)) {
+        
+        # add starts based on rg sign
+        if (direct_rg_new != direct_rg) {
+            model <- str_replace(model, paste0(pheno1, "_direct_std =~ NA\\*", pheno1, "_direct"), paste0(pheno1, "_direct_std =~ NA\\*", pheno1, "_direct + start(7)\\*", pheno1, "_direct"))
+            model <- str_replace(model, paste0(pheno2, "_direct_std =~ NA\\*", pheno2, "_direct"), paste0(pheno2, "_direct_std =~ NA\\*", pheno2, "_direct + start(1.5)*", pheno2, "_direct"))
+        } else if (pop_rg_new != pop_rg) {
+            model <- str_replace(model, paste0(pheno1, "_pop_std =~ NA\\*", pheno1, "_pop"), paste0(pheno1, "_pop_std =~ NA*", pheno1, "_pop + start(1.5)\\*", pheno1, "_pop"))
+            model <- str_replace(model, paste0(pheno2, "_pop_std =~ NA\\*", pheno2, "_pop"), paste0(pheno2, "_pop_std =~ NA*", pheno2, "_pop + start(1.5)\\*", pheno2, "_pop"))
+        }
+
+        print("Rerunning model with updated start values")
+
+        # rerun model
+        output <- usermodel(LDSCoutput, estimation = "DWLS", model = model, CFIcalc = TRUE, std.lv = TRUE, imp_cov = FALSE)
+
+        # save output
+        save(output, file = paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/cross_trait/", pheno1, "_", pheno2, "/", pheno1, "_", pheno2, "_modeloutput.RData"))
+
+        # get results
+        results <- output$results
+        direct_results <- results[results$lhs == paste0(pheno1, "_direct_std") & results$rhs == paste0(pheno2, "_direct_std"),]
+        direct_rg <- as.numeric(direct_results$Unstand_Est)
+        direct_rg_se <- as.numeric(direct_results$Unstand_SE)
+        pop_results <- results[results$lhs == paste0(pheno1, "_pop_std") & results$rhs == paste0(pheno2, "_pop_std"),]
+        pop_rg <- as.numeric(pop_results$Unstand_Est)
+        pop_rg_se <- as.numeric(pop_results$Unstand_SE)
+
+    }
+
+    # calculate difference and p-value
     diff_results <- results[results$lhs == "diff",]
     diff_est <- as.numeric(diff_results$Unstand_Est)
     diff_se <- as.numeric(diff_results$Unstand_SE)
@@ -211,12 +254,12 @@ run_cross_trait <- function(pheno1, pheno2, pheno1_direct, pheno1_pop, pheno2_di
         dir.create(outpath, recursive = TRUE)
     }
 
-    run_ldsc_genomicSEM(traits=c(pheno1_direct, pheno1_pop, pheno2_direct, pheno2_pop), 
-                    ld=ldsc,
-                    wld=ldsc,
-                    trait.names=c(paste0(pheno1, "_direct"), paste0(pheno1, "_pop"), paste0(pheno2, "_direct"), paste0(pheno2, "_pop")),
-                    filename=paste0(pheno1, "_", pheno2),
-                    outpath=outpath)
+    # run_ldsc_genomicSEM(traits=c(pheno1_direct, pheno1_pop, pheno2_direct, pheno2_pop), 
+    #                 ld=ldsc,
+    #                 wld=ldsc,
+    #                 trait.names=c(paste0(pheno1, "_direct"), paste0(pheno1, "_pop"), paste0(pheno2, "_direct"), paste0(pheno2, "_pop")),
+    #                 filename=paste0(pheno1, "_", pheno2),
+    #                 outpath=outpath)
 
     if (analyze_results) {
         analyze_genomicSEM_results(LDSCoutput=paste0("LDSCoutput_", pheno1, "_", pheno2, ".RData"),

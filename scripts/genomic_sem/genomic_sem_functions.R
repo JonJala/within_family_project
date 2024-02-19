@@ -132,14 +132,37 @@ analyze_genomicSEM_results <- function(LDSCoutput, pheno1, pheno2, logfile, outf
     ## if the rgs have changed after sign flipping, need to rerun model
     if ((direct_rg_new != direct_rg) | (pop_rg_new != pop_rg)) {
         
-        # add starts based on rg sign
-        if (direct_rg_new != direct_rg) {
-            model <- str_replace(model, paste0(pheno1, "_direct_std =~ NA\\*", pheno1, "_direct"), paste0(pheno1, "_direct_std =~ NA\\*", pheno1, "_direct + start(7)\\*", pheno1, "_direct"))
-            model <- str_replace(model, paste0(pheno2, "_direct_std =~ NA\\*", pheno2, "_direct"), paste0(pheno2, "_direct_std =~ NA\\*", pheno2, "_direct + start(1.5)*", pheno2, "_direct"))
-        } else if (pop_rg_new != pop_rg) {
-            model <- str_replace(model, paste0(pheno1, "_pop_std =~ NA\\*", pheno1, "_pop"), paste0(pheno1, "_pop_std =~ NA*", pheno1, "_pop + start(1.5)\\*", pheno1, "_pop"))
-            model <- str_replace(model, paste0(pheno2, "_pop_std =~ NA\\*", pheno2, "_pop"), paste0(pheno2, "_pop_std =~ NA*", pheno2, "_pop + start(1.5)\\*", pheno2, "_pop"))
-        }
+        # add contraints
+        model <- '
+        pheno1_direct_std =~ NA*pheno1_direct + start(0.4)*pheno1_direct + h_1*pheno1_direct
+        pheno1_pop_std =~ NA*pheno1_pop + start(0.4)*pheno1_pop + h_2*pheno1_pop
+        pheno2_direct_std =~ NA*pheno2_direct + start(0.4)*pheno2_direct + h_3*pheno2_direct
+        pheno2_pop_std =~ NA*pheno2_pop + start(0.4)*pheno2_pop + h_4*pheno2_pop
+
+        pheno1_direct_std ~~ 1*pheno1_direct_std
+        pheno1_pop_std ~~ 1*pheno1_pop_std
+        pheno2_direct_std ~~ 1*pheno2_direct_std
+        pheno2_pop_std ~~ 1*pheno2_pop_std
+
+        pheno1_direct ~~ 0*pheno1_direct
+        pheno1_pop ~~ 0*pheno1_pop
+        pheno2_direct ~~ 0*pheno2_direct
+        pheno2_pop ~~ 0*pheno2_pop
+
+        pheno1_direct_std ~~ rg1*pheno2_direct_std
+        pheno1_pop_std ~~ rg2*pheno2_pop_std
+
+        diff := rg1 - rg2
+
+        h_1 > 0.0001
+        h_2 > 0.0001
+        h_3 > 0.0001
+        h_4 > 0.0001
+        '
+
+        # replace placeholders with phenos
+        model <- str_replace_all(model, "pheno1", pheno1)
+        model <- str_replace_all(model, "pheno2", pheno2)
 
         print("Rerunning model with updated start values")
 
@@ -157,6 +180,11 @@ analyze_genomicSEM_results <- function(LDSCoutput, pheno1, pheno2, logfile, outf
         pop_results <- results[results$lhs == paste0(pheno1, "_pop_std") & results$rhs == paste0(pheno2, "_pop_std"),]
         pop_rg <- as.numeric(pop_results$Unstand_Est)
         pop_rg_se <- as.numeric(pop_results$Unstand_SE)
+        
+        if (sum(results$Unstand_Est[1:4] < 0) > 0) {
+            count <- sum(results$Unstand_Est[1:4] < 0)
+            print(paste0("WARNING: ", count, " of the sumstats have had their signs flipped."))
+        }
 
     }
 
@@ -168,7 +196,6 @@ analyze_genomicSEM_results <- function(LDSCoutput, pheno1, pheno2, logfile, outf
     p <- 2*pnorm(abs(z), lower.tail = FALSE)
 
     results <- data.table(variable=c("direct_rg", "direct_rg_se", "pop_rg", "pop_rg_se", "diff_est", "diff_se", "z", "p"), value=c(direct_rg, direct_rg_se, pop_rg, pop_rg_se, diff_est, diff_se, z, p))
-    print(results)
     fwrite(results, outfile, sep="\t", quote=F, row.names=F, col.names=T)
 
 }

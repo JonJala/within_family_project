@@ -100,13 +100,8 @@ source("/var/genetics/proj/within_family/within_family_project/scripts/genomic_s
 ldsc <- "/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 ss_basepath <- "/var/genetics/proj/within_family/within_family_project/processed/package_output/"
 
-# phenotypes <- c("aafb", "adhd", "agemenarche", "asthma", "aud", "bmi", "bpd", "bps", "cannabis", "cognition", "copd", "cpd", "depression",
-#                  "depsymp", "dpw", "ea", "eczema", "eversmoker", "extraversion", "fev", "hayfever", "hdl", "health", "height", "hhincome", "hypertension", "income", 
-#                  "migraine", "morningperson", "nchildren", "nearsight", "neuroticism", "nonhdl", "swb")
-
-# without extraversion
 phenotypes <- c("aafb", "adhd", "agemenarche", "asthma", "aud", "bmi", "bpd", "bps", "cannabis", "cognition", "copd", "cpd", "depression",
-                 "depsymp", "dpw", "ea", "eczema", "eversmoker", "fev", "hayfever", "hdl", "health", "height", "hhincome", "hypertension", "income", 
+                 "depsymp", "dpw", "ea", "eczema", "eversmoker", "extraversion", "fev", "hayfever", "hdl", "health", "height", "hhincome", "hypertension", "income", 
                  "migraine", "morningperson", "nchildren", "nearsight", "neuroticism", "nonhdl", "swb")
 
 sink("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/cross_trait/genomicSEM.log")

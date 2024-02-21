@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 ### Run the easyqc pipeline
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/nearsight/nearsight_ref.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/nearsight_ref/nearsight_ref.sumstats.gz"
 
 # #####################
 # ## ====== EB ====== #

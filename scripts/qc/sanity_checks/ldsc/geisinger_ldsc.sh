@@ -13,7 +13,7 @@ python ${ldsc_path}/ldsc.py \
 
 # BMI
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/bmi.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/bmi.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/bmi_ref/bmi_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/geisinger/ldsc_bmi
@@ -22,7 +22,7 @@ python ${ldsc_path}/ldsc.py \
 
 # Height
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/height.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.sumstats.gz \
+# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/height.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/height_ref/height_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/geisinger/ldsc_height
@@ -30,7 +30,7 @@ python ${ldsc_path}/ldsc.py \
 
 # dperessive symptoms
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/depression.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/dep_ref/DS_Full.sumstats.gz \
+# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/depression.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/depsymp_ref/depsymp_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/geisinger/ldsc_dep
@@ -38,7 +38,7 @@ python ${ldsc_path}/ldsc.py \
 
 # EA
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/edu_years.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/edu_years.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/ea_ref/ea_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/geisinger/ldsc_ea
@@ -46,7 +46,7 @@ python ${ldsc_path}/ldsc.py \
 
 # SMoke ever
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/smoke_ever.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/smoking_ref/Smokinginit.sumstats.gz \
+# --rg /var/genetics/data/geisinger/public/latest/processed/sumstats/fgwas/smoke_ever.pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/eversmoker_ref/eversmoker_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/geisinger/ldsc_smokever

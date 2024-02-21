@@ -24,14 +24,14 @@ ${ldscpath}/munge_sumstats.py \
 
 echo "Calculating RG of population effect with reference sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/height/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/height/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/height_ref/height_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/height/population_reference_sample
 
 echo "Calculating RG of direct effect with reference sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/height/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/height/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/height_ref/height_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/height/direct_reference_sample

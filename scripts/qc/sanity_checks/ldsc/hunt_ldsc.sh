@@ -7,7 +7,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/hunt/public/latest/processed/sumstats/fgwas/ea/Eduhunt_results_ldsc_pop.sumstats.gz,${within_family_path}/processed/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+# --rg /var/genetics/data/hunt/public/latest/processed/sumstats/fgwas/ea/Eduhunt_results_ldsc_pop.sumstats.gz,${within_family_path}/processed/ea_ref/ea_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/hunt/ea
@@ -24,7 +24,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # children n
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/hunt/public/latest/processed/sumstats/fgwas/ChildrenN/ChildrenN_ldsc_pop.sumstats.gz,${within_family_path}/processed/neb_ref/nchildren_pooled.sumstats.gz \
+# --rg /var/genetics/data/hunt/public/latest/processed/sumstats/fgwas/ChildrenN/ChildrenN_ldsc_pop.sumstats.gz,${within_family_path}/processed/nchildren_ref/nchildren_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/hunt/nchildren
@@ -32,7 +32,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # Drinks per week
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/hunt/public/latest/processed/sumstats/fgwas/DrinksPerWeek/DrinksPerWeek_ldsc_pop.sumstats.gz,${within_family_path}/processed/drinksperweek_ref/dpw_ref.sumstats.gz \
+# --rg /var/genetics/data/hunt/public/latest/processed/sumstats/fgwas/DrinksPerWeek/DrinksPerWeek_ldsc_pop.sumstats.gz,${within_family_path}/processed/dpw_ref/dpw_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/hunt/drinksperweek
@@ -40,7 +40,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # Height
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/hunt/public/latest/processed/sumstats/fgwas/height/height_ldsc_pop.sumstats.gz,${within_family_path}/processed/ht_ref/Meta-analysis_Wood_et_al+UKBiobank_2018.sumstats.gz \
+# --rg /var/genetics/data/hunt/public/latest/processed/sumstats/fgwas/height/height_ldsc_pop.sumstats.gz,${within_family_path}/processed/height_ref/height_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/sanity_checks/hunt/height

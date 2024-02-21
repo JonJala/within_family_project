@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/migarine_ref/migraine_ref.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/migraine_ref/migraine_ref.sumstats.gz"
 
 # ###############
 # ## Geisinger

@@ -3,7 +3,7 @@
 
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/depression_ref/depression_ref.sumstats.gz"
 
 # ##########
 # # EB - Estonian Biobank

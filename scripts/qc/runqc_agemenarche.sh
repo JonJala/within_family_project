@@ -2,7 +2,7 @@
 #!/usr/bin/bash
 ### Run the easyqc pipeline
 
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/age_menarche_ref/age_menarche_ref.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/agemenarche_ref/agemenarche_ref.sumstats.gz"
 
 
 # #########

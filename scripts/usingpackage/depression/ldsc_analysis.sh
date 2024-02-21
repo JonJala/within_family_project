@@ -5,7 +5,7 @@ eur_w_ld_chr="/var/genetics/pub/data/ld_ref_panel/eur_w_ld_chr/"
 within_family_path="/var/genetics/proj/within_family/within_family_project"
 hm3snps="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 scriptpath="/var/genetics/proj/within_family/within_family_project/scripts/package"
-refsample="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz"
+refsample="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/depression_ref/depression_ref.sumstats.gz"
 
 source /disk/genetics/pub/python_env/anaconda2/bin/activate /disk/genetics/pub/python_env/anaconda2/envs/ldsc
 

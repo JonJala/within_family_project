@@ -20,7 +20,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/str/public/latest/raw/sumstats/fgwas/bmi/bmi_ldsc.sumstats,${within_family_path}/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+# --rg /var/genetics/data/str/public/latest/raw/sumstats/fgwas/bmi/bmi_ldsc.sumstats,${within_family_path}/bmi_ref/bmi_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out /var/genetics/data/str/public/latest/raw/sumstats/fgwas/eduYears/eduYears_ldsc
@@ -29,7 +29,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/str/public/latest/raw/sumstats/fgwas/eduYears/eduYears_ldsc.sumstats,${within_family_path}/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+# --rg /var/genetics/data/str/public/latest/raw/sumstats/fgwas/eduYears/eduYears_ldsc.sumstats,${within_family_path}/ea_ref/ea_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out /var/genetics/data/str/public/latest/raw/sumstats/fgwas/eduYears/eduYears_ldsc
@@ -39,7 +39,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 # # == Generation Scotland == #
 # # 10 = EA
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/10/ldsc.sumstats,${within_family_path}/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+# --rg /var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/10/ldsc.sumstats,${within_family_path}/ea_ref/ea_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out /var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/10/EA_ldsc
@@ -47,7 +47,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # # # 6 = BMI
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/6/ldsc.sumstats,${within_family_path}/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+# --rg /var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/6/ldsc.sumstats,${within_family_path}/bmi_ref/bmi_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out /var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/6/bmi_ldsc
@@ -55,14 +55,14 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # # == Finnish Twins == #
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/EA.sumstats,${within_family_path}/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+# --rg /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/EA.sumstats,${within_family_path}/ea_ref/ea_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/ea_ldsc
 # # # Genetic Correlation: nan (nan) (h2  out of bounds) 
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/bmi.sumstats,${within_family_path}/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+# --rg /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/bmi.sumstats,${within_family_path}/bmi_ref/bmi_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out /var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/bmi_ldsc
@@ -70,7 +70,7 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # # == Estonian Biobank == #
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/bmi.sumstats,${within_family_path}/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+# --rg /var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/bmi.sumstats,${within_family_path}/bmi_ref/bmi_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out /var/genetics/data/estonian_biobank/public/latest/raw/sumstats/fgwas/bmi_ldsc
@@ -79,14 +79,14 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 # # == UKB == #
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/ukb/public/latest/processed/sumstats/fgwas/13/bmi_pop.sumstats,${within_family_path}/bmi_ref/Meta-analysis_Locke_et_al+UKBiobank_2018_UPDATED.sumstats.gz \
+# --rg /var/genetics/data/ukb/public/latest/processed/sumstats/fgwas/13/bmi_pop.sumstats,${within_family_path}/bmi_ref/bmi_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out /var/genetics/proj/within_family/within_family_project/processed/sanity_checks/ukb/bmi_ldsc
 # # 0.9011 (0.023)
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/ukb/public/latest/processed/sumstats/fgwas/21/ea_pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+# --rg /var/genetics/data/ukb/public/latest/processed/sumstats/fgwas/21/ea_pop.sumstats,/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ea_ref/ea_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out /var/genetics/proj/within_family/within_family_project/processed/sanity_checks/ukb/ea_ldsc
@@ -111,13 +111,13 @@ merge_alleles="/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist"
 
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_dir.sumstats.sumstats.gz,${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz \
+# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_dir.sumstats.sumstats.gz,${within_family_path}/processed/depression_ref/depression_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/mdd_ref/mdd_dir
 
 # python ${ldsc_path}/ldsc.py \
-# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_pop.sumstats.sumstats.gz,${within_family_path}/processed/mdd_ref/PGC_UKB_depression_genome-wide.sumstats.gz \
+# --rg /var/genetics/data/estonian_biobank/public/latest/processed/sumstats/fgwas/mdd_pop.sumstats.sumstats.gz,${within_family_path}/processed/depression_ref/depression_ref.sumstats.gz \
 # --ref-ld-chr ${eur_w_ld_chr} \
 # --w-ld-chr ${eur_w_ld_chr} \
 # --out ${within_family_path}/processed/mdd_ref/mdd_pop

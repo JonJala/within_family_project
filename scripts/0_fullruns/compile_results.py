@@ -4,16 +4,16 @@ import subprocess
 import json
 
 ## chooose which results to compile
-metaanalysis = True
+metaanalysis = False
 fpgs = False
-ldsc = False
+ldsc = True
 
 ### define functions for compiling results
 
 def make_rg_matrix(directmat, populationmat):
     '''
     Make upper triangle the population rgs
-    lower triange is direct rgs
+    lower triangle is direct rgs
     '''
 
     outmat = populationmat.copy()
@@ -47,10 +47,16 @@ def get_meta_results(phenotype, effect):
     ncohorts = len(inputfiles.keys())
 
     # get h2
-    with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
+    with open(basepath + f'processed/genomic_sem/{phenotype}/{phenotype}_ldsc.log') as f:
         
-        h2lines = [l for l in f if l.startswith('Total Observed scale h2')]
-        h2 = h2lines[0] if len(h2lines) > 0 else None
+        h2lines = [l for l in f if l.startswith('Total Observed Scale h2')]
+        
+        if (effect == "direct") & (len(h2lines) > 0):
+            h2 = h2lines[0]
+        elif (effect == "population") & (len(h2lines) > 0):
+            h2 = h2lines[1]
+        else:
+            h2 = None
         
         if h2 is not None:
             h2 = h2.split(':')[1]
@@ -61,11 +67,17 @@ def get_meta_results(phenotype, effect):
             h2se = None
 
     # get h2 intercept
-    with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
+    with open(basepath + f'processed/genomic_sem/{phenotype}/{phenotype}_ldsc.log') as f:
         
         # get intercept
         h2_intercept_lines = [l for l in f if l.startswith('Intercept')]
-        h2_intercept = h2_intercept_lines[0] if len(h2_intercept_lines) > 0 else None
+
+        if (effect == "direct") & (len(h2_intercept_lines) > 0):
+            h2_intercept = h2_intercept_lines[0]
+        elif (effect == "population") & (len(h2_intercept_lines) > 0):
+            h2_intercept = h2_intercept_lines[1]
+        else:
+            h2_intercept = None
         
         if h2_intercept is not None:
             h2_intercept = h2_intercept.split(':')[1]
@@ -76,11 +88,17 @@ def get_meta_results(phenotype, effect):
             h2_intercept_se = None
 
     # get ldsc ratio
-    with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
+    with open(basepath + f'processed/genomic_sem/{phenotype}/{phenotype}_ldsc.log') as f:
         
         # get intercept
         ratio_lines = [l for l in f if l.startswith('Ratio')]
-        ratio = ratio_lines[0] if len(ratio_lines) > 0 else None
+
+        if (effect == "direct") & (len(ratio_lines) > 0):
+            ratio = ratio_lines[0]
+        elif (effect == "population") & (len(ratio_lines) > 0):
+            ratio = ratio_lines[1]
+        else:
+            ratio = None
 
         if ratio.startswith("Ratio < 0"):
             ratio_est = 0 # "Ratio < 0 (usually indicates GC correction)." but to keep it as numeric, set to 0
@@ -98,9 +116,17 @@ def get_meta_results(phenotype, effect):
             ratio_se = None
 
     # get rg with ref
-    with open(packageoutput + phenotype + f'/{effect}_reference_sample.log') as f:
-        rglines = [l for l in f if l.startswith('Genetic Correlation:')]
-        rg = rglines[0] if len(rglines) > 0 else None
+    with open(basepath + f'processed/genomic_sem/{phenotype}/{phenotype}_ldsc.log') as f:
+        
+        rglines = [l for l in f if (l.startswith('Genetic Correlation between') & ('and reference' in l))]
+        
+        if (effect == "direct") & (len(rglines) > 0):
+            rg = rglines[0]
+        elif (effect == "population") & (len(rglines) > 0):
+            rg = rglines[1]
+        else:
+            rg = None
+
         if rg is not None:
             rg = rg.split(':')[1]
             rgest = float(rg.split('(')[0])
@@ -109,9 +135,9 @@ def get_meta_results(phenotype, effect):
             rgest = None
             rgse = None
 
-    # get dir-pop rg from ldsc
-    with open(packageoutput + phenotype + '/direct_population.log') as f:
-        ldsc_rglines = [l for l in f if l.startswith('Genetic Correlation:')]
+    # get dir-pop rg
+    with open(basepath + f'processed/genomic_sem/{phenotype}/{phenotype}_ldsc.log') as f:
+        ldsc_rglines = [l for l in f if l.startswith(f'Genetic Correlation between {phenotype}_direct and {phenotype}_pop')]
         ldsc_rg = ldsc_rglines[0] if len(ldsc_rglines) > 0 else None
         if ldsc_rg is not None:
             ldsc_rg = ldsc_rg.split(':')[1]
@@ -494,5 +520,5 @@ if fpgs == True:
 
 ## compile and save ldsc results
 if ldsc == True:
-    get_ldsc_results(phenotypes)
+    subprocess.call ("Rscript /var/genetics/proj/within_family/within_family_project/scripts/0_fullruns/compile_correlation_matrix.R", shell=True)
     # get_heritabilities(phenotypes) # for jackknife estimates -- do not run / leave for now

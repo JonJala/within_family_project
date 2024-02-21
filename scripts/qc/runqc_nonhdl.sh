@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/ldl_ref/ldl_ref.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/nonhdl_ref/nonhdl_ref.sumstats.gz"
 
 # #########
 # # Hunt

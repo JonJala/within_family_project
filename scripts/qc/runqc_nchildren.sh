@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 ### Run the easyqc pipeline
 
-reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/neb_ref/nchildren_pooled.sumstats.gz"
+reffile="/var/genetics/proj/within_family/within_family_project/processed/reference_samples/nchildren_ref/nchildren_ref.sumstats.gz"
 
 # #############
 # # Hunt

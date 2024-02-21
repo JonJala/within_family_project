@@ -43,14 +43,14 @@ ${ldscpath}/munge_sumstats.py \
 
 echo "Calculating RG of population effect with reference EA sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/ea/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/ea/populationmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/ea_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/ea/population_reference_sample
 
 echo "Calculating RG of direct effect with reference EA sample"
 ${ldscpath}/ldsc.py \
---rg ${within_family_path}/processed/package_output/ea/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/GWAS_EA_excl23andMe.sumstats.gz \
+--rg ${within_family_path}/processed/package_output/ea/directmunged.sumstats.gz,${within_family_path}/processed/reference_samples/ea_ref/ea_ref.sumstats.gz \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/ea/direct_reference_sample

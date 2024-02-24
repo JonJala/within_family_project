@@ -33,11 +33,11 @@ cor_results %<>%
 correlate <- cor_results %>%
               select(phenotype, dir_pop_rg, dir_pop_rg_se) %>%
               mutate(source = "SNIPar")
-genomicSEM <- cor_results %>%
+ldsc <- cor_results %>%
                 select(phenotype, dir_pop_rg_ldsc, dir_pop_rg_se_ldsc) %>%
-                mutate(source = "GenomicSEM") %>%
+                mutate(source = "LDSC") %>%
                 rename(dir_pop_rg = dir_pop_rg_ldsc, dir_pop_rg_se = dir_pop_rg_se_ldsc)
-results <- rbind(correlate, genomicSEM)
+results <- rbind(correlate, ldsc)
 results %<>% filter(phenotype != "ADHD", phenotype != "COPD")
 
 # colour palette
@@ -59,10 +59,11 @@ p <- ggplot(results %>% filter(!is.na(dir_pop_rg)),aes(x=phenotype,y=dir_pop_rg,
       geom_errorbar(aes(x = phenotype, ymin=dir_pop_rg-qnorm(0.025)*dir_pop_rg_se,ymax=dir_pop_rg+qnorm(0.025)*dir_pop_rg_se),width=0.25, position = position_dodge(width = 0.5))+
       geom_hline(yintercept=1.0)+
       theme_bw()+
-      theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "bottom")+
+      theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "bottom")+
       xlab('phenotype')+ylab('Correlation between direct and population effects')+
       scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1,1.25,1.5)) +
-      scale_colour_manual(values = palette, guide = "none")
+      scale_colour_manual(values = palette, guide = "none") +
+      coord_flip()
 ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_population_correlations.pdf', p, width=9,height=7,device=cairo_pdf)
 
 # plot direct to ntc corr

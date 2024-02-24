@@ -37,26 +37,29 @@ for (pheno1 in phenotypes) {
 
         if (pheno2_index > pheno1_index) {
 
-            log <- readLines(paste0(basepath, "/", pheno1, "_", pheno2, "/", pheno1, "_", pheno2, "_ldsc.log"))
-            direct_rg_line <- grep(paste0("Genetic Correlation between ", pheno1, "_direct and ", pheno2, "_direct:"), log, value = T)
-            pop_rg_line <- grep(paste0("Genetic Correlation between ", pheno1, "_pop and ", pheno2, "_pop:"), log, value = T)
-
-            if (length(direct_rg_line) > 0) {
-                rg_direct <- as.numeric(strsplit(strsplit(direct_rg_line, ": ")[[1]][2], " \\(")[[1]][1])
-                rg_direct_se <- as.numeric(strsplit(strsplit(direct_rg_line, "\\(")[[1]][2], "\\)")[[1]][1])
-            } else {
-                rg_direct <- NA
-                rg_direct_se <- NA
-            }
-
-            if (length(pop_rg_line) > 0) {
-                rg_pop <- as.numeric(strsplit(strsplit(pop_rg_line, ": ")[[1]][2], " \\(")[[1]][1])
-                rg_pop_se <- as.numeric(strsplit(strsplit(pop_rg_line, "\\(")[[1]][2], "\\)")[[1]][1])
-            } else {
-                rg_pop <- NA
-                rg_pop_se <- NA
-            }
-
+            results <- fread(paste0(basepath, "/", pheno1, "_", pheno2, "/", pheno1, "_", pheno2, "_results.txt"))
+            
+            # get direct rg and se
+            rg_direct <- results %>%
+                            filter(variable == "direct_rg") %>%
+                            select(value)
+            rg_direct <- round(as.numeric(rg_direct$value), 3)
+            rg_direct_se <- results %>%
+                            filter(variable == "direct_rg_se") %>%
+                            select(value)
+            rg_direct_se <- round(as.numeric(rg_direct_se$value), 3)
+            
+            # get pop rg and se
+            rg_pop <- results %>%
+                            filter(variable == "pop_rg") %>%
+                            select(value)
+            rg_pop <- round(as.numeric(rg_pop$value), 3)
+            rg_pop_se <- results %>%
+                        filter(variable == "pop_rg_se") %>%
+                        select(value)
+            rg_pop_se <- round(as.numeric(rg_pop_se$value), 3)
+            
+            # compile
             rgs_direct[pheno2_index] <- paste0(rg_direct, " (", rg_direct_se, ")")
             rgs_pop[pheno2_index] <- paste0(rg_pop, " (", rg_pop_se, ")")
 

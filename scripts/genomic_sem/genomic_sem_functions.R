@@ -23,7 +23,7 @@ run_ldsc_genomicSEM <- function(traits, ld, wld, trait.names, outpath, filename,
     setwd(outpath)
     
     # run LDSC
-    LDSCoutput <- ldsc(traits=traits,sample.prev=sample.prev,population.prev=population.prev,ld=ld,wld=wld,trait.names=trait.names,ldsc.log=filename, stand = TRUE)
+    LDSCoutput <- ldsc(traits=traits,sample.prev=sample.prev,population.prev=population.prev,ld=ld,wld=wld,trait.names=trait.names,ldsc.log=filename)
 
     # save output
     save(LDSCoutput,file=paste0(outpath, "/", "LDSCoutput_", filename, ".RData"))

@@ -17,17 +17,27 @@ cor_results = read_excel("/var/genetics/proj/within_family/within_family_project
 
 # format pheno names
 cor_results %<>% 
-  mutate(phenotype = case_when(phenotype == "aafb" ~ "Age at first birth",
-                               phenotype == "aud" ~ "Alcohol use disorder",
-                               phenotype == "bpd" ~ "Diastolic blood pressure",
-                               phenotype == "bps" ~ "Systolic blood pressure",
-                               phenotype == "cpd" ~ "Cigarettes per day",
-                               phenotype == "dpw" ~ "Drinks per week",
-                               phenotype == "fev" ~ "FEV1",
-                               phenotype == "swb" ~ "Subjective well-being",
-                               phenotype == "nonhdl" ~ "Non-HDL",
-                               phenotype %in% c("adhd", "bmi", "copd", "ea", "hdl") ~ toupper(phenotype),
-                               phenotype %in% c("cannabis", "hhincome", "cognition", "depsymp", "health", "depression", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(phenotype)))  
+  mutate(phenotype = case_when(phenotype %in% c("adhd", "bmi", "copd", "ea", "hdl") ~ toupper(phenotype),
+                                phenotype == "nonhdl" ~ "Non-HDL",
+                                phenotype == "fev" ~ "FEV1",
+                                phenotype == "agemenarche" ~ "Age-at-menarche",
+                                phenotype == "bps" ~ "Blood pressure (systolic)",
+                                phenotype == "bpd" ~ "Blood pressure (diastolic)",
+                                phenotype == "cognition" ~ "Cognitive performance",
+                                phenotype == "depsymp" ~ "Depressive symptoms",
+                                phenotype == "eversmoker" ~ "Ever-smoker",
+                                phenotype == "dpw" ~ "Drinks-per-week",
+                                phenotype == "hayfever" ~ "Allergic rhinitis",
+                                phenotype == "health" ~ "Self-rated health",
+                                phenotype == "hhincome" ~ "Household income",
+                                phenotype == "swb" ~ "Subjective well-being",
+                                phenotype == "nchildren" ~ "Number of children",
+                                phenotype == "nearsight" ~ "Myopia",
+                                phenotype == "aud" ~ "Alcohol use disorder",
+                                phenotype == "cpd" ~ "Cigarettes per day",
+                                phenotype == "aafb" ~ "Age at first birth",
+                                phenotype == "morningperson" ~ "Morning person",
+                                phenotype %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "income", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(phenotype)))
 
 # direct-pop ldsc v.s. snipar comparison
 correlate <- cor_results %>%

@@ -29,17 +29,15 @@ cor_results %<>%
                                phenotype %in% c("adhd", "bmi", "copd", "ea", "hdl") ~ toupper(phenotype),
                                phenotype %in% c("cannabis", "hhincome", "cognition", "depsymp", "health", "depression", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(phenotype)))  
 
-# direct-pop ldsc v.s. genomicSEM comparison
-results <- read_xlsx("/disk/genetics4/ws_dirs/tammytan/processed/ldsc_genomic_sem_rg_comparison.xlsx")
-genomicSEM <- results %>%
-              select(phenotype, rg_genomic_sem, rg_se_genomic_sem) %>%
-              mutate(source = "GenomicSEM") %>%
-              rename(dir_pop_rg = rg_genomic_sem, dir_pop_rg_se = rg_se_genomic_sem)
-ldsc <- results %>%
-                select(phenotype, rg_ldsc, rg_se_ldsc) %>%
-                mutate(source = "LDSC") %>%
-                rename(dir_pop_rg = rg_ldsc, dir_pop_rg_se = rg_se_ldsc)
-results <- rbind(ldsc, genomicSEM)
+# direct-pop ldsc v.s. snipar comparison
+correlate <- cor_results %>%
+              select(phenotype, dir_pop_rg, dir_pop_rg_se) %>%
+              mutate(source = "SNIPar")
+genomicSEM <- cor_results %>%
+                select(phenotype, dir_pop_rg_ldsc, dir_pop_rg_se_ldsc) %>%
+                mutate(source = "GenomicSEM") %>%
+                rename(dir_pop_rg = dir_pop_rg_ldsc, dir_pop_rg_se = dir_pop_rg_se_ldsc)
+results <- rbind(correlate, genomicSEM)
 results %<>% filter(phenotype != "ADHD", phenotype != "COPD")
 
 # colour palette
@@ -65,7 +63,7 @@ p <- ggplot(results %>% filter(!is.na(dir_pop_rg)),aes(x=phenotype,y=dir_pop_rg,
       xlab('phenotype')+ylab('Correlation between direct and population effects')+
       scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1,1.25,1.5)) +
       scale_colour_manual(values = palette, guide = "none")
-ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_population_correlations_genomicsem_ldsc.pdf', p, width=9,height=7,device=cairo_pdf)
+ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_population_correlations.pdf', p, width=9,height=7,device=cairo_pdf)
 
 # plot direct to ntc corr
 cor_results$phenotype = factor(cor_results$phenotype,cor_results$phenotype[order(cor_results$dir_ntc_rg)])

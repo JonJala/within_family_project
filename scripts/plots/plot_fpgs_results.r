@@ -71,7 +71,7 @@ fpgs_plot <- function(data, dirpop, valid, ncols = 6) {
                 axis.title = element_blank(), strip.text.x = element_text(size = 9.5)) +
         facet_wrap(~pheno_name, ncol = ncols, labeller = labeller(phenoname = label_wrap_gen(10)))
         print(p)
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/fpgs_", dirpop, "_effects_", valid, ".png"), p)
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/fpgs_", dirpop, "_effects_", valid, ".png"), p, width = 10, height = 10)
 }
 
 fpgs_plot(df, "direct", "mcs")
@@ -116,7 +116,7 @@ fpgs_plot_ea_cog <- function(data, dirpop, pheno, ylim, ncols = 3) {
                 axis.title = element_blank(), strip.text.x = element_text(size = 8)) +
         facet_wrap(~validation_pheno_name, ncol = ncols)
         print(p)
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/fpgs_", dirpop, "_effects_", pheno, ".png"), p, width = 6, height = 6)
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/fpgs_", dirpop, "_effects_", pheno, ".png"), p)
 }
 
 fpgs_plot_ea_cog(df_ea_cog, "direct", "ea", ylim = c(-0.08, 0.28))
@@ -152,7 +152,7 @@ plot_parental_corrs <- function(data, valid, ncols = 5) {
                 axis.title = element_blank(), strip.text.x = element_text(size = 11)) +
         facet_wrap(~pheno_name, ncol = ncols)
         print(p)
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/parental_corrs_", valid, ".png"), p)
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/parental_corrs_", valid, ".png"), p, width = 10, height = 10)
 }
 
 plot_parental_corrs(corrs_df, "mcs")

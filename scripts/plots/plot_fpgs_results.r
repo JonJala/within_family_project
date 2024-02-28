@@ -5,7 +5,7 @@
 # ---------------------------------------------------------------------
 
 list.of.packages <- c("data.table", "tidyr", "dplyr", "magrittr", "tidyverse", "ggplot2",
-                        "readxl", "stringr")
+                        "readxl", "stringr", "RColorBrewer")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos = "http://cran.rstudio.com/")
 lapply(list.of.packages, library, character.only = TRUE)
@@ -55,7 +55,7 @@ df <- merge(values, se) %>%
 
 # colour palette
 set.seed(42)
-n <- length(unique(results$phenotype))
+n <- length(unique(data$phenotype))
 palette1 <- c("#E93993", "#CCEBDE", "#B2BFDC", "#C46627", "#10258A", "#E73B3C", "#DDDDDD",
                 "#FF8F1F", "#FCD3E6", "#B9E07A", "#A3F6FF", "#47AA42", "#A0DBD0",
                 "#5791C2", "#E9B82D", "#FC9284", "#7850A4", "#CEB8D7", "#FDC998", "#ADADAD",

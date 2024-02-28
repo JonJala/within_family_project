@@ -17,11 +17,11 @@ lapply(list.of.packages, library, character.only = TRUE)
 data <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_results.xlsx")
 
 values <- data %>%
-        select(ends_with(c("phenotype","_direct","_pop","_paternal","_maternal","_corr"))) %>%
+        select(ends_with(c("phenotype","_direct","_pop","_avg_ntc","_corr"))) %>%
         gather(measure, value, direct_direct:population_parental_pgi_corr)
 
 se <- data %>%
-        select(ends_with(c("phenotype", "direct_se", "pop_se", "paternal_se", "maternal_se", "_corr_se"))) %>%
+        select(ends_with(c("phenotype", "direct_se", "pop_se", "avg_ntc_se", "_corr_se"))) %>%
         gather(measure, se, direct_direct_se:population_parental_pgi_corr_se) %>%
         mutate(measure = substr(measure, 1, nchar(measure)-3))
 
@@ -33,8 +33,8 @@ df <- merge(values, se) %>%
                         phenotype == "nonhdl" ~ "Non-HDL",
                         phenotype == "fev" ~ "FEV1",
                         phenotype == "agemenarche" ~ "Age-at-menarche",
-                        phenotype == "bps" ~ "BPS",
-                        phenotype == "bpd" ~ "BPD",
+                        phenotype == "bps" ~ "Blood pressure (systolic)",
+                        phenotype == "bpd" ~ "Blood pressure (diastolic)",
                         phenotype == "cognition" ~ "Cognitive performance",
                         phenotype == "depsymp" ~ "Depressive symptoms",
                         phenotype == "eversmoker" ~ "Ever-smoker",
@@ -53,31 +53,46 @@ df <- merge(values, se) %>%
         validation = case_when(phenotype %in% mcs_phenos ~ "mcs",
                         !(phenotype %in% mcs_phenos) ~ "ukb"))
 
+# colour palette
+set.seed(42)
+n <- length(unique(results$phenotype))
+palette1 <- c("#E93993", "#CCEBDE", "#B2BFDC", "#C46627", "#10258A", "#E73B3C", "#DDDDDD",
+                "#FF8F1F", "#FCD3E6", "#B9E07A", "#A3F6FF", "#47AA42", "#A0DBD0",
+                "#5791C2", "#E9B82D", "#FC9284", "#7850A4", "#CEB8D7", "#FDC998", "#ADADAD",
+                "#00441B", "#028189", "#67001F", "#525252", "#FE69FC", "#A0D99B", "#4B1DB7")
+qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+palette2 <- sample(col_vector, ifelse(n > 27, n-length(palette1), n), replace = F)
+palette <- c(palette1, palette2)
+
 # ---------------------------------------------------------------------
 # plot fpgs coefficients
 # ---------------------------------------------------------------------
 
-fpgs_plot <- function(data, dirpop, valid, ncols = 6) {
-        lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_maternal"), paste0(dirpop, "_paternal"), paste0(dirpop, "_pop"))
-        p <- ggplot(data %>% filter(validation == valid, dir_pop == dirpop, measure %in% lvls),
-                aes(x = factor(measure, levels = lvls), y = value, fill = factor(measure, levels = lvls))) +
-        geom_bar(stat = "identity") +
-        geom_hline(yintercept = 0) +
-        geom_linerange(aes(ymin = value - 1.96*se, ymax = value + 1.96*se), colour="black", linewidth = 0.5) +
-        theme_classic() +
-        scale_fill_discrete(labels = c("Direct", "Maternal", "Paternal", "Population")) +
-        theme(legend.title = element_blank(), legend.position = "bottom", axis.text.x = element_blank(),
-                axis.ticks.x = element_blank(), axis.text.y = element_text(size = 11),
-                axis.title = element_blank(), strip.text.x = element_text(size = 9.5)) +
-        facet_wrap(~pheno_name, ncol = ncols, labeller = labeller(phenoname = label_wrap_gen(10)))
+fpgs_plot <- function(data, dirpop, ncols = 6) {
+        lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_avg_ntc"), paste0(dirpop, "_pop"))
+        data %<>% 
+                filter(dir_pop == dirpop, measure %in% lvls) %>%
+                mutate(measure = case_when(measure == paste0(dirpop, "_direct") ~ "Direct",
+                                        measure == paste0(dirpop, "_avg_ntc") ~ "Average NTC",
+                                        measure == paste0(dirpop, "_pop") ~ "Population"))
+        p <- ggplot(data, aes(x = pheno_name, y = value, colour = pheno_name, group = value), show.legend = F) +
+                geom_point(aes(shape = measure), position = position_dodge(width = 0.5), size=2) +
+                geom_hline(yintercept = 0) +
+                geom_errorbar(aes(x = pheno_name, ymin = value - 1.96*se, ymax = value + 1.96*se), width = 0.25, position = position_dodge(width = 0.5)) +
+                theme_bw()+
+                scale_colour_manual(values = palette, guide = "none") +
+                guides(shape = guide_legend(title = "PGI Coefficient")) +
+                xlab("Phenotype") +
+                theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "bottom",
+                        axis.title.x = element_blank())+
+                coord_flip()
         print(p)
-        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/fpgs_", dirpop, "_effects_", valid, ".png"), p, width = 10, height = 10)
+        ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/fpgs_", dirpop, "_effects.png"), p, width = 10, height = 10)
 }
 
-fpgs_plot(df, "direct", "mcs")
-fpgs_plot(df, "population", "mcs")
-fpgs_plot(df, "direct", "ukb")
-fpgs_plot(df, "population", "ukb")
+fpgs_plot(df, "direct")
+fpgs_plot(df, "population")
 
 # ---------------------------------------------------------------------
 # plot fpgs coefficients for ea and cognition

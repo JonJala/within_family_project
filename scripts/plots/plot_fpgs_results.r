@@ -16,7 +16,14 @@ lapply(list.of.packages, library, character.only = TRUE)
 
 data <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_results.xlsx")
 
+# filter on direct neff
+meta = read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx")
+filtered_phenos <- meta %<>% 
+                        filter(n_eff_median_direct > 5000) %>%
+                        select(phenotype)
+
 values <- data %>%
+        filter(phenotype %in% filtered_phenos$phenotype) %>%
         select(ends_with(c("phenotype","_direct","_pop","_avg_ntc","_corr"))) %>%
         gather(measure, value, direct_direct:population_parental_pgi_corr)
 

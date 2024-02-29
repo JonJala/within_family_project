@@ -6,6 +6,7 @@ library(stringr)
 library(ggpubr)
 library(latex2exp)
 library(ggrepel)
+library(magrittr)
 library(RColorBrewer)
 theme_set(theme_pubr())
 
@@ -58,10 +59,14 @@ reformat_matrix = function(rgmat){
 ## read in and process data
 ## --------------------------------------------------------------------------------
 
+# filter on direct neff
+meta <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx")
+neff_phenos <- meta %<>% 
+                    filter(n_eff_median_direct > 5000) %>%
+                    select(phenotype)
+
 # get all pheno pairings
-all_phenos = c('aafb', 'adhd', 'agemenarche', 'asthma', 'aud', 'bmi', 'bpd', 'bps', 'cannabis', 'cognition', 'copd', 'cpd', 'depression',
-                 'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'hypertension', 'income', 
-                 'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb')
+all_phenos <- neff_phenos$phenotype
 phenos = c()
 for (pheno1 in all_phenos) {
     for (pheno2 in all_phenos) {
@@ -77,20 +82,19 @@ process_data <- function(phenos, filter_pheno = NA) {
     setDT(dat)
     dat <- cbind(names(dat), dat)
     setnames(dat, names(dat)[1], 'phenotype')
-    dat = reformat_matrix(dat)
+    dat <- reformat_matrix(dat)
     if (!is.na(filter_pheno)) {
         phenos <- phenos[grepl(paste0(filter_pheno,"_|_",filter_pheno), phenos)]
     }
     # filter out pairs where direct_rg_se > 0.25
-    dat = dat %>% 
+    dat <- dat %>% 
         filter(!is.na(direct_rg_se) & direct_rg_se < 0.25 & phenotype %in% phenos)
     # +- 95% CI bounds
-    dat[, `:=`(
-        direct_rg_lo = direct_rg - 1.96*direct_rg_se,
-        direct_rg_hi = direct_rg + 1.96*direct_rg_se,
-        pop_rg_lo = pop_rg - 1.96*pop_rg_se,
-        pop_rg_hi = pop_rg + 1.96*pop_rg_se
-    )]
+    dat %<>%
+        mutate(direct_rg_lo = direct_rg - 1.96*direct_rg_se,
+                direct_rg_hi = direct_rg + 1.96*direct_rg_se,
+                pop_rg_lo = pop_rg - 1.96*pop_rg_se,
+                pop_rg_hi = pop_rg + 1.96*pop_rg_se)
     return(dat)
 }
 

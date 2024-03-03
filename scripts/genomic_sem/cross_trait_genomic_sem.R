@@ -36,8 +36,9 @@ compile_results <- function(phenotypes) {
     
     # format pheno names
     results_table <- results_table %>%
-                        mutate(pheno1 = case_when(pheno1 %in% c("adhd", "bmi", "copd", "ea", "hdl") ~ toupper(pheno1),
-                                pheno1 == "nonhdl" ~ "Non-HDL",
+                        mutate(pheno1 = case_when(pheno1 %in% c("adhd", "bmi", "copd", "ea") ~ toupper(pheno1),
+                                pheno1 == "nonhdl" ~ "Non-HDL cholesterol",
+                                pheno1 == "hdl" ~ "HDL cholesterol",
                                 pheno1 == "fev" ~ "FEV1",
                                 pheno1 == "agemenarche" ~ "Age-at-menarche",
                                 pheno1 == "bps" ~ "BPS",
@@ -54,11 +55,13 @@ compile_results <- function(phenotypes) {
                                 pheno1 == "nearsight" ~ "Myopia",
                                 pheno1 == "aud" ~ "Alcohol use disorder",
                                 pheno1 == "cpd" ~ "Cigarettes per day",
-                                pheno1 == "aafb" ~ "Age at first birth",
+                                pheno1 == "aafb" ~ "Age at first birth (women)",
                                 pheno1 == "morningperson" ~ "Morning person",
-                                pheno1 %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "income", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(pheno1)),
-                        pheno2 = case_when(pheno2 %in% c("adhd", "bmi", "copd", "ea", "hdl") ~ toupper(pheno2),
-                                pheno2 == "nonhdl" ~ "Non-HDL",
+                                pheno1 == "income" ~ "Individual income",
+                                pheno1 %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(pheno1)),
+                        pheno2 = case_when(pheno2 %in% c("adhd", "bmi", "copd", "ea") ~ toupper(pheno2),
+                                pheno2 == "nonhdl" ~ "Non-HDL cholesterol",
+                                pheno2 == "hdl" ~ "HDL cholesterol",
                                 pheno2 == "fev" ~ "FEV1",
                                 pheno2 == "agemenarche" ~ "Age-at-menarche",
                                 pheno2 == "bps" ~ "BPS",
@@ -75,9 +78,10 @@ compile_results <- function(phenotypes) {
                                 pheno2 == "nearsight" ~ "Myopia",
                                 pheno2 == "aud" ~ "Alcohol use disorder",
                                 pheno2 == "cpd" ~ "Cigarettes per day",
-                                pheno2 == "aafb" ~ "Age at first birth",
+                                pheno2 == "aafb" ~ "Age at first birth (women)",
                                 pheno2 == "morningperson" ~ "Morning person",
-                                pheno2 %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "income", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(pheno2)))
+                                pheno2 == "income" ~ "Individual income",
+                                pheno2 %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(pheno2)))
     
     # add -log10(p) and adjusted pval column
     results_table[,3:ncol(results_table)] <- sapply(results_table[,3:ncol(results_table)], as.numeric) # exclude first two columns (phenotypes)

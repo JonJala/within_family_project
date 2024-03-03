@@ -29,8 +29,9 @@ h2_plot <- function(save = TRUE) {
 
     # rename phenotypes
     dat %<>%
-        mutate(phenotype = case_when(phenotype %in% c("adhd", "bmi", "copd", "ea", "hdl") ~ toupper(phenotype),
-                                phenotype == "nonhdl" ~ "Non-HDL",
+        mutate(phenotype = case_when(phenotype %in% c("adhd", "bmi", "copd", "ea") ~ toupper(phenotype),
+                                phenotype == "nonhdl" ~ "Non-HDL cholesterol",
+                                phenotype == "hdl" ~ "HDL cholesterol",
                                 phenotype == "fev" ~ "FEV1",
                                 phenotype == "agemenarche" ~ "Age-at-menarche",
                                 phenotype == "bps" ~ "Blood pressure (systolic)",
@@ -47,9 +48,10 @@ h2_plot <- function(save = TRUE) {
                                 phenotype == "nearsight" ~ "Myopia",
                                 phenotype == "aud" ~ "Alcohol use disorder",
                                 phenotype == "cpd" ~ "Cigarettes per day",
-                                phenotype == "aafb" ~ "Age at first birth",
+                                phenotype == "aafb" ~ "Age at first birth (women)",
                                 phenotype == "morningperson" ~ "Morning person",
-                                phenotype %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "income", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(phenotype)))
+                                phenotype == "income" ~ "Individual income",
+                                phenotype %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(phenotype)))
 
     # significant points to be labelled
     sig_points <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/h2_diff_results.xlsx")

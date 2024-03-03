@@ -17,9 +17,10 @@ lapply(list.of.packages, library, character.only = TRUE)
 data <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/fpgs_results.xlsx")
 
 # filter on direct neff
-meta = read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx")
-filtered_phenos <- meta %<>% 
+meta <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx")
+filtered_phenos <- meta %>%
                         filter(n_eff_median_direct > 5000) %>%
+                        arrange(desc(n_eff_median_direct)) %>%
                         select(phenotype)
 
 values <- data %>%
@@ -32,12 +33,13 @@ se <- data %>%
         gather(measure, se, direct_direct_se:population_parental_pgi_corr_se) %>%
         mutate(measure = substr(measure, 1, nchar(measure)-3))
 
-capitalized <- c("adhd", "bmi", "ea", "hdl")
+capitalized <- c("adhd", "bmi", "ea")
 mcs_phenos <- c('ea', 'cognition', 'bmi', 'depression', 'adhd', 'agemenarche', 'eczema', 'cannabis' ,'dpw', 'depsymp', 'eversmoker', 'extraversion', 'neuroticism', 'health', 'height', 'hhincome', 'swb')
 df <- merge(values, se) %>%
         mutate(dir_pop = str_extract(measure, "[^_]+"),
         pheno_name = case_when(phenotype %in% capitalized ~ toupper(phenotype),
-                        phenotype == "nonhdl" ~ "Non-HDL",
+                        phenotype == "nonhdl" ~ "Non-HDL cholesterol",
+                        phenotype == "hdl" ~ "HDL cholesterol",
                         phenotype == "fev" ~ "FEV1",
                         phenotype == "agemenarche" ~ "Age-at-menarche",
                         phenotype == "bps" ~ "Blood pressure (systolic)",
@@ -54,11 +56,13 @@ df <- merge(values, se) %>%
                         phenotype == "nearsight" ~ "Myopia",
                         phenotype == "aud" ~ "Alcohol use disorder",
                         phenotype == "cpd" ~ "Cigarettes per day",
-                        phenotype == "aafb" ~ "Age at first birth",
+                        phenotype == "aafb" ~ "Age at first birth (women)",
                         phenotype == "morningperson" ~ "Morning person",
-                        phenotype %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "income", "migraine", "neuroticism") ~ str_to_title(phenotype)),
+                        phenotype == "income" ~ "Individual income",
+                        phenotype %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "migraine", "neuroticism") ~ str_to_title(phenotype)),
         validation = case_when(phenotype %in% mcs_phenos ~ "mcs",
                         !(phenotype %in% mcs_phenos) ~ "ukb"))
+pheno_order <- df %>% arrange(factor(phenotype, levels = filtered_phenos$phenotype)) %>% select(pheno_name) %>% unique()
 
 # colour palette
 set.seed(42)
@@ -83,12 +87,13 @@ fpgs_plot <- function(data, dirpop, ncols = 6) {
                 mutate(measure = case_when(measure == paste0(dirpop, "_direct") ~ "Direct",
                                         measure == paste0(dirpop, "_avg_ntc") ~ "Average NTC",
                                         measure == paste0(dirpop, "_pop") ~ "Population"))
-        p <- ggplot(data, aes(x = pheno_name, y = value, colour = pheno_name, group = value), show.legend = F) +
-                geom_point(aes(shape = measure), position = position_dodge(width = 0.5), size=2) +
+        p <- ggplot(data, aes(x = factor(pheno_name, level = rev(pheno_order$pheno_name)), y = value, colour = pheno_name, group = value), show.legend = F) +
+                geom_point(aes(shape = factor(measure, levels = c("Population", "Direct", "Average NTC"))), position = position_dodge(width = 0.5), size=2) +
                 geom_hline(yintercept = 0) +
                 geom_errorbar(aes(x = pheno_name, ymin = value - 1.96*se, ymax = value + 1.96*se), width = 0.25, position = position_dodge(width = 0.5)) +
                 theme_bw()+
                 scale_colour_manual(values = palette, guide = "none") +
+                scale_shape_manual(values = factor(data$measure, levels = c("Population", "Direct", "Average NTC"))) +
                 guides(shape = guide_legend(title = "PGI Coefficient")) +
                 xlab("Phenotype") +
                 theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "bottom",

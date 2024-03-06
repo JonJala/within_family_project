@@ -64,17 +64,8 @@ df <- merge(values, se) %>%
                         !(phenotype %in% mcs_phenos) ~ "ukb"))
 pheno_order <- df %>% arrange(factor(phenotype, levels = filtered_phenos$phenotype)) %>% select(pheno_name) %>% unique()
 
-# colour palette
-set.seed(42)
-n <- length(unique(data$phenotype))
-palette1 <- c("#E93993", "#CCEBDE", "#B2BFDC", "#C46627", "#10258A", "#E73B3C", "#DDDDDD",
-                "#FF8F1F", "#FCD3E6", "#B9E07A", "#A3F6FF", "#47AA42", "#A0DBD0",
-                "#5791C2", "#E9B82D", "#FC9284", "#7850A4", "#CEB8D7", "#FDC998", "#ADADAD",
-                "#00441B", "#028189", "#67001F", "#525252", "#FE69FC", "#A0D99B", "#4B1DB7")
-qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
-col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
-palette2 <- sample(col_vector, ifelse(n > 27, n-length(palette1), n), replace = F)
-palette <- c(palette1, palette2)
+# colour palette -- modified version of "Set1" from RColorBrewer
+palette <- rep(c("#E41A1C", "#377EB8",  "#A65628", "#4DAF4A", "#FF7F00", "#984EA3", "#999999", "#F781BF"), 4)
 
 # ---------------------------------------------------------------------
 # plot fpgs coefficients
@@ -87,12 +78,12 @@ fpgs_plot <- function(data, dirpop, ncols = 6) {
                 mutate(measure = case_when(measure == paste0(dirpop, "_direct") ~ "Direct",
                                         measure == paste0(dirpop, "_avg_ntc") ~ "Average NTC",
                                         measure == paste0(dirpop, "_pop") ~ "Population"))
-        p <- ggplot(data, aes(x = factor(pheno_name, level = rev(pheno_order$pheno_name)), y = value, colour = pheno_name, group = value), show.legend = F) +
+        p <- ggplot(data, aes(x = factor(pheno_name, level = rev(pheno_order$pheno_name)), y = value, colour = factor(pheno_name, level = rev(pheno_order$pheno_name)), group = value), show.legend = F) +
                 geom_point(aes(shape = factor(measure, levels = c("Population", "Direct", "Average NTC"))), position = position_dodge(width = 0.5), size=2) +
                 geom_hline(yintercept = 0) +
                 geom_errorbar(aes(x = pheno_name, ymin = value - 1.96*se, ymax = value + 1.96*se), width = 0.25, position = position_dodge(width = 0.5)) +
                 theme_bw()+
-                scale_colour_manual(values = palette, guide = "none") +
+                scale_colour_manual(values = palette, guide = "none")+
                 scale_shape_manual(values = factor(data$measure, levels = c("Population", "Direct", "Average NTC"))) +
                 guides(shape = guide_legend(title = "PGI Coefficient")) +
                 xlab("Phenotype") +

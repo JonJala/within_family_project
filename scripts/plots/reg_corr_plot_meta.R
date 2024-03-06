@@ -56,21 +56,12 @@ results <- rbind(correlate, ldsc) %>%
             filter(dir_pop_rg_se < 0.25)
 results$Source <- factor(results$Source, levels = c("snipar", "LDSC"))
 
-# colour palette
-set.seed(42)
-n <- length(unique(results$phenotype))
-palette1 <- c("#E93993", "#CCEBDE", "#B2BFDC", "#C46627", "#10258A", "#E73B3C", "#DDDDDD",
-                "#FF8F1F", "#FCD3E6", "#B9E07A", "#A3F6FF", "#47AA42", "#A0DBD0",
-                "#5791C2", "#E9B82D", "#FC9284", "#7850A4", "#CEB8D7", "#FDC998", "#ADADAD",
-                "#00441B", "#028189", "#67001F", "#525252", "#FE69FC", "#A0D99B", "#4B1DB7")
-qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
-col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
-palette2 <- sample(col_vector, ifelse(n > 27, n-length(palette1), n), replace = F)
-palette <- c(palette1, palette2)
+# colour palette -- modified version of RColorBrewer "Set1"
+palette <- rep(c("#E41A1C", "#377EB8",  "#A65628", "#4DAF4A", "#FF7F00", "#984EA3", "#999999", "#F781BF"), 4)
 
 # plot direct to pop corr
 results$phenotype = factor(results$phenotype,levels=unique(results$phenotype[order(results$dir_pop_rg)]))
-p <- ggplot(results %>% filter(!is.na(dir_pop_rg)),aes(x=factor(phenotype, levels = cor_results$phenotype),y=dir_pop_rg,colour=phenotype,label=phenotype, group = Source))+
+p <- ggplot(results %>% filter(!is.na(dir_pop_rg)),aes(x=factor(phenotype, levels = cor_results$phenotype),y=dir_pop_rg,colour=factor(phenotype, levels = cor_results$phenotype),label=phenotype, group = Source))+
       geom_point(aes(shape = factor(Source, levels = c("LDSC", "snipar"))), position = position_dodge(width = 0.5), size=2)+
       geom_errorbar(aes(x = phenotype, ymin=dir_pop_rg-qnorm(0.025)*dir_pop_rg_se,ymax=dir_pop_rg+qnorm(0.025)*dir_pop_rg_se),width=0.25, position = position_dodge(width = 0.5))+
       geom_hline(yintercept=1.0)+

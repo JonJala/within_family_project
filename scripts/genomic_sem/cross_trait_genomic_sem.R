@@ -8,12 +8,20 @@ library(data.table)
 library(dplyr)
 library(writexl)
 library(stringr)
+library(readxl)
 
 ## ---------------------------------------------------------------------
 ## function to compile results
 ## ---------------------------------------------------------------------
 
 compile_results <- function(phenotypes) {
+
+    ## filter on median direct neff
+    meta <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx")
+    neff_phenos <- meta %<>% 
+                        filter(n_eff_median_direct > 5000) %>%
+                        select(phenotype)
+    phenotypes <- phenotypes[phenotypes %in% neff_phenos$phenotype]
 
     ## compile results table
     results_table <- data.frame(matrix(ncol = 9, nrow = 0))

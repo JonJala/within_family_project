@@ -1,11 +1,11 @@
-library(data.table)
-library(dplyr)
-library(purrr)
-library(haven)
-library(tibble)
-library(magrittr)
-library(foreign)
-library(metamisc)
+
+#!/usr/bin/env Rscript
+
+list.of.packages <- c("data.table", "tidyr", "dplyr", "magrittr", "tidyverse", "purrr",
+                        "haven", "tibble", "foreign", "metamisc")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages, repos = "http://cran.rstudio.com/")
+lapply(list.of.packages, library, character.only = TRUE)
 
 #---------------------------------------------------------------------------------------------------------------------
 # prepare MCS phenotypes
@@ -379,7 +379,6 @@ phenotypes <- filter_sample(phenotypes, sample)
 # remove outliers / negative values for quantitative phenos
 phenotypes$height <- remove_outliers(phenotypes$height, remove_upper = T, remove_lower = T, remove_neg = T)
 phenotypes$bmi <- remove_outliers(phenotypes$bmi, remove_upper = T, remove_lower = T, remove_neg = T)
-phenotypes$ea <- remove_outliers(phenotypes$ea, remove_upper = T, remove_lower = T, remove_neg = F)
 phenotypes$cognition <- remove_outliers(phenotypes$cognition, remove_upper = F, remove_lower = F, remove_neg = T)
 phenotypes$cogverb <- remove_outliers(phenotypes$cogverb, remove_upper = F, remove_lower = F, remove_neg = T)
 phenotypes$adhd <- remove_outliers(phenotypes$adhd, remove_upper = F, remove_lower = F, remove_neg = T)

@@ -84,7 +84,6 @@ pheno_clean = remove_outliers(pheno_clean, "BPdia", remove_upper = True, remove_
 pheno_clean = remove_outliers(pheno_clean, "BPsys", remove_upper = True, remove_lower = True, remove_neg = False)
 pheno_clean = remove_outliers(pheno_clean, "BL_LDL", remove_upper = True, remove_lower = True, remove_neg = False)
 pheno_clean = remove_outliers(pheno_clean, "logyh_hourly", remove_upper = True, remove_lower = True, remove_neg = True)
-pheno_clean = remove_outliers(pheno_clean, "resid_EAfixed", remove_upper = True, remove_lower = True, remove_neg = False)
 
 # standardize non-binary phenotypes by sex
 nonbinary_phenos = ["BL_HDL", "BPdia", "BPsys", "BL_LDL", "logyh_hourly", "resid_EAfixed"]

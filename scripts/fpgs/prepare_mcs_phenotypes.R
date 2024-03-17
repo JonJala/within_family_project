@@ -388,7 +388,7 @@ phenotypes$depsymp <- remove_outliers(phenotypes$depsymp, remove_upper = F, remo
 phenotypes$extraversion <- remove_outliers(phenotypes$extraversion, remove_upper = F, remove_lower = F, remove_neg = T)
 phenotypes$neuroticism <- remove_outliers(phenotypes$neuroticism, remove_upper = F, remove_lower = F, remove_neg = T)
 phenotypes$health <- remove_outliers(phenotypes$health, remove_upper = F, remove_lower = F, remove_neg = T)
-phenotypes$hhincome <- remove_outliers(phenotypes$hhincome, remove_upper = T, remove_lower = T, remove_neg = T)
+phenotypes$hhincome <- remove_outliers(phenotypes$hhincome, remove_upper = F, remove_lower = F, remove_neg = T)
 phenotypes$swb <- remove_outliers(phenotypes$swb, remove_upper = F, remove_lower = F, remove_neg = T)
 
 ## standardize by sex

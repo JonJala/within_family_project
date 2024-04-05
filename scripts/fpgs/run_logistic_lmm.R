@@ -83,12 +83,12 @@ p <- p %>%
       V20 = (V20-mean(V20))/sd(V20))
 
 ## 1 gen logistic linear mixed model fit
-glmm = glmer(phenotype ~ proband+(1|FID)+age+sex+agesex+V1+V2+V3+V4+V5+V6+V7+V8+V9+V10,data=p,family=binomial(link='logit'),nAGQ=1,glmerControl(optimizer="nlminbwrap"))
+glmm = glmer(phenotype ~ proband+(1|FID)+age+sex+agesex+V1+V2+V3+V4+V5+V6+V7+V8+V9+V10,data=p,family=binomial(link='logit'),nAGQ=1,glmerControl(optimizer="bobyqa"))
 write.table(summary(glmm)$coefficients,paste0(outpath,'.1.effects.txt'),quote=F)
 write.table(as.matrix(vcov(glmm)),paste0(outpath,'.1.vcov.txt'),quote=F) 
 
 ## 2 gen logistic linear mixed model fit
-g2 = try({glmm = glmer(phenotype ~ proband+paternal+maternal+(1|FID)+age+sex+agesex+V1+V2+V3+V4+V5+V6+V7+V8+V9+V10,data=p,family=binomial(link='logit'),nAGQ=1,glmerControl(optimizer="nlminbwrap"))})
+g2 = try({glmm = glmer(phenotype ~ proband+paternal+maternal+(1|FID)+age+sex+agesex+V1+V2+V3+V4+V5+V6+V7+V8+V9+V10,data=p,family=binomial(link='logit'),nAGQ=1,glmerControl(optimizer="bobyqa"))})
 if (class(g2)=='try-error'){
     print('2 gen failed')
     glmm = glm(phenotype ~ proband+paternal+maternal+age+sex+agesex+V1+V2+V3+V4+V5+V6+V7+V8+V9+V10,data=p,family=binomial(link='logit'))

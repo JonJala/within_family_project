@@ -1,3 +1,6 @@
+
+### NOTE: THIS IS AN OLD SCRIPT! WE NOW USE plot_fpgs_results.r
+
 library(data.table)
 library(dplyr)
 library(ggplot2)

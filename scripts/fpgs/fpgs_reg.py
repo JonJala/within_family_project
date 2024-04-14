@@ -5,6 +5,7 @@ import os
 import statsmodels.formula.api as smf
 from tables import Description
 import tempfile
+import subprocess
 
 def fpgs_reg_dat(snipar_pgs, phenofile, outpath, sniparpath, gen_models, covariates):
     '''
@@ -229,7 +230,18 @@ if __name__ == '__main__':
         run_ols_reg(args)
     elif args.kin == '1':
         run_subset_regs(args)
+    elif args.binary == '1':
+        print('Running logistic linear mixed model...')
+        subprocess.call (f'''
+                         /usr/bin/Rscript /var/genetics/proj/within_family/within_family_project/scripts/fpgs/run_logistic_lmm.R \
+                            --pgs {args.pgs} \
+                            --phenofile {args.phenofile} \
+                            --outpath {args.outpath} \
+                            --phenoname {args.phenoname} \
+                            --dataset {args.dataset}
+                         ''', shell=True)
     else:
+        print('Running fPGS regression...')
         run_fpgs_reg(args)
         
 

@@ -23,7 +23,7 @@ run_ldsc_genomicSEM <- function(traits, ld, wld, trait.names, outpath, filename,
     setwd(outpath)
     
     # run LDSC
-    LDSCoutput <- ldsc(traits=traits,sample.prev=sample.prev,population.prev=population.prev,ld=ld,wld=wld,trait.names=trait.names,ldsc.log=filename, stand = TRUE)
+    LDSCoutput <- ldsc(traits=traits,sample.prev=sample.prev,population.prev=population.prev,ld=ld,wld=wld,trait.names=trait.names,ldsc.log=filename)
 
     # save output
     save(LDSCoutput,file=paste0(outpath, "/", "LDSCoutput_", filename, ".RData"))
@@ -63,21 +63,101 @@ munge_sumstats <- function(meta_ss, trait.names, outpath) {
 
 }
 
-## analyze results from cross-trait analysis and get SE and p-values for difference between correlations
-analyze_genomicSEM_results <- function(LDSCoutput, pheno1, pheno2, logfile, outfile, basepath = NA) {
+## get p-values for difference from chisq model
+get_diff_pval <- function(LDSCoutput, pheno1, pheno2) {
 
-    if (!is.na(basepath)) {
-        LDSCoutput <- paste0(basepath, LDSCoutput)
-        logfile <- paste0(basepath, logfile)
-        outfile <- paste0(basepath, outfile)
+    print("Calculating p-value for the difference")
+
+    # define model
+    model <- '
+    pheno1_direct_std =~ NA*pheno1_direct
+    pheno1_pop_std =~ NA*pheno1_pop
+    pheno2_direct_std =~ NA*pheno2_direct
+    pheno2_pop_std =~ NA*pheno2_pop
+
+    pheno1_direct_std ~~ 1*pheno1_direct_std
+    pheno1_pop_std ~~ 1*pheno1_pop_std
+    pheno2_direct_std ~~ 1*pheno2_direct_std
+    pheno2_pop_std ~~ 1*pheno2_pop_std
+
+    pheno1_direct ~~ 0*pheno1_direct
+    pheno1_pop ~~ 0*pheno1_pop
+    pheno2_direct ~~ 0*pheno2_direct
+    pheno2_pop ~~ 0*pheno2_pop
+
+    pheno1_direct_std ~~ rg*pheno2_direct_std
+    pheno1_pop_std ~~ rg*pheno2_pop_std
+
+    '
+
+    # replace placeholders with phenos
+    model <- str_replace_all(model, "pheno1", pheno1)
+    model <- str_replace_all(model, "pheno2", pheno2)
+
+    # run model
+    output <- usermodel(LDSCoutput, estimation = "DWLS", model = model, CFIcalc = TRUE, std.lv = TRUE, imp_cov = FALSE)
+
+    if (is.null(output)) { # if error, constrain rgs so that they're < 1
+        
+        print("Error: some rgs are < -1 or > 1 -- rerunning model with rg constraints")
+
+        # define model
+        model <- '
+        pheno1_direct_std =~ NA*pheno1_direct
+        pheno1_pop_std =~ NA*pheno1_pop
+        pheno2_direct_std =~ NA*pheno2_direct
+        pheno2_pop_std =~ NA*pheno2_pop
+
+        pheno1_direct_std ~~ 1*pheno1_direct_std
+        pheno1_pop_std ~~ 1*pheno1_pop_std
+        pheno2_direct_std ~~ 1*pheno2_direct_std
+        pheno2_pop_std ~~ 1*pheno2_pop_std
+
+        pheno1_direct ~~ 0*pheno1_direct
+        pheno1_pop ~~ 0*pheno1_pop
+        pheno2_direct ~~ 0*pheno2_direct
+        pheno2_pop ~~ 0*pheno2_pop
+
+        pheno1_direct_std  ~~  r_dir1_pop1*pheno1_pop_std
+        -0.9999 < r_dir1_pop1 <.9999
+        pheno1_direct_std  ~~  r_dir1_pop2*pheno2_pop_std
+        -0.9999 < r_dir1_pop2 <.9999
+        pheno1_direct_std  ~~  r_dir1_dir2*pheno2_direct_std
+        -0.9999 < r_dir1_dir2 <.999
+        pheno1_pop_std  ~~  r_pop1_dir2*pheno2_direct_std
+        -0.9999 < r_pop1_dir2 <.999
+        pheno1_pop_std  ~~  r_pop1_pop2*pheno2_pop_std
+        -0.9999 < r_pop1_pop2 <.999
+        pheno2_direct_std  ~~  r_dir2_pop2*pheno2_pop_std
+        -0.9999 < r_dir2_pop2 <.999
+
+        pheno1_direct_std ~~ rg*pheno2_direct_std
+        pheno1_pop_std ~~ rg*pheno2_pop_std
+
+        '
+
+        # replace placeholders with phenos
+        model <- str_replace_all(model, "pheno1", pheno1)
+        model <- str_replace_all(model, "pheno2", pheno2)
+
+        # run model
+        output <- usermodel(LDSCoutput, estimation = "DWLS", model = model, CFIcalc = TRUE, std.lv = TRUE, imp_cov = FALSE)
+
     }
 
-    ## load and extract data
-    load(LDSCoutput)
+    # save output
+    save(output, file = paste0("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/cross_trait/", pheno1, "_", pheno2, "/", pheno1, "_", pheno2, "_chisq_modeloutput.RData"))
 
-    print(paste0("Running for ", pheno1, " x ", pheno2))
+    # extract pvalue
+    modelfit <- output$modelfit
+    pval <- modelfit$chisq
+    return(pval)
 
-    ## run user specified model
+}
+
+get_genomicSEM_correlations <- function(LDSCoutput, pheno1, pheno2) {
+
+    print("Calculating dir-dir and pop-pop correlations")
 
     # define model
     model <- '
@@ -188,15 +268,45 @@ analyze_genomicSEM_results <- function(LDSCoutput, pheno1, pheno2, logfile, outf
 
     }
 
-    # calculate difference and p-value
-    diff_results <- results[results$lhs == "diff",]
-    diff_est <- as.numeric(diff_results$Unstand_Est)
-    diff_se <- as.numeric(diff_results$Unstand_SE)
-    z <- diff_est/diff_se
-    p <- 2*pnorm(abs(z), lower.tail = FALSE)
+    return(results)
 
-    results <- data.table(variable=c("direct_rg", "direct_rg_se", "pop_rg", "pop_rg_se", "diff_est", "diff_se", "z", "p"), value=c(direct_rg, direct_rg_se, pop_rg, pop_rg_se, diff_est, diff_se, z, p))
-    fwrite(results, outfile, sep="\t", quote=F, row.names=F, col.names=T)
+}
+
+## analyze results from cross-trait analysis and get SE and p-values for difference between correlations
+analyze_genomicSEM_results <- function(LDSCoutput, pheno1, pheno2, logfile, outfile, basepath = NA) {
+
+    if (!is.na(basepath)) {
+        LDSCoutput <- paste0(basepath, LDSCoutput)
+        logfile <- paste0(basepath, logfile)
+        outfile <- paste0(basepath, outfile)
+    }
+
+    ## load and extract data
+    load(LDSCoutput)
+
+    print(paste0("Running for ", pheno1, " x ", pheno2))
+
+    ## 1. get correlations
+    results <- get_genomicSEM_correlations(LDSCoutput, pheno1, pheno2)
+
+    ## 2. get p-values for difference
+    p <- get_diff_pval(LDSCoutput, pheno1, pheno2)
+
+    ## 3. compile results
+    direct_results <- results[results$lhs == paste0(pheno1, "_direct_std") & results$rhs == paste0(pheno2, "_direct_std"),]
+    direct_rg <- as.numeric(direct_results$Unstand_Est)
+    direct_rg_se <- as.numeric(direct_results$Unstand_SE)
+    pop_results <- results[results$lhs == paste0(pheno1, "_pop_std") & results$rhs == paste0(pheno2, "_pop_std"),]
+    pop_rg <- as.numeric(pop_results$Unstand_Est)
+    pop_rg_se <- as.numeric(pop_results$Unstand_SE)
+
+    if (sum(results$Unstand_Est[1:4] < 0) > 0) {
+        count <- sum(results$Unstand_Est[1:4] < 0)
+        print(paste0("WARNING: ", count, " of the sumstats have had their signs flipped."))
+    }
+
+    final_results <- data.table(variable=c("direct_rg", "direct_rg_se", "pop_rg", "pop_rg_se", "p"), value=c(direct_rg, direct_rg_se, pop_rg, pop_rg_se, p))
+    fwrite(final_results, outfile, sep="\t", quote=F, row.names=F, col.names=T)
 
 }
 

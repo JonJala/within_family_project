@@ -17,52 +17,61 @@ cor_results = read_excel("/var/genetics/proj/within_family/within_family_project
 
 # format pheno names
 cor_results %<>% 
-  mutate(phenotype = case_when(phenotype == "aafb" ~ "Age at first birth",
-                               phenotype == "aud" ~ "Alcohol use disorder",
-                               phenotype == "bpd" ~ "Diastolic blood pressure",
-                               phenotype == "bps" ~ "Systolic blood pressure",
-                               phenotype == "cpd" ~ "Cigarettes per day",
-                               phenotype == "dpw" ~ "Drinks per week",
-                               phenotype == "fev" ~ "FEV1",
-                               phenotype == "swb" ~ "Subjective well-being",
-                               phenotype == "nonhdl" ~ "Non-HDL",
-                               phenotype %in% c("adhd", "bmi", "copd", "ea", "hdl") ~ toupper(phenotype),
-                               phenotype %in% c("cannabis", "hhincome", "cognition", "depsymp", "health", "depression", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(phenotype)))  
+  filter(n_eff_median_direct > 5000) %>%
+  arrange(n_eff_median_direct) %>%
+  mutate(phenotype = case_when(phenotype %in% c("adhd", "bmi", "copd", "ea") ~ toupper(phenotype),
+                                phenotype == "nonhdl" ~ "Non-HDL cholesterol",
+                                phenotype == "hdl" ~ "HDL cholesterol",
+                                phenotype == "fev" ~ "FEV1",
+                                phenotype == "agemenarche" ~ "Age-at-menarche",
+                                phenotype == "bps" ~ "Blood pressure (systolic)",
+                                phenotype == "bpd" ~ "Blood pressure (diastolic)",
+                                phenotype == "cognition" ~ "Cognitive performance",
+                                phenotype == "depsymp" ~ "Depressive symptoms",
+                                phenotype == "eversmoker" ~ "Ever-smoker",
+                                phenotype == "dpw" ~ "Drinks-per-week",
+                                phenotype == "hayfever" ~ "Allergic rhinitis",
+                                phenotype == "health" ~ "Self-rated health",
+                                phenotype == "hhincome" ~ "Household income",
+                                phenotype == "swb" ~ "Subjective well-being",
+                                phenotype == "nchildren" ~ "Number of children",
+                                phenotype == "nearsight" ~ "Myopia",
+                                phenotype == "aud" ~ "Alcohol use disorder",
+                                phenotype == "cpd" ~ "Cigarettes per day",
+                                phenotype == "aafb" ~ "Age at first birth (women)",
+                                phenotype == "morningperson" ~ "Morning person",
+                                phenotype == "income" ~ "Individual income",
+                                phenotype %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(phenotype)))
+cor_results %<>% filter(phenotype != "ADHD")
 
 # direct-pop ldsc v.s. snipar comparison
 correlate <- cor_results %>%
               select(phenotype, dir_pop_rg, dir_pop_rg_se) %>%
-              mutate(source = "SNIPar")
-genomicSEM <- cor_results %>%
+              mutate(Source = "snipar")
+ldsc <- cor_results %>%
                 select(phenotype, dir_pop_rg_ldsc, dir_pop_rg_se_ldsc) %>%
-                mutate(source = "GenomicSEM") %>%
+                mutate(Source = "LDSC") %>%
                 rename(dir_pop_rg = dir_pop_rg_ldsc, dir_pop_rg_se = dir_pop_rg_se_ldsc)
-results <- rbind(correlate, genomicSEM)
-results %<>% filter(phenotype != "ADHD", phenotype != "COPD")
+results <- rbind(correlate, ldsc) %>%
+            filter(dir_pop_rg_se < 0.25)
+results$Source <- factor(results$Source, levels = c("snipar", "LDSC"))
 
-# colour palette
-set.seed(42)
-n <- length(unique(results$phenotype))
-palette1 <- c("#E93993", "#CCEBDE", "#B2BFDC", "#C46627", "#10258A", "#E73B3C", "#DDDDDD",
-                "#FF8F1F", "#FCD3E6", "#B9E07A", "#A3F6FF", "#47AA42", "#A0DBD0",
-                "#5791C2", "#E9B82D", "#FC9284", "#7850A4", "#CEB8D7", "#FDC998", "#ADADAD",
-                "#00441B", "#028189", "#67001F", "#525252", "#FE69FC", "#A0D99B", "#4B1DB7")
-qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
-col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
-palette2 <- sample(col_vector, n-length(palette1), replace = F)
-palette <- c(palette1, palette2)
+# colour palette -- modified version of RColorBrewer "Set1"
+palette <- rep(c("#E41A1C", "#377EB8",  "#A65628", "#4DAF4A", "#FF7F00", "#984EA3", "#999999", "#F781BF"), 4)
 
 # plot direct to pop corr
 results$phenotype = factor(results$phenotype,levels=unique(results$phenotype[order(results$dir_pop_rg)]))
-p <- ggplot(results %>% filter(!is.na(dir_pop_rg)),aes(x=phenotype,y=dir_pop_rg,colour=phenotype,label=phenotype, group = dir_pop_rg))+
-      geom_point(aes(shape = source), position = position_dodge(width = 0.5), size=2)+
+p <- ggplot(results %>% filter(!is.na(dir_pop_rg)),aes(x=factor(phenotype, levels = cor_results$phenotype),y=dir_pop_rg,colour=factor(phenotype, levels = cor_results$phenotype),label=phenotype, group = Source))+
+      geom_point(aes(shape = factor(Source, levels = c("LDSC", "snipar"))), position = position_dodge(width = 0.5), size=2)+
       geom_errorbar(aes(x = phenotype, ymin=dir_pop_rg-qnorm(0.025)*dir_pop_rg_se,ymax=dir_pop_rg+qnorm(0.025)*dir_pop_rg_se),width=0.25, position = position_dodge(width = 0.5))+
       geom_hline(yintercept=1.0)+
+      guides(shape = guide_legend(title = "Source")) +
       theme_bw()+
-      theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "bottom")+
-      xlab('phenotype')+ylab('Correlation between direct and population effects')+
+      theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "bottom")+
+      xlab('Phenotype')+ylab('Correlation between direct and population effects')+
       scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1,1.25,1.5)) +
-      scale_colour_manual(values = palette, guide = "none")
+      scale_colour_manual(values = palette, guide = "none") +
+      coord_flip()
 ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_population_correlations.pdf', p, width=9,height=7,device=cairo_pdf)
 
 # plot direct to ntc corr

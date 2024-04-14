@@ -23,21 +23,19 @@ ${ldscpath}/munge_sumstats.py \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --n-min 1.0
 
-## no reference sample atm
+echo "Calculating RG of population effect with reference sample"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/migraine/populationmunged.sumstats.gz,${refsample} \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/migraine/population_reference_sample
 
-# echo "Calculating RG of population effect with reference sample"
-# ${ldscpath}/ldsc.py \
-# --rg ${within_family_path}/processed/package_output/migraine/populationmunged.sumstats.gz,${refsample} \
-# --ref-ld-chr ${eur_w_ld_chr} \
-# --w-ld-chr ${eur_w_ld_chr} \
-# --out ${within_family_path}/processed/package_output/migraine/population_reference_sample
-
-# echo "Calculating RG of direct effect with reference sample"
-# ${ldscpath}/ldsc.py \
-# --rg ${within_family_path}/processed/package_output/migraine/directmunged.sumstats.gz,${refsample} \
-# --ref-ld-chr ${eur_w_ld_chr} \
-# --w-ld-chr ${eur_w_ld_chr} \
-# --out ${within_family_path}/processed/package_output/migraine/direct_reference_sample
+echo "Calculating RG of direct effect with reference sample"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/migraine/directmunged.sumstats.gz,${refsample} \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/migraine/direct_reference_sample
 
 echo "Calculating RG of population effect with direct effect"
 ${ldscpath}/ldsc.py \

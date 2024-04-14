@@ -71,11 +71,18 @@ for (pheno in phenotypes) {
 
 if (compile_h2_results) {
     
+    # filter on median direct neff
+    meta <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx")
+    neff_phenos <- meta %<>% 
+                        filter(n_eff_median_direct > 5000) %>%
+                        select(phenotype)
+
     # rename columns
     colnames(h2_results_table) <- c("phenotype", "direct_h2", "direct_h2_se", "pop_h2", "pop_h2_se", "h2_diff", "h2_diff_se", "z", "p")
 
     # format pheno names
     h2_results_table <- h2_results_table %>%
+                        filter(phenotype %in% neff_phenos$phenotype) %>%
                         mutate(phenotype = case_when(phenotype %in% c("adhd", "bmi", "copd", "ea", "hdl") ~ toupper(phenotype),
                                 phenotype == "nonhdl" ~ "Non-HDL",
                                 phenotype == "fev" ~ "FEV1",

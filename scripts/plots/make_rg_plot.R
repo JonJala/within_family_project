@@ -6,6 +6,7 @@ library(stringr)
 library(ggpubr)
 library(latex2exp)
 library(ggrepel)
+library(magrittr)
 library(RColorBrewer)
 theme_set(theme_pubr())
 
@@ -58,10 +59,14 @@ reformat_matrix = function(rgmat){
 ## read in and process data
 ## --------------------------------------------------------------------------------
 
+# filter on direct neff
+meta <- read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx")
+neff_phenos <- meta %<>% 
+                    filter(n_eff_median_direct > 5000) %>%
+                    select(phenotype)
+
 # get all pheno pairings
-all_phenos = c('aafb', 'adhd', 'agemenarche', 'asthma', 'aud', 'bmi', 'bpd', 'bps', 'cannabis', 'cognition', 'copd', 'cpd', 'depression',
-                 'depsymp', 'dpw', 'ea', 'eczema', 'eversmoker', 'extraversion', 'fev', 'hayfever', 'hdl', 'health', 'height', 'hhincome', 'hypertension', 'income', 
-                 'migraine', 'morningperson', 'nchildren', 'nearsight', 'neuroticism', 'nonhdl', 'swb')
+all_phenos <- neff_phenos$phenotype
 phenos = c()
 for (pheno1 in all_phenos) {
     for (pheno2 in all_phenos) {
@@ -77,20 +82,19 @@ process_data <- function(phenos, filter_pheno = NA) {
     setDT(dat)
     dat <- cbind(names(dat), dat)
     setnames(dat, names(dat)[1], 'phenotype')
-    dat = reformat_matrix(dat)
+    dat <- reformat_matrix(dat)
     if (!is.na(filter_pheno)) {
         phenos <- phenos[grepl(paste0(filter_pheno,"_|_",filter_pheno), phenos)]
     }
     # filter out pairs where direct_rg_se > 0.25
-    dat = dat %>% 
+    dat <- dat %>% 
         filter(!is.na(direct_rg_se) & direct_rg_se < 0.25 & phenotype %in% phenos)
-    # +- 1 SE bounds
-    dat[, `:=`(
-        direct_rg_lo = direct_rg - direct_rg_se,
-        direct_rg_hi = direct_rg + direct_rg_se,
-        pop_rg_lo = pop_rg - pop_rg_se,
-        pop_rg_hi = pop_rg + pop_rg_se
-    )]
+    # +- 95% CI bounds
+    dat %<>%
+        mutate(direct_rg_lo = direct_rg - 1.96*direct_rg_se,
+                direct_rg_hi = direct_rg + 1.96*direct_rg_se,
+                pop_rg_lo = pop_rg - 1.96*pop_rg_se,
+                pop_rg_hi = pop_rg + 1.96*pop_rg_se)
     return(dat)
 }
 
@@ -202,12 +206,12 @@ create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suf
             geom_abline(intercept=0, slope=1, linetype="solid", color="gray") +
             geom_hline(yintercept=0, linetype="dotted") +
             geom_vline(xintercept=0, linetype="dotted") +
-            xlim(-0.9, 0.9) +
-            ylim(-0.9, 0.9) +
+            xlim(-0.5, 0.5) +
+            ylim(-0.5, 0.5) +
             xlab("Genetic correlation (population)") +
             ylab("Genetic correlation (direct)") +
             geom_point(dat = dat_points, aes(pop_rg, direct_rg, colour=phenotype, shape=phenotype), alpha=0.6) +
-            geom_label_repel(data = dat_points, aes(pop_rg, direct_rg, label=phenotype), box.padding = 1.3) +
+            geom_label_repel(data = dat_points, aes(pop_rg, direct_rg, label=phenotype), box.padding = 1) +
             geom_linerange(dat = dat_points, aes(x=pop_rg, ymin = direct_rg_lo, ymax=direct_rg_hi, color = phenotype), alpha=0.6) +
             geom_linerange(dat = dat_points, aes(y=direct_rg, xmin = pop_rg_lo, xmax=pop_rg_hi, color = phenotype), alpha=0.6) +  
             scale_colour_manual(values = c(palette, palette("Paired"))) +
@@ -231,13 +235,19 @@ create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suf
 ## create density plot with points for pairs where direct rg and pop rg are statistically significantly different from each other
 results <- read_xlsx("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/cross_trait/cross_trait_results.xlsx")
 results <- results %>%
-            filter(p_adj < 0.05) %>%
+            filter(p < 0.01) %>%
             mutate(pheno_pair = paste0(pheno1, "_", pheno2))
 sig_phenos <- tolower(results$pheno_pair) %>%
                 str_replace("cigarettes per day", "cpd") %>%
                 str_replace("-", "") %>%
                 str_replace("cognitive performance", "cognition") %>%
-                str_replace("1", "")
+                str_replace("1", "") %>%
+                str_replace("number of children", "nchildren") %>%
+                str_replace("age at first birth", "aafb") %>%
+                str_replace("drinks per week", "dpw") %>%
+                str_replace("selfrated health", "health") %>%
+                str_replace("household income", "hhincome") %>%
+                str_replace("alcohol use disorder", "aud")
 dat_points <- process_data(phenos) %>%
                 filter(phenotype %in% sig_phenos)
 dat_points$phenotype <- dat_points$phenotype %>% 
@@ -249,7 +259,14 @@ dat_points$phenotype <- dat_points$phenotype %>%
                             str_replace("height", "Height") %>%
                             str_replace("cognition", "Cognitive performance") %>%
                             str_replace("fev", "FEV1") %>%
-                            str_replace("neuroticism", "Neuroticism")
+                            str_replace("neuroticism", "Neuroticism") %>%
+                            str_replace("nchildren", "Number of children") %>%
+                            str_replace("nonhdl", "Non-HDL") %>%
+                            str_replace("hhincome", "Household income") %>%
+                            str_replace("aafb", "Age at first birth") %>%
+                            str_replace("health", "Self-rated health") %>%
+                            str_replace("aud", "Alcohol use disorder") %>%
+                            str_replace("bps", "BPS")
 create_density_plot(phenos,
                     dat_points = dat_points,
                     save_suffix = "sig",

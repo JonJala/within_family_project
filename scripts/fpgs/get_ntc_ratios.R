@@ -14,6 +14,7 @@ lapply(list.of.packages, library, character.only = TRUE)
 ## ---------------------------------------------------------------------
 
 option_list = list(
+  make_option(c("--phenoname"),  type="character", default=NULL, help="Phenotype", metavar="character"),
   make_option(c("--filepath"),  type="character", default=NULL, help="Path to fPGS output", metavar="character")
 )
 opt_parser = OptionParser(option_list = option_list)
@@ -108,14 +109,36 @@ read_gen_models = function(effect,gen1_effects,gen2_effects,gen2_vcov,savepath,g
 ## execute function
 ## ---------------------------------------------------------------------
 
-read_gen_models(effect = "direct",
+binary_phenos = c("asthma", "cannabis",  "depression", "eczema", "eversmoker", "hayfever", "migraine", "nearsight")
+
+if (opt$phenoname %in% binary_phenos) {
+
+  read_gen_models(effect = "direct",
+                gen1_effects = paste0(opt$filepath, "/direct.1.effects.txt"),
+                gen2_effects = paste0(opt$filepath, "/direct.2.effects.txt"),
+                gen2_vcov = paste0(opt$filepath, "/direct.2.vcov.txt"),
+                savepath = opt$filepath,
+                lme4 = TRUE)
+
+  read_gen_models(effect = "population",
+                  gen1_effects = paste0(opt$filepath, "/population.1.effects.txt"),
+                  gen2_effects = paste0(opt$filepath, "/population.2.effects.txt"),
+                  gen2_vcov = paste0(opt$filepath, "/population.2.vcov.txt"),
+                  savepath = opt$filepath,
+                  lme4 = TRUE)
+
+} else {
+
+  read_gen_models(effect = "direct",
                 gen1_effects = paste0(opt$filepath, "/direct.1.effects.txt"),
                 gen2_effects = paste0(opt$filepath, "/direct.2.effects.txt"),
                 gen2_vcov = paste0(opt$filepath, "/direct.2.vcov.txt"),
                 savepath = opt$filepath)
 
-read_gen_models(effect = "population",
-                gen1_effects = paste0(opt$filepath, "/population.1.effects.txt"),
-                gen2_effects = paste0(opt$filepath, "/population.2.effects.txt"),
-                gen2_vcov = paste0(opt$filepath, "/population.2.vcov.txt"),
-                savepath = opt$filepath)
+  read_gen_models(effect = "population",
+                  gen1_effects = paste0(opt$filepath, "/population.1.effects.txt"),
+                  gen2_effects = paste0(opt$filepath, "/population.2.effects.txt"),
+                  gen2_vcov = paste0(opt$filepath, "/population.2.vcov.txt"),
+                  savepath = opt$filepath)
+
+}

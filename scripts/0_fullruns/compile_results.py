@@ -4,8 +4,8 @@ import subprocess
 import json
 
 ## chooose which results to compile
-metaanalysis = True
-fpgs = False
+metaanalysis = False
+fpgs = True
 ldsc = False
 
 ### define functions for compiling results
@@ -169,6 +169,7 @@ def get_meta_results(phenotype, effect):
 def get_fpgs_results(phenotype, effect):
 
     basepath = '/var/genetics/proj/within_family/within_family_project/'
+    binary_phenos = ['asthma', 'cannabis', 'depression', 'eczema', 'eversmoker', 'hayfever', 'migraine', 'nearsight']
 
     if phenotype == "height":
         proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{height_validation}/{effect}.1.effects.txt"
@@ -187,19 +188,39 @@ def get_fpgs_results(phenotype, effect):
         full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{effect}.2.effects.txt"
         ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/ntc_ratios.txt"
     
-    # 1-generation model (proband only)
-    proband = pd.read_csv(
-        proband_path,
-        delim_whitespace=True,
-        names = ['coeff', 'se']
-    )
+    if phenotype in binary_phenos:
+        
+        # 1-generation model (proband only)
+        proband = pd.read_csv(
+            proband_path,
+            delim_whitespace=True,
+            skiprows = 1,
+            names = ['coeff', 'se', 'z', 'p']
+        )
 
-    # 2-generation model (proband and parents)
-    full = pd.read_csv(
-        full_path,
-        delim_whitespace=True,
-        names = ['coeff', 'se']
-    )
+        # 2-generation model (proband and parents)
+        full = pd.read_csv(
+            full_path,
+            delim_whitespace=True,
+            skiprows = 1,
+            names = ['coeff', 'se', 'z', 'p']
+        )
+
+    else:
+
+        # 1-generation model (proband only)
+        proband = pd.read_csv(
+            proband_path,
+            delim_whitespace=True,
+            names = ['coeff', 'se']
+        )
+
+        # 2-generation model (proband and parents)
+        full = pd.read_csv(
+            full_path,
+            delim_whitespace=True,
+            names = ['coeff', 'se']
+        )
 
     # ntc coefficients and ratios
     ntc_ratio = pd.read_csv(

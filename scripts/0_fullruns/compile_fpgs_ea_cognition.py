@@ -10,7 +10,7 @@ def compile_results(datfpgs, phenotype, effect, dataset, validation_pheno, basep
     ## fpgs results
     proband_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/{effect}.1.effects.txt" 
     full_path = f"{basepath}processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/{effect}.2.effects.txt"
-    ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/ntc_ratios.txt"
+    ntc_path = f"{basepath}/processed/fpgs/{phenotype}/prscs/{dataset}/{validation_pheno}/ntc_ratios_{effect}.txt"
 
     # 1-generation model (proband only)
     proband = pd.read_csv(

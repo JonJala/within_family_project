@@ -198,19 +198,30 @@ function main(){
     
     fi
 
-    # main prediction
-    withinfam_pred $direct_weights \
-        "direct" "$PHENONAME" \
-        "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
+    # # main prediction
+    # withinfam_pred $direct_weights \
+    #     "direct" "$PHENONAME" \
+    #     "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
 
-    withinfam_pred $population_weights \
-        "population" "$PHENONAME" \
-        "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
+    # withinfam_pred $population_weights \
+    #     "population" "$PHENONAME" \
+    #     "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
 
+    if [[ ! -z $CLUMP ]]; then
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"
+        mkdir -p $fpgs_out
+    elif [[ $PHENONAME == "ea" || $PHENONAME == "cognition" || $PHENONAME == "height" ]]; then
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${DATASET}"
+        mkdir -p $fpgs_out
+    else
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}"
+        mkdir -p $fpgs_out
+    fi
 
     if [[ $PHENONAME != "ea" && $PHENONAME != "cognition" ]]; then
         # get ntc coeffs, ratios, and SEs
         Rscript ${within_family_path}/scripts/fpgs/get_ntc_ratios.R \
+            --phenoname ${PHENONAME} \
             --filepath ${fpgs_out}
     fi
 

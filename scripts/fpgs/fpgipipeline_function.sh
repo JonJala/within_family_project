@@ -198,14 +198,14 @@ function main(){
     
     fi
 
-    # # main prediction
-    # withinfam_pred $direct_weights \
-    #     "direct" "$PHENONAME" \
-    #     "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
+    # main prediction
+    withinfam_pred $direct_weights \
+        "direct" "$PHENONAME" \
+        "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
 
-    # withinfam_pred $population_weights \
-    #     "population" "$PHENONAME" \
-    #     "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
+    withinfam_pred $population_weights \
+        "population" "$PHENONAME" \
+        "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
 
     if [[ ! -z $CLUMP ]]; then
         fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"

@@ -266,7 +266,7 @@ dat_points$phenotype <- dat_points$phenotype %>%
                             str_replace("nchildren", "Number of children") %>%
                             str_replace("nonhdl", "Non-HDL") %>%
                             str_replace("hhincome", "Household income") %>%
-                            str_replace("aafb", "Age at first birth") %>%
+                            str_replace("aafb", "Age at first birth (women)") %>%
                             str_replace("health", "Self-rated health") %>%
                             str_replace("aud", "Alcohol use disorder") %>%
                             str_replace("bps", "BPS")

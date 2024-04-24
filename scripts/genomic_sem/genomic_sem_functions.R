@@ -403,12 +403,12 @@ run_cross_trait <- function(pheno1, pheno2, pheno1_direct, pheno1_pop, pheno2_di
         dir.create(outpath, recursive = TRUE)
     }
 
-    # run_ldsc_genomicSEM(traits=c(pheno1_direct, pheno1_pop, pheno2_direct, pheno2_pop), 
-    #                 ld=ldsc,
-    #                 wld=ldsc,
-    #                 trait.names=c(paste0(pheno1, "_direct"), paste0(pheno1, "_pop"), paste0(pheno2, "_direct"), paste0(pheno2, "_pop")),
-    #                 filename=paste0(pheno1, "_", pheno2),
-    #                 outpath=outpath)
+    run_ldsc_genomicSEM(traits=c(pheno1_direct, pheno1_pop, pheno2_direct, pheno2_pop), 
+                    ld=ldsc,
+                    wld=ldsc,
+                    trait.names=c(paste0(pheno1, "_direct"), paste0(pheno1, "_pop"), paste0(pheno2, "_direct"), paste0(pheno2, "_pop")),
+                    filename=paste0(pheno1, "_", pheno2),
+                    outpath=outpath)
 
     if (analyze_results) {
         analyze_genomicSEM_results(LDSCoutput=paste0("LDSCoutput_", pheno1, "_", pheno2, ".RData"),

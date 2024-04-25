@@ -74,6 +74,12 @@ p <- ggplot(results %>% filter(!is.na(dir_pop_rg)),aes(x=factor(phenotype, level
       coord_flip()
 ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_population_correlations.pdf', p, width=9,height=7,device=cairo_pdf)
 
+# check how many are statistically significant
+results %<>%
+    mutate(z = (dir_pop_rg - 1) / dir_pop_rg_se,
+          p = pnorm(abs(z), lower.tail = FALSE),
+          adj_p = p.adjust(p, method='BH'))
+
 # plot direct to ntc corr
 cor_results$phenotype = factor(cor_results$phenotype,cor_results$phenotype[order(cor_results$dir_ntc_rg)])
 ggplot(cor_results %>% filter(!is.na(dir_ntc_rg), dir_ntc_rg < 1 & dir_ntc_rg > -1),aes(x=phenotype,y=dir_ntc_rg,colour=phenotype,label=phenotype))+geom_point(size=3)+

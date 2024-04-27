@@ -26,8 +26,6 @@ phenotype <- opt$phenoname
 outpath <- opt$outpath
 dataset <- opt$dataset
 
-print(phenotype)
-
 ## clean phenofile
 names(phenofile) <- c("FID", "IID", "phenotype")
 phenofile %<>% select(-FID)
@@ -72,19 +70,8 @@ p <- p %>%
       V19 = (V19-mean(V19))/sd(V19),
       V20 = (V20-mean(V20))/sd(V20))
 
-if (phenotype == "eczema") {
 
-  ## 1 gen OLS (glm and glmm had convergence issues)
-  glmm = lm(phenotype ~ proband+age+sex+agesex+V1+V2+V3+V4+V5+V6+V7+V8+V9+V10+V11+V12+V13+V14+V15+V16+V17+V18+V19+V20,data=p)
-  write.table(summary(glmm)$coefficients,paste0(outpath,'.1.effects.txt'),quote=F)
-  write.table(as.matrix(vcov(glmm)),paste0(outpath,'.1.vcov.txt'),quote=F) 
-
-  ## 2 gen OLS
-  glmm = lm(phenotype ~ proband+paternal+maternal+age+sex+agesex+V1+V2+V3+V4+V5+V6+V7+V8+V9+V10+V11+V12+V13+V14+V15+V16+V17+V18+V19+V20,data=p)
-  write.table(summary(glmm)$coefficients,paste0(outpath,'.2.effects.txt'),quote=F)
-  write.table(as.matrix(vcov(glmm)),paste0(outpath,'.2.vcov.txt'),quote=F)
-
-} else if (phenotype == "migraine") {
+if (phenotype == "migraine" | phenotype == "eczema") {
   
   ## 1 gen logistic linear mixed model fit with 5 PCs and NAGQ = 0
   glmm = glmer(phenotype ~ proband+(1|FID)+age+sex+agesex+V1+V2+V3+V4+V5,data=p,family=binomial(link='logit'),nAGQ=0,glmerControl(optimizer="bobyqa"))

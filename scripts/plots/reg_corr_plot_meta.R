@@ -77,8 +77,17 @@ ggsave(filename='/var/genetics/proj/within_family/within_family_project/processe
 # check how many are statistically significant
 results %<>%
     mutate(z = (dir_pop_rg - 1) / dir_pop_rg_se,
-          p = pnorm(abs(z), lower.tail = FALSE),
-          adj_p = p.adjust(p, method='BH'))
+          p = pnorm(abs(z), lower.tail = FALSE))
+ldsc_results <- results %>% 
+                  filter(Source == "LDSC") %>%
+                  mutate(adj_p = p.adjust(p, method = "BH"))
+ldsc_sig <- sum(ldsc_results$adj_p < 0.05)
+print(paste0(ldsc_sig, " significant results out of ", nrow(ldsc_results), " for LDSC"))
+snipar_results <- results %>% 
+                  filter(Source == "snipar") %>%
+                  mutate(adj_p = p.adjust(p, method = "BH"))
+snipar_sig <- sum(snipar_results$adj_p < 0.05)
+print(paste0(snipar_sig, " significant results out of ", nrow(snipar_results), " for snipar"))
 
 # plot direct to ntc corr
 cor_results$phenotype = factor(cor_results$phenotype,cor_results$phenotype[order(cor_results$dir_ntc_rg)])

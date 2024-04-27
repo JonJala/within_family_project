@@ -16,7 +16,7 @@ theme_set(theme_pubr())
 
 h2_plot <- function(save = TRUE) {
 
-    # read in datra
+    # read in data
     dat = read_excel(
     "/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx"
     )

@@ -101,7 +101,7 @@ if (compile_h2_results) {
                                 phenotype == "nearsight" ~ "Myopia",
                                 phenotype == "aud" ~ "Alcohol use disorder",
                                 phenotype == "cpd" ~ "Cigarettes per day",
-                                phenotype == "aafb" ~ "Age at first birth",
+                                phenotype == "aafb" ~ "Age at first birth (women)",
                                 phenotype == "morningperson" ~ "Morning person",
                                 phenotype %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "income", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(phenotype)))
 

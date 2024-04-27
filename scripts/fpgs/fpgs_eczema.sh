@@ -7,4 +7,4 @@ snipar_path="/var/genetics/proj/within_family/snipar_simulate"
 source ${within_family_path}/scripts/fpgs/fpgipipeline_function.sh
 
 # base
-main "eczema" "" "1" "mcs" "prscs"
+main "eczema" "" "1" "ukb" "prscs"

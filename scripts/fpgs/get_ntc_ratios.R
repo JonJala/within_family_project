@@ -14,6 +14,7 @@ lapply(list.of.packages, library, character.only = TRUE)
 ## ---------------------------------------------------------------------
 
 option_list = list(
+  make_option(c("--phenoname"),  type="character", default=NULL, help="Phenotype", metavar="character"),
   make_option(c("--filepath"),  type="character", default=NULL, help="Path to fPGS output", metavar="character")
 )
 opt_parser = OptionParser(option_list = option_list)
@@ -32,7 +33,7 @@ var_ratio_approx = function(x,y,vx,vy,cxy){
 }
 
 # Read gen models 1-3 function modified to only require 2 gen
-read_gen_models = function(gen1_effects,gen2_effects,gen2_vcov,savepath,gen3_effects=NA,gen3_vcov=NA,sign_flip=FALSE,lme4=FALSE){
+read_gen_models = function(effect,gen1_effects,gen2_effects,gen2_vcov,savepath,gen3_effects=NA,gen3_vcov=NA,sign_flip=FALSE,lme4=FALSE){
   ## Estimates to output
   parameter_names = c('population','direct','paternal_NTC','maternal_NTC','average_NTC','maternal_minus_paternal','maternal_minus_paternal_direct_ratio',
   'direct_3','paternal','maternal','parental','grandpaternal','grandmaternal','grandparental',
@@ -100,7 +101,7 @@ read_gen_models = function(gen1_effects,gen2_effects,gen2_vcov,savepath,gen3_eff
   if (sign_flip){results[,1] = -results[,1]}
 
   # save
-  fwrite(as.data.table(results, keep.rownames = T), paste0(savepath, "/ntc_ratios.txt"), quote = F, sep = "\t", row.names = FALSE, col.names = TRUE, na = "NA")
+  fwrite(as.data.table(results, keep.rownames = T), paste0(savepath, "/ntc_ratios_", effect, ".txt"), quote = F, sep = "\t", row.names = FALSE, col.names = TRUE, na = "NA")
   }
 }
 
@@ -108,7 +109,36 @@ read_gen_models = function(gen1_effects,gen2_effects,gen2_vcov,savepath,gen3_eff
 ## execute function
 ## ---------------------------------------------------------------------
 
-read_gen_models(gen1_effects = paste0(opt$filepath, "/direct.1.effects.txt"),
+binary_phenos = c("asthma", "cannabis",  "depression", "eczema", "eversmoker", "hayfever", "migraine", "nearsight")
+
+if (opt$phenoname %in% binary_phenos) {
+
+  read_gen_models(effect = "direct",
+                gen1_effects = paste0(opt$filepath, "/direct.1.effects.txt"),
+                gen2_effects = paste0(opt$filepath, "/direct.2.effects.txt"),
+                gen2_vcov = paste0(opt$filepath, "/direct.2.vcov.txt"),
+                savepath = opt$filepath,
+                lme4 = TRUE)
+
+  read_gen_models(effect = "population",
+                  gen1_effects = paste0(opt$filepath, "/population.1.effects.txt"),
+                  gen2_effects = paste0(opt$filepath, "/population.2.effects.txt"),
+                  gen2_vcov = paste0(opt$filepath, "/population.2.vcov.txt"),
+                  savepath = opt$filepath,
+                  lme4 = TRUE)
+
+} else {
+
+  read_gen_models(effect = "direct",
+                gen1_effects = paste0(opt$filepath, "/direct.1.effects.txt"),
                 gen2_effects = paste0(opt$filepath, "/direct.2.effects.txt"),
                 gen2_vcov = paste0(opt$filepath, "/direct.2.vcov.txt"),
                 savepath = opt$filepath)
+
+  read_gen_models(effect = "population",
+                  gen1_effects = paste0(opt$filepath, "/population.1.effects.txt"),
+                  gen2_effects = paste0(opt$filepath, "/population.2.effects.txt"),
+                  gen2_vcov = paste0(opt$filepath, "/population.2.vcov.txt"),
+                  savepath = opt$filepath)
+
+}

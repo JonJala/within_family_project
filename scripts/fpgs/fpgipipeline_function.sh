@@ -141,7 +141,6 @@ function withinfam_pred(){
     ## don't run regression for ea and cognition here (do it separately using fpgs_ea_cognition.sh)
     if [[ $PHENONAME != "ea" && $PHENONAME != "cognition" ]]; then
 
-        echo "Running fPGS regression..."
         python ${within_family_path}/scripts/fpgs/fpgs_reg.py ${fpgs_out}/${EFFECT}${OUTSUFFIX} \
             --pgs $OUTPATH/${EFFECT}${OUTSUFFIX}_full.pgs.txt \
             --phenofile $RAWPATH/phen/${PHENONAME}/pheno.pheno \
@@ -208,10 +207,21 @@ function main(){
         "population" "$PHENONAME" \
         "$OUTSUFFIX" "$BINARY" "$DATASET" "$METHOD" "$CLUMP" \
 
+    if [[ ! -z $CLUMP ]]; then
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/clumping_analysis/${DATASET}"
+        mkdir -p $fpgs_out
+    elif [[ $PHENONAME == "ea" || $PHENONAME == "cognition" || $PHENONAME == "height" ]]; then
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}/${DATASET}"
+        mkdir -p $fpgs_out
+    else
+        fpgs_out="$within_family_path/processed/fpgs/${PHENONAME}/${METHOD}"
+        mkdir -p $fpgs_out
+    fi
 
     if [[ $PHENONAME != "ea" && $PHENONAME != "cognition" ]]; then
         # get ntc coeffs, ratios, and SEs
         Rscript ${within_family_path}/scripts/fpgs/get_ntc_ratios.R \
+            --phenoname ${PHENONAME} \
             --filepath ${fpgs_out}
     fi
 

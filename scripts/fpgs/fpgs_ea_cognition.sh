@@ -92,6 +92,7 @@ function get_ntc_ratios(){
 
     ## get ntc coeffs, ratios, and SEs
     Rscript ${within_family_path}/scripts/fpgs/get_ntc_ratios.R \
+        --phenoname ${PHENONAME} \
         --filepath "${within_family_path}/processed/fpgs/${PHENONAME}/${METHOD}/${DATASET}/${VALIDATION}"
 
 }

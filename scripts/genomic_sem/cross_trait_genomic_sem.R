@@ -40,7 +40,7 @@ compile_results <- function(phenotypes) {
     ## format
 
     # rename columns
-    colnames(results_table) <- c("pheno1", "pheno2", "direct_rg", "direct_rg_se", "pop_rg", "pop_rg_se", "diff_est", "diff_se", "z", "p")
+    colnames(results_table) <- c("pheno1", "pheno2", "direct_rg", "direct_rg_se", "pop_rg", "pop_rg_se", "p")
     
     # format pheno names
     results_table <- results_table %>%

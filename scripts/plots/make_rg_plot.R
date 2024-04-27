@@ -232,10 +232,10 @@ create_density_plot <- function(phenos, dat_points = NULL, save = TRUE, save_suf
 # ## create density plot with points for pairs with direct rg SE < 0.07
 # create_density_plot(phenos, save = TRUE)
 
-## create density plot with points for pairs where direct rg and pop rg are statistically significantly different from each other
+## create density plot with points for pairs where adj pval for difference between direct and pop rg is < 0.01
 results <- read_xlsx("/var/genetics/proj/within_family/within_family_project/processed/genomic_sem/cross_trait/cross_trait_results.xlsx")
 results <- results %>%
-            filter(p < 0.01) %>%
+            filter(p_adj < 0.01) %>%
             mutate(pheno_pair = paste0(pheno1, "_", pheno2))
 sig_phenos <- tolower(results$pheno_pair) %>%
                 str_replace("cigarettes per day", "cpd") %>%
@@ -244,9 +244,12 @@ sig_phenos <- tolower(results$pheno_pair) %>%
                 str_replace("1", "") %>%
                 str_replace("number of children", "nchildren") %>%
                 str_replace("age at first birth", "aafb") %>%
-                str_replace("drinks per week", "dpw") %>%
                 str_replace("selfrated health", "health") %>%
                 str_replace("household income", "hhincome") %>%
+                str_replace("ever-smoker", "eversmoker") %>%
+                str_replace("aafb \\(women\\)", "aafb") %>%
+                str_replace("nonhdl cholesterol", "nonhdl") %>%
+                str_replace("drinksper-week", "dpw") %>%
                 str_replace("alcohol use disorder", "aud")
 dat_points <- process_data(phenos) %>%
                 filter(phenotype %in% sig_phenos)
@@ -263,7 +266,7 @@ dat_points$phenotype <- dat_points$phenotype %>%
                             str_replace("nchildren", "Number of children") %>%
                             str_replace("nonhdl", "Non-HDL") %>%
                             str_replace("hhincome", "Household income") %>%
-                            str_replace("aafb", "Age at first birth") %>%
+                            str_replace("aafb", "Age at first birth (women)") %>%
                             str_replace("health", "Self-rated health") %>%
                             str_replace("aud", "Alcohol use disorder") %>%
                             str_replace("bps", "BPS")

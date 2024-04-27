@@ -70,10 +70,10 @@ get_diff_pval <- function(LDSCoutput, pheno1, pheno2) {
 
     # define model
     model <- '
-    pheno1_direct_std =~ NA*pheno1_direct
-    pheno1_pop_std =~ NA*pheno1_pop
-    pheno2_direct_std =~ NA*pheno2_direct
-    pheno2_pop_std =~ NA*pheno2_pop
+    pheno1_direct_std =~ NA*pheno1_direct + start(0.4)*pheno1_direct + h_1*pheno1_direct
+    pheno1_pop_std =~ NA*pheno1_pop + start(0.4)*pheno1_pop + h_2*pheno1_pop
+    pheno2_direct_std =~ NA*pheno2_direct + start(0.4)*pheno2_direct + h_3*pheno2_direct
+    pheno2_pop_std =~ NA*pheno2_pop + start(0.4)*pheno2_pop + h_4*pheno2_pop
 
     pheno1_direct_std ~~ 1*pheno1_direct_std
     pheno1_pop_std ~~ 1*pheno1_pop_std
@@ -87,6 +87,11 @@ get_diff_pval <- function(LDSCoutput, pheno1, pheno2) {
 
     pheno1_direct_std ~~ rg*pheno2_direct_std
     pheno1_pop_std ~~ rg*pheno2_pop_std
+
+    h_1 > 0.0001
+    h_2 > 0.0001
+    h_3 > 0.0001
+    h_4 > 0.0001
 
     '
 
@@ -103,10 +108,15 @@ get_diff_pval <- function(LDSCoutput, pheno1, pheno2) {
 
         # define model
         model <- '
-        pheno1_direct_std =~ NA*pheno1_direct
-        pheno1_pop_std =~ NA*pheno1_pop
-        pheno2_direct_std =~ NA*pheno2_direct
-        pheno2_pop_std =~ NA*pheno2_pop
+        pheno1_direct_std =~ NA*pheno1_direct + start(0.4)*pheno1_direct + h_1*pheno1_direct
+        pheno1_pop_std =~ NA*pheno1_pop + start(0.4)*pheno1_pop + h_2*pheno1_pop
+        pheno2_direct_std =~ NA*pheno2_direct + start(0.4)*pheno2_direct + h_3*pheno2_direct
+        pheno2_pop_std =~ NA*pheno2_pop + start(0.4)*pheno2_pop + h_4*pheno2_pop
+
+        h_1 > 0.0001
+        h_2 > 0.0001
+        h_3 > 0.0001
+        h_4 > 0.0001
 
         pheno1_direct_std ~~ 1*pheno1_direct_std
         pheno1_pop_std ~~ 1*pheno1_pop_std
@@ -119,20 +129,22 @@ get_diff_pval <- function(LDSCoutput, pheno1, pheno2) {
         pheno2_pop ~~ 0*pheno2_pop
 
         pheno1_direct_std  ~~  r_dir1_pop1*pheno1_pop_std
-        -0.9999 < r_dir1_pop1 <.9999
+        r_dir1_pop1 <.9999
+        r_dir1_pop1 > -0.9999
         pheno1_direct_std  ~~  r_dir1_pop2*pheno2_pop_std
-        -0.9999 < r_dir1_pop2 <.9999
-        pheno1_direct_std  ~~  r_dir1_dir2*pheno2_direct_std
-        -0.9999 < r_dir1_dir2 <.999
+        r_dir1_pop2 <.9999
+        r_dir1_pop2 > -0.9999
         pheno1_pop_std  ~~  r_pop1_dir2*pheno2_direct_std
-        -0.9999 < r_pop1_dir2 <.999
-        pheno1_pop_std  ~~  r_pop1_pop2*pheno2_pop_std
-        -0.9999 < r_pop1_pop2 <.999
+        r_pop1_dir2 <.9999
+        r_pop1_dir2 > -0.9999
         pheno2_direct_std  ~~  r_dir2_pop2*pheno2_pop_std
-        -0.9999 < r_dir2_pop2 <.999
+        r_dir2_pop2 <.9999
+        r_dir2_pop2 > -0.9999
 
         pheno1_direct_std ~~ rg*pheno2_direct_std
         pheno1_pop_std ~~ rg*pheno2_pop_std
+        rg < .9999
+        rg > -0.9999
 
         '
 
@@ -150,7 +162,7 @@ get_diff_pval <- function(LDSCoutput, pheno1, pheno2) {
 
     # extract pvalue
     modelfit <- output$modelfit
-    pval <- modelfit$chisq
+    pval <- modelfit$p_chisq
     return(pval)
 
 }
@@ -391,12 +403,12 @@ run_cross_trait <- function(pheno1, pheno2, pheno1_direct, pheno1_pop, pheno2_di
         dir.create(outpath, recursive = TRUE)
     }
 
-    # run_ldsc_genomicSEM(traits=c(pheno1_direct, pheno1_pop, pheno2_direct, pheno2_pop), 
-    #                 ld=ldsc,
-    #                 wld=ldsc,
-    #                 trait.names=c(paste0(pheno1, "_direct"), paste0(pheno1, "_pop"), paste0(pheno2, "_direct"), paste0(pheno2, "_pop")),
-    #                 filename=paste0(pheno1, "_", pheno2),
-    #                 outpath=outpath)
+    run_ldsc_genomicSEM(traits=c(pheno1_direct, pheno1_pop, pheno2_direct, pheno2_pop), 
+                    ld=ldsc,
+                    wld=ldsc,
+                    trait.names=c(paste0(pheno1, "_direct"), paste0(pheno1, "_pop"), paste0(pheno2, "_direct"), paste0(pheno2, "_pop")),
+                    filename=paste0(pheno1, "_", pheno2),
+                    outpath=outpath)
 
     if (analyze_results) {
         analyze_genomicSEM_results(LDSCoutput=paste0("LDSCoutput_", pheno1, "_", pheno2, ".RData"),

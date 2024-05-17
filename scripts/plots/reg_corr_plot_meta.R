@@ -90,11 +90,18 @@ snipar_sig <- sum(snipar_results$adj_p < 0.05)
 print(paste0(snipar_sig, " significant results out of ", nrow(snipar_results), " for snipar"))
 
 # plot direct to ntc corr
-cor_results$phenotype = factor(cor_results$phenotype,cor_results$phenotype[order(cor_results$dir_ntc_rg)])
-ggplot(cor_results %>% filter(!is.na(dir_ntc_rg), dir_ntc_rg < 1 & dir_ntc_rg > -1),aes(x=phenotype,y=dir_ntc_rg,colour=phenotype,label=phenotype))+geom_point(size=3)+
-  geom_errorbar(aes(ymin=dir_ntc_rg-qnorm(0.025)*dir_ntc_rg_se,ymax=dir_ntc_rg+qnorm(0.025)*dir_ntc_rg_se),width=0.25)+theme_bw()+
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "none")+
-  xlab('phenotype')+ylab('Correlation between direct effects and average NTCs')+geom_hline(yintercept=1.0)+
-  geom_hline(yintercept=-1.0)+geom_hline(yintercept=0,linetype='dashed')+
-  scale_y_continuous(breaks=c(-1,0,1))
-ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_avg_ntc_correlations.pdf',width=9,height=6,device=cairo_pdf)
+results <- cor_results %>%
+            select(phenotype, dir_ntc_rg, dir_ntc_rg_se) %>%
+            filter(dir_ntc_rg_se < 0.25)
+results$phenotype = factor(results$phenotype,levels=unique(results$phenotype[order(results$dir_ntc_rg)]))
+p <- ggplot(results %>% filter(!is.na(dir_ntc_rg)),aes(x=factor(phenotype, levels = cor_results$phenotype),y=dir_ntc_rg,colour=factor(phenotype, levels = cor_results$phenotype),label=phenotype))+
+      geom_point()+
+      geom_errorbar(aes(x = phenotype, ymin=dir_ntc_rg-qnorm(0.025)*dir_ntc_rg_se,ymax=dir_ntc_rg+qnorm(0.025)*dir_ntc_rg_se),width=0.25, position = position_dodge(width = 0.5))+
+      geom_hline(yintercept=1.0)+
+      theme_bw()+
+      theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "none")+
+      xlab('Phenotype')+ylab('Correlation between direct effect and average NTC')+
+      scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1,1.25,1.5)) +
+      scale_colour_manual(values = palette, guide = "none") +
+      coord_flip()
+ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_avg_ntc_correlations.pdf', p, width=9,height=7,device=cairo_pdf)

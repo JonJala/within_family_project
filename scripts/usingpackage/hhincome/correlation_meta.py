@@ -9,7 +9,7 @@ sys.path.insert(1, '/var/genetics/proj/within_family/within_family_project/scrip
 import correlation_meta_functions as corr
 
 pheno = "hhincome"
-all_cohorts = ["ukb", "str"]
+all_cohorts = ["ukb", "str", "ipsych"]
 
 ## ------------------------------------------------------------------------------------------------
 ## calculate correlations for each cohort using correlate.py
@@ -17,6 +17,7 @@ all_cohorts = ["ukb", "str"]
 
 corr.get_correlations(cohort = "ukb", processed_ss = "/var/genetics/data/ukb/private/v3/processed/proj/within_family/sumstats/household.income/household.income", pheno = pheno, chrposid = False, format = False, avg_ntc = True)
 corr.get_correlations(cohort = "str", raw_ss = "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/hhInc/hhInc_chr*.hdf5", processed_ss = "/var/genetics/data/str/public/latest/processed/sumstats/fgwas/hhInc/gz/hhInc_chr@", pheno = pheno, chrposid = False, format = True, avg_ntc = True)
+corr.get_correlations(cohort = "ipsych", processed_ss = "/disk/genetics/data/ipsych/public/v2/processed/sumstats/sumstats_inc_export_plinkfiltered", pheno = pheno, chrposid = True, format = False, avg_ntc = True)
 
 ## ------------------------------------------------------------------------------------------------
 ## compile and meta-analyze correlation estimates

@@ -1,8 +1,8 @@
 #!/usr/bin/bash
 
-basepath="/var/genetics/proj/within_family/within_family_project/scripts/package"
+basepath="/var/genetics/proj/within_family/within_family_project/scripts/package/h2_meta"
 pheno="ea"
-cohorts="ukb str moba minn_twins lifelines hunt gs geisinger ft estonian_biobank dutch_twin botnia qimr"
+cohorts="ukb str moba minn_twins lifelines hunt gs geisinger ft estonian_biobank dutch_twin qimr"
 
 ## calculate direct and pop h2 for each cohort
 bash ${basepath}/calculate_h2.sh ${pheno} "${cohorts}"

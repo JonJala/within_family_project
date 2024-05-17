@@ -130,7 +130,7 @@ def format_sumstats(sumstats, chrposid, avg_ntc):
 # function to run correlate.py
 def get_correlations(cohort, processed_ss, pheno, raw_ss = "NA", chrposid = False, format = False, avg_ntc = False):
 
-    ## NOTE: THIS VERSION OF SNIPAR ONLY TAKES .GZ FILES, SO THE SUMSTATS MUST BE CONVERTED TO .GZ / A SNIPAR-COMPATIBLE FORMAT
+    ## NOTE: SUMSTATS MUST BE CONVERTED TO .GZ
 
     ## ARGS ---------------------------------------------------------------------------------------------
     ## format = True for .hdf5 files that need reformatting to .gz (so they can be read into snipar)

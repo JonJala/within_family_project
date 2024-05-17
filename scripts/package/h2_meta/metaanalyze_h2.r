@@ -36,6 +36,7 @@ dat %<>%
                                     cohort %in% c("botnia", "geisinger", "hunt", "lifelines") ~ str_to_title(cohort),
                                     cohort == "dutch_twin" ~ "Dutch Twin",
                                     cohort == "estonian_biobank" ~ "Estonian Biobank",
+                                    cohort == "finngen" ~ "FinnGen",
                                     cohort == "ipsych" ~ "iPSYCH",
                                     cohort == "minn_twins" ~ "Minn Twins"))  %>% 
     filter(direct_h2_se < 0.25)

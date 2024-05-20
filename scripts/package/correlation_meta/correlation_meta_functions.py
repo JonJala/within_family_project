@@ -130,6 +130,14 @@ def format_sumstats(sumstats, chrposid, avg_ntc):
 # function to run correlate.py
 def get_correlations(cohort, processed_ss, pheno, raw_ss = "NA", chrposid = False, format = False, avg_ntc = False):
 
+    ## NOTE: SUMSTATS MUST BE CONVERTED TO .GZ
+
+    ## ARGS ---------------------------------------------------------------------------------------------
+    ## format = True for .hdf5 files that need reformatting to .gz (so they can be read into snipar)
+    ## chrposid = True for sumstats that use chr:pos IDs
+    ## avg_ntc = True for sumstats that don't have paternal and maternal effects, only avg NTC
+    ## ---------------------------------------------------------------------------------------------------
+
     within_family_path = "/var/genetics/proj/within_family/within_family_project"
     snipar_path = "/var/genetics/proj/within_family/snipar_simulate/snipar"
 
@@ -194,7 +202,7 @@ def compile_correlation_estimates(phenotype, cohorts):
 # function to meta-analyze correlation estimates
 def metaanalyze_corrs(pheno):
 
-    basepath = "/var/genetics/proj/within_family/within_family_project/scripts/package"
+    basepath = "/var/genetics/proj/within_family/within_family_project/scripts/package/correlation_meta"
     
     subprocess.run(f'''Rscript {basepath}/metaanalyze_corrs.r \
     --pheno {pheno}

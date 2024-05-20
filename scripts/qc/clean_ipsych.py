@@ -37,6 +37,10 @@ for file in files:
     print(f"Number of SNPs after filtering: {nrow_after}")
 
     savepath = file.replace("raw", "processed")
-    ss.to_csv(savepath, sep = " ", index = False, na_rep = "NA")
+    ss.to_csv(savepath, sep = " ", index = False, na_rep = "NA") # as .txt
+    
+    # gzip version for correlation RE meta
+    ss["SNP"] = ss["chromosome"].astype(str) + ":" + ss["pos"].astype(str) # create chr:pos IDs
+    ss.to_csv(savepath.replace("txt", "sumstats.gz"), sep = " ", index = False, na_rep = "nan", compression = "gzip") # as .gz
 
     print(f"Done with {file}")

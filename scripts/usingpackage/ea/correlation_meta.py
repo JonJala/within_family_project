@@ -9,7 +9,7 @@ sys.path.insert(1, '/var/genetics/proj/within_family/within_family_project/scrip
 import correlation_meta_functions as corr
 
 pheno = "ea"
-all_cohorts = ["gs", "hunt", "minn_twins", "str", "ft", "geisinger", "moba", "dutch_twin", "qimr", "ukb", "lifelines", "estonian_biobank"]
+all_cohorts = ["gs", "hunt", "minn_twins", "str", "ft", "geisinger", "moba", "dutch_twin", "qimr", "ukb", "lifelines", "estonian_biobank", "ipsych"]
 
 ## ------------------------------------------------------------------------------------------------
 ## calculate correlations for each cohort using correlate.py
@@ -27,6 +27,7 @@ corr.get_correlations(cohort = "hunt", raw_ss = "/var/genetics/data/hunt/public/
 corr.get_correlations(cohort = "minn_twins", raw_ss = "/var/genetics/data/minn_twins/public/latest/raw/sumstats/fgwas/sumstats/ED_chr*.sumstats.hdf5", processed_ss = "/var/genetics/data/minn_twins/public/latest/processed/sumstats/fgwas/sumstats/gz/ED_chr@", pheno = pheno, chrposid = True, format = False, avg_ntc = True)
 corr.get_correlations(cohort = "dutch_twin", raw_ss = "/var/genetics/data/dutch_twin/public/latest/raw/sumstats/fgwas/Education/NTR_Education_CHR*.sumstats.hdf5", processed_ss = "/var/genetics/data/dutch_twin/public/latest/processed/sumstats/fgwas/Education/gz/NTR_Education_CHR@", pheno = pheno, chrposid = True, format = False, avg_ntc = False)
 corr.get_correlations(cohort = "qimr", raw_ss = "/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/Education/Edu_Chr*.sumstats.hdf5", processed_ss = "/var/genetics/data/qimr/private/v1/processed/pgs/QIMR_FamilyGWAS/Education/gz/Edu_Chr@", pheno = pheno, chrposid = True, format = False, avg_ntc = False)
+corr.get_correlations(cohort = "ipsych", processed_ss = "/disk/genetics/data/ipsych/public/v2/processed/sumstats/sumstats_ea_export_plinkfiltered", pheno = pheno, chrposid = True, format = False, avg_ntc = True)
 
 ## ------------------------------------------------------------------------------------------------
 ## compile and meta-analyze correlation estimates

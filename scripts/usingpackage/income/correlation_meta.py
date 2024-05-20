@@ -9,7 +9,7 @@ sys.path.insert(1, '/var/genetics/proj/within_family/within_family_project/scrip
 import correlation_meta_functions as corr
 
 pheno = "income"
-all_cohorts = ["ukb", "minn_twins", "moba", "str", "ft"]
+all_cohorts = ["ukb", "minn_twins", "moba", "str", "ft", "ipsych"]
 
 ## ------------------------------------------------------------------------------------------------
 ## calculate correlations for each cohort using correlate.py
@@ -20,6 +20,7 @@ corr.get_correlations(cohort = "minn_twins", raw_ss = "/var/genetics/data/minn_t
 corr.get_correlations(cohort = "moba", raw_ss = "/var/genetics/data/moba/private/v1/raw/sumstats/hdf5/inc_chr*.sumstats.hdf5", processed_ss = "/var/genetics/data/moba/private/v1/processed/sumstats/gz/inc_chr@", pheno = pheno, chrposid = False, format = True, avg_ntc = False)
 corr.get_correlations(cohort = "str", raw_ss = "/var/genetics/data/str/public/latest/raw/sumstats/fgwas/income/income_chr*.hdf5", processed_ss = "/var/genetics/data/str/public/latest/processed/sumstats/fgwas/income/gz/income_chr@", pheno = pheno, chrposid = False, format = True, avg_ntc = True)
 corr.get_correlations(cohort = "ft", raw_ss = "/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/income.chr*.hdf5", processed_ss = "/var/genetics/data/finn_twin/public/latest/processed/sumstats/fgwas/gz/income.chr@", pheno = pheno, chrposid = False, format = True, avg_ntc = True)
+corr.get_correlations(cohort = "ipsych", processed_ss = "/disk/genetics/data/ipsych/public/v2/processed/sumstats/sumstats_wage_export_plinkfiltered", pheno = pheno, chrposid = True, format = False, avg_ntc = True)
 
 ## ------------------------------------------------------------------------------------------------
 ## compile and meta-analyze correlation estimates

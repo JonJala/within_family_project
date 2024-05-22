@@ -44,7 +44,13 @@ cor_results %<>%
                                 phenotype %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(phenotype)))
 cor_results %<>% filter(phenotype != "ADHD")
 
-# direct-pop ldsc v.s. snipar comparison
+# colour palette -- modified version of RColorBrewer "Set1"
+palette <- rep(c("#E41A1C", "#377EB8",  "#A65628", "#4DAF4A", "#FF7F00", "#984EA3", "#999999", "#F781BF"), 4)
+
+## --------------------------------------------------------------------------------
+## direct-pop ldsc v.s. snipar comparison
+## --------------------------------------------------------------------------------
+
 correlate <- cor_results %>%
               select(phenotype, dir_pop_rg, dir_pop_rg_se) %>%
               mutate(Source = "snipar")
@@ -55,9 +61,6 @@ ldsc <- cor_results %>%
 results <- rbind(correlate, ldsc) %>%
             filter(dir_pop_rg_se < 0.25)
 results$Source <- factor(results$Source, levels = c("snipar", "LDSC"))
-
-# colour palette -- modified version of RColorBrewer "Set1"
-palette <- rep(c("#E41A1C", "#377EB8",  "#A65628", "#4DAF4A", "#FF7F00", "#984EA3", "#999999", "#F781BF"), 4)
 
 # plot direct to pop corr
 results$phenotype = factor(results$phenotype,levels=unique(results$phenotype[order(results$dir_pop_rg)]))
@@ -89,6 +92,11 @@ snipar_results <- results %>%
 snipar_sig <- sum(snipar_results$adj_p < 0.05)
 print(paste0(snipar_sig, " significant results out of ", nrow(snipar_results), " for snipar"))
 
+
+## --------------------------------------------------------------------------------
+## direct-ntc correlations
+## --------------------------------------------------------------------------------
+
 # plot direct to ntc corr
 results <- cor_results %>%
             select(phenotype, dir_ntc_rg, dir_ntc_rg_se) %>%
@@ -97,7 +105,7 @@ results$phenotype = factor(results$phenotype,levels=unique(results$phenotype[ord
 p <- ggplot(results %>% filter(!is.na(dir_ntc_rg)),aes(x=factor(phenotype, levels = cor_results$phenotype),y=dir_ntc_rg,colour=factor(phenotype, levels = cor_results$phenotype),label=phenotype))+
       geom_point()+
       geom_errorbar(aes(x = phenotype, ymin=dir_ntc_rg-qnorm(0.025)*dir_ntc_rg_se,ymax=dir_ntc_rg+qnorm(0.025)*dir_ntc_rg_se),width=0.25, position = position_dodge(width = 0.5))+
-      geom_hline(yintercept=1.0)+
+      geom_hline(yintercept=0)+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "none")+
       xlab('Phenotype')+ylab('Correlation between direct effect and average NTC')+
@@ -105,3 +113,12 @@ p <- ggplot(results %>% filter(!is.na(dir_ntc_rg)),aes(x=factor(phenotype, level
       scale_colour_manual(values = palette, guide = "none") +
       coord_flip()
 ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_avg_ntc_correlations.pdf', p, width=9,height=7,device=cairo_pdf)
+
+# check how many are statistically significantly different from 0
+results %<>%
+    mutate(z = dir_ntc_rg / dir_ntc_rg_se,
+          p = 2*pnorm(abs(z), lower.tail = FALSE),
+          adj_p = p.adjust(p, method = "BH"))
+n_sig <- sum(results$adj_p < 0.05)
+print(paste0(n_sig, " significant results out of ", nrow(results)))
+sig <- results %>% filter(adj_p < 0.05)

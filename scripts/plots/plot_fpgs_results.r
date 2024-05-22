@@ -105,10 +105,10 @@ fpgs_ea_cog <- read_excel("/var/genetics/proj/within_family/within_family_projec
 fpgs_ea_cog %<>% fill(phenotype, validation_pheno) # fill down missing phenotype values from merged rows
 
 values_ea_cog <- fpgs_ea_cog %>%
-                select(ends_with(c("phenotype", "dataset", "pheno", "_direct","_pop","_paternal","_maternal","_corr"))) %>%
+                select(ends_with(c("phenotype", "dataset", "pheno", "_direct","_pop", "_avg_ntc", "_paternal","_maternal","_corr"))) %>%
                 gather(measure, value, direct_direct:population_parental_pgi_corr)
 se_ea_cog <- fpgs_ea_cog %>%
-        select(ends_with(c("phenotype", "dataset", "pheno",  "direct_se", "pop_se", "paternal_se", "maternal_se", "_corr_se"))) %>%
+        select(ends_with(c("phenotype", "dataset", "pheno",  "direct_se", "pop_se", "_avg_ntc_se", "paternal_se", "maternal_se", "_corr_se"))) %>%
         gather(measure, se, direct_direct_se:population_parental_pgi_corr_se) %>%
         mutate(measure = substr(measure, 1, nchar(measure)-3))
 df_ea_cog <- merge(values_ea_cog, se_ea_cog) %>%
@@ -120,7 +120,7 @@ df_ea_cog <- merge(values_ea_cog, se_ea_cog) %>%
                                                   dataset == "ukb" & validation_pheno == "cognition" ~ "UKB Fluid Intelligence"))
 
 fpgs_plot_ea_cog <- function(data, dirpop, pheno, ylim, ncols = 3) {
-        lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_maternal"), paste0(dirpop, "_paternal"), paste0(dirpop, "_pop"))
+        lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_maternal"), paste0(dirpop, "_paternal"), paste0(dirpop, "_avg_ntc"), paste0(dirpop, "_pop"))
         p <- ggplot(data %>% filter(phenotype == pheno, dir_pop == dirpop, measure %in% lvls),
                 aes(x = factor(measure, levels = lvls), y = value, fill = factor(measure, levels = lvls))) +
         geom_bar(stat = "identity") +
@@ -128,7 +128,7 @@ fpgs_plot_ea_cog <- function(data, dirpop, pheno, ylim, ncols = 3) {
         geom_linerange(aes(ymin = value - 1.96*se, ymax = value + 1.96*se), colour="black", linewidth = 0.5) +
         theme_classic() +
         ylim(ylim) +
-        scale_fill_discrete(labels = c("Direct", "Maternal", "Paternal", "Population")) +
+        scale_fill_discrete(labels = c("Direct", "Maternal NTC", "Paternal NTC", "Average NTC", "Population")) +
         theme(legend.title = element_blank(), legend.position = "bottom", axis.text.x = element_blank(),
                 axis.ticks.x = element_blank(), axis.text.y = element_text(size = 9),
                 axis.title = element_blank(), strip.text.x = element_text(size = 8)) +

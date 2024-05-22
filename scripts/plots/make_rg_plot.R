@@ -106,6 +106,55 @@ create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = 
 
     # process data
     dat = process_data(phenos, filter_pheno = filter_pheno)
+    dat %<>% mutate(pheno1 = str_split(phenotype, "_", simplify = TRUE)[,1],
+                    pheno2 = str_split(phenotype, "_", simplify = TRUE)[,2])
+    dat %<>% mutate(pheno1 = case_when(pheno1 %in% c("adhd", "bmi", "copd", "ea") ~ toupper(pheno1),
+                                pheno1 == "nonhdl" ~ "Non-HDL cholesterol",
+                                pheno1 == "hdl" ~ "HDL cholesterol",
+                                pheno1 == "fev" ~ "FEV1",
+                                pheno1 == "agemenarche" ~ "Age-at-menarche",
+                                pheno1 == "bps" ~ "Blood pressure (systolic)",
+                                pheno1 == "bpd" ~ "Blood pressure (diastolic)",
+                                pheno1 == "cognition" ~ "Cognitive performance",
+                                pheno1 == "depsymp" ~ "Depressive symptoms",
+                                pheno1 == "eversmoker" ~ "Ever-smoker",
+                                pheno1 == "dpw" ~ "Drinks-per-week",
+                                pheno1 == "hayfever" ~ "Allergic rhinitis",
+                                pheno1 == "health" ~ "Self-rated health",
+                                pheno1 == "hhincome" ~ "Household income",
+                                pheno1 == "swb" ~ "Subjective well-being",
+                                pheno1 == "nchildren" ~ "Number of children",
+                                pheno1 == "nearsight" ~ "Myopia",
+                                pheno1 == "aud" ~ "Alcohol use disorder",
+                                pheno1 == "cpd" ~ "Cigarettes per day",
+                                pheno1 == "aafb" ~ "Age at first birth (women)",
+                                pheno1 == "morningperson" ~ "Morning person",
+                                pheno1 == "income" ~ "Individual income",
+                                pheno1 %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(pheno1)),
+                    pheno2 = case_when(pheno2 %in% c("adhd", "bmi", "copd", "ea") ~ toupper(pheno2),
+                                pheno2 == "nonhdl" ~ "Non-HDL cholesterol",
+                                pheno2 == "hdl" ~ "HDL cholesterol",
+                                pheno2 == "fev" ~ "FEV1",
+                                pheno2 == "agemenarche" ~ "Age-at-menarche",
+                                pheno2 == "bps" ~ "Blood pressure (systolic)",
+                                pheno2 == "bpd" ~ "Blood pressure (diastolic)",
+                                pheno2 == "cognition" ~ "Cognitive performance",
+                                pheno2 == "depsymp" ~ "Depressive symptoms",
+                                pheno2 == "eversmoker" ~ "Ever-smoker",
+                                pheno2 == "dpw" ~ "Drinks-per-week",
+                                pheno2 == "hayfever" ~ "Allergic rhinitis",
+                                pheno2 == "health" ~ "Self-rated health",
+                                pheno2 == "hhincome" ~ "Household income",
+                                pheno2 == "swb" ~ "Subjective well-being",
+                                pheno2 == "nchildren" ~ "Number of children",
+                                pheno2 == "nearsight" ~ "Myopia",
+                                pheno2 == "aud" ~ "Alcohol use disorder",
+                                pheno2 == "cpd" ~ "Cigarettes per day",
+                                pheno2 == "aafb" ~ "Age at first birth (women)",
+                                pheno2 == "morningperson" ~ "Morning person",
+                                pheno2 == "income" ~ "Individual income",
+                                pheno2 %in% c("asthma", "cannabis", "depression", "eczema", "extraversion", "height", "migraine", "neuroticism", "nchildren", "agemenarche", "eczema", "hayfever", "eversmoker", "morningperson", "asthma", "nearsight", "height", "migraine", "income", "extraversion", "hypertension") ~ str_to_title(pheno2)),
+                    pheno_label = paste0(pheno1, "_", pheno2))
 
     # get colour palette
     if (is.na(palette)) {
@@ -128,17 +177,20 @@ create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = 
         }
     }
 
+    xlim <- max(c(abs(min(dat$pop_rg_lo)), max(dat$pop_rg_hi)), na.rm = T)
+    ylim <- max(c(abs(min(dat$direct_rg_lo)), max(dat$direct_rg_hi)), na.rm = T)
+
     # plot
     dat %>%
         ggplot() +
-        geom_point(aes(pop_rg, direct_rg, colour=phenotype, shape=phenotype), alpha=0.6) +
-        geom_linerange(aes(x=pop_rg, ymin = direct_rg_lo, ymax=direct_rg_hi, color = phenotype), alpha=0.6) +
-        geom_linerange(aes(y=direct_rg, xmin = pop_rg_lo, xmax=pop_rg_hi, color = phenotype), alpha=0.6) +
+        geom_point(aes(pop_rg, direct_rg, colour=pheno_label, shape=pheno_label), alpha=0.6) +
+        geom_linerange(aes(x=pop_rg, ymin = direct_rg_lo, ymax=direct_rg_hi, color = pheno_label), alpha=0.6) +
+        geom_linerange(aes(y=direct_rg, xmin = pop_rg_lo, xmax=pop_rg_hi, color = pheno_label), alpha=0.6) +
         geom_abline(intercept=0, slope=1, linetype="solid", color="gray") +
         geom_hline(yintercept=0, linetype="dotted") +
         geom_vline(xintercept=0, linetype="dotted") +
-        ylim(-0.9, 0.9) +
-        xlim(-0.9, 0.9) +
+        ylim(-ylim, ylim) +
+        xlim(-xlim, xlim) +
         scale_colour_manual(values = palette) +
         scale_shape_manual(values = seq(1, n)) +
         labs(y = TeX("Direct $\\textit{r_g}$"), x = TeX("Population $\\textit{r_g}")) +
@@ -156,11 +208,11 @@ create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = 
 
 }
 
-# ## generate scatterplot filtering on each phenotype
-# for (pheno in all_phenos) {
-#     print(pheno)
-#     create_scatterplot(phenos, save = TRUE, save_suffix = pheno, filter_pheno = pheno)
-# }
+## generate scatterplot filtering on each phenotype
+for (pheno in all_phenos) {
+    print(pheno)
+    create_scatterplot(phenos, save = TRUE, save_suffix = pheno, filter_pheno = pheno)
+}
 
 ## --------------------------------------------------------------------------------
 ## create density plot

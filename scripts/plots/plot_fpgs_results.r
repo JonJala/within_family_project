@@ -29,6 +29,7 @@ values <- data %>%
         gather(measure, value, direct_direct:population_parental_pgi_corr)
 
 se <- data %>%
+        filter(phenotype %in% filtered_phenos$phenotype) %>%
         select(ends_with(c("phenotype", "direct_se", "pop_se", "avg_ntc_se", "_corr_se"))) %>%
         gather(measure, se, direct_direct_se:population_parental_pgi_corr_se) %>%
         mutate(measure = substr(measure, 1, nchar(measure)-3))
@@ -97,6 +98,26 @@ fpgs_plot <- function(data, dirpop, ncols = 6) {
 fpgs_plot(df, "direct")
 fpgs_plot(df, "population")
 
+## determine which phenos have stat sig out of sample predictions based on direct effects
+dir_pop_sig <- df %>%
+                filter(measure == "direct_pop") %>%
+                mutate(z = value / se,
+                        p = 2 * pnorm(-abs(z)),
+                        adj_pval = p.adjust(p, method = "BH")) %>%
+                filter(adj_pval < 0.05)
+dir_ntc_sig <- df %>%
+                filter(measure == "direct_avg_ntc") %>%
+                mutate(z = value / se,
+                        p = 2 * pnorm(-abs(z)),
+                        adj_pval = p.adjust(p, method = "BH")) %>%
+                filter(p < 0.05)
+pop_ntc_sig <- df %>%
+                filter(measure == "population_avg_ntc") %>%
+                mutate(z = value / se,
+                        p = 2 * pnorm(-abs(z)),
+                        adj_pval = p.adjust(p, method = "BH")) %>%
+                filter(adj_pval < 0.05)
+
 # ---------------------------------------------------------------------
 # plot fpgs coefficients for ea and cognition
 # ---------------------------------------------------------------------
@@ -149,10 +170,10 @@ fpgs_plot_ea_cog(df_ea_cog, "population", "cognition", ylim = c(-0.05, 0.15))
 # append ukb cog and mcs parental corrs to data
 pgi_corrs <- df %>% filter(measure == "population_parental_pgi_corr" | measure == "direct_parental_pgi_corr")
 ea_cog_corrs_ukb <- df_ea_cog %>% 
-                        filter((measure == "population_parental_pgi_corr" | measure == "direct_parental_pgi_corr") & validation_pheno == "ea4") %>%
+                        filter((measure == "population_parental_pgi_corr" | measure == "direct_parental_pgi_corr") & ((validation_pheno_name == "EA4 Outcome" & phenotype == "ea") | (validation_pheno_name == "UKB Fluid Intelligence" & phenotype == "cognition"))) %>%
                         mutate(validation = "ukb",
                                 pheno_name = case_when(phenotype == "ea" ~ "EA",
-                                                        phenotype == "cognition" ~ "Cognition")) %>%
+                                                        phenotype == "cognition" ~ "Cognitive Performance")) %>%
                         select(phenotype, measure, value, se, dir_pop, pheno_name, validation)
 corrs_df <- rbind(pgi_corrs, ea_cog_corrs_ukb)
 

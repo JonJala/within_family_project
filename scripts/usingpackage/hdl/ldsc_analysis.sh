@@ -25,17 +25,9 @@ ${ldscpath}/munge_sumstats.py \
 
 ${ldscpath}/munge_sumstats.py \
 --sumstats ${within_family_path}/processed/package_output/hdl/meta.nfilter.sumstats.gz \
---out ${within_family_path}/processed/package_output/hdl/maternalmunged \
---N-col direct_N --p maternal_pval --signed-sumstats maternal_z,0 \
+--out ${within_family_path}/processed/package_output/hdl/ntcmunged \
+--N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
 --n-min 1.0
-
-${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/hdl/meta.nfilter.sumstats.gz \
---out ${within_family_path}/processed/package_output/hdl/paternalmunged \
---N-col direct_N --p paternal_pval --signed-sumstats paternal_z,0 \
---n-min 1.0
-
-
 
 echo "Calculating RG of population effect with reference HDL sample"
 ${ldscpath}/ldsc.py \
@@ -57,6 +49,13 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/hdl/direct_population
+
+echo "Calculating RG of avg NTC with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/hdl/ntcmunged.sumstats.gz,${within_family_path}/processed/package_output/hdl/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/hdl/direct_avgNTC
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/hdl/directmunged.sumstats.gz \

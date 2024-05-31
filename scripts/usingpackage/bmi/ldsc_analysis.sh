@@ -24,17 +24,9 @@ ${ldscpath}/munge_sumstats.py \
 
 ${ldscpath}/munge_sumstats.py \
 --sumstats ${within_family_path}/processed/package_output/bmi/meta.nfilter.sumstats.gz \
---out ${within_family_path}/processed/package_output/bmi/maternalmunged \
---N-col direct_N --p maternal_pval --signed-sumstats maternal_z,0 \
+--out ${within_family_path}/processed/package_output/bmi/ntcmunged \
+--N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
 --n-min 1.0
-
-${ldscpath}/munge_sumstats.py \
---sumstats ${within_family_path}/processed/package_output/bmi/meta.nfilter.sumstats.gz \
---out ${within_family_path}/processed/package_output/bmi/paternalmunged \
---N-col direct_N --p paternal_pval --signed-sumstats paternal_z,0 \
---n-min 1.0
-
-
 
 echo "Calculating RG of population effect with reference BMI sample"
 ${ldscpath}/ldsc.py \
@@ -56,6 +48,13 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/bmi/direct_population
+
+echo "Calculating RG of avg NTC with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/bmi/ntcmunged.sumstats.gz,${within_family_path}/processed/package_output/bmi/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/bmi/direct_avgNTC
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/bmi/directmunged.sumstats.gz \

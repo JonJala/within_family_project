@@ -23,13 +23,18 @@ ${ldscpath}/munge_sumstats.py \
 --N-col direct_N --p direct_pval --signed-sumstats direct_z,0 \
 --n-min 1.0
 
+${ldscpath}/munge_sumstats.py \
+--sumstats ${within_family_path}/processed/package_output/fev/meta.nfilter.sumstats.gz \
+--out ${within_family_path}/processed/package_output/fev/ntcmunged \
+--N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
+--n-min 1.0
+
 echo "Calculating RG of population effect with reference sample"
 ${ldscpath}/ldsc.py \
 --rg ${within_family_path}/processed/package_output/fev/populationmunged.sumstats.gz,${refsample} \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/fev/population_reference_sample
-# 0.901 (0.0059)
 
 echo "Calculating RG of direct effect with reference sample"
 ${ldscpath}/ldsc.py \
@@ -37,7 +42,6 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/fev/direct_reference_sample
-# 0.901 (0.0059)
 
 echo "Calculating RG of population effect with direct effect"
 ${ldscpath}/ldsc.py \
@@ -45,6 +49,13 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/fev/direct_population
+
+echo "Calculating RG of avg NTC with direct effect"
+${ldscpath}/ldsc.py \
+--rg ${within_family_path}/processed/package_output/fev/ntcmunged.sumstats.gz,${within_family_path}/processed/package_output/fev/directmunged.sumstats.gz \
+--ref-ld-chr ${eur_w_ld_chr} \
+--w-ld-chr ${eur_w_ld_chr} \
+--out ${within_family_path}/processed/package_output/fev/direct_avgNTC
 
 ${ldscpath}/ldsc.py \
 --h2 ${within_family_path}/processed/package_output/fev/directmunged.sumstats.gz \

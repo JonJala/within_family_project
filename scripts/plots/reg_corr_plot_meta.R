@@ -14,6 +14,7 @@ library(RColorBrewer)
 
 # read in data
 cor_results = read_excel("/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx")
+cor_results[2:ncol(cor_results)] = lapply(cor_results[2:ncol(cor_results)], as.numeric) # convert to numeric, force NAs
 
 # format pheno names
 cor_results %<>% 
@@ -109,7 +110,6 @@ p <- ggplot(results %>% filter(!is.na(dir_ntc_rg)),aes(x=factor(phenotype, level
       theme_bw()+
       theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "none")+
       xlab('Phenotype')+ylab('Correlation between direct effect and average NTC')+
-      scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1,1.25,1.5)) +
       scale_colour_manual(values = palette, guide = "none") +
       coord_flip()
 ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_avg_ntc_correlations.pdf', p, width=9,height=7,device=cairo_pdf)
@@ -122,3 +122,31 @@ results %<>%
 n_sig <- sum(results$adj_p < 0.05)
 print(paste0(n_sig, " significant results out of ", nrow(results)))
 sig <- results %>% filter(adj_p < 0.05)
+
+## --------------------------------------------------------------------------------
+## regression pop v.s. direct
+## --------------------------------------------------------------------------------
+
+# plot direct to ntc corr
+reg_results <- cor_results %>%
+                  select(phenotype, reg_population_direct, reg_population_direct_se) %>%
+                  filter(reg_population_direct_se < 0.25)
+reg_results$phenotype = factor(reg_results$phenotype,levels=unique(reg_results$phenotype[order(reg_results$reg_population_direct)]))
+p <- ggplot(reg_results %>% filter(!is.na(reg_population_direct)),aes(x=factor(phenotype, levels = cor_results$phenotype),y=reg_population_direct,colour=factor(phenotype, levels = cor_results$phenotype),label=phenotype))+
+      geom_point()+
+      geom_errorbar(aes(x = phenotype, ymin=reg_population_direct-qnorm(0.025)*reg_population_direct_se,ymax=reg_population_direct+qnorm(0.025)*reg_population_direct_se),width=0.25, position = position_dodge(width = 0.5))+
+      geom_hline(yintercept=1)+
+      theme_bw()+
+      theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "none")+
+      xlab('Phenotype')+ylab('Regression of population on direct effects')+
+      scale_colour_manual(values = palette, guide = "none") +
+      coord_flip()
+ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/reg_direct_population.pdf', p, width=9,height=7,device=cairo_pdf)
+
+# check how many are statistically significantly different from 0
+reg_results %<>%
+    mutate(z = (reg_population_direct-1) / reg_population_direct_se,
+          p = 2*pnorm(abs(z), lower.tail = FALSE),
+          adj_p = p.adjust(p, method = "BH"))
+n_sig <- sum(reg_results$adj_p < 0.05)
+sig <- reg_results %>% filter(adj_p < 0.05)

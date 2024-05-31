@@ -4,8 +4,8 @@ import subprocess
 import json
 
 ## chooose which results to compile
-metaanalysis = False
-fpgs = True
+metaanalysis = True
+fpgs = False
 ldsc = False
 
 ### define functions for compiling results
@@ -118,6 +118,18 @@ def get_meta_results(phenotype, effect):
         else:
             ldsc_rgest = None
             ldsc_rgse = None
+
+    # get dir-avg ntc rg from ldsc
+    with open(packageoutput + phenotype + '/direct_avgNTC.log') as f:
+        ldsc_dir_avgntc_rglines = [l for l in f if l.startswith('Genetic Correlation:')]
+        ldsc_dir_avgntc_rg = ldsc_dir_avgntc_rglines[0] if len(ldsc_dir_avgntc_rglines) > 0 else None
+        if ldsc_dir_avgntc_rg is not None:
+            ldsc_dir_avgntc_rg = ldsc_dir_avgntc_rg.split(':')[1]
+            ldsc_dir_avgntc_rgest = float(ldsc_dir_avgntc_rg.split('(')[0])
+            ldsc_dir_avgntc_rgse = float(ldsc_dir_avgntc_rg.split('(')[1].replace(')', ''))
+        else:
+            ldsc_dir_avgntc_rgest = None
+            ldsc_dir_avgntc_rgse = None
     
     # dir-pop dir-ntc marginal correlations
     mrg = pd.read_csv(
@@ -156,6 +168,8 @@ def get_meta_results(phenotype, effect):
             'dir_ntc_rg_se' : [dir_ntc_mrg_se],
             'dir_pop_rg_ldsc' : [ldsc_rgest],
             'dir_pop_rg_se_ldsc' : [ldsc_rgse],
+            'dir_avgntc_rg_ldsc' : [ldsc_dir_avgntc_rgest],
+            'dir_avgntc_rg_se_ldsc' : [ldsc_dir_avgntc_rgse],
             'n_cohorts' : [ncohorts],
             'reg_population_direct': [reg_population_direct_mrg],
             'reg_population_direct_se': [reg_population_direct_mrg_se],
@@ -459,7 +473,7 @@ if metaanalysis == True:
     dat = dat.drop(
         ['n_cohorts_population', 'dir_pop_rg_population', 'dir_pop_rg_se_population', 'dir_ntc_rg_population', 'dir_ntc_rg_se_population',
         'reg_population_direct_population', 'reg_population_direct_se_population', 'v_population_uncorr_direct_population', 'v_population_uncorr_direct_se_population',
-        'dir_pop_rg_ldsc_population', 'dir_pop_rg_se_ldsc_population'], 
+        'dir_pop_rg_ldsc_population', 'dir_pop_rg_se_ldsc_population', 'dir_avgntc_rg_ldsc_population', 'dir_avgntc_rg_se_ldsc_population'], 
         axis = 1
     )
     dat = dat.rename(
@@ -471,6 +485,8 @@ if metaanalysis == True:
             'dir_ntc_rg_se_direct' : 'dir_ntc_rg_se',
             'dir_pop_rg_ldsc_direct' : 'dir_pop_rg_ldsc',
             'dir_pop_rg_se_ldsc_direct' : 'dir_pop_rg_se_ldsc',
+            'dir_avgntc_rg_ldsc_direct' : 'dir_avgntc_rg_ldsc',
+            'dir_avgntc_rg_se_ldsc_direct' : 'dir_avgntc_rg_se_ldsc',
             'v_population_uncorr_direct_direct': 'v_population_uncorr_direct',
             'v_population_uncorr_direct_se_direct': 'v_population_uncorr_direct_se',
             'reg_population_direct_direct': 'reg_population_direct',
@@ -485,7 +501,8 @@ if metaanalysis == True:
         'h2_intercept_direct', 'h2_intercept_se_direct', 'h2_intercept_population', 'h2_intercept_se_population',
         'ratio_direct', 'ratio_se_direct', 'ratio_population', 'ratio_se_population',
         'rg_ref_direct','rg_ref_se_direct',  'rg_ref_population', 'rg_ref_se_population',
-        'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc', 'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 
+        'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc', 'dir_avgntc_rg_ldsc', 'dir_avgntc_rg_se_ldsc', 
+        'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 
         'reg_population_direct', 'reg_population_direct_se', 'v_population_uncorr_direct', 'v_population_uncorr_direct_se'
     ]
     ]
@@ -496,7 +513,8 @@ if metaanalysis == True:
 
     # save to excel
     dat.to_excel(
-        '/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx'
+        '/var/genetics/proj/within_family/within_family_project/processed/package_output/meta_results.xlsx',
+        na_rep = "NA"
     )
 
 ## format and save fpgs results

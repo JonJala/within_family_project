@@ -150,3 +150,31 @@ reg_results %<>%
           adj_p = p.adjust(p, method = "BH"))
 n_sig <- sum(reg_results$adj_p < 0.05)
 sig <- reg_results %>% filter(adj_p < 0.05)
+
+## --------------------------------------------------------------------------------
+## prop non-sampling variance in pop due to stratification bias
+## --------------------------------------------------------------------------------
+
+prop_var_results <- cor_results %>%
+                  select(phenotype, v_population_uncorr_direct, v_population_uncorr_direct_se) %>%
+                  filter(v_population_uncorr_direct_se < 0.25)
+prop_var_results$phenotype = factor(prop_var_results$phenotype,levels=unique(prop_var_results$phenotype[order(prop_var_results$v_population_uncorr_direct)]))
+p <- ggplot(prop_var_results %>% filter(!is.na(v_population_uncorr_direct)),aes(x=factor(phenotype, levels = cor_results$phenotype),y=v_population_uncorr_direct,colour=factor(phenotype, levels = cor_results$phenotype),label=phenotype))+
+      geom_point()+
+      geom_errorbar(aes(x = phenotype, ymin=v_population_uncorr_direct-qnorm(0.025)*v_population_uncorr_direct_se,ymax=v_population_uncorr_direct+qnorm(0.025)*v_population_uncorr_direct_se),width=0.25, position = position_dodge(width = 0.5))+
+      geom_hline(yintercept=0)+
+      theme_bw()+
+      theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "none")+
+      xlab('Phenotype')+ylab('Proportion of non-sampling variance in population due to stratification bias')+
+      scale_colour_manual(values = palette, guide = "none") +
+      coord_flip()
+ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/prop_non_sampling_var.pdf', p, width=9,height=7,device=cairo_pdf)
+
+# check how many are statistically significantly different from 0
+prop_var_results %<>%
+    mutate(z = v_population_uncorr_direct / v_population_uncorr_direct_se,
+          p = 2*pnorm(abs(z), lower.tail = FALSE),
+          adj_p = p.adjust(p, method = "BH"))
+n_sig <- sum(prop_var_results$adj_p < 0.05)
+sig <- prop_var_results %>% filter(adj_p < 0.05)
+sig$phenotype

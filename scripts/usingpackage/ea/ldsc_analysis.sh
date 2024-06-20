@@ -26,7 +26,7 @@ ${ldscpath}/munge_sumstats.py \
 ${ldscpath}/munge_sumstats.py \
 --sumstats ${within_family_path}/processed/package_output/ea/meta.nfilter.sumstats.gz \
 --out ${within_family_path}/processed/package_output/ea/ntcmunged \
---N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
+--N-col avg_NTC_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
 --n-min 1.0
 
 echo "Calculating RG of population effect with reference EA sample"

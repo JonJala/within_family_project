@@ -26,13 +26,13 @@ ${ldscpath}/munge_sumstats.py \
 ${ldscpath}/munge_sumstats.py \
 --sumstats ${within_family_path}/processed/package_output/eversmoker/meta.nfilter.sumstats.gz \
 --out ${within_family_path}/processed/package_output/eversmoker/ntcmunged \
---N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
+--N-col avg_NTC_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
 --n-min 1.0
 
 ${ldscpath}/munge_sumstats.py /
 --sumstats ${within_family_path}/processed/package_output/eversmoker/meta.nfilter.sumstats.gz \
 --out ${within_family_path}/processed/package_output/eversmoker/ntcmunged \
---N-col direct_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
+--N-col avg_NTC_N --p avg_NTC_pval --signed-sumstats avg_NTC_z,0 \
 --merge-alleles ${hm3snps}
 
 echo "Calculating RG of population effect with reference dpression sample"
@@ -48,7 +48,6 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/eversmoker/direct_reference_sample
-# 1.0353 (0.0159)
 
 echo "Calculating RG of population effect with direct effect"
 ${ldscpath}/ldsc.py \
@@ -69,7 +68,6 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/eversmoker/maternal_vs_paternal
-# -0.0501 (0.3567)
 
 
 ${ldscpath}/ldsc.py \
@@ -77,7 +75,6 @@ ${ldscpath}/ldsc.py \
 --ref-ld-chr ${eur_w_ld_chr} \
 --w-ld-chr ${eur_w_ld_chr} \
 --out ${within_family_path}/processed/package_output/eversmoker/h2_ntc
-# 0.0367 (0.0072)
 
 
 Rscript $scriptpath/estimate_marginal_correlations_meta.R \

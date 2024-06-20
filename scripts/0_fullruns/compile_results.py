@@ -78,23 +78,28 @@ def get_meta_results(phenotype, effect):
     # get ldsc ratio
     with open(packageoutput + phenotype + f'/{effect}_h2.log') as f:
         
-        # get intercept
         ratio_lines = [l for l in f if l.startswith('Ratio')]
         ratio = ratio_lines[0] if len(ratio_lines) > 0 else None
-        if ratio.startswith("Ratio < 0"):
-            ratio_est = 0 # "Ratio < 0 (usually indicates GC correction)." but to keep it as numeric, set to 0
-            ratio_se = None
-        elif ratio is not None:
-            ratio = ratio.split(':')[1]
-            if ratio.startswith(" NA"):
-                ratio_est = None
+
+        if ratio is not None:
+
+            if ratio.startswith("Ratio < 0"):
+                ratio_est = 0 # "Ratio < 0 (usually indicates GC correction)." but to keep it as numeric, set to 0
                 ratio_se = None
             else:
-                ratio_est = float(ratio.split('(')[0])
-                ratio_se = float(ratio.split('(')[1].replace(')', ''))
+                ratio = ratio.split(':')[1]
+                if ratio.startswith(" NA"):
+                    ratio_est = None
+                    ratio_se = None
+                else:
+                    ratio_est = float(ratio.split('(')[0])
+                    ratio_se = float(ratio.split('(')[1].replace(')', ''))
+                
         else:
+            
             ratio_est = None
             ratio_se = None
+    
     # get rg with ref
     with open(packageoutput + phenotype + f'/{effect}_reference_sample.log') as f:
         rglines = [l for l in f if l.startswith('Genetic Correlation:')]
@@ -119,8 +124,9 @@ def get_meta_results(phenotype, effect):
             ldsc_rgest = None
             ldsc_rgse = None
 
-    # get dir-avg ntc rg from ldsc
+    # get dir-avg ntc rg, avg ntc h2, h2 intercept, and ratio from ldsc
     with open(packageoutput + phenotype + '/direct_avgNTC.log') as f:
+        # dir-avg ntc rg
         ldsc_dir_avgntc_rglines = [l for l in f if l.startswith('Genetic Correlation:')]
         ldsc_dir_avgntc_rg = ldsc_dir_avgntc_rglines[0] if len(ldsc_dir_avgntc_rglines) > 0 else None
         if ldsc_dir_avgntc_rg is not None:
@@ -130,7 +136,55 @@ def get_meta_results(phenotype, effect):
         else:
             ldsc_dir_avgntc_rgest = None
             ldsc_dir_avgntc_rgse = None
+
+    with open(packageoutput + phenotype + '/direct_avgNTC.log') as f:
+        # h2
+        ntc_h2lines = [l for l in f if l.startswith('Total Observed scale h2')]
+        ntc_h2 = ntc_h2lines[0] if len(ntc_h2lines) > 0 else None
+        
+        if ntc_h2 is not None:
+            ntc_h2 = ntc_h2.split(':')[1]
+            ntc_h2est = float(ntc_h2.split('(')[0])
+            ntc_h2se = float(ntc_h2.split('(')[1].replace(')', ''))
+        else:
+            ntc_h2est = None
+            ntc_h2se = None
     
+    with open(packageoutput + phenotype + '/direct_avgNTC.log') as f:
+        # h2 intercept
+        ntc_h2_intercept_lines = [l for l in f if l.startswith('Intercept')]
+        ntc_h2_intercept = ntc_h2_intercept_lines[0] if len(ntc_h2_intercept_lines) > 0 else None
+        
+        if ntc_h2_intercept is not None:
+            ntc_h2_intercept = ntc_h2_intercept.split(':')[1]
+            ntc_h2_intercept_est = float(ntc_h2_intercept.split('(')[0])
+            ntc_h2_intercept_se = float(ntc_h2_intercept.split('(')[1].replace(')', ''))
+        else:
+            ntc_h2_intercept_est = None
+            ntc_h2_intercept_se = None
+
+    with open(packageoutput + phenotype + '/direct_avgNTC.log') as f:
+        # ratio
+        ntc_ratio_lines = [l for l in f if l.startswith('Ratio')]
+        ntc_ratio = ntc_ratio_lines[0] if len(ntc_ratio_lines) > 0 else None
+        
+        if ntc_ratio is not None:
+        
+            if ntc_ratio.startswith("Ratio < 0"):
+                ntc_ratio_est = 0 # "Ratio < 0 (usually indicates GC correction)." but to keep it as numeric, set to 0
+                ntc_ratio_se = None
+            else:
+                ntc_ratio = ntc_ratio.split(':')[1]
+                if ntc_ratio.startswith(" NA"):
+                    ntc_ratio_est = None
+                    ntc_ratio_se = None
+                else:
+                    ntc_ratio_est = float(ntc_ratio.split('(')[0])
+                    ntc_ratio_se = float(ntc_ratio.split('(')[1].replace(')', ''))
+        else:
+            ntc_ratio_est = None
+            ntc_ratio_se = None
+
     # dir-pop dir-ntc marginal correlations
     mrg = pd.read_csv(
         packageoutput + phenotype + f'/marginal_corrs.txt',
@@ -156,10 +210,16 @@ def get_meta_results(phenotype, effect):
             'n_eff_median' : [neff], 
             'h2' : [h2est], 
             'h2_se': [h2se],
+            'ntc_h2' : [ntc_h2est],
+            'ntc_h2_se' : [ntc_h2se],
             'h2_intercept' : [h2_intercept_est], 
             'h2_intercept_se': [h2_intercept_se],
+            'ntc_h2_intercept' : [ntc_h2_intercept_est],
+            'ntc_h2_intercept_se' : [ntc_h2_intercept_se],
             'ratio' : [ratio_est], 
             'ratio_se': [ratio_se],
+            'ntc_ratio' : [ntc_ratio_est],
+            'ntc_ratio_se' : [ntc_ratio_se],
             'rg_ref' : [rgest],
             'rg_ref_se' : [rgse],
             'dir_pop_rg' : [dir_pop_mrg],
@@ -437,7 +497,8 @@ cog_pheno = "cognition" # cognition validation pheno
 ## initialize dataframes for saving results
 if metaanalysis == True:    
     dat = pd.DataFrame(columns = ['phenotype', 'effect', 'n_eff_median', 'h2', 
-        'h2_se', 'h2_intercept', 'h2_intercept_se', 'ratio', 'ratio_se', 
+        'h2_se', 'ntc_h2', 'ntc_h2_se', 'h2_intercept', 'h2_intercept_se', 'ntc_h2_intercept',
+        'ntc_h2_intercept_se', 'ratio', 'ratio_se', 'ntc_ratio', 'ntc_ratio_se', 
         'rg_ref', 'rg_ref_se', 'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 
         'dir_ntc_rg_se', 'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc',
         'n_cohorts', 'reg_population_direct', 'reg_population_direct_se',
@@ -473,7 +534,8 @@ if metaanalysis == True:
     dat = dat.drop(
         ['n_cohorts_population', 'dir_pop_rg_population', 'dir_pop_rg_se_population', 'dir_ntc_rg_population', 'dir_ntc_rg_se_population',
         'reg_population_direct_population', 'reg_population_direct_se_population', 'v_population_uncorr_direct_population', 'v_population_uncorr_direct_se_population',
-        'dir_pop_rg_ldsc_population', 'dir_pop_rg_se_ldsc_population', 'dir_avgntc_rg_ldsc_population', 'dir_avgntc_rg_se_ldsc_population'], 
+        'dir_pop_rg_ldsc_population', 'dir_pop_rg_se_ldsc_population', 'dir_avgntc_rg_ldsc_population', 'dir_avgntc_rg_se_ldsc_population',
+        'ntc_h2_population', 'ntc_h2_se_population', 'ntc_h2_intercept_population', 'ntc_h2_intercept_se_population', 'ntc_ratio_population', 'ntc_ratio_se_population'], 
         axis = 1
     )
     dat = dat.rename(
@@ -490,16 +552,23 @@ if metaanalysis == True:
             'v_population_uncorr_direct_direct': 'v_population_uncorr_direct',
             'v_population_uncorr_direct_se_direct': 'v_population_uncorr_direct_se',
             'reg_population_direct_direct': 'reg_population_direct',
-            'reg_population_direct_se_direct': 'reg_population_direct_se'
+            'reg_population_direct_se_direct': 'reg_population_direct_se',
+            'ntc_h2_direct': 'ntc_h2',
+            'ntc_h2_se_direct': 'ntc_h2_se',
+            'ntc_h2_intercept_direct': 'ntc_h2_intercept',
+            'ntc_h2_intercept_se_direct': 'ntc_h2_intercept_se',
+            'ntc_ratio_direct': 'ntc_ratio',
+            'ntc_ratio_se_direct': 'ntc_ratio_se'
             }
     )
 
     # reordering columns
     dat = dat[
         ['n_cohorts', 'n_eff_median_direct', 'n_eff_median_population',
-        'h2_direct','h2_se_direct', 'h2_population','h2_se_population',
-        'h2_intercept_direct', 'h2_intercept_se_direct', 'h2_intercept_population', 'h2_intercept_se_population',
-        'ratio_direct', 'ratio_se_direct', 'ratio_population', 'ratio_se_population',
+        'h2_direct','h2_se_direct', 'ntc_h2', 'ntc_h2_se', 'h2_population','h2_se_population',
+        'h2_intercept_direct', 'h2_intercept_se_direct', 'ntc_h2_intercept', 'ntc_h2_intercept_se', 
+        'h2_intercept_population', 'h2_intercept_se_population', 'ratio_direct', 'ratio_se_direct',
+        'ntc_ratio', 'ntc_ratio_se', 'ratio_population', 'ratio_se_population',
         'rg_ref_direct','rg_ref_se_direct',  'rg_ref_population', 'rg_ref_se_population',
         'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc', 'dir_avgntc_rg_ldsc', 'dir_avgntc_rg_se_ldsc', 
         'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 

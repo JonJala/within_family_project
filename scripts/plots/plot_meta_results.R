@@ -98,17 +98,26 @@ print(paste0(snipar_sig, " significant results out of ", nrow(snipar_results), "
 ## direct-ntc correlations
 ## --------------------------------------------------------------------------------
 
-# plot direct to ntc corr
-results <- cor_results %>%
-            select(phenotype, dir_ntc_rg, dir_ntc_rg_se) %>%
+snipar <- cor_results %>%
+              select(phenotype, dir_ntc_rg, dir_ntc_rg_se) %>%
+              mutate(Source = "snipar")
+ldsc <- cor_results %>%
+                select(phenotype, dir_avgntc_rg_ldsc, dir_avgntc_rg_se_ldsc) %>%
+                mutate(Source = "LDSC") %>%
+                rename(dir_ntc_rg = dir_avgntc_rg_ldsc, dir_ntc_rg_se = dir_avgntc_rg_se_ldsc)
+results <- rbind(snipar, ldsc) %>%
             filter(dir_ntc_rg_se < 0.25)
+results$Source <- factor(results$Source, levels = c("snipar", "LDSC"))
+
+# plot direct-average NTC corr
 results$phenotype = factor(results$phenotype,levels=unique(results$phenotype[order(results$dir_ntc_rg)]))
-p <- ggplot(results %>% filter(!is.na(dir_ntc_rg)),aes(x=factor(phenotype, levels = cor_results$phenotype),y=dir_ntc_rg,colour=factor(phenotype, levels = cor_results$phenotype),label=phenotype))+
-      geom_point()+
+p <- ggplot(results %>% filter(!is.na(dir_ntc_rg)),aes(x=factor(phenotype, levels = cor_results$phenotype),y=dir_ntc_rg,colour=factor(phenotype, levels = cor_results$phenotype),label=phenotype, group = Source))+
+      geom_point(aes(shape = factor(Source, levels = c("LDSC", "snipar"))), position = position_dodge(width = 0.5), size=2)+
       geom_errorbar(aes(x = phenotype, ymin=dir_ntc_rg-qnorm(0.025)*dir_ntc_rg_se,ymax=dir_ntc_rg+qnorm(0.025)*dir_ntc_rg_se),width=0.25, position = position_dodge(width = 0.5))+
       geom_hline(yintercept=0)+
+      guides(shape = guide_legend(title = "Source")) +
       theme_bw()+
-      theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "none")+
+      theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "bottom")+
       xlab('Phenotype')+ylab('Correlation between direct effect and average NTC')+
       scale_colour_manual(values = palette, guide = "none") +
       coord_flip()
@@ -116,12 +125,18 @@ ggsave(filename='/var/genetics/proj/within_family/within_family_project/processe
 
 # check how many are statistically significantly different from 0
 results %<>%
-    mutate(z = dir_ntc_rg / dir_ntc_rg_se,
-          p = 2*pnorm(abs(z), lower.tail = FALSE),
-          adj_p = p.adjust(p, method = "BH"))
-n_sig <- sum(results$adj_p < 0.05)
-print(paste0(n_sig, " significant results out of ", nrow(results)))
-sig <- results %>% filter(adj_p < 0.05)
+    mutate(z = (dir_ntc_rg) / dir_ntc_rg_se,
+          p = pnorm(abs(z), lower.tail = FALSE))
+ldsc_results <- results %>% 
+                  filter(Source == "LDSC") %>%
+                  mutate(adj_p = p.adjust(p, method = "BH"))
+ldsc_sig <- sum(ldsc_results$adj_p < 0.05)
+print(paste0(ldsc_sig, " significant results out of ", nrow(ldsc_results), " for LDSC"))
+snipar_results <- results %>% 
+                  filter(Source == "snipar") %>%
+                  mutate(adj_p = p.adjust(p, method = "BH"))
+snipar_sig <- sum(snipar_results$adj_p < 0.05)
+print(paste0(snipar_sig, " significant results out of ", nrow(snipar_results), " for snipar"))
 
 ## --------------------------------------------------------------------------------
 ## regression pop v.s. direct

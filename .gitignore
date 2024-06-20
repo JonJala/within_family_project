@@ -3,6 +3,7 @@ processed/*
 scratch/*
 !processed/README.md
 !processed/**/README.md
+doc/exampleplots/*
 
 # Eliminate ~ files
 *~

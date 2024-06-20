@@ -25,12 +25,12 @@ filtered_phenos <- meta %>%
 
 values <- data %>%
         filter(phenotype %in% filtered_phenos$phenotype) %>%
-        select(ends_with(c("phenotype","_direct","_pop","_avg_ntc","_corr"))) %>%
+        select(ends_with(c("phenotype","_direct","_pop","_corr"))) %>%
         gather(measure, value, direct_direct:population_parental_pgi_corr)
 
 se <- data %>%
         filter(phenotype %in% filtered_phenos$phenotype) %>%
-        select(ends_with(c("phenotype", "direct_se", "pop_se", "avg_ntc_se", "_corr_se"))) %>%
+        select(ends_with(c("phenotype", "direct_se", "pop_se", "_corr_se"))) %>%
         gather(measure, se, direct_direct_se:population_parental_pgi_corr_se) %>%
         mutate(measure = substr(measure, 1, nchar(measure)-3))
 
@@ -73,11 +73,10 @@ palette <- rep(c("#E41A1C", "#377EB8",  "#A65628", "#4DAF4A", "#FF7F00", "#984EA
 # ---------------------------------------------------------------------
 
 fpgs_plot <- function(data, dirpop, ncols = 6) {
-        lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_avg_ntc"), paste0(dirpop, "_pop"))
+        lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_pop"))
         data %<>% 
                 filter(dir_pop == dirpop, measure %in% lvls) %>%
                 mutate(measure = case_when(measure == paste0(dirpop, "_direct") ~ "Direct",
-                                        measure == paste0(dirpop, "_avg_ntc") ~ "Average NTC",
                                         measure == paste0(dirpop, "_pop") ~ "Population"))
         p <- ggplot(data, aes(x = factor(pheno_name, level = rev(pheno_order$pheno_name)), y = value, colour = factor(pheno_name, level = rev(pheno_order$pheno_name)), group = measure), show.legend = F) +
                 geom_point(aes(shape = factor(measure, levels = c("Population", "Direct", "Average NTC"))), position = position_dodge(width = 0.75), size=2) +
@@ -105,18 +104,18 @@ dir_pop_sig <- df %>%
                         p = 2 * pnorm(-abs(z)),
                         adj_pval = p.adjust(p, method = "BH")) %>%
                 filter(adj_pval < 0.05)
-dir_ntc_sig <- df %>%
-                filter(measure == "direct_avg_ntc") %>%
-                mutate(z = value / se,
-                        p = 2 * pnorm(-abs(z)),
-                        adj_pval = p.adjust(p, method = "BH")) %>%
-                filter(p < 0.05)
-pop_ntc_sig <- df %>%
-                filter(measure == "population_avg_ntc") %>%
-                mutate(z = value / se,
-                        p = 2 * pnorm(-abs(z)),
-                        adj_pval = p.adjust(p, method = "BH")) %>%
-                filter(adj_pval < 0.05)
+# dir_ntc_sig <- df %>%
+#                 filter(measure == "direct_avg_ntc") %>%
+#                 mutate(z = value / se,
+#                         p = 2 * pnorm(-abs(z)),
+#                         adj_pval = p.adjust(p, method = "BH")) %>%
+#                 filter(p < 0.05)
+# pop_ntc_sig <- df %>%
+#                 filter(measure == "population_avg_ntc") %>%
+#                 mutate(z = value / se,
+#                         p = 2 * pnorm(-abs(z)),
+#                         adj_pval = p.adjust(p, method = "BH")) %>%
+#                 filter(adj_pval < 0.05)
 
 # ---------------------------------------------------------------------
 # plot fpgs coefficients for ea and cognition

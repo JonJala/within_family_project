@@ -1,0 +1,1 @@
+Scripts in this folder are used to compile supplementary table results, including meta-analysis, fPGS, and cohort-level QC sumstats.

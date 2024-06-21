@@ -1,0 +1,1 @@
+Scripts in this folder were created to investigate sibling correlations and imputation quality of SNPs used in the Howe et al. paper.

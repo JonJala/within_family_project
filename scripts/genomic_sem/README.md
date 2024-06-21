@@ -1,0 +1,1 @@
+Scripts in this folder were created to run the GenomicSEM-based analyses (heritability comparison and cross-trait correlation analyses).

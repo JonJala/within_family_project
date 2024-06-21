@@ -1,0 +1,1 @@
+Old scripts for running SBayesR to create PGI weights. We are no longer using SBayesR due to convergence issues and have moved to PRSCS. See `prscs` folder for updated scripts.

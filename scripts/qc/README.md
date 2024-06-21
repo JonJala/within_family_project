@@ -1,0 +1,1 @@
+Scripts for preparing sumstats for QC and running QC on each phenotype.

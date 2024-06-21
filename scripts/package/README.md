@@ -1,0 +1,1 @@
+Scripts in this folder are used to run the main meta-analysis. Scripts underlying the QC pipeline are found in the `qc` subdirectory.

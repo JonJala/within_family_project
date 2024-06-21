@@ -1,0 +1,1 @@
+Scripts used to create PGI weights using PRSCS for each phenotype.

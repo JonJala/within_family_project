@@ -25,11 +25,12 @@ filtered_phenos <- meta %>%
 
 values <- data %>%
         filter(phenotype %in% filtered_phenos$phenotype) %>%
-        select(ends_with(c("phenotype","_direct","_pop","_avg_ntc","_corr"))) %>%
+        select(ends_with(c("phenotype","_direct","_pop","_corr"))) %>%
         gather(measure, value, direct_direct:population_parental_pgi_corr)
 
 se <- data %>%
-        select(ends_with(c("phenotype", "direct_se", "pop_se", "avg_ntc_se", "_corr_se"))) %>%
+        filter(phenotype %in% filtered_phenos$phenotype) %>%
+        select(ends_with(c("phenotype", "direct_se", "pop_se", "_corr_se"))) %>%
         gather(measure, se, direct_direct_se:population_parental_pgi_corr_se) %>%
         mutate(measure = substr(measure, 1, nchar(measure)-3))
 
@@ -72,11 +73,10 @@ palette <- rep(c("#E41A1C", "#377EB8",  "#A65628", "#4DAF4A", "#FF7F00", "#984EA
 # ---------------------------------------------------------------------
 
 fpgs_plot <- function(data, dirpop, ncols = 6) {
-        lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_avg_ntc"), paste0(dirpop, "_pop"))
+        lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_pop"))
         data %<>% 
                 filter(dir_pop == dirpop, measure %in% lvls) %>%
                 mutate(measure = case_when(measure == paste0(dirpop, "_direct") ~ "Direct",
-                                        measure == paste0(dirpop, "_avg_ntc") ~ "Average NTC",
                                         measure == paste0(dirpop, "_pop") ~ "Population"))
         p <- ggplot(data, aes(x = factor(pheno_name, level = rev(pheno_order$pheno_name)), y = value, colour = factor(pheno_name, level = rev(pheno_order$pheno_name)), group = measure), show.legend = F) +
                 geom_point(aes(shape = factor(measure, levels = c("Population", "Direct", "Average NTC"))), position = position_dodge(width = 0.75), size=2) +
@@ -97,6 +97,26 @@ fpgs_plot <- function(data, dirpop, ncols = 6) {
 fpgs_plot(df, "direct")
 fpgs_plot(df, "population")
 
+## determine which phenos have stat sig out of sample predictions based on direct effects
+dir_pop_sig <- df %>%
+                filter(measure == "direct_pop") %>%
+                mutate(z = value / se,
+                        p = 2 * pnorm(-abs(z)),
+                        adj_pval = p.adjust(p, method = "BH")) %>%
+                filter(adj_pval < 0.05)
+# dir_ntc_sig <- df %>%
+#                 filter(measure == "direct_avg_ntc") %>%
+#                 mutate(z = value / se,
+#                         p = 2 * pnorm(-abs(z)),
+#                         adj_pval = p.adjust(p, method = "BH")) %>%
+#                 filter(p < 0.05)
+# pop_ntc_sig <- df %>%
+#                 filter(measure == "population_avg_ntc") %>%
+#                 mutate(z = value / se,
+#                         p = 2 * pnorm(-abs(z)),
+#                         adj_pval = p.adjust(p, method = "BH")) %>%
+#                 filter(adj_pval < 0.05)
+
 # ---------------------------------------------------------------------
 # plot fpgs coefficients for ea and cognition
 # ---------------------------------------------------------------------
@@ -105,10 +125,10 @@ fpgs_ea_cog <- read_excel("/var/genetics/proj/within_family/within_family_projec
 fpgs_ea_cog %<>% fill(phenotype, validation_pheno) # fill down missing phenotype values from merged rows
 
 values_ea_cog <- fpgs_ea_cog %>%
-                select(ends_with(c("phenotype", "dataset", "pheno", "_direct","_pop","_paternal","_maternal","_corr"))) %>%
+                select(ends_with(c("phenotype", "dataset", "pheno", "_direct","_pop", "_avg_ntc", "_paternal","_maternal","_corr"))) %>%
                 gather(measure, value, direct_direct:population_parental_pgi_corr)
 se_ea_cog <- fpgs_ea_cog %>%
-        select(ends_with(c("phenotype", "dataset", "pheno",  "direct_se", "pop_se", "paternal_se", "maternal_se", "_corr_se"))) %>%
+        select(ends_with(c("phenotype", "dataset", "pheno",  "direct_se", "pop_se", "_avg_ntc_se", "paternal_se", "maternal_se", "_corr_se"))) %>%
         gather(measure, se, direct_direct_se:population_parental_pgi_corr_se) %>%
         mutate(measure = substr(measure, 1, nchar(measure)-3))
 df_ea_cog <- merge(values_ea_cog, se_ea_cog) %>%
@@ -120,7 +140,7 @@ df_ea_cog <- merge(values_ea_cog, se_ea_cog) %>%
                                                   dataset == "ukb" & validation_pheno == "cognition" ~ "UKB Fluid Intelligence"))
 
 fpgs_plot_ea_cog <- function(data, dirpop, pheno, ylim, ncols = 3) {
-        lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_maternal"), paste0(dirpop, "_paternal"), paste0(dirpop, "_pop"))
+        lvls <- c(paste0(dirpop, "_direct"), paste0(dirpop, "_maternal"), paste0(dirpop, "_paternal"), paste0(dirpop, "_avg_ntc"), paste0(dirpop, "_pop"))
         p <- ggplot(data %>% filter(phenotype == pheno, dir_pop == dirpop, measure %in% lvls),
                 aes(x = factor(measure, levels = lvls), y = value, fill = factor(measure, levels = lvls))) +
         geom_bar(stat = "identity") +
@@ -128,7 +148,7 @@ fpgs_plot_ea_cog <- function(data, dirpop, pheno, ylim, ncols = 3) {
         geom_linerange(aes(ymin = value - 1.96*se, ymax = value + 1.96*se), colour="black", linewidth = 0.5) +
         theme_classic() +
         ylim(ylim) +
-        scale_fill_discrete(labels = c("Direct", "Maternal", "Paternal", "Population")) +
+        scale_fill_discrete(labels = c("Direct", "Maternal NTC", "Paternal NTC", "Average NTC", "Population")) +
         theme(legend.title = element_blank(), legend.position = "bottom", axis.text.x = element_blank(),
                 axis.ticks.x = element_blank(), axis.text.y = element_text(size = 9),
                 axis.title = element_blank(), strip.text.x = element_text(size = 8)) +
@@ -149,10 +169,10 @@ fpgs_plot_ea_cog(df_ea_cog, "population", "cognition", ylim = c(-0.05, 0.15))
 # append ukb cog and mcs parental corrs to data
 pgi_corrs <- df %>% filter(measure == "population_parental_pgi_corr" | measure == "direct_parental_pgi_corr")
 ea_cog_corrs_ukb <- df_ea_cog %>% 
-                        filter((measure == "population_parental_pgi_corr" | measure == "direct_parental_pgi_corr") & validation_pheno == "ea4") %>%
+                        filter((measure == "population_parental_pgi_corr" | measure == "direct_parental_pgi_corr") & ((validation_pheno_name == "EA4 Outcome" & phenotype == "ea") | (validation_pheno_name == "UKB Fluid Intelligence" & phenotype == "cognition"))) %>%
                         mutate(validation = "ukb",
                                 pheno_name = case_when(phenotype == "ea" ~ "EA",
-                                                        phenotype == "cognition" ~ "Cognition")) %>%
+                                                        phenotype == "cognition" ~ "Cognitive Performance")) %>%
                         select(phenotype, measure, value, se, dir_pop, pheno_name, validation)
 corrs_df <- rbind(pgi_corrs, ea_cog_corrs_ukb)
 

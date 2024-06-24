@@ -279,6 +279,37 @@ def main(args):
 
     f_tosave = np.empty(shape = (0, 1))
 
+
+    ## inv var weighted meta-analysis for direct effects only
+
+    df_theta = df_merged.filter(regex = 'theta_') # df of effect estimates
+    df_se = df_merged.filter(regex = 'se_') # df of standard errors
+
+    df_theta = df_theta.applymap(lambda x: x[0] if isinstance(x, list) else x) # extract direct effect only
+    df_se = df_se.applymap(lambda x: x[0] if isinstance(x, list) else x) # extract direct effect SE
+
+    # rename columns so they align even though this is a bit janky
+    df_se.columns = df_theta.columns
+
+    # inverse variance weighted meta-analysis
+    weights = 1 / df_se**2
+    weighted_effects = df_theta * weights
+    sum_weights = weights.sum(axis=1, skipna=True)
+    sum_weighted_effects = weighted_effects.sum(axis=1, skipna=True)
+    inv_var_direct_effect = sum_weighted_effects / sum_weights
+    inv_var_direct_effect_se = np.sqrt(1 / sum_weights)
+
+    # save
+    inv_var_meta = pd.DataFrame({
+        'cptid': df_merged['cptid'],
+        'inv_var_direct': inv_var_direct_effect,
+        'inv_var_direct_SE': inv_var_direct_effect_se
+    })
+    inv_var_meta.to_csv(args.outprefix + '.inv.var.direct.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
+
+
+    ## regular meta-analysis
+
     for dim in dims:
 
         print(f"Meta analyzing SNPs with effect dimensions {dim}...")
@@ -306,8 +337,8 @@ def main(args):
         phvar_vec = extract_vector(df_toarray_dim, "phvar")
         phvar_vec = get_firstvalue_dict(phvar_vec)
 
-        theta_vec_adj = adjust_theta_by_phvar(theta_vec, phvar_vec)
-        S_vec_adj = adjust_S_by_phvar(S_vec, phvar_vec)
+        theta_vec_adj = adjust_theta_by_phvar(theta_vec, phvar_vec) ## by default, phvar is set to 1, and so no standardizing actually occurs here
+        S_vec_adj = adjust_S_by_phvar(S_vec, phvar_vec) ## by default, phvar is set to 1, and so no standardizing actually occurs here
         
         wt = get_wts(Amat, S_vec_adj)
         nan_to_num_dict(wt, theta_vec_adj)
@@ -338,6 +369,7 @@ def main(args):
         
         Neff_dir = neff(f_bar, theta_ses_out[:, 0])
         Neff_pop = neff(f_bar, theta_ses_out[:, 4])
+        Neff_avg_ntc = neff(f_bar, theta_ses_out[:, 3])
 
         # combining everything into a dataframe
         df_out = pd.DataFrame(
@@ -351,6 +383,7 @@ def main(args):
                 'A2' : df_toarray_dim['A2'],
                 'direct_N' : Neff_dir.astype(int),
                 'population_N' : Neff_pop.astype(int),
+                'avg_NTC_N' : Neff_avg_ntc.astype(int),
                 'direct_Beta' : theta_bar_out[:, 0].flatten(),
                 'paternal_Beta' : theta_bar_out[:, 1].flatten(),
                 'maternal_Beta' : theta_bar_out[:, 2].flatten(),
@@ -447,6 +480,7 @@ def main(args):
             df_out_nfilter.to_csv(args.outprefix + '.nfilter.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
 
         df_out = df_out.sort_values(by = ["chromosome", "pos"])
+        df_out.drop(columns = ['avg_NTC_N'], inplace = True)
         print(f"Writing output to {args.outprefix + '.sumstats.gz'}")
         df_out.to_csv(args.outprefix + '.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
 

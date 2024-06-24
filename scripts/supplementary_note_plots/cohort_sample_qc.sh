@@ -22,23 +22,24 @@ python ${ssgac_path}/plotting/qqplot.py \
 # Make SE-F plot
 # hackily use R
 
-# echo "
-# library(data.table)
-# library(ggplot2)
-# library(dplyr)
-# library(latex2exp)
-# theme_set(theme_bw())
+echo "
+library(data.table)
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+library(latex2exp)
+theme_set(theme_bw())
 
-# dat = fread('${within_family_path}/processed/qc/ukb/ea/CLEANED.out.gz')
+dat = fread('${within_family_path}/processed/qc/ukb/ea/CLEANED.out.gz')
 
-# dat %>%
-#     mutate(normalized_f = sqrt(f * (1-f))) %>%
-#     ggplot() +
-#     geom_point(aes(normalized_f, se_direct)) +
-#     labs(x = TeX('$\\\\sqrt{f (1-f)}$'), y = 'Standard Error of Direct Effects', title = 'SE-F Plot')
+dat %>%
+    mutate(normalized_f = sqrt(f * (1-f))) %>%
+    ggplot() +
+    geom_point(aes(normalized_f, se_direct)) +
+    labs(x = TeX('$\\\\sqrt{f (1-f)}$'), y = 'Standard Error of Direct Genetic Effects')
 
-# ggsave('/var/genetics/proj/within_family/within_family_project/doc/exampleplots/sefplot_ukb.png', width = 9, height = 6)
-# " | R --slave
+ggsave('/var/genetics/proj/within_family/within_family_project/doc/exampleplots/sefplot_ukb.png', width = 9, height = 6)
+" | R --slave
 
-# # Make UKB rg plot
-# python "/var/genetics/proj/within_family/within_family_project/scratch/example_plots/ukb_rg_plot.py"
+# Make UKB rg plot
+python "/var/genetics/proj/within_family/within_family_project/scripts/supplementary_note_plots/ukb_rg_plot.py"

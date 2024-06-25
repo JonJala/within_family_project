@@ -6,8 +6,7 @@ import h5py
 from numba import njit
 
 
-plt.rcParams['text.usetex'] = True
-
+plt.rcParams['text.usetex'] = False
 
 def transform_estimates(fromest,
                         toest,
@@ -161,7 +160,9 @@ def convert_S_to_corr(Smat):
 theta_vec = np.empty(shape = (0, 5))
 S_vec = np.empty(shape = (0, 5, 5))
 for chr in range(1, 23):
-    fname = f'/var/genetics/data/ukb/public/latest/raw/sumstats/fgwas/21/chr_{chr}.sumstats.hdf5'
+    fname = f'/var/genetics/data/gen_scotland/public/latest/raw/sumstats/fgwas/6/chr_{chr}.sumstatschr_clean.hdf5' # gs
+    # fname = f'/var/genetics/data/qimr/private/v1/raw/pgs/QIMR_FamilyGWAS/BMI/BMI_Chr{chr}.sumstats.hdf5' # qimr
+    # fname = f'/var/genetics/data/finn_twin/public/latest/raw/sumstats/fgwas/BMI.chr{chr}.hdf5'
     with h5py.File(fname, 'r') as hf:
         
         print(f'Reading in file {fname}')
@@ -169,7 +170,7 @@ for chr in range(1, 23):
         vcov = hf['estimate_covariance'][()]
 
         vcov, estimates = transform_estimates('full', 'full_averageparental_population', vcov, estimates)
-        
+        # import pdb; pdb.set_trace()
         theta_vec = np.vstack((theta_vec, estimates))
         S_vec = np.vstack((S_vec, vcov))
 
@@ -180,7 +181,10 @@ dat = pd.DataFrame({
 })
 print(dat.head())
 kdeplot = sns.kdeplot(data=dat, x = 'rg_dir_pop', y = 'rg_dir_avgparental', fill=True, thresh=0.001)
-kdeplot.set_xlabel("Direct to Population Sampling Correlation")
-kdeplot.set_ylabel("Direct to Average NTC Sampling Correlation")
+kdeplot.set_xlabel("Sampling Correlation Between DGEs and Population Effects")
+kdeplot.set_ylabel("Sampling Correlation Between DGEs and Average NTCs")
 fig = kdeplot.get_figure()
-fig.savefig("/var/genetics/proj/within_family/within_family_project/doc/exampleplots/ukb_rg_plot.png")
+fig.savefig("/var/genetics/proj/within_family/within_family_project/doc/exampleplots/gs_bmi_rg_plot.pdf")
+# fig.savefig("/var/genetics/proj/within_family/within_family_project/doc/exampleplots/qimr_bmi_rg_plot.pdf")
+# fig.savefig("/var/genetics/proj/within_family/within_family_project/doc/exampleplots/eb_bmi_rg_plot.pdf")
+# fig.savefig("/var/genetics/proj/within_family/within_family_project/doc/exampleplots/ft_bmi_rg_plot.pdf")

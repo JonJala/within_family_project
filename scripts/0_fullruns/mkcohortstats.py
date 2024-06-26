@@ -136,7 +136,8 @@ datout.replace("Hayfever", "Allergic rhinitis", inplace=True)
 datout.to_csv(
     basepath + 'processed/package_output/cohortstats.txt',
     index = False,
-    sep = '\t'
+    sep = '\t',
+    na_rep = "NA"
 )
 
 

@@ -135,8 +135,8 @@ df_ea_cog <- merge(values_ea_cog, se_ea_cog) %>%
         mutate(dir_pop = str_extract(measure, "[^_]+"),
                 validation_pheno_name = case_when(dataset == "mcs" & validation_pheno == "cognition" ~ "MCS S7 Cognitive Assessment",
                                                   dataset == "mcs" & validation_pheno == "cogverb" ~ "MCS S6 Word Activity",
-                                                  dataset == "mcs" & validation_pheno == "ea" ~ "Avg. Eng. & Math GCSE Score",
-                                                  dataset == "ukb" & validation_pheno == "ea" ~ "EA4 Outcome",
+                                                  dataset == "mcs" & validation_pheno == "ea" ~ "MCS Avg. Eng. & Math GCSE Score",
+                                                  dataset == "ukb" & validation_pheno == "ea" ~ "UKB Educational Attainment",
                                                   dataset == "ukb" & validation_pheno == "cognition" ~ "UKB Fluid Intelligence"))
 
 fpgs_plot_ea_cog <- function(data, dirpop, pheno, ylim, ncols = 3) {

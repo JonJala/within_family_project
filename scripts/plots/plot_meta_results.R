@@ -72,7 +72,7 @@ p <- ggplot(results %>% filter(!is.na(dir_pop_rg)),aes(x=factor(phenotype, level
       guides(shape = guide_legend(title = "Source")) +
       theme_bw()+
       theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "bottom")+
-      xlab('Phenotype')+ylab('Correlation between direct and population effects')+
+      xlab('Phenotype')+ylab('Correlation between direct genetic effects and population effects')+
       scale_y_continuous(breaks=c(0,0.25,0.5,0.75,1,1.25,1.5)) +
       scale_colour_manual(values = palette, guide = "none") +
       coord_flip()
@@ -118,7 +118,7 @@ p <- ggplot(results %>% filter(!is.na(dir_ntc_rg)),aes(x=factor(phenotype, level
       guides(shape = guide_legend(title = "Source")) +
       theme_bw()+
       theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "bottom")+
-      xlab('Phenotype')+ylab('Correlation between direct effect and average NTC')+
+      xlab('Phenotype')+ylab('Correlation between direct genetic effects and average NTCs')+
       scale_colour_manual(values = palette, guide = "none") +
       coord_flip()
 ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/direct_avg_ntc_correlations.pdf', p, width=9,height=7,device=cairo_pdf)
@@ -153,7 +153,7 @@ p <- ggplot(reg_results %>% filter(!is.na(reg_population_direct)),aes(x=factor(p
       geom_hline(yintercept=1)+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "none")+
-      xlab('Phenotype')+ylab('Regression of population on direct effects')+
+      xlab('Phenotype')+ylab('Regression of slope of population effects on direct genetic effects')+
       scale_colour_manual(values = palette, guide = "none") +
       coord_flip()
 ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/reg_direct_population.pdf', p, width=9,height=7,device=cairo_pdf)
@@ -180,7 +180,7 @@ p <- ggplot(prop_var_results %>% filter(!is.na(v_population_uncorr_direct)),aes(
       geom_hline(yintercept=0)+
       theme_bw()+
       theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "none")+
-      xlab('Phenotype')+ylab('Proportion of non-sampling variance in population due to stratification bias')+
+      xlab('Phenotype')+ylab('Proportion of variance in population effects uncorrelated with direct genetic effects')+
       scale_colour_manual(values = palette, guide = "none") +
       coord_flip()
 ggsave(filename='/var/genetics/proj/within_family/within_family_project/processed/figures/prop_non_sampling_var.pdf', p, width=9,height=7,device=cairo_pdf)

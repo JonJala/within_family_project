@@ -102,7 +102,7 @@ process_data <- function(phenos, filter_pheno = NA) {
 ## create scatterplot
 ## --------------------------------------------------------------------------------
 
-create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = NA, filter_pheno = NA) {
+create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = NA, filter_pheno = NA, xlim = NA, ylim = NA) {
 
     # process data
     dat = process_data(phenos, filter_pheno = filter_pheno)
@@ -177,8 +177,12 @@ create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = 
         }
     }
 
-    xlim <- max(c(abs(min(dat$pop_rg_lo)), max(dat$pop_rg_hi)), na.rm = T)
-    ylim <- max(c(abs(min(dat$direct_rg_lo)), max(dat$direct_rg_hi)), na.rm = T)
+    if (is.na(xlim)) {
+        xlim <- max(c(abs(min(dat$pop_rg_lo)), max(dat$pop_rg_hi)), na.rm = T)
+    }
+    if (is.na(ylim)) {
+        ylim <- max(c(abs(min(dat$direct_rg_lo)), max(dat$direct_rg_hi)), na.rm = T)
+    }
 
     # plot
     dat %>%
@@ -193,7 +197,7 @@ create_scatterplot <- function(phenos, palette = NA, save = TRUE, save_suffix = 
         xlim(-xlim, xlim) +
         scale_colour_manual(values = palette) +
         scale_shape_manual(values = seq(1, n)) +
-        labs(y = TeX("Direct $\\textit{r_g}$"), x = TeX("Population $\\textit{r_g}")) +
+        labs(y = "Genetic correlation (direct)", x = "Genetic correlation (population)") +
         theme(legend.position = "bottom", legend.title = element_blank()) +
         guides(colour=guide_legend(ncol = 4))
 
@@ -213,6 +217,8 @@ for (pheno in all_phenos) {
     print(pheno)
     create_scatterplot(phenos, save = TRUE, save_suffix = pheno, filter_pheno = pheno)
 }
+create_scatterplot(phenos, save = TRUE, save_suffix = "bmi", filter_pheno = "bmi") # for paper
+create_scatterplot(phenos, save = TRUE, save_suffix = "ea", filter_pheno = "ea") # for paper
 
 ## --------------------------------------------------------------------------------
 ## create density plot

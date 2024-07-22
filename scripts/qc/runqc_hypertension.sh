@@ -14,5 +14,6 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/hypertension" \
     --effects "direct_averageparental" \
     --ldsc-ref $reffile \
+    --info "/disk/genetics/data/finngen/private/v1/processed/sumstats/qc.txt" \
     --toest "direct_population" \
     --binary

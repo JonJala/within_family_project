@@ -80,6 +80,7 @@ python /var/genetics/proj/within_family/within_family_project/scripts/package/qc
     "/var/genetics/data/finngen/private/v1/processed/sumstats/migraine.sumstats.txt" \
     --outprefix "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/migraine" \
     --ldsc-ref "$reffile" \
+    --info "/disk/genetics/data/finngen/private/v1/processed/sumstats/qc.txt" \
     --effects "direct_averageparental" \
     --toest "direct_population" \
     --binary

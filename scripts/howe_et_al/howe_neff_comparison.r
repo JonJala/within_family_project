@@ -1,6 +1,6 @@
 
 ## ---------------------------------------------------------------------
-## description: get Neff for direct effects from howe et al. paper
+## description: look at Neff and QC diagnostics from howe paper
 ## ---------------------------------------------------------------------
 
 library(vcfR)

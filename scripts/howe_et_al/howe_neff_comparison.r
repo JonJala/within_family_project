@@ -3,11 +3,10 @@
 ## description: look at Neff and QC diagnostics from howe paper
 ## ---------------------------------------------------------------------
 
-library(vcfR)
-library(data.table)
-library(dplyr)
-library(magrittr)
-library(ggplot2)
+list.of.packages <- c("data.table", "dplyr", "magrittr", "tidyverse", "vcfR", "ggplot2")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages, repos = "http://cran.rstudio.com/")
+lapply(list.of.packages, library, character.only = TRUE)
 
 ## ---------------------------------------------------------------------
 ## add AF and calculate Neff for each sumstats file
@@ -19,29 +18,31 @@ get_neff <- function(file, pheno, phvar = 1) {
 
     # read in .vcf sumstats file
     vcf <- read.vcfR(file, verbose = FALSE)
-    
-    # get standard errors
-    se <- extract.gt(vcf, element = 'SE') %>%
-        as.data.frame()
-    se %<>% mutate(ID = sub("\\_.*", "", rownames(se)))
-    colnames(se)[1] <- "se"
-    rownames(se) <- NULL
-    se[,"se"] <- as.numeric(se[,"se"])
+
+    # extract data from gt
+    gt <- vcf@gt
+    df <- data.frame(gt[,2])
+    colnames(df) <- "data"
+    strings <- df$data
+    split_strings <- strsplit(strings, ":")
+    new_df <- do.call(rbind, split_strings)
+    colnames(new_df) <- c("ES", "SE", "LP", "SS", "ID")
+    new_df <- as.data.frame(new_df)
+    new_df$ES <- as.numeric(new_df$ES)
+    new_df$SE <- as.numeric(new_df$SE)
+    new_df$LP <- as.numeric(new_df$LP)
+    new_df$SS <- as.numeric(new_df$SS)
 
     # get genotype data and merge with af
     fix <- getFIX(vcf)
     data <- fix %>%
             as.data.frame() %>%
             mutate(ChrPosID = paste0(CHROM, ":", POS)) %>%
-            merge(af)
+            merge(af) %>%
+            select(-a1, -a2)
     
     # merge with se
-    final <- merge(data, se) %>%
-                mutate(neff = round(phvar*(2*freq1*(1-freq1)*se^2)^(-1), 0))
-                
-    # # save effective N and add to table
-    # neff <- data.frame(med_neff = median(final$neff))
-    # write.table(neff, file = paste0("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_",pheno,"_neff.txt"), sep = " \t", row.names =  FALSE, quote = FALSE)
+    final <- merge(data, new_df, by = "ID")
     
     # save final sumstats
     write.table(final, file = paste0("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_",pheno,".txt"), sep = " \t", row.names =  FALSE, quote = FALSE)
@@ -79,12 +80,12 @@ for (pheno in phenos) {
 
     ss <- fread(paste0("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_", pheno, ".txt"))
 
-    med_neff <- median(ss$neff, na.rm = TRUE)
-    max_neff <- max(ss$neff, na.rm = TRUE)
+    med_neff <- median(ss$SS, na.rm = TRUE)
+    max_neff <- max(ss$SS, na.rm = TRUE)
     
     ss_hm3 <- ss %>%
                 filter(ID %in% hm3$SNP)
-    med_neff_hm3 <- median(ss_hm3$neff, na.rm = TRUE)
+    med_neff_hm3 <- median(ss_hm3$SS, na.rm = TRUE)
 
     neff <- data.frame(pheno = pheno, med_neff = med_neff, max_neff = max_neff, med_neff_hm3 = med_neff_hm3)
     neff_df <- rbind(neff_df, neff)
@@ -93,42 +94,42 @@ for (pheno in phenos) {
 fwrite(neff_df, "/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_med_neff.txt", sep = "\t", row.names =  FALSE, quote = FALSE)
 
 ## ---------------------------------------------------------------------
-## QC diagnostic plots for just height
+## QC diagnostic plots for just education
 ## ---------------------------------------------------------------------
 
 ## plot SE v.s. AF
 
-height_ss <- fread("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_height.txt")
+education_ss <- fread("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_education.txt")
 
-se_af <- ggplot(height_ss, aes(x = freq1, y = se)) +
+se_af <- ggplot(education_ss, aes(x = freq1, y = se)) +
             geom_point() +
             labs(x = "Allele Frequency", y = "Standard Error") +
             theme_classic()
-ggsave("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_height_se_af.png", se_af)
+ggsave("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_education_se_af.png", se_af)
 
 ## plot Neff v.s. AF
-neff_af <- ggplot(height_ss, aes(x = freq1, y = neff)) +
+neff_af <- ggplot(education_ss, aes(x = freq1, y = neff)) +
             geom_point() +
             labs(x = "Allele Frequency", y = "Direct Effective N") +
             theme_classic()
-ggsave("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_height_neff_af.png", neff_af)
+ggsave("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_education_neff_af.png", neff_af)
 
 ## plot Neff histogram
-neff_hist <- ggplot(height_ss, aes(x = neff)) +
+neff_hist <- ggplot(education_ss, aes(x = neff)) +
                 geom_histogram() +
                 labs(x="Effective N", y="Count") +
                 theme_classic()
-ggsave("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_height_neff_hist.png", neff_hist)
+ggsave("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_education_neff_hist.png", neff_hist)
 
 ## Neff histogram for just hm3 SNPs
 
 hm3 <- fread("/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist")
 
-height_ss_hm3 <- height_ss %>%
+education_ss_hm3 <- education_ss %>%
                     filter(ID %in% hm3$SNP)
 
-neff_hm3_hist <- ggplot(height_ss_hm3, aes(x = neff)) +
+neff_hm3_hist <- ggplot(education_ss_hm3, aes(x = neff)) +
                 geom_histogram() +
                 labs(x="Effective N", y="Count") +
                 theme_classic()
-ggsave("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_height_neff_hm3_hist.png", neff_hm3_hist)
+ggsave("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_education_neff_hm3_hist.png", neff_hm3_hist)

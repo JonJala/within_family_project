@@ -16,6 +16,8 @@ af <- fread("/var/genetics/ukb/linner/EA3/EasyQC_HRC/EASYQC.ALLELE_FREQUENCY.MAP
 
 get_neff <- function(file, pheno, phvar = 1) {
 
+    print(pheno)
+
     # read in .vcf sumstats file
     vcf <- read.vcfR(file, verbose = FALSE)
 
@@ -77,6 +79,8 @@ phenos <- c("height", "education", "bmi", "eversmoker", "bps", "hdl", "alc_consu
 
 neff_df <- data.frame(pheno = NULL, med_neff = NULL, max_neff = NULL, med_neff_hm3 = NULL)
 for (pheno in phenos) {
+
+    print(pheno)
 
     ss <- fread(paste0("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_", pheno, ".txt"))
 

@@ -133,8 +133,8 @@ se_ea_cog <- fpgs_ea_cog %>%
         mutate(measure = substr(measure, 1, nchar(measure)-3))
 df_ea_cog <- merge(values_ea_cog, se_ea_cog) %>%
         mutate(dir_pop = str_extract(measure, "[^_]+"),
-                validation_pheno_name = case_when(dataset == "mcs" & validation_pheno == "cognition" ~ "MCS S7 Cognitive Assessment",
-                                                  dataset == "mcs" & validation_pheno == "cogverb" ~ "MCS S6 Word Activity",
+                validation_pheno_name = case_when(dataset == "mcs" & validation_pheno == "cognition" ~ "MCS Cognitive Assessment (Age 17)",
+                                                  dataset == "mcs" & validation_pheno == "cogverb" ~ "MCS Word Activity (Age 14)",
                                                   dataset == "mcs" & validation_pheno == "ea" ~ "MCS Avg. Eng. & Math GCSE Score",
                                                   dataset == "ukb" & validation_pheno == "ea" ~ "UKB Educational Attainment",
                                                   dataset == "ukb" & validation_pheno == "cognition" ~ "UKB Fluid Intelligence"))
@@ -157,7 +157,7 @@ fpgs_plot_ea_cog <- function(data, dirpop, pheno, ylim, ncols = 3) {
         ggsave(paste0("/var/genetics/proj/within_family/within_family_project/processed/figures/fpgs_plots/fpgs_", dirpop, "_effects_", pheno, ".png"), p)
 }
 
-fpgs_plot_ea_cog(df_ea_cog, "direct", "ea", ylim = c(-0.08, 0.28))
+fpgs_plot_ea_cog(df_ea_cog, "direct", "ea", ylim = c(-0.05, 0.17))
 fpgs_plot_ea_cog(df_ea_cog, "population", "ea", ylim = c(-0.08, 0.28))
 fpgs_plot_ea_cog(df_ea_cog, "direct", "cognition", ylim = c(-0.05, 0.15))
 fpgs_plot_ea_cog(df_ea_cog, "population", "cognition", ylim = c(-0.05, 0.15))

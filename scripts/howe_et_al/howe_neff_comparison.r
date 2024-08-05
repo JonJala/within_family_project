@@ -105,21 +105,21 @@ fwrite(neff_df, "/var/genetics/proj/within_family/within_family_project/processe
 
 education_ss <- fread("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_education.txt")
 
-se_af <- ggplot(education_ss, aes(x = freq1, y = se)) +
+se_af <- ggplot(education_ss, aes(x = freq1, y = SE)) +
             geom_point() +
             labs(x = "Allele Frequency", y = "Standard Error") +
             theme_classic()
 ggsave("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_education_se_af.png", se_af)
 
 ## plot Neff v.s. AF
-neff_af <- ggplot(education_ss, aes(x = freq1, y = neff)) +
+neff_af <- ggplot(education_ss, aes(x = freq1, y = SS)) +
             geom_point() +
             labs(x = "Allele Frequency", y = "Direct Effective N") +
             theme_classic()
 ggsave("/var/genetics/proj/within_family/within_family_project/processed/howe_et_al/howe_education_neff_af.png", neff_af)
 
 ## plot Neff histogram
-neff_hist <- ggplot(education_ss, aes(x = neff)) +
+neff_hist <- ggplot(education_ss, aes(x = SS)) +
                 geom_histogram() +
                 labs(x="Effective N", y="Count") +
                 theme_classic()
@@ -132,7 +132,7 @@ hm3 <- fread("/disk/genetics2/pub/data/PH3_Reference/w_hm3.snplist")
 education_ss_hm3 <- education_ss %>%
                     filter(ID %in% hm3$SNP)
 
-neff_hm3_hist <- ggplot(education_ss_hm3, aes(x = neff)) +
+neff_hm3_hist <- ggplot(education_ss_hm3, aes(x = SS)) +
                 geom_histogram() +
                 labs(x="Effective N", y="Count") +
                 theme_classic()

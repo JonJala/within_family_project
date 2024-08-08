@@ -79,12 +79,12 @@ fpgs_plot <- function(data, dirpop, ncols = 6) {
                 mutate(measure = case_when(measure == paste0(dirpop, "_direct") ~ "Direct",
                                         measure == paste0(dirpop, "_pop") ~ "Population"))
         p <- ggplot(data, aes(x = factor(pheno_name, level = rev(pheno_order$pheno_name)), y = value, colour = factor(pheno_name, level = rev(pheno_order$pheno_name)), group = measure), show.legend = F) +
-                geom_point(aes(shape = factor(measure, levels = c("Population", "Direct", "Average NTC"))), position = position_dodge(width = 0.75), size=2) +
+                geom_point(aes(shape = factor(measure, levels = c("Population", "Direct"))), position = position_dodge(width = 0.75), size=2) +
                 geom_hline(yintercept = 0) +
                 geom_errorbar(aes(x = pheno_name, ymin = value - 1.96*se, ymax = value + 1.96*se), width = 0.25, position = position_dodge(width = 0.75)) +
                 theme_bw()+
                 scale_colour_manual(values = palette, guide = "none")+
-                scale_shape_manual(values = c(15,16,17)) +
+                scale_shape_manual(values = c(16,17)) +
                 guides(shape = guide_legend(title = "PGI Coefficient")) +
                 xlab("Phenotype") +
                 theme(axis.text.x = element_text(angle = 45,vjust=1,hjust=1),legend.position = "bottom",

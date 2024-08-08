@@ -32,10 +32,11 @@ dat <- read_excel(paste0("/var/genetics/proj/within_family/within_family_project
 dat %<>% 
     fill(phenotype) %>%
     mutate(direct_h2_var = direct_h2_se^2, population_h2_var = population_h2_se^2,
-                cohort = case_when(cohort %in% c("ukb", "str", "fhs", "ft", "gs", "moba", "qimr") ~ toupper(cohort),
+                cohort = case_when(cohort %in% c("ukb", "str", "fhs", "gs", "moba", "qimr") ~ toupper(cohort),
                                     cohort %in% c("botnia", "geisinger", "hunt", "lifelines") ~ str_to_title(cohort),
                                     cohort == "dutch_twin" ~ "Dutch Twin",
                                     cohort == "estonian_biobank" ~ "Estonian Biobank",
+                                    cohort == "ft" ~ "FTC",
                                     cohort == "finngen" ~ "FinnGen",
                                     cohort == "ipsych" ~ "iPSYCH",
                                     cohort == "minn_twins" ~ "Minn Twins"))  %>% 

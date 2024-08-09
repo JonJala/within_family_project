@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import subprocess
 import json
+import os
 
 ## chooose which results to compile
 metaanalysis = True
@@ -203,6 +204,16 @@ def get_meta_results(phenotype, effect):
     v_population_uncorr_direct_mrg = mrg.loc[mrg['correlation'] == 'v_population_uncorr_direct', 'est'].values[0]
     v_population_uncorr_direct_mrg_se = mrg.loc[mrg['correlation'] == 'v_population_uncorr_direct', 'SE'].values[0]
 
+    # dir-pop correlation random effects meta-analysis
+    re_meta_path = f"/disk/genetics/proj/within_family/within_family_project/processed/package_output/correlation_meta/final_estimates/corr_meta_est_{phenotype}.csv"
+    if not os.path.exists(re_meta_path):
+        re_meta_corr_est = None
+        re_meta_corr_se = None
+    else:
+        re_meta = pd.read_csv(re_meta_path)
+        re_meta_corr_est = re_meta["estimate"].values[0]
+        re_meta_corr_se = re_meta["se"].values[0]
+
     dattmp = pd.DataFrame(
         {
             'phenotype' : [phenotype], 
@@ -230,6 +241,8 @@ def get_meta_results(phenotype, effect):
             'dir_pop_rg_se_ldsc' : [ldsc_rgse],
             'dir_avgntc_rg_ldsc' : [ldsc_dir_avgntc_rgest],
             'dir_avgntc_rg_se_ldsc' : [ldsc_dir_avgntc_rgse],
+            're_meta_corr_est' : [re_meta_corr_est],
+            're_meta_corr_se' : [re_meta_corr_se],
             'n_cohorts' : [ncohorts],
             'reg_population_direct': [reg_population_direct_mrg],
             'reg_population_direct_se': [reg_population_direct_mrg_se],
@@ -501,6 +514,7 @@ if metaanalysis == True:
         'ntc_h2_intercept_se', 'ratio', 'ratio_se', 'ntc_ratio', 'ntc_ratio_se', 
         'rg_ref', 'rg_ref_se', 'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 
         'dir_ntc_rg_se', 'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc',
+        're_meta_corr_est', 're_meta_corr_se',
         'n_cohorts', 'reg_population_direct', 'reg_population_direct_se',
         'v_population_uncorr_direct', 'v_population_uncorr_direct_se'])
 if fpgs == True:
@@ -535,7 +549,8 @@ if metaanalysis == True:
         ['n_cohorts_population', 'dir_pop_rg_population', 'dir_pop_rg_se_population', 'dir_ntc_rg_population', 'dir_ntc_rg_se_population',
         'reg_population_direct_population', 'reg_population_direct_se_population', 'v_population_uncorr_direct_population', 'v_population_uncorr_direct_se_population',
         'dir_pop_rg_ldsc_population', 'dir_pop_rg_se_ldsc_population', 'dir_avgntc_rg_ldsc_population', 'dir_avgntc_rg_se_ldsc_population',
-        'ntc_h2_population', 'ntc_h2_se_population', 'ntc_h2_intercept_population', 'ntc_h2_intercept_se_population', 'ntc_ratio_population', 'ntc_ratio_se_population'], 
+        'ntc_h2_population', 'ntc_h2_se_population', 'ntc_h2_intercept_population', 'ntc_h2_intercept_se_population', 'ntc_ratio_population', 'ntc_ratio_se_population',
+        're_meta_corr_est_population', 're_meta_corr_se_population'], 
         axis = 1
     )
     dat = dat.rename(
@@ -558,7 +573,9 @@ if metaanalysis == True:
             'ntc_h2_intercept_direct': 'ntc_h2_intercept',
             'ntc_h2_intercept_se_direct': 'ntc_h2_intercept_se',
             'ntc_ratio_direct': 'ntc_ratio',
-            'ntc_ratio_se_direct': 'ntc_ratio_se'
+            'ntc_ratio_se_direct': 'ntc_ratio_se',
+            're_meta_corr_est_direct': 're_meta_corr_est',
+            're_meta_corr_se_direct': 're_meta_corr_se'
             }
     )
 
@@ -572,6 +589,7 @@ if metaanalysis == True:
         'rg_ref_direct','rg_ref_se_direct',  'rg_ref_population', 'rg_ref_se_population',
         'dir_pop_rg_ldsc', 'dir_pop_rg_se_ldsc', 'dir_avgntc_rg_ldsc', 'dir_avgntc_rg_se_ldsc', 
         'dir_pop_rg', 'dir_pop_rg_se', 'dir_ntc_rg', 'dir_ntc_rg_se', 
+        're_meta_corr_est', 're_meta_corr_se',
         'reg_population_direct', 'reg_population_direct_se', 'v_population_uncorr_direct', 'v_population_uncorr_direct_se'
     ]
     ]

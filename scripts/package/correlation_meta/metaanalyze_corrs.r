@@ -31,9 +31,10 @@ dat$se <- as.numeric(dat$se)
 dat %<>% 
     fill(phenotype) %>%
     mutate(var = se^2,
-     cohort = case_when(cohort %in% c("ukb", "str", "fhs", "ft", "gs", "moba", "qimr") ~ toupper(cohort),
+     cohort = case_when(cohort %in% c("ukb", "str", "fhs", "gs", "moba", "qimr") ~ toupper(cohort),
                                     cohort %in% c("botnia", "geisinger", "hunt", "lifelines") ~ str_to_title(cohort),
                                     cohort == "dutch_twin" ~ "Dutch Twin",
+                                    cohort == "ft" ~ "FTC",
                                     cohort == "finngen" ~ "FinnGen",
                                     cohort == "estonian_biobank" ~ "Estonian Biobank",
                                     cohort == "ipsych" ~ "iPSYCH",
@@ -43,6 +44,10 @@ dat_final <- escalc(measure="GEN", data=dat, yi=corr, vi=var, slab=cohort)
 
 ## fit random-effects model
 res <- rma(yi = yi, vi = vi, data = dat_final)
+
+# save results as dataframe
+res_df <- data.frame(estimate = res$beta, se = res$se, z = res$zval, p = res$pval, QEp = res$QEp, tau2 = res$tau2, row.names = NULL)
+write.csv(res_df, file=paste0("/var/genetics/proj/within_family/within_family_project/processed/package_output/correlation_meta/final_estimates/corr_meta_est_", pheno, ".csv"), row.names=FALSE)
 
 ## plot and save
 

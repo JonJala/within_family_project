@@ -1,0 +1,1 @@
+Scripts for running the main meta-analysis for each phenotype, and also related analyses in LDSC and snipar (e.g. correlation and heritability analyses).

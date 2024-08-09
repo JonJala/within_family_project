@@ -27,10 +27,20 @@ p <- data %>%
         theme(panel.grid.major = element_line(color = "grey",
                                         linewidth = 0.5,
                                         linetype = 2))
-ggsave("/var/genetics/proj/within_family/within_family_project/doc/exampleplots/fhs_bmi_sef.pdf", p)
-
+# ggsave("/var/genetics/proj/within_family/within_family_project/doc/exampleplots/fhs_bmi_sef.pdf", p)
+ggsave("/var/genetics/proj/within_family/within_family_project/doc/exampleplots/fhs_bmi_sef.jpg", p) # pdf file is very large
 
 # ---------------------------------------------------------------------
-# sampling correlation figure
+# Neff vs AF
 # ---------------------------------------------------------------------
 
+p <- data %>%
+        ggplot(aes(x = f, y = n_direct)) +
+        geom_point() +
+        xlab("Allele Frequency") +
+        ylab("Effective N for Direct Genetic Effects") +
+        theme_classic() +
+        theme(panel.grid.major = element_line(color = "grey",
+                                        linewidth = 0.5,
+                                        linetype = 2))
+ggsave("/var/genetics/proj/within_family/within_family_project/doc/exampleplots/fhs_bmi_neff_af.jpg", p)

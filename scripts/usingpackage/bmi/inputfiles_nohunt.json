@@ -1,0 +1,55 @@
+{
+    "moba" : {
+
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/moba/bmi/CLEANED.out.gz"
+
+    },
+
+    "str": {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/str/bmi/CLEANED.out.gz"
+    },
+
+    "ukb": {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/bmi/CLEANED.out.gz"
+    },
+
+    "gs" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/bmi/CLEANED.out.gz"
+    },
+
+    "eb" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/estonian_biobank/bmi/CLEANED.out.gz"
+    },
+
+    "ll" :{
+
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/lifelines/bmi18/CLEANED.out.gz"
+    },
+
+
+    "geisinger" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/geisinger/bmi/CLEANED.out.gz"
+
+    },
+
+    "dutchtwin" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/bmi/CLEANED.out.gz"
+    },
+
+    "mt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/bmi/CLEANED.out.gz"
+    },
+
+    "qimr" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/bmi/CLEANED.out.gz"
+    },
+
+    "fhs" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/fhs/bmi/CLEANED.out.gz"
+    },
+
+    "finngen" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/finngen/bmi/CLEANED.out.gz"
+    }
+
+}

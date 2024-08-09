@@ -1,0 +1,1 @@
+Script in this folder are used to run the fPGI analyses for each phenotype, as well as prepare the validation phenotypes.

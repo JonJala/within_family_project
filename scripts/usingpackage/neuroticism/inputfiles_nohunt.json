@@ -1,0 +1,27 @@
+{
+    "ukb" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ukb/neuroticism/CLEANED.out.gz"
+    },
+
+    "gs" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/gs/neuroticism/CLEANED.out.gz"
+    },
+
+    "ft" :{
+
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/ft/neuroticism/CLEANED.out.gz"
+    },
+
+    "mt" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/minn_twins/neuroticism/CLEANED.out.gz"
+    },
+
+    "dutchtwin" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/dutch_twin/neuroticism/CLEANED.out.gz"
+    },
+
+    "qimr" : {
+        "path2file" : "/var/genetics/proj/within_family/within_family_project/processed/qc/qimr/neuroticism/CLEANED.out.gz"
+    }
+
+}

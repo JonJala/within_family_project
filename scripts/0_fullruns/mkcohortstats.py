@@ -75,18 +75,20 @@ datout = datout.loc[datout['Cohort'] != 'Otherqc']
 
 # cohort names
 datout.replace("Estonian_Biobank", "Estonian Biobank", inplace=True)
-datout.replace("Ukb", "UKB", inplace=True)
-datout.replace("Minn_Twins", "Minn Twins", inplace=True)
-datout.replace("Gs", "GS", inplace=True)
-datout.replace("Moba", "MOBA", inplace=True)
-datout.replace("Str", "STR", inplace=True)
-datout.replace("Ft", "FT", inplace=True)
+datout.replace("Ukb", "UK Biobank", inplace=True)
+datout.replace("Minn_Twins", "Minnesota Twins", inplace=True)
+datout.replace("Gs", "Generation Scotland", inplace=True)
+datout.replace("Moba", "Norwegian Mother, Father and Child Cohort Study (MoBa)", inplace=True)
+datout.replace("Str", "Swedish Twin Registry", inplace=True)
+datout.replace("Hunt", "Trøndelag Health Study (HUNT)", inplace=True)
+datout.replace("Ft", "Finnish Twin Cohort", inplace=True)
 datout.replace("Ipsych", "iPSYCH", inplace=True)
-datout.replace("Dutch_Twin", "Dutch Twin", inplace=True)
-datout.replace("Qimr", "QIMR", inplace=True)
-datout.replace("Fhs", "FHS", inplace=True)
-datout.replace("Ckb", "CKB", inplace=True)
-datout.replace("Finngen", "FinnGen", inplace=True)
+datout.replace("Dutch_Twin", "Netherlands Twin Register", inplace=True)
+datout.replace("Qimr", "QIMR Berghofer Medical Research Institute (QIMR)", inplace=True)
+datout.replace("Fhs", "Framingham Heart Study", inplace=True)
+datout.replace("Ckb", "China Kadoorie Biobank", inplace=True)
+datout.replace("Botnia", "Botnia Family Study", inplace=True)
+datout.replace("Finngen", "Finngen", inplace=True)
 
 # phenotypes
 datout.replace("Cho18", "Total cholesterol at 18", inplace=True)
@@ -134,7 +136,8 @@ datout.replace("Hayfever", "Allergic rhinitis", inplace=True)
 datout.to_csv(
     basepath + 'processed/package_output/cohortstats.txt',
     index = False,
-    sep = '\t'
+    sep = '\t',
+    na_rep = "NA"
 )
 
 

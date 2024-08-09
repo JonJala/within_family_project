@@ -299,14 +299,11 @@ def main(args):
     inv_var_direct_effect = sum_weighted_effects / sum_weights
     inv_var_direct_effect_se = np.sqrt(1 / sum_weights)
 
-    # save
     inv_var_meta = pd.DataFrame({
         'cptid': df_merged['cptid'],
-        'inv_var_direct': inv_var_direct_effect,
-        'inv_var_direct_SE': inv_var_direct_effect_se
+        'direct_effect_univariate': inv_var_direct_effect,
+        'direct_effect_SE_univariate': inv_var_direct_effect_se
     })
-    inv_var_meta.to_csv(args.outprefix + '.inv.var.direct.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
-
 
     ## regular meta-analysis
 
@@ -483,6 +480,25 @@ def main(args):
         df_out.drop(columns = ['avg_NTC_N'], inplace = True)
         print(f"Writing output to {args.outprefix + '.sumstats.gz'}")
         df_out.to_csv(args.outprefix + '.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
+
+        ## version for public release
+
+        # merge with univariate direct effects
+        df_out = df_out.merge(inv_var_meta, on = 'cptid', how = 'left')
+        df_out['direct_N_univariate'] = np.round((2*df_out['freq']*(1-df_out['freq'])*df_out['direct_effect_SE_univariate']**2)**(-1))
+        
+        # round freq to 3 dp
+        df_out['freq'] = df_out['freq'].round(3)
+        
+        # rename col
+        df_out.rename(columns = {'r_avg_parental_population' : 'r_avg_NTC_population'}, inplace = True)
+
+        # reorder cols
+        colnames = ['cptid', 'chromosome', 'pos', 'SNP', 'freq', 'A1', 'A2', 'direct_N', 'direct_Beta', 'direct_SE', 'direct_Z', 'direct_pval', 'paternal_Beta', 'paternal_SE', 'paternal_Z', 'paternal_pval', 'maternal_Beta', 'maternal_SE', 'maternal_Z', 'maternal_pval', 'avg_NTC_Beta', 'avg_NTC_SE', 'avg_NTC_Z', 'avg_NTC_pval', 'population_N', 'population_Beta', 'population_SE', 'population_Z', 'population_pval', 'direct_N_univariate', 'direct_effect_univariate', 'direct_effect_SE_univariate', 'r_direct_paternal', 'r_direct_maternal', 'r_direct_avg_NTC', 'r_direct_population', 'r_paternal_maternal', 'r_paternal_avg_NTC', 'r_paternal_population', 'r_maternal_avg_NTC', 'r_maternal_population', 'r_avg_NTC_population', 'n_cohorts']
+        df_out = df_out[colnames]
+
+        # save
+        df_out.to_csv(args.outprefix + '.pub.release.sumstats.gz', sep = ' ', index = False, na_rep = "nan")
 
     print(f"Median direct-population effect correlation: {np.median(df_out['r_direct_population'])}")
     print(f"Median Direct N: {np.median(df_out['direct_N'])}")
